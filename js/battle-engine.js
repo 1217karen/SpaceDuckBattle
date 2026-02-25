@@ -74,30 +74,21 @@ export function simulateBattle(snapshot) {
         continue;
       }
 
-      // ⭐ 前方1マススキル
-      if (isFrontAdjacent(unit, target)) {
+import { skillHandlers } from "./skills.js";
 
-        log.push({
-          type: "attack",
-          from: unit.id,
-          to: target.id,
-          damage: unit.atk
-        });
+for (let skill of unit.skills) {
 
-        target.hp -= unit.atk;
+  const handler = skillHandlers[skill.type];
 
-        log.push({
-          type: "damage",
-          target: target.id,
-          hp: Math.max(target.hp, 0)
-        });
+  if (!handler) continue;
 
-        if (target.hp <= 0) {
-          log.push({ type: "death", target: target.id });
-        }
+  if (handler.canUse(unit, target)) {
 
-        continue;
-      }
+    handler.execute(unit, target, log);
+
+    break;
+  }
+}
 
       // ⭐ それ以外（今は何もしない）
     }
