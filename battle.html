@@ -39,33 +39,6 @@ startBtn.addEventListener("click", () => {
   // 結果ページへ移動
   window.location.href = `battlelog.html?id=${battleID}`;
 });
-
-  function renderEvent(event) {
-
-  const div = document.createElement("div");
-
-  if (event.type === "turnStart") {
-    div.textContent = `--- ターン ${event.turn} ---`;
-  }
-
-  else if (event.type === "attack") {
-    div.textContent = `${event.from} が ${event.to} を攻撃 (${event.damage})`;
-  }
-
-  else if (event.type === "damage") {
-    div.textContent = `${event.target} のHP → ${event.hp}`;
-  }
-
-  else if (event.type === "death") {
-    div.textContent = `${event.target} が倒れた`;
-  }
-
-  else if (event.type === "battleEnd") {
-    div.textContent = `戦闘終了 勝者: ${event.winner}`;
-  }
-
-  logArea.appendChild(div);
-}
 </script>
   
 </body>
