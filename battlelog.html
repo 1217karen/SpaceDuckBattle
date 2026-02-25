@@ -15,7 +15,7 @@
 
 <script type="module">
 
-import { createBoard, placeUnit, moveUnit } from "./js/board.js";
+import { createBoard, placeUnit, moveUnit, updateFacing } from "./js/board.js";
 
 // =====================
 // ログ取得（最初にやる）
@@ -81,6 +81,7 @@ nextBtn.addEventListener("click", () => {
   }
     
 else if (event.type === "faceChange") {
+  updateFacing("board", event.unit, event.facing);
   div.textContent = `${event.unit} の向きが ${event.facing} に変わった`;
 }
   else if (event.type === "attack") {
