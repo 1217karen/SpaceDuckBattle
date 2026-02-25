@@ -28,13 +28,41 @@ export function placeUnit(containerId, unit) {
 
   if (!cell) return;
 
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("unitWrapper");
+  wrapper.dataset.unitId = unit.id;
+
   const img = document.createElement("img");
-
   img.src = unit.icon;
-  img.classList.add("unit");
-  img.dataset.unitId = unit.id;
+  img.classList.add("unitImage");
 
-  cell.appendChild(img);
+  const marker = document.createElement("div");
+  marker.classList.add("facingMarker");
+  marker.textContent = "▲"; // 初期向きN想定
+
+  wrapper.appendChild(img);
+  wrapper.appendChild(marker);
+
+  cell.appendChild(wrapper);
+}
+export function updateFacing(containerId, unitId, facing) {
+
+  const container = document.getElementById(containerId);
+
+  const wrapper = container.querySelector(
+    `[data-unit-id="${unitId}"]`
+  );
+
+  if (!wrapper) return;
+
+  const marker = wrapper.querySelector(".facingMarker");
+
+  if (!marker) return;
+
+  if (facing === "N") marker.textContent = "▲";
+  if (facing === "S") marker.textContent = "▼";
+  if (facing === "E") marker.textContent = "▶";
+  if (facing === "W") marker.textContent = "◀";
 }
 export function moveUnit(containerId, unitId, newX, newY) {
 
