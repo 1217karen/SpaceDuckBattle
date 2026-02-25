@@ -3,16 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <title>Battle Log</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <h1>Battle Log</h1>
+  <div id="board"></div>
   <button id="nextBtn">次へ</button>
+  
   <div id="logArea"></div>
 
-  <script>
-    const logArea = document.getElementById("logArea");
-    const nextBtn = document.getElementById("nextBtn");
+<script type="module">
+import { createBoard } from "./js/board.js";
 
+createBoard("board", 6, 6);
+
+const logArea = document.getElementById("logArea");
+const nextBtn = document.getElementById("nextBtn");
     // URLからid取得
     const params = new URLSearchParams(window.location.search);
     const battleID = params.get("id");
