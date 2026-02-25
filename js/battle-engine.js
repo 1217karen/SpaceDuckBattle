@@ -12,39 +12,81 @@ export function simulateBattle(snapshot) {
   while (turn <= MAX_TURNS) {
     log.push({ type: "turnStart", turn });
 
-    for (let unit of units) {
-      if (unit.hp <= 0) continue;
+for (let unit of units) {
 
-      const enemies = units.filter(
-        u => u.team !== unit.team && u.hp > 0
-      );
+  if (unit.hp <= 0) continue;
 
-      if (enemies.length === 0) {
-        log.push({ type: "battleEnd", winner: unit.team });
-        return log;
-      }
+  const enemies = units.filter(
+    u => u.team !== unit.team && u.hp > 0
+  );
 
-      const target = enemies[0]; // 最初の敵を殴る（単純AI）
+  if (enemies.length === 0) {
+    log.push({ type: "battleEnd", winner: unit.team });
+    return log;
+  }
 
-      log.push({
-        type: "attack",
-        from: unit.id,
-        to: target.id,
-        damage: unit.atk
-      });
+  // ⭐ まずターゲット決定
+  const target = enemies[0];
 
-      target.hp -= unit.atk;
+  const dx = target.x - unit.x;
+  const dy = target.y - unit.y;
 
-      log.push({
-        type: "damage",
-        target: target.id,
-        hp: Math.max(target.hp, 0)
-      });
+  // ⭐ 隣接チェック（マンハッタン距離）
+  if (Math.abs(dx) + Math.abs(dy) > 1) {
 
-      if (target.hp <= 0) {
-        log.push({ type: "death", target: target.id });
-      }
+    let newX = unit.x;
+    let newY = unit.y;
+    let newFacing = unit.facing;
+
+    if (dx !== 0) {
+      newX += dx > 0 ? 1 : -1;
+      newFacing = dx > 0 ? "E" : "W";
     }
+    else if (dy !== 0) {
+      newY += dy > 0 ? 1 : -1;
+      newFacing = dy > 0 ? "S" : "N";
+    }
+
+    unit.x = newX;
+    unit.y = newY;
+    unit.facing = newFacing;
+
+    log.push({
+      type:"move",
+      unit:unit.id,
+      x:newX,
+      y:newY
+    });
+
+    log.push({
+      type:"faceChange",
+      unit:unit.id,
+      facing:newFacing
+    });
+
+    continue; // 攻撃しない
+  }
+
+  // 隣接していたら攻撃
+  log.push({
+    type: "attack",
+    from: unit.id,
+    to: target.id,
+    damage: unit.atk
+  });
+
+  target.hp -= unit.atk;
+
+  log.push({
+    type: "damage",
+    target: target.id,
+    hp: Math.max(target.hp, 0)
+  });
+
+  if (target.hp <= 0) {
+    log.push({ type: "death", target: target.id });
+  }
+}
 
     turn++;
   }
