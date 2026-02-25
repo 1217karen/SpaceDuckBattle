@@ -63,14 +63,6 @@ if (snapshot) {
   });
 }
 
-// ★ テスト用：最初に移動イベント追加
-battleLog.unshift({
-  type:"move",
-  unit:"A",
-  x:2,
-  y:1
-});
-
 let logIndex = 0;
 
 // =====================
@@ -87,7 +79,10 @@ nextBtn.addEventListener("click", () => {
   if (event.type === "turnStart") {
     div.textContent = `--- ターン ${event.turn} ---`;
   }
-
+    
+else if (event.type === "faceChange") {
+  div.textContent = `${event.unit} の向きが ${event.facing} に変わった`;
+}
   else if (event.type === "attack") {
     div.textContent = `${event.from} が ${event.to} を攻撃 (${event.damage})`;
   }
