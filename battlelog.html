@@ -10,9 +10,7 @@
 <h1>Battle Log</h1>
 
 <div id="board"></div>
-
 <button id="nextBtn">次へ</button>
-
 <div id="logArea"></div>
 
 <script type="module">
@@ -20,25 +18,7 @@
 import { createBoard, placeUnit, moveUnit } from "./js/board.js";
 
 // =====================
-// 盤面作成
-// =====================
-
-createBoard("board", 6, 6);
-
-// UI側の現在状態
-let boardState = {
-  units: {}
-};
-
-placeUnit("board", {
-  id: "B",
-  x: 4,
-  y: 4,
-  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp"
-});
-
-// =====================
-// ログ取得
+// ログ取得（最初にやる）
 // =====================
 
 const logArea = document.getElementById("logArea");
@@ -54,9 +34,36 @@ if (!stored) {
   nextBtn.disabled = true;
 }
 
-const battleLog = stored ? JSON.parse(stored) : [];
+const battleData = stored ? JSON.parse(stored) : null;
+const snapshot = battleData ? battleData.snapshot : null;
+const battleLog = battleData ? battleData.log : [];
 
-// ★ テスト用：最初に移動イベントを追加
+
+// =====================
+// 盤面作成
+// =====================
+
+createBoard("board", 6, 6);
+
+let boardState = { units:{} };
+
+// snapshot から初期配置
+if (snapshot) {
+  snapshot.units.forEach(u => {
+
+    boardState.units[u.id] = { x:u.x, y:u.y };
+
+    placeUnit("board", {
+      id: u.id,
+      x: u.x,
+      y: u.y,
+      icon: u.icon || "https://placehold.co/60x60"
+    });
+
+  });
+}
+
+// ★ テスト用：最初に移動イベント追加
 battleLog.unshift({
   type:"move",
   unit:"A",
@@ -97,7 +104,6 @@ nextBtn.addEventListener("click", () => {
     div.textContent = `戦闘終了 勝者: ${event.winner}`;
   }
 
-  // ⭐ 移動イベント
   else if (event.type === "move") {
 
     moveUnit("board", event.unit, event.x, event.y);
@@ -109,8 +115,8 @@ nextBtn.addEventListener("click", () => {
   }
 
   logArea.appendChild(div);
-
   logIndex++;
+
 });
 
 </script>
