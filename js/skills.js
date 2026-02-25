@@ -85,8 +85,6 @@ attack_nearest: {
       });
     }
   },
-
-}
 heal_cross2: {
 
   canUse(unit, ctx) {
