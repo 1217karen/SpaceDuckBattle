@@ -7,12 +7,17 @@
 <body>
   <h1>Battle Test</h1>
   <button id="startBtn">戦闘開始</button>
+  <button id="nextBtn">次へ</button>
 <div id="logArea"></div>
-  <script type="module">
+<script type="module">
 import { simulateBattle } from './js/battle-engine.js';
 
 const startBtn = document.getElementById("startBtn");
+const nextBtn = document.getElementById("nextBtn");
 const logArea = document.getElementById("logArea");
+
+let battleLog = [];
+let logIndex = 0;
 
 startBtn.addEventListener("click", () => {
 
@@ -23,17 +28,22 @@ startBtn.addEventListener("click", () => {
     ]
   };
 
-  const log = simulateBattle(snapshot);
-
-  // 表示用
+  battleLog = simulateBattle(snapshot);
+  logIndex = 0;
   logArea.innerHTML = "";
+});
 
-  log.forEach(event => {
-    const div = document.createElement("div");
-    div.textContent = JSON.stringify(event);
-    logArea.appendChild(div);
-  });
+nextBtn.addEventListener("click", () => {
 
+  if (logIndex >= battleLog.length) return;
+
+  const event = battleLog[logIndex];
+
+  const div = document.createElement("div");
+  div.textContent = JSON.stringify(event);
+  logArea.appendChild(div);
+
+  logIndex++;
 });
 </script>
 </body>
