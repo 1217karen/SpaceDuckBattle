@@ -9,8 +9,8 @@ const H = 5;
 
 const snapshot = {
   units: [
-    {id:"A", team:"player", x:0, y:2, hp:10, speed:10},
-    {id:"B", team:"enemy", x:3, y:2, hp:10, speed:8}
+    {id:"A", team:"player", x:0, y:2, hp:10, speed:10, icon:"🐤"},
+    {id:"B", team:"enemy", x:3, y:2, hp:10, speed:8, icon:"🐤"}
   ]
 };
 
@@ -155,7 +155,7 @@ function render(){
   for(const id in units){
     const u = units[id];
     if(u.hp<=0) continue;
-    cells[u.y][u.x].textContent = "🐤";
+    cells[u.y][u.x].textContent = u.icon;
   }
 }
 
