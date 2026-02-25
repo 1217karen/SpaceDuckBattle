@@ -95,7 +95,9 @@ else if (event.type === "faceChange") {
   else if (event.type === "death") {
     div.textContent = `${event.target} が倒れた`;
   }
-
+else if (event.type === "heal") {
+  div.textContent = `${event.target} のHP → ${event.hp} (回復)`;
+}
   else if (event.type === "battleEnd") {
     div.textContent = `戦闘終了 勝者: ${event.winner}`;
   }
