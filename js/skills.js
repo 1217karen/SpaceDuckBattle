@@ -84,7 +84,7 @@ attack_nearest: {
         target:target.id
       });
     }
-  }
+  },
 
 }
 heal_cross2: {
