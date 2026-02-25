@@ -45,7 +45,33 @@ function getNearestEnemy(unit, units) {
 
   return nearest;
 }
+function getUnitsInManhattanRange(center, units, range) {
 
+  return units.filter(u => {
+
+    if (u.hp <= 0) return false;
+
+    const dist =
+      Math.abs(center.x - u.x) +
+      Math.abs(center.y - u.y);
+
+    return dist <= range;
+  });
+}
+
+function getUnitsInSameRow(unit, units) {
+  return units.filter(u =>
+    u.hp > 0 &&
+    u.y === unit.y
+  );
+}
+
+function getUnitsInSameColumn(unit, units) {
+  return units.filter(u =>
+    u.hp > 0 &&
+    u.x === unit.x
+  );
+}
 
 // ==========================
 // メイン
@@ -61,14 +87,17 @@ export function simulateBattle(snapshot) {
   // 行動順固定
   units.sort((a,b)=>b.speed-a.speed);
 
-  const context = {
-    units,
-    log,
-    getDistance,
-    getEnemies,
-    getAllies,
-    getNearestEnemy
-  };
+const context = {
+  units,
+  log,
+  getDistance,
+  getEnemies,
+  getAllies,
+  getNearestEnemy,
+  getUnitsInManhattanRange,
+  getUnitsInSameRow,
+  getUnitsInSameColumn
+};
 
   let turn = 1;
   const MAX_TURNS = 50;
