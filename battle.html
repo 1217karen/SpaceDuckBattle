@@ -7,25 +7,34 @@
 <body>
   <h1>Battle Test</h1>
   <button id="startBtn">戦闘開始</button>
-
+<div id="logArea"></div>
   <script type="module">
-    import { simulateBattle } from './js/battle-engine.js';
+import { simulateBattle } from './battle-engine.js';
 
-    const startBtn = document.getElementById("startBtn");
+const startBtn = document.getElementById("startBtn");
+const logArea = document.getElementById("logArea");
 
-    startBtn.addEventListener("click", () => {
-      const snapshot = {
-        units: [
-          { id: "A", team: 1, hp: 30, atk: 5, speed: 10 },
-          { id: "B", team: 2, hp: 30, atk: 5, speed: 8 }
-        ]
-      };
+startBtn.addEventListener("click", () => {
 
-      const log = simulateBattle(snapshot);
+  const snapshot = {
+    units: [
+      { id: "A", team: 1, hp: 30, atk: 5, speed: 10 },
+      { id: "B", team: 2, hp: 30, atk: 5, speed: 8 }
+    ]
+  };
 
-      console.log("=== Battle Log ===");
-      console.log(log);
-    });
-  </script>
+  const log = simulateBattle(snapshot);
+
+  // 表示用
+  logArea.innerHTML = "";
+
+  log.forEach(event => {
+    const div = document.createElement("div");
+    div.textContent = JSON.stringify(event);
+    logArea.appendChild(div);
+  });
+
+});
+</script>
 </body>
 </html>
