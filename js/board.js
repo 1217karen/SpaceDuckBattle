@@ -36,3 +36,19 @@ export function placeUnit(containerId, unit) {
 
   cell.appendChild(img);
 }
+export function moveUnit(containerId, unitId, newX, newY) {
+
+  const container = document.getElementById(containerId);
+
+  const unit = container.querySelector(`[data-unit-id="${unitId}"]`);
+
+  if (!unit) return;
+
+  const targetCell = container.querySelector(
+    `[data-x="${newX}"][data-y="${newY}"]`
+  );
+
+  if (!targetCell) return;
+
+  targetCell.appendChild(unit);
+}
