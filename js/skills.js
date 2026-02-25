@@ -87,7 +87,48 @@ attack_nearest: {
   }
 
 }
+heal_cross2: {
 
+  canUse(unit, ctx) {
+
+    const allies =
+      ctx.getUnitsInManhattanRange(
+        unit,
+        ctx.units,
+        2
+      ).filter(u =>
+        u.team === unit.team &&
+        u.id !== unit.id
+      );
+
+    return allies.length > 0;
+  },
+
+  execute(unit, ctx) {
+
+    const allies =
+      ctx.getUnitsInManhattanRange(
+        unit,
+        ctx.units,
+        2
+      ).filter(u =>
+        u.team === unit.team &&
+        u.id !== unit.id
+      );
+
+    for (let ally of allies) {
+
+      ally.hp += 5;
+
+      ctx.log.push({
+        type:"heal",
+        target:ally.id,
+        hp:ally.hp
+      });
+    }
+  }
+
+},
 };
 
 
