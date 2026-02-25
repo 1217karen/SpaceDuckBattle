@@ -13,9 +13,23 @@
   <div id="logArea"></div>
 
 <script type="module">
-import { createBoard } from "./js/board.js";
+import { createBoard, placeUnit } from "./js/board.js";
 
 createBoard("board", 6, 6);
+
+placeUnit("board", {
+  id: "A",
+  x: 1,
+  y: 1,
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp"
+});
+
+placeUnit("board", {
+  id: "B",
+  x: 4,
+  y: 4,
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp"
+});
 
 const logArea = document.getElementById("logArea");
 const nextBtn = document.getElementById("nextBtn");
