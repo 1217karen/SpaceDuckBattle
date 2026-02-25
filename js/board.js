@@ -18,3 +18,21 @@ export function createBoard(containerId, width, height) {
     }
   }
 }
+export function placeUnit(containerId, unit) {
+
+  const container = document.getElementById(containerId);
+
+  const cell = container.querySelector(
+    `[data-x="${unit.x}"][data-y="${unit.y}"]`
+  );
+
+  if (!cell) return;
+
+  const img = document.createElement("img");
+
+  img.src = unit.icon;
+  img.classList.add("unit");
+  img.dataset.unitId = unit.id;
+
+  cell.appendChild(img);
+}
