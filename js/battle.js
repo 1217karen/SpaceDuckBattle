@@ -115,3 +115,87 @@ function simulate(snapshot){
 const battleLog = simulate(snapshot);
 
 console.log(battleLog);
+/*
+========================
+UI再生部分（表示）
+========================
+*/
+
+const board = document.getElementById("board");
+const logDiv = document.getElementById("log");
+
+const cells = [];
+const units = {};
+
+// 盤面作成
+for(let y=0;y<H;y++){
+  const row=[];
+  for(let x=0;x<W;x++){
+    const c=document.createElement("div");
+    c.className="cell";
+    board.appendChild(c);
+    row.push(c);
+  }
+  cells.push(row);
+}
+
+// 初期ユニット配置（snapshotから）
+for(const u of snapshot.units){
+  units[u.id] = { ...u };
+}
+
+function render(){
+
+  for(let y=0;y<H;y++){
+    for(let x=0;x<W;x++){
+      cells[y][x].textContent="";
+    }
+  }
+
+  for(const id in units){
+    const u = units[id];
+    if(u.hp<=0) continue;
+    cells[u.y][u.x].textContent = "🐤";
+  }
+}
+
+function addLog(text){
+  const p=document.createElement("div");
+  p.textContent=text;
+  logDiv.appendChild(p);
+}
+
+let playIndex = 0;
+
+function playStep(){
+
+  if(playIndex >= battleLog.length) return;
+
+  const ev = battleLog[playIndex];
+  playIndex++;
+
+  if(ev.type==="move"){
+    units[ev.unit].x = ev.x;
+    units[ev.unit].y = ev.y;
+    addLog(`${ev.unit} が移動`);
+  }
+
+  if(ev.type==="attack"){
+    addLog(`${ev.attacker} の攻撃`);
+  }
+
+  if(ev.type==="damage"){
+    units[ev.target].hp = ev.hp;
+    addLog(`${ev.target} に ${ev.value} ダメージ`);
+  }
+
+  if(ev.type==="death"){
+    addLog(`${ev.target} が倒れた`);
+  }
+
+  render();
+}
+
+document.getElementById("stepBtn").onclick = playStep;
+
+render();
