@@ -16,12 +16,12 @@ const startBtn = document.getElementById("startBtn");
 
 startBtn.addEventListener("click", () => {
 
-  const snapshot = {
-    units: [
-      { id: "A", team: 1, hp: 30, atk: 5, speed: 10 },
-      { id: "B", team: 2, hp: 30, atk: 5, speed: 8 }
-    ]
-  };
+const snapshot = {
+  units: [
+    { id: "A", team: 1, hp: 30, atk: 5, speed: 10, x:1, y:1 },
+    { id: "B", team: 2, hp: 30, atk: 5, speed: 8,  x:4, y:4 }
+  ]
+};
 
   const log = simulateBattle(snapshot);
 
