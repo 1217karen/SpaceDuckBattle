@@ -2,22 +2,17 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Battle Test２</title>
+  <title>Battle Test</title>
 </head>
 <body>
-  <h1>Battle Test</h1>
-  <button id="startBtn">戦闘開始</button>
-  <button id="nextBtn">次へ</button>
-<div id="logArea"></div>
+
+<h1>Battle Test</h1>
+<button id="startBtn">戦闘開始</button>
+
 <script type="module">
 import { simulateBattle } from './js/battle-engine.js';
 
 const startBtn = document.getElementById("startBtn");
-const nextBtn = document.getElementById("nextBtn");
-const logArea = document.getElementById("logArea");
-
-let battleLog = [];
-let logIndex = 0;
 
 startBtn.addEventListener("click", () => {
 
@@ -30,16 +25,13 @@ startBtn.addEventListener("click", () => {
 
   const log = simulateBattle(snapshot);
 
-  // 仮battleID生成
   const battleID = "battle_" + Date.now();
 
-  // localStorageに保存
   localStorage.setItem(battleID, JSON.stringify(log));
 
-  // 結果ページへ移動
   window.location.href = `battlelog.html?id=${battleID}`;
 });
 </script>
-  
+
 </body>
 </html>
