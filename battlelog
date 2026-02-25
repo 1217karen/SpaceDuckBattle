@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Battle Log</title>
+</head>
+<body>
+  <h1>Battle Log</h1>
+  <button id="nextBtn">次へ</button>
+  <div id="logArea"></div>
+
+  <script>
+    const logArea = document.getElementById("logArea");
+    const nextBtn = document.getElementById("nextBtn");
+
+    // URLからid取得
+    const params = new URLSearchParams(window.location.search);
+    const battleID = params.get("id");
+
+    const stored = localStorage.getItem(battleID);
+
+    if (!stored) {
+      logArea.textContent = "ログが見つかりません";
+      nextBtn.disabled = true;
+    }
+
+    const battleLog = stored ? JSON.parse(stored) : [];
+    let logIndex = 0;
+
+    nextBtn.addEventListener("click", () => {
+
+      if (logIndex >= battleLog.length) return;
+
+      const event = battleLog[logIndex];
+
+      const div = document.createElement("div");
+
+      if (event.type === "turnStart") {
+        div.textContent = `--- ターン ${event.turn} ---`;
+      }
+
+      else if (event.type === "attack") {
+        div.textContent = `${event.from} が ${event.to} を攻撃 (${event.damage})`;
+      }
+
+      else if (event.type === "damage") {
+        div.textContent = `${event.target} のHP → ${event.hp}`;
+      }
+
+      else if (event.type === "death") {
+        div.textContent = `${event.target} が倒れた`;
+      }
+
+      else if (event.type === "battleEnd") {
+        div.textContent = `戦闘終了 勝者: ${event.winner}`;
+      }
+
+      logArea.appendChild(div);
+
+      logIndex++;
+    });
+  </script>
+</body>
+</html>
