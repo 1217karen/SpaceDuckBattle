@@ -1,21 +1,6 @@
 // battle-engine.js
 
-function isFrontAdjacent(unit, target) {
-
-  if (unit.facing === "N")
-    return target.x === unit.x && target.y === unit.y - 1;
-
-  if (unit.facing === "S")
-    return target.x === unit.x && target.y === unit.y + 1;
-
-  if (unit.facing === "E")
-    return target.x === unit.x + 1 && target.y === unit.y;
-
-  if (unit.facing === "W")
-    return target.x === unit.x - 1 && target.y === unit.y;
-
-  return false;
-}
+import { skillHandlers } from "./skills.js";
 
 export function simulateBattle(snapshot) {
 
@@ -45,10 +30,30 @@ export function simulateBattle(snapshot) {
 
       const target = enemies[0];
 
+      // ⭐ スキル判定（最優先）
+      let usedSkill = false;
+
+      for (let skill of (unit.skills || [])) {
+
+        const handler = skillHandlers[skill.type];
+
+        if (!handler) continue;
+
+        if (handler.canUse(unit, target)) {
+
+          handler.execute(unit, target, log);
+
+          usedSkill = true;
+          break;
+        }
+      }
+
+      if (usedSkill) continue;
+
+      // ⭐ スキル使えなかったら移動
       const dx = target.x - unit.x;
       const dy = target.y - unit.y;
 
-      // ⭐ 遠いなら接近
       if (Math.abs(dx) + Math.abs(dy) > 1) {
 
         let newX = unit.x;
@@ -70,27 +75,8 @@ export function simulateBattle(snapshot) {
 
         log.push({ type:"move", unit:unit.id, x:newX, y:newY });
         log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
-
-        continue;
       }
 
-import { skillHandlers } from "./skills.js";
-
-for (let skill of unit.skills) {
-
-  const handler = skillHandlers[skill.type];
-
-  if (!handler) continue;
-
-  if (handler.canUse(unit, target)) {
-
-    handler.execute(unit, target, log);
-
-    break;
-  }
-}
-
-      // ⭐ それ以外（今は何もしない）
     }
 
     turn++;
