@@ -28,20 +28,16 @@ startBtn.addEventListener("click", () => {
     ]
   };
 
-  battleLog = simulateBattle(snapshot);
-  logIndex = 0;
-  logArea.innerHTML = "";
-});
+  const log = simulateBattle(snapshot);
 
-nextBtn.addEventListener("click", () => {
+  // 仮battleID生成
+  const battleID = "battle_" + Date.now();
 
-  if (logIndex >= battleLog.length) return;
+  // localStorageに保存
+  localStorage.setItem(battleID, JSON.stringify(log));
 
-  const event = battleLog[logIndex];
-
-  renderEvent(event);
-
-  logIndex++;
+  // 結果ページへ移動
+  window.location.href = `battlelog.html?id=${battleID}`;
 });
 
   function renderEvent(event) {
