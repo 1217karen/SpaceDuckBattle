@@ -43,44 +43,50 @@ export const skillHandlers = {
   },
 
   // ⭐ NEW
-  attack_nearest: {
+attack_nearest: {
 
-    canUse(unit, ctx) {
+  canUse(unit, ctx) {
 
-      return !!ctx.getNearestEnemy(unit, ctx.units);
-    },
+    const target = ctx.getNearestEnemy(unit, ctx.units);
 
-    execute(unit, ctx) {
+    if (!target) return false;
 
-      const target = ctx.getNearestEnemy(unit, ctx.units);
+    const dist = ctx.getDistance(unit, target);
 
-      if (!target) return;
+    return dist === 1;
+  },
+
+  execute(unit, ctx) {
+
+    const target = ctx.getNearestEnemy(unit, ctx.units);
+
+    if (!target) return;
+
+    ctx.log.push({
+      type:"attack",
+      from:unit.id,
+      to:target.id,
+      damage:unit.atk
+    });
+
+    target.hp -= unit.atk;
+
+    ctx.log.push({
+      type:"damage",
+      target:target.id,
+      hp:Math.max(target.hp,0)
+    });
+
+    if (target.hp <= 0) {
 
       ctx.log.push({
-        type:"attack",
-        from:unit.id,
-        to:target.id,
-        damage:unit.atk
+        type:"death",
+        target:target.id
       });
-
-      target.hp -= unit.atk;
-
-      ctx.log.push({
-        type:"damage",
-        target:target.id,
-        hp:Math.max(target.hp,0)
-      });
-
-      if (target.hp <= 0) {
-
-        ctx.log.push({
-          type:"death",
-          target:target.id
-        });
-      }
     }
-
   }
+
+}
 
 };
 
