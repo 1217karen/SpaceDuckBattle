@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<h1>Battle Test2</h1>
+<h1>Battle Test</h1>
 <button id="startBtn">戦闘開始</button>
 
 <script type="module">
@@ -27,7 +27,13 @@ const snapshot = {
 
   const battleID = "battle_" + Date.now();
 
-  localStorage.setItem(battleID, JSON.stringify(log));
+localStorage.setItem(
+  battleID,
+  JSON.stringify({
+    snapshot: snapshot,
+    log: log
+  })
+);
 
   window.location.href = `battlelog.html?id=${battleID}`;
 });
