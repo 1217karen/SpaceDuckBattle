@@ -1,3 +1,39 @@
+#battleLayout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 上段 */
+#topArea {
+  width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 中段 */
+#middleArea {
+  width: 900px;
+  display: grid;
+  grid-template-columns: 150px auto 150px;
+  align-items: center;
+}
+
+/* グリッド中央固定 */
+#boardArea {
+  display: flex;
+  justify-content: center;
+}
+
+/* 下段 */
+#bottomArea {
+  width: 900px;
+  display: grid;
+  grid-template-columns: 150px auto 150px;
+}
+
 .cell {
   width: 80px;
   height: 80px;
@@ -6,19 +42,9 @@
   position: relative;
 }
 
-#battleContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 #turnDisplay {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 10px;
-}
-
-#board {
   margin-bottom: 10px;
 }
 
