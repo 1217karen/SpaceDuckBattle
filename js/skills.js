@@ -10,7 +10,7 @@ generateActions(unit, ctx) {
 
   const target = getFrontTarget(unit, ctx);
   if (!target) return null;
-
+if (target.team === unit.team) return null;
   let x = unit.x;
   let y = unit.y;
 
