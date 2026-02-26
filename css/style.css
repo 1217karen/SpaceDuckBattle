@@ -1,11 +1,67 @@
 .cell {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   background: #eee;
   border: 1px solid #999;
   position: relative;
 }
+.unitWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
+.unitImage {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.facingMarker {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* 三角形（上向きベース） */
+.facingMarker::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid white;
+}
+
+/* 向きごとの位置＋回転 */
+
+.face-N::before {
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.face-S::before {
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+.face-E::before {
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.face-W::before {
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}
 .cell.attackHighlight {
   background-color: rgba(255,0,0,0.4);
 }
