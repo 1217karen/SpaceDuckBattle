@@ -195,20 +195,16 @@ for (let skill of (unit.skills || [])) {
   const handler = skillHandlers[skill.type];
   if (!handler) continue;
 
-  const actions = handler.generateActions(unit, context);
-  if (!actions || actions.length === 0) continue;
+const result = handler.generateActions(unit, context);
 
-let rangeCells = null;
-let rangeStyle = null;
+if (!result) continue;
 
-// action内の preview を自動収集
-for (let a of actions) {
-  if (a.preview) {
-    rangeCells = a.preview.cells || null;
-    rangeStyle = a.preview.style || null;
-    break;
-  }
-}
+const actions = result.actions || [];
+
+if (actions.length === 0) continue;
+
+const rangeCells = result.preview ? result.preview.cells : null;
+const rangeStyle = result.preview ? result.preview.style : null;;
 
   // 「効果がある」Action が1つでもあるか
   // ※今は damage/heal だけ。将来 buff/debuff などを足すときここに追加する
