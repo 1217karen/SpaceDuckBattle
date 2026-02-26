@@ -5,6 +5,9 @@ import {
   highlightCells
 } from "./board.js";
 
+function displayName(id, nameMap) {
+  return nameMap?.[id] || id;
+}
 export function playLogEvent(
   event,
   boardState,
@@ -40,7 +43,7 @@ else if (event.type === "faceChange") {
   else if (event.type === "skillUse") {
 
     div.textContent =
-      `${event.unit} が ${event.skill} を使用`;
+      `${displayName(event.unit, nameMap)} が ${event.skill} を使用`;
 
     if (event.rangeCells) {
 
@@ -76,7 +79,7 @@ if (cls) {
     }
 
     div.textContent =
-      `${event.from} が ${event.to} を攻撃 (${event.amount})`;
+      `${displayName(event.from, nameMap)} が ${displayName(event.to, nameMap)} を攻撃`
   }
 
   else if (event.type === "heal") {
@@ -94,7 +97,7 @@ if (cls) {
     }
 
     div.textContent =
-      `${event.from} が ${event.to} を回復 (${event.amount})`;
+      `${displayName(event.from, nameMap)} が ${displayName(event.to, nameMap)} を回復`
   }
 else if (event.type === "effectApplied") {
 
@@ -122,7 +125,7 @@ else if (event.type === "effectApplied") {
     e.value >= 0 ? "+" : "";
 
   div.textContent =
-    `${event.to} の ${e.stat} ${sign}${e.value}`;
+    `${displayName(event.to, nameMap)} の ${e.stat} ${sign}${e.value}`
 }
   
   else if (event.type === "death") {
