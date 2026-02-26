@@ -79,34 +79,32 @@ nextBtn.addEventListener("click", () => {
   if (event.type === "turnStart") {
     div.textContent = `--- ターン ${event.turn} ---`;
   }
-    
-else if (event.type === "faceChange") {
-  updateFacing("board", event.unit, event.facing);
-  div.textContent = `${event.unit} の向きが ${event.facing} に変わった`;
-}
+
+  else if (event.type === "faceChange") {
+    updateFacing("board", event.unit, event.facing);
+    div.textContent = `${event.unit} の向きが ${event.facing} に変わった`;
+  }
+
   else if (event.type === "skillUse") {
-  div.textContent = `${event.unit} が ${event.skill} を使用`;
-}
+    div.textContent = `${event.unit} が ${event.skill} を使用`;
+  }
 
-else if (event.type === "attack") {
-  div.textContent = `${event.from} が ${event.to} を攻撃 (${event.amount})`;
-}
+  else if (event.type === "attack") {
+    div.textContent = `${event.from} が ${event.to} を攻撃 (${event.amount})`;
+  }
 
-else if (event.type === "heal") {
-  div.textContent = `${event.from} が ${event.to} を回復 (${event.amount})`;
-}
+  else if (event.type === "heal") {
+    div.textContent = `${event.from} が ${event.to} を回復 (${event.amount})`;
+  }
 
-else if (event.type === "hpChange") {
-  div.textContent = `${event.target} のHP → ${event.hp}`;
-}
+  else if (event.type === "hpChange") {
+    div.textContent = `${event.target} のHP → ${event.hp}`;
   }
 
   else if (event.type === "death") {
     div.textContent = `${event.target} が倒れた`;
   }
-else if (event.type === "heal") {
-  div.textContent = `${event.target} のHP → ${event.hp} (回復)`;
-}
+
   else if (event.type === "battleEnd") {
     div.textContent = `戦闘終了 勝者: ${event.winner}`;
   }
