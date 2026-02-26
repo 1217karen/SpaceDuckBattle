@@ -58,7 +58,25 @@ function getUnitsInManhattanRange(center, units, range) {
     return dist <= range;
   });
 }
+function getManhattanCells(center, range) {
 
+  const cells = [];
+
+  for (let dx = -range; dx <= range; dx++) {
+    for (let dy = -range; dy <= range; dy++) {
+
+      if (Math.abs(dx) + Math.abs(dy) <= range) {
+
+        cells.push({
+          x: center.x + dx,
+          y: center.y + dy
+        });
+      }
+    }
+  }
+
+  return cells;
+}
 function getUnitsInSameRow(unit, units) {
   return units.filter(u =>
     u.hp > 0 &&
@@ -140,7 +158,8 @@ const context = {
   getUnitsInSameRow,
   getUnitsInSameColumn,
   applyDamage,
-  applyHeal
+  applyHeal,
+  getManhattanCells
 };
 
   let turn = 1;
