@@ -84,6 +84,9 @@ else if (event.type === "faceChange") {
   updateFacing("board", event.unit, event.facing);
   div.textContent = `${event.unit} の向きが ${event.facing} に変わった`;
 }
+  else if (event.type === "skillUse") {
+  div.textContent = `${event.unit} が ${event.skill} を使用`;
+}
   else if (event.type === "attack") {
     div.textContent = `${event.from} が ${event.to} を攻撃 (${event.damage})`;
   }
