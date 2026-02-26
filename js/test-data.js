@@ -4,7 +4,8 @@ export function createTestSnapshot() {
     units: [
 
       {
-        id:"味方１",
+        id:01,
+        name:"味方１",
         team:1,
         hp:30,
         atk:5,
@@ -20,7 +21,8 @@ export function createTestSnapshot() {
       },
 
       {
-        id:"味方２",
+        id:02,
+        name:"味方２",
         team:1,
         hp:10,
         atk:5,
@@ -37,7 +39,8 @@ export function createTestSnapshot() {
       },
 
       {
-        id:"敵１",
+        id:03,
+        name:"敵１",
         team:2,
         hp:30,
         atk:5,
