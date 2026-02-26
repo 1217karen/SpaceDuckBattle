@@ -39,7 +39,7 @@ export function createTestSnapshot() {
         speed:8,
         x:2,
         y:2,
-        facing:"N",
+        facing:"W",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_icon_str_30.webp",
         skills:[
           { type:"attack_nearest" }
