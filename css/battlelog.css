@@ -5,6 +5,28 @@
   border: 1px solid #999;
   position: relative;
 }
+
+#battleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#turnDisplay {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#board {
+  margin-bottom: 10px;
+}
+
+#logArea {
+  width: 500px;
+  min-height: 120px;
+}
+
 .unitWrapper {
   position: relative;
   width: 100%;
