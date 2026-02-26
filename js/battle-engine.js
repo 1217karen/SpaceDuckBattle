@@ -6,7 +6,25 @@ import { skillHandlers } from "./skills.js";
 // ==========================
 // 共通ユーティリティ
 // ==========================
+function getManhattanCells(center, range) {
 
+  const cells = [];
+
+  for (let dx = -range; dx <= range; dx++) {
+    for (let dy = -range; dy <= range; dy++) {
+
+      if (Math.abs(dx) + Math.abs(dy) <= range) {
+
+        cells.push({
+          x: center.x + dx,
+          y: center.y + dy
+        });
+      }
+    }
+  }
+
+  return cells;
+}
 function getAliveUnits(units) {
   return units.filter(u => u.hp > 0);
 }
@@ -57,47 +75,6 @@ function getUnitsInManhattanRange(center, units, range) {
 
     return dist <= range;
   });
-}
-function getManhattanCells(center, range) {
-
-  const cells = [];
-
-  for (let dx = -range; dx <= range; dx++) {
-    for (let dy = -range; dy <= range; dy++) {
-
-      if (Math.abs(dx) + Math.abs(dy) <= range) {
-else {
-
-  // 移動しないが敵方向を向く
-  let newFacing = unit.facing;
-
-  if (Math.abs(dx) >= Math.abs(dy)) {
-    if (dx > 0) newFacing = "E";
-    else if (dx < 0) newFacing = "W";
-  } else {
-    if (dy > 0) newFacing = "S";
-    else if (dy < 0) newFacing = "N";
-  }
-
-  if (newFacing !== unit.facing) {
-    unit.facing = newFacing;
-
-    log.push({
-      type:"faceChange",
-      unit:unit.id,
-      facing:newFacing
-    });
-  }
-}
-        cells.push({
-          x: center.x + dx,
-          y: center.y + dy
-        });
-      }
-    }
-  }
-
-  return cells;
 }
 function getUnitsInSameRow(unit, units) {
   return units.filter(u =>
@@ -250,7 +227,7 @@ const actions = result.actions || [];
 if (actions.length === 0) continue;
 
 const rangeCells = result.preview ? result.preview.cells : null;
-const rangeStyle = result.preview ? result.preview.style : null;;
+const rangeStyle = result.preview ? result.preview.style : null;
 
   // 「効果がある」Action が1つでもあるか
   // ※今は damage/heal だけ。将来 buff/debuff などを足すときここに追加する
@@ -331,7 +308,29 @@ if (absDx >= absDy && dx !== 0) {
         log.push({ type:"move", unit:unit.id, x:newX, y:newY });
         log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
       }
+else {
 
+  let newFacing = unit.facing;
+
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  if (absDx >= absDy && dx !== 0) {
+    newFacing = dx > 0 ? "E" : "W";
+  } else if (dy !== 0) {
+    newFacing = dy > 0 ? "S" : "N";
+  }
+
+  if (newFacing !== unit.facing) {
+    unit.facing = newFacing;
+
+    log.push({
+      type:"faceChange",
+      unit:unit.id,
+      facing:newFacing
+    });
+  }
+}
     }
 
     turn++;
