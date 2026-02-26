@@ -114,6 +114,8 @@ if (ev.type === "turnStart") {
   }
 
   start++;
+  logIndex = start; // ← これ追加（超重要）
+
   continue;
 }
 
@@ -218,7 +220,9 @@ for (let i = 0; i < actionEvents.length; i++) {
     );
   }
 
+if (i !== actionEvents.length - 1) {
   await sleep(500);
+}
 }
 
   logIndex = end;
