@@ -82,12 +82,15 @@ heal_cross2: {
 generateActions(unit, ctx) {
 
   // 実際に回復対象となるユニット
-  const targets =
-    ctx.getUnitsInManhattanRange(
-      unit,
-      ctx.units,
-      2
-    ).filter(u => u.id !== unit.id);
+const targets =
+  ctx.getUnitsInManhattanRange(
+    unit,
+    ctx.units,
+    2
+  ).filter(u =>
+    u.id !== unit.id &&
+    u.team === unit.team
+  );
 
   // 効果対象がいないなら不発
   if (targets.length === 0) return null;
