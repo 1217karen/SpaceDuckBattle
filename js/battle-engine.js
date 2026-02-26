@@ -66,7 +66,29 @@ function getManhattanCells(center, range) {
     for (let dy = -range; dy <= range; dy++) {
 
       if (Math.abs(dx) + Math.abs(dy) <= range) {
+else {
 
+  // 移動しないが敵方向を向く
+  let newFacing = unit.facing;
+
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    if (dx > 0) newFacing = "E";
+    else if (dx < 0) newFacing = "W";
+  } else {
+    if (dy > 0) newFacing = "S";
+    else if (dy < 0) newFacing = "N";
+  }
+
+  if (newFacing !== unit.facing) {
+    unit.facing = newFacing;
+
+    log.push({
+      type:"faceChange",
+      unit:unit.id,
+      facing:newFacing
+    });
+  }
+}
         cells.push({
           x: center.x + dx,
           y: center.y + dy
@@ -287,16 +309,20 @@ if (usedSkill) continue;
         let newY = unit.y;
         let newFacing = unit.facing;
 
-        if (dx !== 0) {
+const absDx = Math.abs(dx);
+const absDy = Math.abs(dy);
 
-          newX += dx > 0 ? 1 : -1;
-          newFacing = dx > 0 ? "E" : "W";
+// 距離が大きい方向を優先
+if (absDx >= absDy && dx !== 0) {
 
-        } else if (dy !== 0) {
+  newX += dx > 0 ? 1 : -1;
+  newFacing = dx > 0 ? "E" : "W";
 
-          newY += dy > 0 ? 1 : -1;
-          newFacing = dy > 0 ? "S" : "N";
-        }
+} else if (dy !== 0) {
+
+  newY += dy > 0 ? 1 : -1;
+  newFacing = dy > 0 ? "S" : "N";
+}
 
         unit.x = newX;
         unit.y = newY;
