@@ -138,7 +138,9 @@ nextBtn.addEventListener("click", async () => {
   // 0.5秒ずつ再生
   // ======================
 
-for (let ev of actionEvents) {
+for (let i = 0; i < actionEvents.length; i++) {
+
+  const ev = actionEvents[i];
 
   // 毎イベント前にハイライトリセット
   document.querySelectorAll(".cell")
@@ -155,12 +157,41 @@ for (let ev of actionEvents) {
       );
     });
 
-  playLogEvent(
-    ev,
-    boardState,
-    logArea,
-    nameMap
-  );
+  // ==========================
+  // move + faceChange 同時処理
+  // ==========================
+
+  if (
+    ev.type === "move" &&
+    i + 1 < actionEvents.length &&
+    actionEvents[i + 1].type === "faceChange"
+  ) {
+    // move 再生
+    playLogEvent(
+      ev,
+      boardState,
+      logArea,
+      nameMap
+    );
+
+    // faceChange もすぐ再生（待たない）
+    playLogEvent(
+      actionEvents[i + 1],
+      boardState,
+      logArea,
+      nameMap
+    );
+
+    i++; // 次のfaceChangeをスキップ
+  }
+  else {
+    playLogEvent(
+      ev,
+      boardState,
+      logArea,
+      nameMap
+    );
+  }
 
   await sleep(500);
 }
