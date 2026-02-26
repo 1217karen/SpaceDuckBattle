@@ -78,13 +78,13 @@ function applyDamage(source, target, amount, ctx) {
     type:"attack",
     from:source.id,
     to:target.id,
-    damage:amount
+    amount:amount
   });
 
   target.hp -= amount;
 
   ctx.log.push({
-    type:"damage",
+    type:"hpChange",
     target:target.id,
     hp:Math.max(target.hp,0)
   });
@@ -100,11 +100,17 @@ function applyDamage(source, target, amount, ctx) {
 
 function applyHeal(source, target, amount, ctx) {
 
-  target.hp += amount;
-
   ctx.log.push({
     type:"heal",
     from:source.id,
+    to:target.id,
+    amount:amount
+  });
+
+  target.hp += amount;
+
+  ctx.log.push({
+    type:"hpChange",
     target:target.id,
     hp:target.hp
   });
