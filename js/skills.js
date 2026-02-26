@@ -57,21 +57,41 @@ heal_cross2: {
 
   generateActions(unit, ctx) {
 
-    const targets =
+    const cells =
       ctx.getUnitsInManhattanRange(
         unit,
         ctx.units,
         2
-      ).filter(u => u.id !== unit.id);
+      );
 
-    if (targets.length === 0) return null;
+    if (cells.length === 0) return null;
 
-    return targets.map(t => ({
-      type:"heal",
-      source:unit.id,
-      target:t.id,
-      amount:5
-    }));
+    const actions = [];
+
+    // ⭐ 範囲表示用
+    actions.push({
+      type:"rangePreview",
+      cells: cells.map(c=>({
+        x:c.x,
+        y:c.y
+      })),
+      style:"heal"
+    });
+
+    // 回復処理
+    for (let t of cells) {
+
+      if (t.id === unit.id) continue;
+
+      actions.push({
+        type:"heal",
+        source:unit.id,
+        target:t.id,
+        amount:5
+      });
+    }
+
+    return actions;
   }
 }
 
