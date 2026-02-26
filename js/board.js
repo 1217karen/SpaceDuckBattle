@@ -80,3 +80,22 @@ export function moveUnit(containerId, unitId, newX, newY) {
 
   targetCell.appendChild(unit);
 }
+export function highlightCell(containerId, x, y, colorClass) {
+
+  const container =
+    document.getElementById(containerId);
+
+  const cell =
+    container.querySelector(
+      `[data-x="${x}"][data-y="${y}"]`
+    );
+
+  if (!cell) return;
+
+  cell.classList.add(colorClass);
+
+  // 一瞬だけ表示（600ms）
+  setTimeout(() => {
+    cell.classList.remove(colorClass);
+  }, 600);
+}
