@@ -99,3 +99,29 @@ export function highlightCell(containerId, x, y, colorClass) {
     cell.classList.remove(colorClass);
   }, 600);
 }
+export function highlightCells(containerId, cells, className) {
+
+  const container =
+    document.getElementById(containerId);
+
+  const highlighted = [];
+
+  for (let c of cells) {
+
+    const cell =
+      container.querySelector(
+        `[data-x="${c.x}"][data-y="${c.y}"]`
+      );
+
+    if (!cell) continue;
+
+    cell.classList.add(className);
+    highlighted.push(cell);
+  }
+
+  setTimeout(()=>{
+    highlighted.forEach(cell=>{
+      cell.classList.remove(className);
+    });
+  },600);
+}
