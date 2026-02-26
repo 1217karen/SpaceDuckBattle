@@ -166,38 +166,65 @@ const context = {
         return log;
       }
 
-      // ====================
-      // スキル判定
-      // ====================
+// ====================
+// スキル判定
+// ====================
 
-      let usedSkill = false;
+let usedSkill = false;
 
- for (let skill of (unit.skills || [])) {
+for (let skill of (unit.skills || [])) {
 
   const handler = skillHandlers[skill.type];
 
   if (!handler) continue;
 
-  if (handler.canUse(unit, context)) {
-
-    // 自動スキルログ
-    log.push({
-      type:"skillUse",
-      unit:unit.id,
-      skill:skill.type
-    });
-
   const actions =
-  handler.generateActions(unit, context);
+    handler.generateActions(unit, context);
 
-if (!actions) continue;
+  if (!actions) continue;
 
-// 自動スキルログ
-log.push({
-  type:"skillUse",
-  unit:unit.id,
-  skill:skill.type
-});
+  // ⭐ 自動スキルログ（ここだけ）
+  log.push({
+    type:"skillUse",
+    unit:unit.id,
+    skill:skill.type
+  });
+
+  // action実行
+  for (let action of actions) {
+
+    const source =
+      units.find(u => u.id === action.source);
+
+    const target =
+      units.find(u => u.id === action.target);
+
+    if (!source || !target) continue;
+
+    if (action.type === "damage") {
+
+      context.applyDamage(
+        source,
+        target,
+        action.amount,
+        context
+      );
+    }
+
+    else if (action.type === "heal") {
+
+      context.applyHeal(
+        source,
+        target,
+        action.amount,
+        context
+      );
+    }
+  }
+
+  usedSkill = true;
+  break;
+}
 
 // action実行
 for (let action of actions) {
