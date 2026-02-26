@@ -10,6 +10,7 @@ import { playLogEvent }
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+const turnDisplay = document.getElementById("turnDisplay");
 // =====================
 // ログ取得（最初にやる）
 // =====================
@@ -106,11 +107,15 @@ while (start < battleLog.length) {
 
   const ev = battleLog[start];
 
-  if (ev.type === "turnStart") {
-    playLogEvent(ev, boardState, logArea, nameMap);
-    start++;
-    continue;
+if (ev.type === "turnStart") {
+
+  if (turnDisplay) {
+    turnDisplay.textContent = `TURN ${ev.turn}`;
   }
+
+  start++;
+  continue;
+}
 
   if (ev.type === "skillUse" || ev.type === "move") {
     break;
