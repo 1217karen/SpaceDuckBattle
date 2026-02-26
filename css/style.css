@@ -70,32 +70,6 @@
   background-color: rgba(0,255,0,0.4);
 }
 
-.unit {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-}
-.unitWrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.unitImage {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.facingMarker {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  font-size: 16px;
-  font-weight: bold;
-  pointer-events: none;
-}
 .buffHighlight {
   background-color: rgba(255, 230, 0, 0.6);
 }
