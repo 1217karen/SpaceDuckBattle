@@ -375,8 +375,8 @@ else if (action.type === "applyEffect") {
 }
   }
 // 使用したスキルにCTをセット
-if (skill.cooldown && skill.cooldown > 0) {
-  skill._currentCooldown = skill.cooldown;
+if (handler.cooldown && handler.cooldown > 0) {
+  skill._currentCooldown = handler.cooldown;
 }
   usedSkill = true;
   break;
