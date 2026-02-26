@@ -80,3 +80,19 @@
 .cell.debuffHighlight {
   background-color: rgba(180, 0, 255, 0.6);
 }
+
+.cell.attackRange {
+  background-color: rgba(255,0,0,0.15);
+}
+
+.cell.healRange {
+  background-color: rgba(0,255,0,0.15);
+}
+
+.cell.buffRange {
+  background-color: rgba(255, 230, 0, 0.2);
+}
+
+.cell.debuffRange {
+  background-color: rgba(180, 0, 255, 0.2);
+}
