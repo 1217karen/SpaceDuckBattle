@@ -19,16 +19,20 @@ generateActions(unit, ctx) {
   if (unit.facing === "E") x += 1;
   if (unit.facing === "W") x -= 1;
 
-  return [{
-    type:"damage",
-    source:unit.id,
-    target:target.id,
-    amount:unit.atk,
+  return {
     preview:{
       cells:[{x,y}],
       style:"attack"
-    }
-  }];
+    },
+    actions:[
+      {
+        type:"damage",
+        source:unit.id,
+        target:target.id,
+        amount:unit.atk
+      }
+    ]
+  };
 }
 },
 
@@ -51,16 +55,20 @@ generateActions(unit, ctx) {
 
   if (dist !== 1) return null;
 
-  return [{
-    type:"damage",
-    source:unit.id,
-    target:target.id,
-    amount:unit.atk,
+  return {
     preview:{
       cells:[{ x:target.x, y:target.y }],
       style:"attack"
-    }
-  }];
+    },
+    actions:[
+      {
+        type:"damage",
+        source:unit.id,
+        target:target.id,
+        amount:unit.atk
+      }
+    ]
+  };
 }
 },
 
@@ -71,43 +79,43 @@ generateActions(unit, ctx) {
 
 heal_cross2: {
 
-  generateActions(unit, ctx) {
+generateActions(unit, ctx) {
 
-    // 実際に回復対象となるユニット
-    const targets =
-      ctx.getUnitsInManhattanRange(
-        unit,
-        ctx.units,
-        2
-      ).filter(u => u.id !== unit.id);
+  // 実際に回復対象となるユニット
+  const targets =
+    ctx.getUnitsInManhattanRange(
+      unit,
+      ctx.units,
+      2
+    ).filter(u => u.id !== unit.id);
 
-    // 効果対象がいないなら不発
-    if (targets.length === 0) return null;
+  // 効果対象がいないなら不発
+  if (targets.length === 0) return null;
 
-    const actions = [];
+  // 範囲表示（座標）
+  const cells =
+    ctx.getManhattanCells(unit, 2);
 
-    // 範囲表示（座標）
-    const cells =
-      ctx.getManhattanCells(unit, 2);
+  const actions = [];
 
+  for (let t of targets) {
 
-    // 実際の回復（ユニット）
-    for (let t of targets) {
-
-actions.push({
-  type:"heal",
-  source:unit.id,
-  target:t.id,
-  amount:5,
-  preview:{
-    cells: cells,
-    style:"heal"
+    actions.push({
+      type:"heal",
+      source:unit.id,
+      target:t.id,
+      amount:5
+    });
   }
-});
-    }
 
-    return actions;
-  }
+  return {
+    preview:{
+      cells: cells,
+      style:"heal"
+    },
+    actions: actions
+  };
+};
 }
 
 };
