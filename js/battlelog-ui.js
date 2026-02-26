@@ -38,9 +38,11 @@ export function playLogEvent(
     if (event.rangeCells) {
 
       const cls =
-  event.rangeStyle === "heal"
-    ? "healRange"
-    : "attackRange";
+let cls = "attackRange";
+
+if (event.rangeStyle === "heal") cls = "healRange";
+if (event.rangeStyle === "buff") cls = "buffRange";
+if (event.rangeStyle === "debuff") cls = "debuffRange";
 
       highlightCells(
         "board",
