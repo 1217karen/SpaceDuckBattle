@@ -138,17 +138,32 @@ nextBtn.addEventListener("click", async () => {
   // 0.5秒ずつ再生
   // ======================
 
-  for (let ev of actionEvents) {
+for (let ev of actionEvents) {
 
-    playLogEvent(
-      ev,
-      boardState,
-      logArea,
-      nameMap
-    );
+  // 毎イベント前にハイライトリセット
+  document.querySelectorAll(".cell")
+    .forEach(cell => {
+      cell.classList.remove(
+        "attackRange",
+        "healRange",
+        "buffRange",
+        "debuffRange",
+        "attackHighlight",
+        "healHighlight",
+        "buffHighlight",
+        "debuffHighlight"
+      );
+    });
 
-    await sleep(500);
-  }
+  playLogEvent(
+    ev,
+    boardState,
+    logArea,
+    nameMap
+  );
+
+  await sleep(500);
+}
 
   logIndex = end;
   nextBtn.disabled = false;
