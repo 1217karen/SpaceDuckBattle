@@ -13,12 +13,6 @@ export const skillHandlers = {
 
     execute(unit, ctx) {
 
-      ctx.log.push({
-        type: "skillUse",
-        unit: unit.id,
-        skill: "attack_front1"
-      });
-
       const target = getFrontTarget(unit, ctx);
       if (!target) return;
 
@@ -52,12 +46,6 @@ export const skillHandlers = {
     },
 
     execute(unit, ctx) {
-
-      ctx.log.push({
-        type:"skillUse",
-        unit:unit.id,
-        skill:"attack_nearest"
-      });
 
       const target =
         ctx.getNearestEnemy(unit, ctx.units);
@@ -95,13 +83,6 @@ export const skillHandlers = {
     },
 
     execute(unit, ctx) {
-
-      ctx.log.push({
-        type:"skillUse",
-        unit:unit.id,
-        skill:"heal_cross2"
-      });
-
       const targets =
         ctx.getUnitsInManhattanRange(
           unit,
