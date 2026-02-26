@@ -139,16 +139,31 @@ function applyDamage(source, target, action, ctx) {
   }
 }
 
-function applyHeal(source, target, amount, ctx) {
+function applyHeal(source, target, action, ctx) {
+
+  let finalHeal = 0;
+
+  const power = action.power || 0;
+  const type = action.healType || "fixed";
+
+  if (type === "fixed") {
+    finalHeal = power;
+  }
+
+  else if (type === "scale") {
+    const atk = source.atk || 0;
+    finalHeal = atk + power;
+  }
+
+  target.hp += finalHeal;
 
   ctx.log.push({
     type:"heal",
     from:source.id,
     to:target.id,
-    amount:amount
+    amount:finalHeal,
+    healType:type
   });
-
-  target.hp += amount;
 
   ctx.log.push({
     type:"hpChange",
@@ -259,7 +274,7 @@ const rangeStyle = result.preview ? result.preview.style : null;
     if (action.type === "damage") {
       context.applyDamage(source, target, action, context);
     } else if (action.type === "heal") {
-      context.applyHeal(source, target, action.amount, context);
+      context.applyHeal(source, target, action, context);
     }
   }
 
