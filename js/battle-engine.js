@@ -182,16 +182,25 @@ for (let skill of (unit.skills || [])) {
 
   if (!actions) continue;
 
-  // ⭐ 自動スキルログ
+  // 自動スキルログ
   log.push({
     type:"skillUse",
     unit:unit.id,
     skill:skill.type
   });
 
-  // ⭐ action実行（ここは1回だけ）
+  // action実行
   for (let action of actions) {
+if (action.type === "rangePreview") {
 
+  log.push({
+    type:"rangePreview",
+    cells:action.cells,
+    style:action.style
+  });
+
+  continue;
+}
     const source =
       units.find(u => u.id === action.source);
 
