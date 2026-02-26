@@ -37,17 +37,20 @@ export function playLogEvent(
 
     if (event.rangeCells) {
 
-      let cls = "attackRange";
+let cls = null;
 
-      if (event.rangeStyle === "heal") cls = "healRange";
-      if (event.rangeStyle === "buff") cls = "buffRange";
-      if (event.rangeStyle === "debuff") cls = "debuffRange";
+if (event.rangeStyle === "attack") cls = "attackRange";
+if (event.rangeStyle === "heal") cls = "healRange";
+if (event.rangeStyle === "buff") cls = "buffRange";
+if (event.rangeStyle === "debuff") cls = "debuffRange";
 
-      highlightCells(
-        "board",
-        event.rangeCells,
-        cls
-      );
+if (cls) {
+  highlightCells(
+    "board",
+    event.rangeCells,
+    cls
+  );
+}
     }
   }
 
