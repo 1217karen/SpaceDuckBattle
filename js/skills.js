@@ -122,8 +122,48 @@ const targets =
     actions: actions
   };
 }
+},
+  
+  // =========================
+  // 自分にバフ
+  // =========================
+
+buff_self_if_alone: {
+
+generateActions(unit, ctx) {
+
+  // 周囲1マス以内の他ユニット取得
+  const nearby =
+    ctx.getUnitsInManhattanRange(
+      unit,
+      ctx.units,
+      1
+    ).filter(u => u.id !== unit.id);
+
+  // 誰もいなければ発動
+  if (nearby.length !== 0) return null;
+
+  return {
+    preview:{
+      cells:[{x:unit.x, y:unit.y}],
+      style:"heal"
+    },
+    actions:[
+      {
+        type:"applyEffect",
+        source:unit.id,
+        target:unit.id,
+        effect:{
+          stat:"atk",
+          value:5,
+          duration:null
+        }
+      }
+    ]
+  };
 }
 
+}
 };
 // =======================
 // 前方ターゲット取得
