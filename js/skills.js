@@ -44,7 +44,7 @@ if (target.team === unit.team) return null;
   // =========================
 
   attack_nearest: {
-
+cooldown: 2,
 generateActions(unit, ctx) {
 
   const target =
@@ -81,7 +81,7 @@ generateActions(unit, ctx) {
   // =========================
 
 heal_cross2: {
-
+cooldown: 1,
 generateActions(unit, ctx) {
 
   // 実際に回復対象となるユニット
@@ -130,7 +130,7 @@ const targets =
   // =========================
 
 buff_self_if_alone: {
-
+cooldown: 3,
 generateActions(unit, ctx) {
 
   // 周囲1マス以内の他ユニット取得
