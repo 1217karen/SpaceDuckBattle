@@ -11,7 +11,6 @@ generateActions(unit, ctx) {
   const target = getFrontTarget(unit, ctx);
   if (!target) return null;
 
-  // ⭐ 前方1マスの座標を作る
   let x = unit.x;
   let y = unit.y;
 
@@ -20,23 +19,16 @@ generateActions(unit, ctx) {
   if (unit.facing === "E") x += 1;
   if (unit.facing === "W") x -= 1;
 
-  return [
-
-    // ⭐ 範囲表示
-    {
-      type:"rangePreview",
-      cells:[{ x, y }],
+  return [{
+    type:"damage",
+    source:unit.id,
+    target:target.id,
+    amount:unit.atk,
+    preview:{
+      cells:[{x,y}],
       style:"attack"
-    },
-
-    // ⭐ 実際の攻撃
-    {
-      type:"damage",
-      source:unit.id,
-      target:target.id,
-      amount:unit.atk
     }
-  ];
+  }];
 }
 },
 
@@ -59,22 +51,16 @@ generateActions(unit, ctx) {
 
   if (dist !== 1) return null;
 
-  return [
-
-    // ⭐ 範囲表示（対象のマス）
-    {
-      type:"rangePreview",
+  return [{
+    type:"damage",
+    source:unit.id,
+    target:target.id,
+    amount:unit.atk,
+    preview:{
       cells:[{ x:target.x, y:target.y }],
       style:"attack"
-    },
-
-    {
-      type:"damage",
-      source:unit.id,
-      target:target.id,
-      amount:unit.atk
     }
-  ];
+  }];
 }
 },
 
@@ -100,25 +86,24 @@ heal_cross2: {
 
     const actions = [];
 
-    // ⭐ 範囲表示（座標）
+    // 範囲表示（座標）
     const cells =
       ctx.getManhattanCells(unit, 2);
 
-    actions.push({
-      type:"rangePreview",
-      cells: cells,
-      style:"heal"
-    });
 
-    // ⭐ 実際の回復（ユニット）
+    // 実際の回復（ユニット）
     for (let t of targets) {
 
-      actions.push({
-        type:"heal",
-        source:unit.id,
-        target:t.id,
-        amount:5
-      });
+actions.push({
+  type:"heal",
+  source:unit.id,
+  target:t.id,
+  amount:5,
+  preview:{
+    cells: cells,
+    style:"heal"
+  }
+});
     }
 
     return actions;
