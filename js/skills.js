@@ -25,6 +25,11 @@ export const skillHandlers = {
         ctx
       );
     }
+    ctx.log.push({
+  type:"skillUse",
+  unit:unit.id,
+  skill:"attack_front1"
+});
   },
 
 
@@ -61,6 +66,11 @@ export const skillHandlers = {
         ctx
       );
     }
+    ctx.log.push({
+  type:"skillUse",
+  unit:unit.id,
+  skill:"attack_nearest"
+});
   },
 
 
@@ -105,6 +115,11 @@ export const skillHandlers = {
         );
       }
     }
+    ctx.log.push({
+  type:"skillUse",
+  unit:unit.id,
+  skill:"heal_cross2"
+});
   }
 
 };
