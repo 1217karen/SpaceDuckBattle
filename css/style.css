@@ -22,46 +22,49 @@
 
 .facingMarker {
   position: absolute;
-  width: 0;
-  height: 0;
+  inset: 0;
+  pointer-events: none;
 }
 
-/* 三角形（上向きベース） */
 .facingMarker::before {
   content: "";
   position: absolute;
+
   width: 0;
   height: 0;
+
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-bottom: 12px solid white;
+
+  filter: drop-shadow(0 0 2px black);
 }
 
 /* 向きごとの位置＋回転 */
-
 .face-N::before {
-  top: 2px;
+  top: 4px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .face-S::before {
-  bottom: 2px;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
 }
 
 .face-E::before {
-  right: 2px;
+  right: 4px;
   top: 50%;
   transform: translateY(-50%) rotate(90deg);
 }
 
 .face-W::before {
-  left: 2px;
+  left: 4px;
   top: 50%;
   transform: translateY(-50%) rotate(-90deg);
 }
+
 .cell.attackHighlight {
   background-color: rgba(255,0,0,0.4);
 }
