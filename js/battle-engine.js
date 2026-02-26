@@ -90,16 +90,41 @@ function getUnitsInSameColumn(unit, units) {
     u.x === unit.x
   );
 }
-function applyDamage(source, target, amount, ctx) {
+function applyDamage(source, target, action, ctx) {
+
+  let finalDamage = 0;
+
+  const power = action.power || 0;
+  const type = action.damageType || "normal";
+
+  if (type === "normal") {
+    const atk = source.atk || 0;
+    const df = target.df || 0;
+    finalDamage = Math.max(atk + power - df, 0);
+  }
+
+  else if (type === "pierce") {
+    const atk = source.atk || 0;
+    finalDamage = atk + power;
+  }
+
+  else if (type === "fixed") {
+    finalDamage = power;
+  }
+
+  else if (type === "effect") {
+    finalDamage = power;
+  }
+
+  target.hp -= finalDamage;
 
   ctx.log.push({
     type:"attack",
     from:source.id,
     to:target.id,
-    amount:amount
+    amount:finalDamage,
+    damageType:type
   });
-
-  target.hp -= amount;
 
   ctx.log.push({
     type:"hpChange",
@@ -108,7 +133,6 @@ function applyDamage(source, target, amount, ctx) {
   });
 
   if (target.hp <= 0) {
-
     ctx.log.push({
       type:"death",
       target:target.id
@@ -234,7 +258,7 @@ const rangeStyle = result.preview ? result.preview.style : null;;
     if (!source || !target) continue;
 
     if (action.type === "damage") {
-      context.applyDamage(source, target, action.amount, context);
+      context.applyDamage(source, target, action, context);
     } else if (action.type === "heal") {
       context.applyHeal(source, target, action.amount, context);
     }
