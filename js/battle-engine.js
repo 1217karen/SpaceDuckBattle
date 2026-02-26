@@ -198,10 +198,17 @@ for (let skill of (unit.skills || [])) {
   const actions = handler.generateActions(unit, context);
   if (!actions || actions.length === 0) continue;
 
-  // rangePreview を取り出す（?. を使わない）
-  const preview = actions.find(a => a.type === "rangePreview");
-  const rangeCells = preview ? preview.cells : null;
-  const rangeStyle = preview ? preview.style : null;
+let rangeCells = null;
+let rangeStyle = null;
+
+// action内の preview を自動収集
+for (let a of actions) {
+  if (a.preview) {
+    rangeCells = a.preview.cells || null;
+    rangeStyle = a.preview.style || null;
+    break;
+  }
+}
 
   // 「効果がある」Action が1つでもあるか
   // ※今は damage/heal だけ。将来 buff/debuff などを足すときここに追加する
