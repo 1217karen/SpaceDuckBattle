@@ -17,14 +17,6 @@ export function playLogEvent(
 
   const div = document.createElement("div");
   
-// 行動開始表示（skillUse または move のとき）
-if (event.type === "skillUse" || event.type === "move") {
-  const header = document.createElement("div");
-  const displayName = nameMap?.[event.unit] || event.unit;
-  header.textContent = `▶ ${displayName} の行動`;
-  header.classList.add("actionHeader");
-  logArea.appendChild(header);
-}
 if (event.type === "turnStart") {
 
   const turnDisplay =
