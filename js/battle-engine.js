@@ -172,20 +172,27 @@ const context = {
 
       let usedSkill = false;
 
-      for (let skill of (unit.skills || [])) {
+ for (let skill of (unit.skills || [])) {
 
-        const handler = skillHandlers[skill.type];
+  const handler = skillHandlers[skill.type];
 
-        if (!handler) continue;
+  if (!handler) continue;
 
-        if (handler.canUse(unit, context)) {
+  if (handler.canUse(unit, context)) {
 
-          handler.execute(unit, context);
+    // 自動スキルログ
+    log.push({
+      type:"skillUse",
+      unit:unit.id,
+      skill:skill.type
+    });
 
-          usedSkill = true;
-          break;
-        }
-      }
+    handler.execute(unit, context);
+
+    usedSkill = true;
+    break;
+  }
+}
 
       if (usedSkill) continue;
 
