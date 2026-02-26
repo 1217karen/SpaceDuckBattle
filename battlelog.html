@@ -81,11 +81,14 @@ nextBtn.addEventListener("click", () => {
 document.querySelectorAll(".cell")
   .forEach(cell => {
     cell.classList.remove(
+      "attackRange",
+      "healRange",
+      "buffRange",
+      "debuffRange",
       "attackHighlight",
       "healHighlight",
       "buffHighlight",
-      "debuffHighlight",
-      "rangeHighlight"
+      "debuffHighlight"
     );
   });
   if (logIndex >= battleLog.length) return;
