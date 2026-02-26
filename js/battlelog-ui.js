@@ -138,7 +138,7 @@ else if (event.type === "effectApplied") {
   
   else if (event.type === "death") {
     div.textContent =
-      `${event.target} が倒れた`;
+      `${displayName(event.unit, nameMap)} が倒れた`;
   }
 
   else if (event.type === "battleEnd") {
@@ -162,7 +162,7 @@ else if (event.type === "effectApplied") {
       event.y;
 
     div.textContent =
-      `${event.unit} が (${event.x},${event.y}) に移動`;
+      `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
   }
 
   logArea.appendChild(div);
