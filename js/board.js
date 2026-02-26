@@ -4,8 +4,8 @@ export function createBoard(containerId, width, height) {
   container.innerHTML = "";
 
   container.style.display = "grid";
-  container.style.gridTemplateColumns = `repeat(${width}, 60px)`;
-  container.style.gridTemplateRows = `repeat(${height}, 60px)`;
+container.style.gridTemplateColumns = `repeat(${width}, 80px)`;
+container.style.gridTemplateRows = `repeat(${height}, 80px)`;
   container.style.gap = "2px";
 
   for (let y = 0; y < height; y++) {
@@ -32,13 +32,12 @@ export function placeUnit(containerId, unit) {
   wrapper.classList.add("unitWrapper");
   wrapper.dataset.unitId = unit.id;
 
-  const img = document.createElement("img");
-  img.src = unit.icon;
-  img.classList.add("unitImage");
+const img = document.createElement("img");
+img.src = unit.icon;
+img.classList.add("unitImage");
 
-  const marker = document.createElement("div");
-  marker.classList.add("facingMarker");
-  marker.textContent = "▲"; // 初期向きN想定
+const marker = document.createElement("div");
+marker.classList.add("facingMarker", "face-N");
 
   wrapper.appendChild(img);
   wrapper.appendChild(marker);
@@ -59,10 +58,8 @@ export function updateFacing(containerId, unitId, facing) {
 
   if (!marker) return;
 
-  if (facing === "N") marker.textContent = "▲";
-  if (facing === "S") marker.textContent = "▼";
-  if (facing === "E") marker.textContent = "▶";
-  if (facing === "W") marker.textContent = "◀";
+marker.classList.remove("face-N","face-S","face-E","face-W");
+marker.classList.add("face-" + facing);
 }
 export function moveUnit(containerId, unitId, newX, newY) {
 
