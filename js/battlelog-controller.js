@@ -228,3 +228,6 @@ for (let i = 0; i < actionEvents.length; i++) {
     await sleep(500);
   }
 }
+  logIndex = end;
+  nextBtn.disabled = false;
+});
