@@ -6,24 +6,19 @@ export const skillHandlers = {
 
   attack_front1: {
 
-    canUse(unit, ctx) {
-      const target = getFrontTarget(unit, ctx);
-      return !!target;
-    },
+  generateActions(unit, ctx) {
 
-    execute(unit, ctx) {
+    const target = getFrontTarget(unit, ctx);
+    if (!target) return null;
 
-      const target = getFrontTarget(unit, ctx);
-      if (!target) return;
-
-      ctx.applyDamage(
-        unit,
-        target,
-        unit.atk,
-        ctx
-      );
-    }
-  },
+    return [{
+      type:"damage",
+      source:unit.id,
+      target:target.id,
+      amount:unit.atk
+    }];
+  }
+},
 
 
   // =========================
@@ -32,77 +27,53 @@ export const skillHandlers = {
 
   attack_nearest: {
 
-    canUse(unit, ctx) {
+  generateActions(unit, ctx) {
 
-      const target =
-        ctx.getNearestEnemy(unit, ctx.units);
+    const target =
+      ctx.getNearestEnemy(unit, ctx.units);
 
-      if (!target) return false;
+    if (!target) return null;
 
-      const dist =
-        ctx.getDistance(unit, target);
+    const dist =
+      ctx.getDistance(unit, target);
 
-      return dist === 1;
-    },
+    if (dist !== 1) return null;
 
-    execute(unit, ctx) {
-
-      const target =
-        ctx.getNearestEnemy(unit, ctx.units);
-
-      if (!target) return;
-
-      ctx.applyDamage(
-        unit,
-        target,
-        unit.atk,
-        ctx
-      );
-    }
-  },
+    return [{
+      type:"damage",
+      source:unit.id,
+      target:target.id,
+      amount:unit.atk
+    }];
+  }
+},
 
 
   // =========================
   // 縦横2マス回復
   // =========================
 
-  heal_cross2: {
+heal_cross2: {
 
-    canUse(unit, ctx) {
+  generateActions(unit, ctx) {
 
-      const targets =
-        ctx.getUnitsInManhattanRange(
-          unit,
-          ctx.units,
-          2
-        ).filter(u =>
-          u.id !== unit.id
-        );
+    const targets =
+      ctx.getUnitsInManhattanRange(
+        unit,
+        ctx.units,
+        2
+      ).filter(u => u.id !== unit.id);
 
-      return targets.length > 0;
-    },
+    if (targets.length === 0) return null;
 
-    execute(unit, ctx) {
-      const targets =
-        ctx.getUnitsInManhattanRange(
-          unit,
-          ctx.units,
-          2
-        ).filter(u =>
-          u.id !== unit.id
-        );
-
-      for (let t of targets) {
-
-        ctx.applyHeal(
-          unit,
-          t,
-          5,
-          ctx
-        );
-      }
-    }
+    return targets.map(t => ({
+      type:"heal",
+      source:unit.id,
+      target:t.id,
+      amount:5
+    }));
   }
+}
 
 };
 // =======================
