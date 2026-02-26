@@ -67,7 +67,7 @@ generateActions(unit, ctx) {
   source:unit.id,
   target:target.id,
   power:0,
-  damageType:"pierce"
+  damageType:"normal"
 }
     ]
   };
