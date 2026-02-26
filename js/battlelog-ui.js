@@ -17,19 +17,6 @@ export function playLogEvent(
 
   const div = document.createElement("div");
   
-if (event.type === "turnStart") {
-
-  const turnDisplay =
-    document.getElementById("turnDisplay");
-
-  if (turnDisplay) {
-    turnDisplay.textContent =
-      `TURN ${event.turn}`;
-  }
-
-  return; // ログには追加しない
-}
-
 else if (event.type === "faceChange") {
 
   updateFacing(
