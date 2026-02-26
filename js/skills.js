@@ -6,18 +6,38 @@ export const skillHandlers = {
 
   attack_front1: {
 
-  generateActions(unit, ctx) {
+generateActions(unit, ctx) {
 
-    const target = getFrontTarget(unit, ctx);
-    if (!target) return null;
+  const target = getFrontTarget(unit, ctx);
+  if (!target) return null;
 
-    return [{
+  // ⭐ 前方1マスの座標を作る
+  let x = unit.x;
+  let y = unit.y;
+
+  if (unit.facing === "N") y -= 1;
+  if (unit.facing === "S") y += 1;
+  if (unit.facing === "E") x += 1;
+  if (unit.facing === "W") x -= 1;
+
+  return [
+
+    // ⭐ 範囲表示
+    {
+      type:"rangePreview",
+      cells:[{ x, y }],
+      style:"attack"
+    },
+
+    // ⭐ 実際の攻撃
+    {
       type:"damage",
       source:unit.id,
       target:target.id,
       amount:unit.atk
-    }];
-  }
+    }
+  ];
+}
 },
 
 
@@ -27,25 +47,35 @@ export const skillHandlers = {
 
   attack_nearest: {
 
-  generateActions(unit, ctx) {
+generateActions(unit, ctx) {
 
-    const target =
-      ctx.getNearestEnemy(unit, ctx.units);
+  const target =
+    ctx.getNearestEnemy(unit, ctx.units);
 
-    if (!target) return null;
+  if (!target) return null;
 
-    const dist =
-      ctx.getDistance(unit, target);
+  const dist =
+    ctx.getDistance(unit, target);
 
-    if (dist !== 1) return null;
+  if (dist !== 1) return null;
 
-    return [{
+  return [
+
+    // ⭐ 範囲表示（対象のマス）
+    {
+      type:"rangePreview",
+      cells:[{ x:target.x, y:target.y }],
+      style:"attack"
+    },
+
+    {
       type:"damage",
       source:unit.id,
       target:target.id,
       amount:unit.atk
-    }];
-  }
+    }
+  ];
+}
 },
 
 
