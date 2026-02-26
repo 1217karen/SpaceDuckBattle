@@ -207,11 +207,27 @@ function applyEffect(source, target, action, ctx) {
   const effectData = action.effect;
   if (!effectData) return;
 
+  // 永続のみ扱う（flat前提）
+  if (effectData.duration !== null) return;
+
+  const stackKey = effectData.stat + "_flat";
+  const DIMINISH = 0.75;
+
+  const stackCount = (target.effects || []).filter(
+    e => e.stackKey === stackKey
+  ).length;
+
+  const finalValue =
+    effectData.value *
+    Math.pow(DIMINISH, stackCount);
+
   const newEffect = {
+    category:"permanent",
     stat: effectData.stat,
-    mode: effectData.mode,
-    value: effectData.value,
-    duration: effectData.duration ?? null
+    mode:"flat",
+    value: finalValue,
+    duration:null,
+    stackKey: stackKey
   };
 
   if (!target.effects) {
