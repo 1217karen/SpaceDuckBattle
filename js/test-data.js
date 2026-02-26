@@ -30,7 +30,10 @@ export function createTestSnapshot() {
         y:2,
         facing:"N",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima3_icon_22.webp",
-        skills:[{type:"attack_front1"}]
+        skills:[
+  { type:"buff_self_if_alone" },
+  { type:"attack_front1" }
+]
       },
 
       {
