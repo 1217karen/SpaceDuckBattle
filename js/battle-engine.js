@@ -89,6 +89,37 @@ function getUnitsInSameColumn(unit, units) {
     u.x === unit.x
   );
 }
+
+function getEffectiveStat(unit, statName) {
+
+  const base = unit[statName] || 0;
+
+  if (!unit.effects || unit.effects.length === 0) {
+    return base;
+  }
+
+  let flatBonus = 0;
+  let rateBonus = 0;
+
+  for (let effect of unit.effects) {
+
+    if (effect.stat !== statName) continue;
+
+    if (effect.mode === "flat") {
+      flatBonus += effect.value;
+    }
+
+    if (effect.mode === "rate") {
+      rateBonus += effect.value;
+    }
+  }
+
+  const afterFlat = base + flatBonus;
+  const finalValue = afterFlat * (1 + rateBonus);
+
+  return finalValue;
+}
+
 function applyDamage(source, target, action, ctx) {
 
   let finalDamage = 0;
@@ -97,14 +128,14 @@ function applyDamage(source, target, action, ctx) {
   const type = action.damageType || "normal";
 
   if (type === "normal") {
-    const atk = source.atk || 0;
-    const df = target.df || 0;
-    finalDamage = Math.max(atk + power - df, 0);
+const atk = getEffectiveStat(source, "atk");
+const df = getEffectiveStat(target, "df");
+finalDamage = Math.max(atk + power - df, 0);
   }
 
   else if (type === "pierce") {
-    const atk = source.atk || 0;
-    finalDamage = atk + power;
+const atk = getEffectiveStat(source, "atk");
+finalDamage = atk + power;
   }
 
   else if (type === "fixed") {
@@ -171,6 +202,31 @@ function applyHeal(source, target, action, ctx) {
     hp:target.hp
   });
 }
+function applyEffect(source, target, action, ctx) {
+
+  const effectData = action.effect;
+  if (!effectData) return;
+
+  const newEffect = {
+    stat: effectData.stat,
+    mode: effectData.mode,
+    value: effectData.value,
+    duration: effectData.duration ?? null
+  };
+
+  if (!target.effects) {
+    target.effects = [];
+  }
+
+  target.effects.push(newEffect);
+
+  ctx.log.push({
+    type:"effectApplied",
+    from:source.id,
+    to:target.id,
+    effect:newEffect
+  });
+}
 // ==========================
 // メイン
 // ==========================
@@ -180,7 +236,10 @@ export function simulateBattle(snapshot) {
   const log = [];
 
   // snapshotをコピー
-  const units = snapshot.units.map(u => ({ ...u }));
+const units = snapshot.units.map(u => ({
+  ...u,
+  effects: []
+}));
 
   // 行動順固定
   units.sort((a,b)=>b.speed-a.speed);
@@ -195,8 +254,10 @@ const context = {
   getUnitsInManhattanRange,
   getUnitsInSameRow,
   getUnitsInSameColumn,
+  getEffectiveStat,
   applyDamage,
   applyHeal,
+  applyEffect,
   getManhattanCells
 };
 
@@ -244,11 +305,12 @@ if (actions.length === 0) continue;
 const rangeCells = result.preview ? result.preview.cells : null;
 const rangeStyle = result.preview ? result.preview.style : null;
 
-  // 「効果がある」Action が1つでもあるか
-  // ※今は damage/heal だけ。将来 buff/debuff などを足すときここに追加する
-  const hasEffect = actions.some(a =>
-    a.type === "damage" || a.type === "heal"
-  );
+  // 「効果がある」Action が1つでもあるか。足すときここに追加する
+const hasEffect = actions.some(a =>
+  a.type === "damage" ||
+  a.type === "heal" ||
+  a.type === "applyEffect"
+);
 
   // 効果がないなら「使えなかった扱い」にして次のスキルへ（移動に回せる）
   if (!hasEffect) continue;
@@ -265,17 +327,25 @@ const rangeStyle = result.preview ? result.preview.style : null;
   // action実行（rangePreview は実行しない）
   for (let action of actions) {
 
-    if (action.type !== "damage" && action.type !== "heal") continue;
+if (
+  action.type !== "damage" &&
+  action.type !== "heal" &&
+  action.type !== "applyEffect"
+) continue;
 
     const source = units.find(u => u.id === action.source);
     const target = units.find(u => u.id === action.target);
     if (!source || !target) continue;
 
-    if (action.type === "damage") {
-      context.applyDamage(source, target, action, context);
-    } else if (action.type === "heal") {
-      context.applyHeal(source, target, action, context);
-    }
+if (action.type === "damage") {
+  context.applyDamage(source, target, action, context);
+}
+else if (action.type === "heal") {
+  context.applyHeal(source, target, action, context);
+}
+else if (action.type === "applyEffect") {
+  context.applyEffect(source, target, action, context);
+}
   }
 
   usedSkill = true;
