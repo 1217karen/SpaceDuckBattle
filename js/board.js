@@ -90,11 +90,6 @@ export function highlightCell(containerId, x, y, colorClass) {
   if (!cell) return;
 
   cell.classList.add(colorClass);
-
-  // 一瞬だけ表示（600ms）
-  setTimeout(() => {
-    cell.classList.remove(colorClass);
-  }, 600);
 }
 export function highlightCells(containerId, cells, className) {
 
@@ -115,10 +110,4 @@ export function highlightCells(containerId, cells, className) {
     cell.classList.add(className);
     highlighted.push(cell);
   }
-
-  setTimeout(()=>{
-    highlighted.forEach(cell=>{
-      cell.classList.remove(className);
-    });
-  },600);
 }
