@@ -72,7 +72,43 @@ function getUnitsInSameColumn(unit, units) {
     u.x === unit.x
   );
 }
+function applyDamage(source, target, amount, ctx) {
 
+  ctx.log.push({
+    type:"attack",
+    from:source.id,
+    to:target.id,
+    damage:amount
+  });
+
+  target.hp -= amount;
+
+  ctx.log.push({
+    type:"damage",
+    target:target.id,
+    hp:Math.max(target.hp,0)
+  });
+
+  if (target.hp <= 0) {
+
+    ctx.log.push({
+      type:"death",
+      target:target.id
+    });
+  }
+}
+
+function applyHeal(source, target, amount, ctx) {
+
+  target.hp += amount;
+
+  ctx.log.push({
+    type:"heal",
+    from:source.id,
+    target:target.id,
+    hp:target.hp
+  });
+}
 // ==========================
 // メイン
 // ==========================
@@ -96,7 +132,9 @@ const context = {
   getNearestEnemy,
   getUnitsInManhattanRange,
   getUnitsInSameRow,
-  getUnitsInSameColumn
+  getUnitsInSameColumn,
+  applyDamage,
+  applyHeal
 };
 
   let turn = 1;
