@@ -169,6 +169,11 @@ for (let i = 0; i < actionEvents.length; i++) {
 
   const ev = actionEvents[i];
 
+  // hpChange は演出対象にしない
+  if (ev.type === "hpChange") {
+    continue;
+  }
+
   // 毎イベント前にハイライトリセット
   document.querySelectorAll(".cell")
     .forEach(cell => {
@@ -193,7 +198,6 @@ for (let i = 0; i < actionEvents.length; i++) {
     i + 1 < actionEvents.length &&
     actionEvents[i + 1].type === "faceChange"
   ) {
-    // move 再生
     playLogEvent(
       ev,
       boardState,
@@ -201,7 +205,6 @@ for (let i = 0; i < actionEvents.length; i++) {
       nameMap
     );
 
-    // faceChange もすぐ再生（待たない）
     playLogEvent(
       actionEvents[i + 1],
       boardState,
@@ -209,7 +212,7 @@ for (let i = 0; i < actionEvents.length; i++) {
       nameMap
     );
 
-    i++; // 次のfaceChangeをスキップ
+    i++; // faceChangeスキップ
   }
   else {
     playLogEvent(
@@ -220,11 +223,8 @@ for (let i = 0; i < actionEvents.length; i++) {
     );
   }
 
-if (i !== actionEvents.length - 1) {
-  await sleep(500);
+  // 最後だけ待たない
+  if (i !== actionEvents.length - 1) {
+    await sleep(500);
+  }
 }
-}
-
-  logIndex = end;
-  nextBtn.disabled = false;
-});
