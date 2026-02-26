@@ -57,31 +57,31 @@ heal_cross2: {
 
   generateActions(unit, ctx) {
 
-    const cells =
+    // 実際に回復対象となるユニット
+    const targets =
       ctx.getUnitsInManhattanRange(
         unit,
         ctx.units,
         2
-      );
+      ).filter(u => u.id !== unit.id);
 
-    if (cells.length === 0) return null;
+    // 効果対象がいないなら不発
+    if (targets.length === 0) return null;
 
     const actions = [];
 
-    // ⭐ 範囲表示用
+    // ⭐ 範囲表示（座標）
+    const cells =
+      ctx.getManhattanCells(unit, 2);
+
     actions.push({
       type:"rangePreview",
-      cells: cells.map(c=>({
-        x:c.x,
-        y:c.y
-      })),
+      cells: cells,
       style:"heal"
     });
 
-    // 回復処理
-    for (let t of cells) {
-
-      if (t.id === unit.id) continue;
+    // ⭐ 実際の回復（ユニット）
+    for (let t of targets) {
 
       actions.push({
         type:"heal",
