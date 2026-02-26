@@ -106,11 +106,12 @@ const targets =
   for (let t of targets) {
 
     actions.push({
-      type:"heal",
-      source:unit.id,
-      target:t.id,
-      amount:5
-    });
+  type:"heal",
+  source:unit.id,
+  target:t.id,
+  power:5,
+  healType:"fixed"
+});
   }
 
   return {
