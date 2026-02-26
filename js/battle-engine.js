@@ -193,59 +193,47 @@ let usedSkill = false;
 for (let skill of (unit.skills || [])) {
 
   const handler = skillHandlers[skill.type];
-
   if (!handler) continue;
 
-  const actions =
-    handler.generateActions(unit, context);
+  const actions = handler.generateActions(unit, context);
+  if (!actions || actions.length === 0) continue;
 
-  if (!actions) continue;
+  // rangePreview を取り出す（?. を使わない）
+  const preview = actions.find(a => a.type === "rangePreview");
+  const rangeCells = preview ? preview.cells : null;
+  const rangeStyle = preview ? preview.style : null;
 
-  // 自動スキルログ
+  // 「効果がある」Action が1つでもあるか
+  // ※今は damage/heal だけ。将来 buff/debuff などを足すときここに追加する
+  const hasEffect = actions.some(a =>
+    a.type === "damage" || a.type === "heal"
+  );
+
+  // 効果がないなら「使えなかった扱い」にして次のスキルへ（移動に回せる）
+  if (!hasEffect) continue;
+
+  // 自動スキルログ（範囲を同時に出すため skillUse に載せる）
   log.push({
-    type:"skillUse",
-    unit:unit.id,
-    skill:skill.type
+    type: "skillUse",
+    unit: unit.id,
+    skill: skill.type,
+    rangeCells: rangeCells,
+    rangeStyle: rangeStyle
   });
 
-  // action実行
+  // action実行（rangePreview は実行しない）
   for (let action of actions) {
-if (action.type === "rangePreview") {
 
-  log.push({
-    type:"rangePreview",
-    cells:action.cells,
-    style:action.style
-  });
+    if (action.type !== "damage" && action.type !== "heal") continue;
 
-  continue;
-}
-    const source =
-      units.find(u => u.id === action.source);
-
-    const target =
-      units.find(u => u.id === action.target);
-
+    const source = units.find(u => u.id === action.source);
+    const target = units.find(u => u.id === action.target);
     if (!source || !target) continue;
 
     if (action.type === "damage") {
-
-      context.applyDamage(
-        source,
-        target,
-        action.amount,
-        context
-      );
-    }
-
-    else if (action.type === "heal") {
-
-      context.applyHeal(
-        source,
-        target,
-        action.amount,
-        context
-      );
+      context.applyDamage(source, target, action.amount, context);
+    } else if (action.type === "heal") {
+      context.applyHeal(source, target, action.amount, context);
     }
   }
 
