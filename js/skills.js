@@ -1,8 +1,13 @@
 export const skillHandlers = {
 
+  // =========================
+  // 前方1マス攻撃
+  // =========================
+
   attack_front1: {
 
     canUse(unit, ctx) {
+
       const target = getFrontTarget(unit, ctx);
       return !!target;
     },
@@ -10,100 +15,94 @@ export const skillHandlers = {
     execute(unit, ctx) {
 
       const target = getFrontTarget(unit, ctx);
+
       if (!target) return;
 
-      ctx.log.push({
-        type:"attack",
-        from:unit.id,
-        to:target.id,
-        damage:unit.atk
-      });
-
-      target.hp -= unit.atk;
-
-      ctx.log.push({
-        type:"damage",
-        target:target.id,
-        hp:Math.max(target.hp,0)
-      });
-
-      if (target.hp <= 0) {
-        ctx.log.push({ type:"death", target:target.id });
-      }
+      ctx.applyDamage(
+        unit,
+        target,
+        unit.atk,
+        ctx
+      );
     }
   },
 
+
+  // =========================
+  // 最寄り敵攻撃
+  // =========================
 
   attack_nearest: {
 
     canUse(unit, ctx) {
 
-      const target = ctx.getNearestEnemy(unit, ctx.units);
+      const target =
+        ctx.getNearestEnemy(unit, ctx.units);
+
       if (!target) return false;
 
-      const dist = ctx.getDistance(unit, target);
+      const dist =
+        ctx.getDistance(unit, target);
+
       return dist === 1;
     },
 
     execute(unit, ctx) {
 
-      const target = ctx.getNearestEnemy(unit, ctx.units);
+      const target =
+        ctx.getNearestEnemy(unit, ctx.units);
+
       if (!target) return;
 
-      ctx.log.push({
-        type:"attack",
-        from:unit.id,
-        to:target.id,
-        damage:unit.atk
-      });
-
-      target.hp -= unit.atk;
-
-      ctx.log.push({
-        type:"damage",
-        target:target.id,
-        hp:Math.max(target.hp,0)
-      });
-
-      if (target.hp <= 0) {
-        ctx.log.push({ type:"death", target:target.id });
-      }
+      ctx.applyDamage(
+        unit,
+        target,
+        unit.atk,
+        ctx
+      );
     }
   },
 
+
+  // =========================
+  // 縦横2マス回復
+  // =========================
 
   heal_cross2: {
 
     canUse(unit, ctx) {
 
-      const allies =
-        ctx.getUnitsInManhattanRange(unit, ctx.units, 2)
-        .filter(u =>
-          u.team === unit.team &&
+      const targets =
+        ctx.getUnitsInManhattanRange(
+          unit,
+          ctx.units,
+          2
+        ).filter(u =>
           u.id !== unit.id
         );
 
-      return allies.length > 0;
+      return targets.length > 0;
     },
 
     execute(unit, ctx) {
 
-      const allies =
-        ctx.getUnitsInManhattanRange(unit, ctx.units, 2)
-        .filter(u =>
-          u.team === unit.team &&
+      const targets =
+        ctx.getUnitsInManhattanRange(
+          unit,
+          ctx.units,
+          2
+        ).filter(u =>
           u.id !== unit.id
         );
 
-      for (let ally of allies) {
+      for (let t of targets) {
 
-        ally.hp += 5;
-
-        ctx.log.push({
-          type:"heal",
-          target:ally.id,
-          hp:ally.hp
-        });
+        ctx.applyHeal(
+          unit,
+          t,
+          5,
+          ctx
+        );
       }
     }
   }
@@ -111,12 +110,19 @@ export const skillHandlers = {
 };
 
 
-// front判定
+// =======================
+// 前方ターゲット取得
+// =======================
+
 function getFrontTarget(unit, ctx) {
 
-  const enemies = ctx.getEnemies(ctx.units, unit.team);
+  const candidates =
+    ctx.units.filter(u =>
+      u.hp > 0 &&
+      u.id !== unit.id
+    );
 
-  for (let target of enemies) {
+  for (let target of candidates) {
 
     if (unit.facing === "N" &&
       target.x === unit.x &&
