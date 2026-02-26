@@ -38,9 +38,9 @@ export function playLogEvent(
     if (event.rangeCells) {
 
       const cls =
-        event.rangeStyle === "heal"
-          ? "healHighlight"
-          : "attackHighlight";
+  event.rangeStyle === "heal"
+    ? "healRange"
+    : "attackRange";
 
       highlightCells(
         "board",
