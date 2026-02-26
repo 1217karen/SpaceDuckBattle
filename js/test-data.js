@@ -31,7 +31,7 @@ export function createTestSnapshot() {
         x:5,
         y:2,
         facing:"N",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima3_icon_22.webp",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
         skills:[
   { type:"buff_self_if_alone" },
   { type:"attack_front1" }
@@ -49,7 +49,7 @@ export function createTestSnapshot() {
         x:3,
         y:5,
         facing:"W",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_100.webp",
         skills:[
           { type:"attack_nearest" }
         ]
