@@ -25,10 +25,18 @@ if (event.type === "skillUse" || event.type === "move") {
   header.classList.add("actionHeader");
   logArea.appendChild(header);
 }
-  if (event.type === "turnStart") {
-    div.textContent =
-      `--- ターン ${event.turn} ---`;
+if (event.type === "turnStart") {
+
+  const turnDisplay =
+    document.getElementById("turnDisplay");
+
+  if (turnDisplay) {
+    turnDisplay.textContent =
+      `TURN ${event.turn}`;
   }
+
+  return; // ログには追加しない
+}
 
 else if (event.type === "faceChange") {
 
