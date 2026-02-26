@@ -99,15 +99,25 @@ nextBtn.addEventListener("click", async () => {
   // 行動開始を探す
   // ======================
 
-  let start = logIndex;
+let start = logIndex;
 
-  while (
-    start < battleLog.length &&
-    battleLog[start].type !== "skillUse" &&
-    battleLog[start].type !== "move"
-  ) {
+// turnStart は先に処理してしまう
+while (start < battleLog.length) {
+
+  const ev = battleLog[start];
+
+  if (ev.type === "turnStart") {
+    playLogEvent(ev, boardState, logArea, nameMap);
     start++;
+    continue;
   }
+
+  if (ev.type === "skillUse" || ev.type === "move") {
+    break;
+  }
+
+  start++;
+}
 
   if (start >= battleLog.length) {
     logIndex = battleLog.length;
