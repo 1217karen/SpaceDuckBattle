@@ -89,12 +89,31 @@ else if (event.type === "effectApplied") {
 
   const e = event.effect;
 
+  const unitState =
+    boardState.units[event.to];
+
+  if (unitState) {
+
+    const cls =
+      e.value >= 0
+        ? "buffHighlight"
+        : "debuffHighlight";
+
+    highlightCell(
+      "board",
+      unitState.x,
+      unitState.y,
+      cls
+    );
+  }
+
   const sign =
     e.value >= 0 ? "+" : "";
 
   div.textContent =
     `${event.to} の ${e.stat} ${sign}${e.value}`;
 }
+  
   else if (event.type === "hpChange") {
     div.textContent =
       `${event.target} のHP → ${event.hp}`;
