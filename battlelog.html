@@ -93,23 +93,25 @@ nextBtn.addEventListener("click", () => {
     div.textContent = `${event.unit} の向きが ${event.facing} に変わった`;
   }
 
-  else if (event.type === "skillUse") {
-    div.textContent = `${event.unit} が ${event.skill} を使用`;
-  }
+else if (event.type === "skillUse") {
 
-else if (event.type === "attack") {
+  div.textContent =
+    `${event.unit} が ${event.skill} を使用`;
 
-  const unitState =
-    boardState.units[event.to];
+  if (event.rangeCells) {
 
-  if (unitState) {
-    highlightCell(
+    const cls =
+      event.rangeStyle === "heal"
+        ? "healHighlight"
+        : "attackHighlight";
+
+    highlightCells(
       "board",
-      unitState.x,
-      unitState.y,
-      "attackHighlight"
+      event.rangeCells,
+      cls
     );
   }
+}
 
   div.textContent =
     `${event.from} が ${event.to} を攻撃 (${event.amount})`;
