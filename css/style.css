@@ -40,3 +40,10 @@
   font-weight: bold;
   pointer-events: none;
 }
+.buffHighlight {
+  background-color: rgba(255, 230, 0, 0.6);
+}
+
+.debuffHighlight {
+  background-color: rgba(180, 0, 255, 0.6);
+}
