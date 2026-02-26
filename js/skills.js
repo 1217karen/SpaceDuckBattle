@@ -146,7 +146,7 @@ generateActions(unit, ctx) {
   return {
     preview:{
       cells:[{x:unit.x, y:unit.y}],
-      style:"heal"
+      style:"buff"
     },
     actions:[
       {
