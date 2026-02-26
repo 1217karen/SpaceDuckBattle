@@ -1,0 +1,51 @@
+export function createTestSnapshot() {
+
+  return {
+    units: [
+
+      {
+        id:"A",
+        team:1,
+        hp:30,
+        atk:5,
+        speed:10,
+        x:1,
+        y:1,
+        facing:"N",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+        skills:[
+          { type:"heal_cross2" }
+        ]
+      },
+
+      {
+        id:"C",
+        team:1,
+        hp:10,
+        atk:5,
+        speed:9,
+        x:2,
+        y:1,
+        facing:"N",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+        skills:[]
+      },
+
+      {
+        id:"B",
+        team:2,
+        hp:30,
+        atk:5,
+        speed:8,
+        x:4,
+        y:4,
+        facing:"N",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+        skills:[
+          { type:"attack_nearest" }
+        ]
+      }
+
+    ]
+  };
+}
