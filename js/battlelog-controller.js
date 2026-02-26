@@ -67,7 +67,6 @@ let logIndex = 0;
 // =====================
 // イベント再生
 // =====================
-
 nextBtn.addEventListener("click", () => {
 
   // 前回のハイライトを消す
@@ -87,14 +86,53 @@ nextBtn.addEventListener("click", () => {
 
   if (logIndex >= battleLog.length) return;
 
-  const event = battleLog[logIndex];
+  // ======================
+  // 行動開始を探す
+  // ======================
 
-  playLogEvent(
-    event,
-    boardState,
-    logArea,
-    nameMap
-  );
+  let start = logIndex;
 
-  logIndex++;
+  while (
+    start < battleLog.length &&
+    battleLog[start].type !== "skillUse" &&
+    battleLog[start].type !== "move"
+  ) {
+    start++;
+  }
+
+  if (start >= battleLog.length) {
+    logIndex = battleLog.length;
+    return;
+  }
+
+  // ======================
+  // 行動終了を探す
+  // ======================
+
+  let end = start + 1;
+
+  while (
+    end < battleLog.length &&
+    battleLog[end].type !== "skillUse" &&
+    battleLog[end].type !== "move"
+  ) {
+    end++;
+  }
+
+  // ======================
+  // まとめて再生
+  // ======================
+
+  const actionEvents = battleLog.slice(start, end);
+
+  for (let ev of actionEvents) {
+    playLogEvent(
+      ev,
+      boardState,
+      logArea,
+      nameMap
+    );
+  }
+
+  logIndex = end;
 });
