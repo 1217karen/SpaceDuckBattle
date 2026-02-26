@@ -7,6 +7,9 @@ import {
 import { playLogEvent }
   from "./battlelog-ui.js";
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 // =====================
 // ログ取得（最初にやる）
 // =====================
@@ -67,7 +70,10 @@ let logIndex = 0;
 // =====================
 // イベント再生
 // =====================
-nextBtn.addEventListener("click", () => {
+nextBtn.addEventListener("click", async () => {
+
+  // 再生中の連打防止
+  nextBtn.disabled = true;
 
   // 前回のハイライトを消す
   document.querySelectorAll(".cell")
@@ -84,7 +90,10 @@ nextBtn.addEventListener("click", () => {
       );
     });
 
-  if (logIndex >= battleLog.length) return;
+  if (logIndex >= battleLog.length) {
+    nextBtn.disabled = false;
+    return;
+  }
 
   // ======================
   // 行動開始を探す
@@ -102,6 +111,7 @@ nextBtn.addEventListener("click", () => {
 
   if (start >= battleLog.length) {
     logIndex = battleLog.length;
+    nextBtn.disabled = false;
     return;
   }
 
@@ -119,20 +129,27 @@ nextBtn.addEventListener("click", () => {
     end++;
   }
 
-  // ======================
-  // まとめて再生
-  // ======================
-
   const actionEvents = battleLog.slice(start, end);
 
+  // 「最新の行動だけ」表示するため、ここでログを全消し
+  logArea.innerHTML = "";
+
+  // ======================
+  // 0.5秒ずつ再生
+  // ======================
+
   for (let ev of actionEvents) {
+
     playLogEvent(
       ev,
       boardState,
       logArea,
       nameMap
     );
+
+    await sleep(500);
   }
 
   logIndex = end;
+  nextBtn.disabled = false;
 });
