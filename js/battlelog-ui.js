@@ -27,18 +27,16 @@ if (event.type === "skillUse" || event.type === "move") {
       `--- ターン ${event.turn} ---`;
   }
 
-  else if (event.type === "faceChange") {
+else if (event.type === "faceChange") {
 
-    updateFacing(
-      "board",
-      event.unit,
-      event.facing
-    );
+  updateFacing(
+    "board",
+    event.unit,
+    event.facing
+  );
 
-    div.textContent =
-      `${event.unit} の向きが ${event.facing} に変わった`;
-  }
-
+  return; // ログ表示しない
+}
   else if (event.type === "skillUse") {
 
     div.textContent =
@@ -127,11 +125,6 @@ else if (event.type === "effectApplied") {
     `${event.to} の ${e.stat} ${sign}${e.value}`;
 }
   
-  else if (event.type === "hpChange") {
-    div.textContent =
-      `${event.target} のHP → ${event.hp}`;
-  }
-
   else if (event.type === "death") {
     div.textContent =
       `${event.target} が倒れた`;
