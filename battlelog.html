@@ -93,47 +93,61 @@ nextBtn.addEventListener("click", () => {
     div.textContent = `${event.unit} の向きが ${event.facing} に変わった`;
   }
 
-else if (event.type === "skillUse") {
+  else if (event.type === "skillUse") {
 
-  div.textContent =
-    `${event.unit} が ${event.skill} を使用`;
+    div.textContent =
+      `${event.unit} が ${event.skill} を使用`;
 
-  if (event.rangeCells) {
+    if (event.rangeCells) {
 
-    const cls =
-      event.rangeStyle === "heal"
-        ? "healHighlight"
-        : "attackHighlight";
+      const cls =
+        event.rangeStyle === "heal"
+          ? "healHighlight"
+          : "attackHighlight";
 
-    highlightCells(
-      "board",
-      event.rangeCells,
-      cls
-    );
-  }
-}
-
-  div.textContent =
-    `${event.from} が ${event.to} を攻撃 (${event.amount})`;
-}
-
-else if (event.type === "heal") {
-
-  const unitState =
-    boardState.units[event.to];
-
-  if (unitState) {
-    highlightCell(
-      "board",
-      unitState.x,
-      unitState.y,
-      "healHighlight"
-    );
+      highlightCells(
+        "board",
+        event.rangeCells,
+        cls
+      );
+    }
   }
 
-  div.textContent =
-    `${event.from} が ${event.to} を回復 (${event.amount})`;
-}
+  else if (event.type === "attack") {
+
+    const unitState =
+      boardState.units[event.to];
+
+    if (unitState) {
+      highlightCell(
+        "board",
+        unitState.x,
+        unitState.y,
+        "attackHighlight"
+      );
+    }
+
+    div.textContent =
+      `${event.from} が ${event.to} を攻撃 (${event.amount})`;
+  }
+
+  else if (event.type === "heal") {
+
+    const unitState =
+      boardState.units[event.to];
+
+    if (unitState) {
+      highlightCell(
+        "board",
+        unitState.x,
+        unitState.y,
+        "healHighlight"
+      );
+    }
+
+    div.textContent =
+      `${event.from} が ${event.to} を回復 (${event.amount})`;
+  }
 
   else if (event.type === "hpChange") {
     div.textContent = `${event.target} のHP → ${event.hp}`;
@@ -156,19 +170,7 @@ else if (event.type === "heal") {
 
     div.textContent = `${event.unit} が (${event.x},${event.y}) に移動`;
   }
-else if (event.type === "rangePreview") {
 
-  const cls =
-    event.style === "heal"
-      ? "healHighlight"
-      : "attackHighlight";
-
-  highlightCells(
-    "board",
-    event.cells,
-    cls
-  );
-}
   logArea.appendChild(div);
   logIndex++;
 
