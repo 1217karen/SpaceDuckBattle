@@ -140,9 +140,19 @@ while (start < battleLog.length) {
   }
 
   const actionEvents = battleLog.slice(start, end);
+  
+// 行動ヘッダを先に表示
+const firstEvent = actionEvents[0];
+const header = document.createElement("div");
+const displayName = nameMap?.[firstEvent.unit] || firstEvent.unit;
+header.textContent = `▶ ${displayName} の行動`;
+header.classList.add("actionHeader");
 
+logArea.innerHTML = "";
+logArea.appendChild(header);
+
+await sleep(500);
   // 「最新の行動だけ」表示するため、ここでログを全消し
-  logArea.innerHTML = "";
 
   // ======================
   // 0.5秒ずつ再生
