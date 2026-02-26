@@ -15,8 +15,12 @@ export function playLogEvent(
   nameMap
 ) {
 
-  const div = document.createElement("div");
-  
+const div = document.createElement("div");
+
+if (event.type === "turnStart") {
+  return;
+}
+
 else if (event.type === "faceChange") {
 
   updateFacing(
@@ -25,10 +29,9 @@ else if (event.type === "faceChange") {
     event.facing
   );
 
-  return; // ログ表示しない
+  return;
 }
-  else if (event.type === "skillUse") {
-
+else if (event.type === "skillUse") {
     div.textContent =
       `${displayName(event.unit, nameMap)} が ${event.skill} を使用`;
 
