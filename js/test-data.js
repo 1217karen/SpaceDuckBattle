@@ -12,7 +12,7 @@ export function createTestSnapshot() {
         x:1,
         y:1,
         facing:"N",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_90.webp",
         skills:[
           { type:"heal_cross2" }
         ]
@@ -27,7 +27,7 @@ export function createTestSnapshot() {
         x:3,
         y:1,
         facing:"N",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima3_icon_22.webp",
         skills:[{type:"attack_front1"}]
       },
 
@@ -40,7 +40,7 @@ export function createTestSnapshot() {
         x:2,
         y:2,
         facing:"N",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_icon_str_30.webp",
         skills:[
           { type:"attack_nearest" }
         ]
