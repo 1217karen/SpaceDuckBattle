@@ -187,7 +187,49 @@ const context = {
       skill:skill.type
     });
 
-    handler.execute(unit, context);
+  const actions =
+  handler.generateActions(unit, context);
+
+if (!actions) continue;
+
+// 自動スキルログ
+log.push({
+  type:"skillUse",
+  unit:unit.id,
+  skill:skill.type
+});
+
+// action実行
+for (let action of actions) {
+
+  const source =
+    units.find(u => u.id === action.source);
+
+  const target =
+    units.find(u => u.id === action.target);
+
+  if (!source || !target) continue;
+
+  if (action.type === "damage") {
+
+    context.applyDamage(
+      source,
+      target,
+      action.amount,
+      context
+    );
+  }
+
+  if (action.type === "heal") {
+
+    context.applyHeal(
+      source,
+      target,
+      action.amount,
+      context
+    );
+  }
+}
 
     usedSkill = true;
     break;
