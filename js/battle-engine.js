@@ -253,8 +253,16 @@ export function simulateBattle(snapshot) {
 
   // snapshotをコピー
 const units = snapshot.units.map(u => ({
+
   ...u,
-  effects: []
+
+  effects: [],
+
+  skills: (u.skills || []).map(s => ({
+    ...s,
+    _currentCooldown: 0
+  }))
+
 }));
 
   // 行動順固定
@@ -306,6 +314,9 @@ const context = {
 let usedSkill = false;
 
 for (let skill of (unit.skills || [])) {
+
+  // クールタイム中ならスキップ
+  if (skill._currentCooldown > 0) continue;
 
   const handler = skillHandlers[skill.type];
   if (!handler) continue;
@@ -363,7 +374,10 @@ else if (action.type === "applyEffect") {
   context.applyEffect(source, target, action, context);
 }
   }
-
+// 使用したスキルにCTをセット
+if (skill.cooldown && skill.cooldown > 0) {
+  skill._currentCooldown = skill.cooldown;
+}
   usedSkill = true;
   break;
 }
@@ -433,7 +447,14 @@ else {
   }
 }
     }
-
+// ターン終了時に全スキルのCT減少
+for (let u of units) {
+  for (let s of (u.skills || [])) {
+    if (s._currentCooldown > 0) {
+      s._currentCooldown--;
+    }
+  }
+}
     turn++;
   }
 
