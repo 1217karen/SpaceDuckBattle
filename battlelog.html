@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Battle Log</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/battlelog.css">
   
 </head>
 <body>
@@ -44,7 +44,15 @@ if (!stored) {
 const battleData = stored ? JSON.parse(stored) : null;
 const snapshot = battleData ? battleData.snapshot : null;
 const battleLog = battleData ? battleData.log : [];
+  
+// id → name 変換テーブル
+const nameMap = {};
 
+if (snapshot) {
+  snapshot.units.forEach(u => {
+    nameMap[u.id] = u.name || u.id;
+  });
+}
 
 // =====================
 // 盤面作成
@@ -98,7 +106,8 @@ const event = battleLog[logIndex];
 playLogEvent(
   event,
   boardState,
-  logArea
+  logArea,
+  nameMap
 );
 
 logIndex++;
