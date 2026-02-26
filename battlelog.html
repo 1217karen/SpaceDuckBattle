@@ -148,7 +148,19 @@ else if (event.type === "heal") {
 
     div.textContent = `${event.unit} が (${event.x},${event.y}) に移動`;
   }
+else if (event.type === "rangePreview") {
 
+  const cls =
+    event.style === "heal"
+      ? "healHighlight"
+      : "attackHighlight";
+
+  highlightCells(
+    "board",
+    event.cells,
+    cls
+  );
+}
   logArea.appendChild(div);
   logIndex++;
 
