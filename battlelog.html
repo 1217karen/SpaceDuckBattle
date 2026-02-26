@@ -77,7 +77,17 @@ let logIndex = 0;
 // =====================
 
 nextBtn.addEventListener("click", () => {
-
+// 前回のハイライトを消す
+document.querySelectorAll(".cell")
+  .forEach(cell => {
+    cell.classList.remove(
+      "attackHighlight",
+      "healHighlight",
+      "buffHighlight",
+      "debuffHighlight",
+      "rangeHighlight"
+    );
+  });
   if (logIndex >= battleLog.length) return;
 
 const event = battleLog[logIndex];
