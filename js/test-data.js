@@ -28,7 +28,7 @@ export function createTestSnapshot() {
         y:1,
         facing:"N",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
-        skills:[type:"attack_front1"]
+        skills:[{type:"attack_front1"}]
       },
 
       {
