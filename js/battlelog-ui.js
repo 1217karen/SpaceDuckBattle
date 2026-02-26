@@ -85,7 +85,16 @@ export function playLogEvent(
     div.textContent =
       `${event.from} が ${event.to} を回復 (${event.amount})`;
   }
+else if (event.type === "effectApplied") {
 
+  const e = event.effect;
+
+  const sign =
+    e.value >= 0 ? "+" : "";
+
+  div.textContent =
+    `${event.to} の ${e.stat} ${sign}${e.value}`;
+}
   else if (event.type === "hpChange") {
     div.textContent =
       `${event.target} のHP → ${event.hp}`;
