@@ -165,7 +165,6 @@ const context = {
 
         return log;
       }
-
 // ====================
 // スキル判定
 // ====================
@@ -183,14 +182,14 @@ for (let skill of (unit.skills || [])) {
 
   if (!actions) continue;
 
-  // ⭐ 自動スキルログ（ここだけ）
+  // ⭐ 自動スキルログ
   log.push({
     type:"skillUse",
     unit:unit.id,
     skill:skill.type
   });
 
-  // action実行
+  // ⭐ action実行（ここは1回だけ）
   for (let action of actions) {
 
     const source =
@@ -226,44 +225,7 @@ for (let skill of (unit.skills || [])) {
   break;
 }
 
-// action実行
-for (let action of actions) {
-
-  const source =
-    units.find(u => u.id === action.source);
-
-  const target =
-    units.find(u => u.id === action.target);
-
-  if (!source || !target) continue;
-
-  if (action.type === "damage") {
-
-    context.applyDamage(
-      source,
-      target,
-      action.amount,
-      context
-    );
-  }
-
-  if (action.type === "heal") {
-
-    context.applyHeal(
-      source,
-      target,
-      action.amount,
-      context
-    );
-  }
-}
-
-    usedSkill = true;
-    break;
-  }
-}
-
-      if (usedSkill) continue;
+if (usedSkill) continue;
 
       // ====================
       // fallback移動
