@@ -25,12 +25,13 @@ if (target.team === unit.team) return null;
       style:"attack"
     },
     actions:[
-      {
-        type:"damage",
-        source:unit.id,
-        target:target.id,
-        amount:unit.atk
-      }
+{
+  type:"damage",
+  source:unit.id,
+  target:target.id,
+  power:0,
+  damageType:"normal"
+}
     ]
   };
 }
@@ -61,12 +62,13 @@ generateActions(unit, ctx) {
       style:"attack"
     },
     actions:[
-      {
-        type:"damage",
-        source:unit.id,
-        target:target.id,
-        amount:unit.atk
-      }
+{
+  type:"damage",
+  source:unit.id,
+  target:target.id,
+  power:0,
+  damageType:"pierce"
+}
     ]
   };
 }
