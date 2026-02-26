@@ -6,20 +6,39 @@
   <link rel="stylesheet" href="css/battlelog.css">
   
 </head>
-<body>
-<div id="battleContainer">
+<h1>Battle Log</h1>
 
-  <div id="turnDisplay"></div>
+<div id="battleLayout">
 
-  <div id="board"></div>
+  <!-- 上段 -->
+  <div id="topArea">
+    <div id="turnDisplay"></div>
+    <div id="hpArea"></div>
+  </div>
+
+  <!-- 中段 -->
+  <div id="middleArea">
+    <div id="enemySide"></div>
+
+    <div id="boardArea">
+      <div id="board"></div>
+    </div>
+
+    <div id="allySide"></div>
+  </div>
+
+  <!-- 下段 -->
+  <div id="bottomArea">
+    <div class="bottomSide"></div>
+
+    <div id="logArea"></div>
+
+    <div class="bottomSide"></div>
+  </div>
 
   <button id="nextBtn">次へ</button>
-
-  <div id="logArea"></div>
 
 </div>
 
 <script type="module" src="./js/battlelog-controller.js"></script>
-
-</body>
 </html>
