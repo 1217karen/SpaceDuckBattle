@@ -115,7 +115,7 @@ generateActions(unit, ctx) {
     },
     actions: actions
   };
-};
+}
 }
 
 };
