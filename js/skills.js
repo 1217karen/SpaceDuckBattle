@@ -163,34 +163,35 @@ generateActions(unit, ctx) {
     ]
   };
 },
-// =========================
-// 自分にDF50%バフ（3ターン）
-// =========================
+  // =========================
+  // 自分DF50%バフ（3T）
+  // =========================
 
-buff_df_50_3turn: {
-  cooldown: 3,
-  generateActions(unit, ctx) {
+  buff_df50_self: {
+    cooldown: 4,
 
-    return {
-      preview:{
-        cells:[{x:unit.x, y:unit.y}],
-        style:"buff"
-      },
-      actions:[
-        {
-          type:"applyEffect",
-          source:unit.id,
-          target:unit.id,
-          effect:{
-            stat:"df",
-            value:0.5,      // 50%
-            duration:3
+    generateActions(unit, ctx) {
+
+      return {
+        preview:{
+          cells:[{ x:unit.x, y:unit.y }],
+          style:"buff"
+        },
+        actions:[
+          {
+            type:"applyEffect",
+            source:unit.id,
+            target:unit.id,
+            effect:{
+              stat:"df",
+              value:0.5,     // 50%
+              duration:3
+            }
           }
-        }
-      ]
-    };
-  }
-}
+        ]
+      };
+    }
+  },
 }
 };
 // =======================
