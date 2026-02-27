@@ -214,12 +214,12 @@ finalDamage = atk + power;
     hp:Math.max(target.hp,0)
   });
 
-  if (target.hp <= 0) {
-    ctx.log.push({
-      type:"death",
-      target:target.id
-    });
-  }
+if (target.hp <= 0) {
+  ctx.log.push({
+    type:"death",
+    unit:target.id
+  });
+}
 }
 
 function applyHeal(source, target, action, ctx) {
