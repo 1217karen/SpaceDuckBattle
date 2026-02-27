@@ -215,6 +215,11 @@ else if (
 }
 // 行動ヘッダを先に表示
 const firstEvent = actionEvents[0];
+  if (!firstEvent) {
+  logIndex = end + 1;
+  nextBtn.disabled = false;
+  return;
+}
 const header = document.createElement("div");
 const displayName = nameMap?.[firstEvent.unit] || firstEvent.unit;
 header.textContent = `▶ ${displayName} の行動`;
