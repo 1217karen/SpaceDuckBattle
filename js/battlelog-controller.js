@@ -119,7 +119,32 @@ nextBtn.addEventListener("click", async () => {
     nextBtn.disabled = false;
     return;
   }
+// ======================
+// battleEnd 単独処理
+// ======================
 
+if (battleLog[logIndex]?.type === "battleEnd") {
+
+  logArea.innerHTML = "";
+
+  const div = document.createElement("div");
+  div.classList.add("battleEndBlock");
+
+  div.innerHTML = `
+    <div style="font-size:20px;font-weight:bold;">
+      BATTLE FINISHED
+    </div>
+    <div style="margin-top:8px;">
+      TEAM ${battleLog[logIndex].winner} 勝利
+    </div>
+  `;
+
+  logArea.appendChild(div);
+
+  logIndex++;
+  nextBtn.disabled = false;
+  return;
+}
 // ======================
 // actionStart を探す
 // ======================
