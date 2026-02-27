@@ -30,7 +30,8 @@ else if (event.type === "faceChange") {
     event.facing
   );
 
-  return;
+  div.textContent =
+    `${displayName(event.unit, nameMap)} は ${event.facing} を向いた`;
 }
 else if (event.type === "skillUse") {
 div.textContent =
