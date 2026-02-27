@@ -436,6 +436,7 @@ else {
     newFacing = dy > 0 ? "S" : "N";
   }
 
+  // 向きが変わる場合
   if (newFacing !== unit.facing) {
     unit.facing = newFacing;
 
@@ -443,6 +444,13 @@ else {
       type:"faceChange",
       unit:unit.id,
       facing:newFacing
+    });
+  }
+  // 本当に何もできない場合
+  else {
+    log.push({
+      type:"wait",
+      unit:unit.id
     });
   }
 }
