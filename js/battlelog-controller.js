@@ -255,16 +255,12 @@ if (ev.type === "death") {
   // 毎イベント前にハイライトリセット
   document.querySelectorAll(".cell")
     .forEach(cell => {
-      cell.classList.remove(
-        "attackRange",
-        "healRange",
-        "buffRange",
-        "debuffRange",
-        "attackHighlight",
-        "healHighlight",
-        "buffHighlight",
-        "debuffHighlight"
-      );
+cell.classList.remove(
+  "attackRange",
+  "healRange",
+  "buffRange",
+  "debuffRange"
+);
     });
 
   // ==========================
