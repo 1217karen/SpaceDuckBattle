@@ -204,6 +204,7 @@ header.classList.add("actionHeader");
 logArea.innerHTML = "";
 logArea.appendChild(header);
 
+  await sleep(500);
   // 「最新の行動だけ」表示するため、ここでログを全消し
 
   // ======================
