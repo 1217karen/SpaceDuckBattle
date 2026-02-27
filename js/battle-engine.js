@@ -215,10 +215,31 @@ finalDamage = atk + power;
   });
 
 if (target.hp <= 0) {
+
   ctx.log.push({
     type:"death",
     unit:target.id
   });
+
+  // ====================
+  // 勝敗判定
+  // ====================
+
+  const aliveTeams = new Set(
+    ctx.units
+      .filter(u => u.hp > 0)
+      .map(u => u.team)
+  );
+
+  if (aliveTeams.size === 1) {
+
+    const winner = [...aliveTeams][0];
+
+    ctx.log.push({
+      type:"battleEnd",
+      winner: winner
+    });
+  }
 }
 }
 
