@@ -160,8 +160,9 @@ generateActions(unit, ctx) {
           duration:null
         }
       }
-    ]
+     ]
   };
+}
 },
   // =========================
   // 自分DF50%バフ（3T）
