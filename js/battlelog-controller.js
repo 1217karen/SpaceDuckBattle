@@ -129,9 +129,14 @@ while (start < battleLog.length) {
 
   const ev = battleLog[start];
 
-  if (ev.type === "skillUse" || ev.type === "move") {
-    break;
-  }
+if (
+  ev.type === "skillUse" ||
+  ev.type === "move" ||
+  ev.type === "faceChange" ||
+  ev.type === "wait"
+) {
+  break;
+}
 
   start++;
 }
@@ -148,11 +153,13 @@ while (start < battleLog.length) {
 
   let end = start + 1;
 
-  while (
-    end < battleLog.length &&
-    battleLog[end].type !== "skillUse" &&
-    battleLog[end].type !== "move"
-  ) {
+while (
+  end < battleLog.length &&
+  battleLog[end].type !== "skillUse" &&
+  battleLog[end].type !== "move" &&
+  battleLog[end].type !== "faceChange" &&
+  battleLog[end].type !== "wait"
+) {
     end++;
   }
 
