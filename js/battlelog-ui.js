@@ -1,3 +1,4 @@
+//battlelog-ui.js
 import {
   moveUnit,
   updateFacing,
