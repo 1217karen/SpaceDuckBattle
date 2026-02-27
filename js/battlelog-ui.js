@@ -33,8 +33,8 @@ else if (event.type === "faceChange") {
   return;
 }
 else if (event.type === "skillUse") {
-    div.textContent =
-      `${displayName(event.unit, nameMap)} が ${event.skill} を使用`;
+div.textContent =
+  `${displayName(event.unit, nameMap)} の ${event.skill}`;
 
     if (event.rangeCells) {
 
@@ -69,8 +69,8 @@ if (cls) {
       );
     }
 
-    div.textContent =
-      `${displayName(event.from, nameMap)} が ${displayName(event.to, nameMap)} を攻撃`
+div.textContent =
+  `${displayName(event.to, nameMap)} に ${event.amount} のダメージ`;
   }
 
   else if (event.type === "heal") {
@@ -87,8 +87,8 @@ if (cls) {
       );
     }
 
-    div.textContent =
-      `${displayName(event.from, nameMap)} が ${displayName(event.to, nameMap)} を回復`
+div.textContent =
+  `${displayName(event.to, nameMap)} のHPが ${event.amount} 回復`;
   }
 else if (event.type === "effectApplied") {
 
