@@ -156,7 +156,9 @@ while (start < battleLog.length) {
     end++;
   }
 
-  const actionEvents = battleLog.slice(start, end);
+const actionEvents = battleLog
+  .slice(start, end)
+  .filter(ev => ev.type !== "hpChange");
   // ======================
 // ターン進行判定
 // ======================
@@ -205,11 +207,6 @@ await sleep(500);
 for (let i = 0; i < actionEvents.length; i++) {
 
   const ev = actionEvents[i];
-
-  // hpChange は演出対象にしない
-  if (ev.type === "hpChange") {
-    continue;
-  }
   
   //死んだら終わり
 if (ev.type === "death") {
