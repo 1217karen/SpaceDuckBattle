@@ -63,6 +63,28 @@ function getNearestEnemy(unit, units) {
 
   return nearest;
 }
+
+function getRandomUnit(list) {
+  if (!list || list.length === 0) return null;
+  const index = Math.floor(Math.random() * list.length);
+  return list[index];
+}
+
+function getRandomEnemy(unit, units) {
+  const enemies = getEnemies(units, unit.team);
+  return getRandomUnit(enemies);
+}
+
+function getRandomAlly(unit, units) {
+  const allies = getAllies(units, unit.team, unit.id);
+  return getRandomUnit(allies);
+}
+
+function getRandomAny(units) {
+  const alive = getAliveUnits(units);
+  return getRandomUnit(alive);
+}
+
 function getUnitsInManhattanRange(center, units, range) {
 
   return units.filter(u => {
@@ -383,7 +405,10 @@ const context = {
   applyDamage,
   applyHeal,
   applyEffect,
-  getManhattanCells
+  getManhattanCells,
+  getRandomEnemy,
+  getRandomAlly,
+  getRandomAny
 };
 
   let turn = 1;
