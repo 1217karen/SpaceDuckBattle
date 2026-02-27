@@ -11,7 +11,7 @@ import { playLogEvent }
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-const HEADER_DELAY = 800;
+const HEADER_DELAY = 1000;
 const EVENT_DELAY = 500;
 const turnDisplay = document.getElementById("turnDisplay");
 // =====================
