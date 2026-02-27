@@ -60,7 +60,7 @@ if (snapshot) {
 // 盤面作成
 // =====================
 
-createBoard("board", 12, 8);
+createBoard("board", 10, 6);
 
 let boardState = { units:{} };
 
