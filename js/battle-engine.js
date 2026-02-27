@@ -207,41 +207,142 @@ function applyEffect(source, target, action, ctx) {
   const effectData = action.effect;
   if (!effectData) return;
 
-  // 永続のみ扱う（flat前提）
-  if (effectData.duration !== null) return;
-
-  const stackKey = effectData.stat + "_flat";
-  const DIMINISH = 0.75;
-
-  const stackCount = (target.effects || []).filter(
-    e => e.stackKey === stackKey
-  ).length;
-
-  const finalValue =
-    effectData.value *
-    Math.pow(DIMINISH, stackCount);
-
-  const newEffect = {
-    category:"permanent",
-    stat: effectData.stat,
-    mode:"flat",
-    value: finalValue,
-    duration:null,
-    stackKey: stackKey
-  };
-
   if (!target.effects) {
     target.effects = [];
   }
 
-  target.effects.push(newEffect);
+  // =========================
+  // 永続 flat
+  // =========================
+  if (effectData.duration === null) {
 
-  ctx.log.push({
-    type:"effectApplied",
-    from:source.id,
-    to:target.id,
-    effect:newEffect
-  });
+    const stackKey = effectData.stat + "_flat";
+    const DIMINISH = 0.75;
+
+    const stackCount = target.effects.filter(
+      e => e.stackKey === stackKey
+    ).length;
+
+    const finalValue =
+      effectData.value *
+      Math.pow(DIMINISH, stackCount);
+
+    const newEffect = {
+      category:"permanent",
+      stat: effectData.stat,
+      mode:"flat",
+      value: finalValue,
+      duration:null,
+      stackKey: stackKey
+    };
+
+    target.effects.push(newEffect);
+
+    ctx.log.push({
+      type:"effectApplied",
+      from:source.id,
+      to:target.id,
+      effect:newEffect
+    });
+
+    return;
+  }
+
+  // =========================
+  // ターン制 rate
+  // =========================
+
+  const stat = effectData.stat;
+  const newValue = effectData.value;
+  const newDuration = effectData.duration;
+
+  const existing = target.effects.find(
+    e =>
+      e.category === "timed" &&
+      e.stat === stat &&
+      e.mode === "rate"
+  );
+
+  // 既存が無い → そのまま追加
+  if (!existing) {
+
+    const newEffect = {
+      category:"timed",
+      stat: stat,
+      mode:"rate",
+      value: newValue,
+      duration: newDuration
+    };
+
+    target.effects.push(newEffect);
+
+    ctx.log.push({
+      type:"effectApplied",
+      from:source.id,
+      to:target.id,
+      effect:newEffect
+    });
+
+    return;
+  }
+
+  const absCurrent = Math.abs(existing.value);
+  const absNew = Math.abs(newValue);
+
+  // =========================
+  // ① 強い → 上書き
+  // =========================
+  if (absNew > absCurrent) {
+
+    existing.value = newValue;
+    existing.duration = newDuration;
+
+    ctx.log.push({
+      type:"effectApplied",
+      from:source.id,
+      to:target.id,
+      effect:existing
+    });
+
+    return;
+  }
+
+  // =========================
+  // ② 同値 → 延長
+  // =========================
+  if (newValue === existing.value) {
+
+    existing.duration += newDuration;
+
+    ctx.log.push({
+      type:"effectApplied",
+      from:source.id,
+      to:target.id,
+      effect:existing
+    });
+
+    return;
+  }
+
+  // =========================
+  // ③ 弱い → 総量換算
+  // =========================
+
+  const addedTotal = absNew * newDuration;
+  const convertTurn =
+    Math.floor(addedTotal / absCurrent);
+
+  if (convertTurn > 0) {
+    existing.duration += convertTurn;
+
+    ctx.log.push({
+      type:"effectApplied",
+      from:source.id,
+      to:target.id,
+      effect:existing
+    });
+  }
+
 }
 // ==========================
 // メイン
@@ -483,7 +584,8 @@ else {
     });
   }
 }
-  // ====================
+  
+// ====================
 // 行動終了
 // ====================
 log.push({
@@ -491,6 +593,29 @@ log.push({
   unit: unit.id
 });
     }
+    
+// ====================
+// ターン制effect減少
+// ====================
+for (let u of units) {
+
+  if (!u.effects) continue;
+
+  for (let i = u.effects.length - 1; i >= 0; i--) {
+
+    const e = u.effects[i];
+
+    if (e.category === "timed" && e.duration !== null) {
+
+      e.duration--;
+
+      if (e.duration <= 0) {
+        u.effects.splice(i, 1);
+      }
+    }
+  }
+}
+    
 // ターン終了時に全スキルのCT減少
 for (let u of units) {
   for (let s of (u.skills || [])) {
