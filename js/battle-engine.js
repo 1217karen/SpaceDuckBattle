@@ -622,8 +622,10 @@ else {
     newFacing = dy > 0 ? "S" : "N";
   }
 
-  // 向きが変わる場合
-  if (newFacing !== unit.facing) {
+  const facingChanged = newFacing !== unit.facing;
+
+  if (facingChanged) {
+
     unit.facing = newFacing;
 
     log.push({
@@ -631,14 +633,87 @@ else {
       unit:unit.id,
       facing:newFacing
     });
+
+    // ====================
+    // 向き変更後に再スキル判定
+    // ====================
+
+    let usedAfterTurn = false;
+
+    for (let skill of (unit.skills || [])) {
+
+      if (skill._currentCooldown > 0) continue;
+
+      const handler = skillHandlers[skill.type];
+      if (!handler) continue;
+
+      const result = handler.generateActions(unit, context);
+      if (!result) continue;
+
+      const actions = result.actions || [];
+      if (actions.length === 0) continue;
+
+      const hasEffect = actions.some(a =>
+        a.type === "damage" ||
+        a.type === "heal" ||
+        a.type === "applyEffect"
+      );
+
+      if (!hasEffect) continue;
+
+      log.push({
+        type: "skillUse",
+        unit: unit.id,
+        skill: skill.type,
+        rangeCells: result.preview ? result.preview.cells : null,
+        rangeStyle: result.preview ? result.preview.style : null
+      });
+
+      for (let action of actions) {
+
+        if (
+          action.type !== "damage" &&
+          action.type !== "heal" &&
+          action.type !== "applyEffect"
+        ) continue;
+
+        const source = units.find(u => u.id === action.source);
+        const target = units.find(u => u.id === action.target);
+        if (!source || !target) continue;
+
+        if (action.type === "damage") {
+          context.applyDamage(source, target, action, context);
+        }
+        else if (action.type === "heal") {
+          context.applyHeal(source, target, action, context);
+        }
+        else if (action.type === "applyEffect") {
+          context.applyEffect(source, target, action, context);
+        }
+      }
+
+      if (handler.cooldown && handler.cooldown > 0) {
+        skill._currentCooldown = handler.cooldown;
+      }
+
+      usedAfterTurn = true;
+      break;
+    }
+
+    if (usedAfterTurn) {
+      log.push({
+        type: "actionEnd",
+        unit: unit.id
+      });
+      continue;
+    }
   }
-  // 本当に何もできない場合
-  else {
-    log.push({
-      type:"wait",
-      unit:unit.id
-    });
-  }
+
+  // 何もできない場合
+  log.push({
+    type:"wait",
+    unit:unit.id
+  });
 }
   
 // ====================
