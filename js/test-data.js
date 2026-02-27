@@ -54,6 +54,7 @@ export function createTestSnapshot() {
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_100.webp",
         skills:[
           { type:"attack_nearest" }
+          { type:"buff_df_50_3turn" }
         ]
       }
 
