@@ -42,6 +42,13 @@ function getDistance(a, b) {
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 }
 
+function getChebyshevDistance(a, b) {
+  return Math.max(
+    Math.abs(a.x - b.x),
+    Math.abs(a.y - b.y)
+  );
+}
+
 function getNearestEnemy(unit, units) {
 
   const enemies = getEnemies(units, unit.team);
@@ -167,7 +174,30 @@ finalDamage = atk + power;
   else if (type === "effect") {
     finalDamage = power;
   }
+  
+  // =========================
+  // 距離減衰（falloff:true の場合のみ）
+  // =========================
+  if (action.falloff) {
 
+    const distance =
+      ctx.getChebyshevDistance(source, target);
+
+    if (distance > 1) {
+
+      const FALLOFF_RATE = 0.2; // 1マスごと20%
+
+      const multiplier =
+        1 - (distance - 1) * FALLOFF_RATE;
+
+      const clamped =
+        multiplier < 0 ? 0 : multiplier;
+
+      finalDamage =
+        Math.floor(finalDamage * clamped);
+    }
+  }
+  
   target.hp -= finalDamage;
 
   ctx.log.push({
@@ -395,6 +425,7 @@ const context = {
   units,
   log,
   getDistance,
+  getChebyshevDistance,
   getEnemies,
   getAllies,
   getNearestEnemy,
