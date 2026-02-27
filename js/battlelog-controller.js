@@ -11,6 +11,18 @@ import { playLogEvent }
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+function clearEffectHighlights() {
+
+  document.querySelectorAll(".cell")
+    .forEach(cell => {
+      cell.classList.remove(
+        "attackHighlight",
+        "healHighlight",
+        "buffHighlight",
+        "debuffHighlight"
+      );
+    });
+}
 const HEADER_DELAY = 1000;
 const EVENT_DELAY = 500;
 const turnDisplay = document.getElementById("turnDisplay");
@@ -103,16 +115,12 @@ nextBtn.addEventListener("click", async () => {
   // 前回のハイライトを消す
   document.querySelectorAll(".cell")
     .forEach(cell => {
-      cell.classList.remove(
-        "attackRange",
-        "healRange",
-        "buffRange",
-        "debuffRange",
-        "attackHighlight",
-        "healHighlight",
-        "buffHighlight",
-        "debuffHighlight"
-      );
+cell.classList.remove(
+  "attackRange",
+  "healRange",
+  "buffRange",
+  "debuffRange"
+);
     });
 
   if (logIndex >= battleLog.length) {
@@ -295,7 +303,11 @@ if (ev.type === "death") {
 
   // 最後だけ待たない
   if (i !== actionEvents.length - 1) {
+
     await sleep(EVENT_DELAY);
+
+    clearEffectHighlights();   // ← この1行を追加
+
   }
 }
   actedSet.add(actingUnit);
