@@ -3,7 +3,8 @@ import {
   moveUnit,
   updateFacing,
   highlightCell,
-  highlightCells
+  highlightCells,
+  removeUnit
 } from "./board.js";
 
 function displayName(id, nameMap) {
@@ -120,10 +121,15 @@ else if (event.type === "effectApplied") {
     `${displayName(event.to, nameMap)} の ${e.stat} ${sign}${e.value}`
 }
   
-  else if (event.type === "death") {
-    div.textContent =
-      `${displayName(event.to, nameMap)}  が倒れた`;
-  }
+else if (event.type === "death") {
+
+  removeUnit("board", event.unit);
+
+  delete boardState.units[event.unit];
+
+  div.textContent =
+    `${displayName(event.unit, nameMap)} が倒れた`;
+}
 
   else if (event.type === "battleEnd") {
     div.textContent =
