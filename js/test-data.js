@@ -53,7 +53,7 @@ export function createTestSnapshot() {
         facing:"W",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_100.webp",
         skills:[
-          { type:"attack_random_falloff" },
+          { type:"attack_around2_all" },
           { type:"buff_df50_self" }
         ]
       }
