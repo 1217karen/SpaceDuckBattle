@@ -48,7 +48,7 @@ export function createTestSnapshot() {
         atk:5,
         df: 2,
         speed:8,
-        x:1,
+        x:0,
         y:2,
         facing:"W",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_100.webp",
