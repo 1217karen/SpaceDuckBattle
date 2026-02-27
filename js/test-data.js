@@ -26,7 +26,7 @@ export function createTestSnapshot() {
         id:"Eno02",
         name:"味方２",
         team:1,
-        hp:10,
+        hp:20,
         atk:5,
         df: 2,
         speed:9,
