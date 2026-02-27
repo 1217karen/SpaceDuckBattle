@@ -68,7 +68,28 @@ if (snapshot) {
 }
 
 let logIndex = 0;
+// =====================
+// UIターン管理
+// =====================
+let uiTurn = 0;
+let requiredSet = new Set();
+let actedSet = new Set();
 
+if (turnDisplay) {
+  turnDisplay.textContent = "BATTLE START";
+}
+
+// 初期の行動対象（生存ユニット）
+if (snapshot) {
+  const sorted = [...snapshot.units]
+    .sort((a,b)=>b.speed-a.speed);
+
+  sorted.forEach(u=>{
+    if (u.hp > 0) {
+      requiredSet.add(u.id);
+    }
+  });
+}
 // =====================
 // イベント再生
 // =====================
@@ -108,18 +129,6 @@ while (start < battleLog.length) {
 
   const ev = battleLog[start];
 
-if (ev.type === "turnStart") {
-
-  if (turnDisplay) {
-    turnDisplay.textContent = `TURN ${ev.turn}`;
-  }
-
-  start++;
-  logIndex = start; // ← これ追加（超重要）
-
-  continue;
-}
-
   if (ev.type === "skillUse" || ev.type === "move") {
     break;
   }
@@ -148,7 +157,34 @@ if (ev.type === "turnStart") {
   }
 
   const actionEvents = battleLog.slice(start, end);
-  
+  // ======================
+// ターン進行判定
+// ======================
+
+const actingUnit = actionEvents[0].unit;
+
+// 初回行動時にTURN1へ
+if (uiTurn === 0) {
+  uiTurn = 1;
+  if (turnDisplay) {
+    turnDisplay.textContent = "TURN 1";
+  }
+}
+
+// 全員が行動したら次ターンへ
+// 行動重複対策でeveryを使う
+else if (
+  [...requiredSet].every(id => actedSet.has(id))
+) {
+
+  uiTurn++;
+
+  if (turnDisplay) {
+    turnDisplay.textContent = `TURN ${uiTurn}`;
+  }
+
+  actedSet.clear();
+}
 // 行動ヘッダを先に表示
 const firstEvent = actionEvents[0];
 const header = document.createElement("div");
@@ -174,7 +210,12 @@ for (let i = 0; i < actionEvents.length; i++) {
   if (ev.type === "hpChange") {
     continue;
   }
-
+  
+  //死んだら終わり
+if (ev.type === "death") {
+  requiredSet.delete(ev.target);
+}
+  
   // 毎イベント前にハイライトリセット
   document.querySelectorAll(".cell")
     .forEach(cell => {
@@ -229,6 +270,7 @@ for (let i = 0; i < actionEvents.length; i++) {
     await sleep(500);
   }
 }
+  actedSet.add(actingUnit);
   logIndex = end;
   nextBtn.disabled = false;
 });
