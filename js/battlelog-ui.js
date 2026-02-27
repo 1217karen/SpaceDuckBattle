@@ -147,6 +147,11 @@ else if (event.type === "effectApplied") {
     div.textContent =
       `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
   }
+    
+else if (event.type === "wait") {
 
+  div.textContent =
+    `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
+}
   logArea.appendChild(div);
 }
