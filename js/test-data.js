@@ -32,7 +32,7 @@ export function createTestSnapshot() {
         atk:5,
         df: 2,
         speed:9,
-        x:5,
+        x:2,
         y:4,
         facing:"N",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
