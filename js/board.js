@@ -111,3 +111,18 @@ export function highlightCells(containerId, cells, className) {
     highlighted.push(cell);
   }
 }
+
+export function removeUnit(containerId, unitId) {
+
+  const container =
+    document.getElementById(containerId);
+
+  const wrapper =
+    container.querySelector(
+      `[data-unit-id="${unitId}"]`
+    );
+
+  if (!wrapper) return;
+
+  wrapper.remove();
+}
