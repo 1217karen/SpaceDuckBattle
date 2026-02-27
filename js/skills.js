@@ -5,6 +5,8 @@ export const skillHandlers = {
   // 前方1マス攻撃
   // =========================
   attack_front1: {
+    cooldown: 2,
+    
     generateActions(unit, ctx) {
 
       const target = getFrontTarget(unit, ctx);
@@ -77,7 +79,7 @@ export const skillHandlers = {
   // 縦横2マス回復
   // =========================
   heal_cross2: {
-    cooldown: 1,
+    cooldown: 2,
 
     generateActions(unit, ctx) {
 
@@ -126,7 +128,8 @@ export const skillHandlers = {
   // =========================
 
   attack_around2_all: {
-
+    cooldown: 2,
+    
     generateActions(unit, ctx) {
 
       const targets =
@@ -209,7 +212,8 @@ export const skillHandlers = {
   // =========================
 
   attack_random_falloff: {
-
+    cooldown: 2,
+    
 generateActions(unit, ctx) {
 
   const enemies =
