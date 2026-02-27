@@ -11,6 +11,8 @@ import { playLogEvent }
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+const HEADER_DELAY = 800;
+const EVENT_DELAY = 500;
 const turnDisplay = document.getElementById("turnDisplay");
 // =====================
 // ログ取得（最初にやる）
@@ -196,7 +198,7 @@ header.classList.add("actionHeader");
 logArea.innerHTML = "";
 logArea.appendChild(header);
 
-  await sleep(500);
+  await sleep(HEADER_DELAY);
   // 「最新の行動だけ」表示するため、ここでログを全消し
 
   // ======================
@@ -263,7 +265,7 @@ if (ev.type === "death") {
 
   // 最後だけ待たない
   if (i !== actionEvents.length - 1) {
-    await sleep(500);
+    await sleep(EVENT_DELAY);
   }
 }
   actedSet.add(actingUnit);
