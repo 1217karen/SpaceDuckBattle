@@ -118,52 +118,51 @@ nextBtn.addEventListener("click", async () => {
     return;
   }
 
-  // ======================
-  // 行動開始を探す
-  // ======================
+// ======================
+// actionStart を探す
+// ======================
 
 let start = logIndex;
 
-// turnStart は先に処理してしまう
-while (start < battleLog.length) {
-
-  const ev = battleLog[start];
-
-if (ev.type === "skillUse" || ev.type === "move") {
-  break;
-}
-
+while (
+  start < battleLog.length &&
+  battleLog[start].type !== "actionStart"
+) {
   start++;
 }
 
-  if (start >= battleLog.length) {
-    logIndex = battleLog.length;
-    nextBtn.disabled = false;
-    return;
-  }
+if (start >= battleLog.length) {
+  logIndex = battleLog.length;
+  nextBtn.disabled = false;
+  return;
+}
 
-  // ======================
-  // 行動終了を探す
-  // ======================
+// ======================
+// actionEnd を探す
+// ======================
 
-  let end = start + 1;
+let end = start + 1;
 
 while (
   end < battleLog.length &&
-  battleLog[end].type !== "skillUse" &&
-  battleLog[end].type !== "move"
+  battleLog[end].type !== "actionEnd"
 ) {
-    end++;
-  }
+  end++;
+}
+
+if (end >= battleLog.length) {
+  nextBtn.disabled = false;
+  return;
+}
 
 const actionEvents = battleLog
-  .slice(start, end)
+  .slice(start + 1, end) // actionStart と actionEnd は除く
   .filter(ev => ev.type !== "hpChange");
   // ======================
 // ターン進行判定
 // ======================
 
-const actingUnit = actionEvents[0].unit;
+const actingUnit = battleLog[start].unit;
 
 // 初回行動時にTURN1へ
 if (uiTurn === 0) {
@@ -268,6 +267,6 @@ if (ev.type === "death") {
   }
 }
   actedSet.add(actingUnit);
-  logIndex = end;
+logIndex = end + 1;
   nextBtn.disabled = false;
 });
