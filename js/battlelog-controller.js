@@ -298,13 +298,8 @@ cell.classList.remove(
   }
 
   // 最後だけ待たない
-  if (i !== actionEvents.length - 1) {
-
-    await sleep(EVENT_DELAY);
-
-    clearEffectHighlights();
-
-  }
+await sleep(EVENT_DELAY);
+clearEffectHighlights();
 }
   actedSet.add(actingUnit);
 logIndex = end + 1;
