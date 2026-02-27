@@ -71,6 +71,28 @@ function getNearestEnemy(unit, units) {
   return nearest;
 }
 
+function getLowestHpAlly(unit, units) {
+
+  const allies = getAllies(units, unit.team, unit.id);
+  if (!allies || allies.length === 0) return null;
+
+  // HPが低い順、同値なら近い順
+  let best = allies[0];
+  for (let a of allies) {
+    if (a.hp < best.hp) {
+      best = a;
+      continue;
+    }
+    if (a.hp === best.hp) {
+      const da = getDistance(unit, a);
+      const db = getDistance(unit, best);
+      if (da < db) best = a;
+    }
+  }
+
+  return best;
+}
+
 function getRandomUnit(list) {
   if (!list || list.length === 0) return null;
   const index = Math.floor(Math.random() * list.length);
@@ -450,6 +472,7 @@ const context = {
   getEnemies,
   getAllies,
   getNearestEnemy,
+  getLowestHpAlly,
   getUnitsInManhattanRange,
   getUnitsInSameRow,
   getUnitsInSameColumn,
@@ -584,158 +607,147 @@ if (usedSkill) {
 }
 
       // ====================
-      // fallback移動
+      // fallback移動（role別）
       // ====================
 
-const target = getNearestEnemy(unit, units);
+      const role = unit.role || "attack";
 
-if (!target) {
+      let moveMode = "toward"; // "toward" or "away"
+      let targetUnit = null;
 
-  log.push({
-    type: "actionEnd",
-    unit: unit.id
-  });
+      if (role === "attack") {
+        targetUnit = getNearestEnemy(unit, units);
+        moveMode = "toward";
+      }
 
-  continue;
-}
+      else if (role === "defense") {
+        targetUnit = getLowestHpAlly(unit, units);
+        moveMode = "toward";
+      }
 
-      const dx = target.x - unit.x;
-      const dy = target.y - unit.y;
+      else if (role === "heal") {
+        const nearestEnemy = getNearestEnemy(unit, units);
+        if (!nearestEnemy) {
+          // 敵がいないのは上でbattleEndしている想定だが、念のため
+          targetUnit = getLowestHpAlly(unit, units);
+          moveMode = "toward";
+        } else {
+          const dist = getDistance(unit, nearestEnemy);
 
-      if (Math.abs(dx) + Math.abs(dy) > 1) {
+          if (dist < 3) {
+            // 近い敵から離れる
+            targetUnit = nearestEnemy;
+            moveMode = "away";
+          } else {
+            // すでに距離3以上なら、最もHPの低い味方へ
+            targetUnit = getLowestHpAlly(unit, units);
+            moveMode = "toward";
+          }
+        }
+      }
 
-        let newX = unit.x;
-        let newY = unit.y;
+      // 目標がいないなら何もしない
+      if (!targetUnit) {
+        log.push({
+          type:"wait",
+          unit:unit.id
+        });
+
+        log.push({
+          type: "actionEnd",
+          unit: unit.id
+        });
+
+        continue;
+      }
+
+      // toward: target - unit
+      // away  : unit - target
+      let dx = 0;
+      let dy = 0;
+
+      if (moveMode === "toward") {
+        dx = targetUnit.x - unit.x;
+        dy = targetUnit.y - unit.y;
+      } else {
+        dx = unit.x - targetUnit.x;
+        dy = unit.y - targetUnit.y;
+      }
+
+      const distManhattan = Math.abs(dx) + Math.abs(dy);
+
+      // 「toward」の場合だけ、隣接なら移動せず向き変更（今の仕様を維持）
+      if (moveMode === "toward" && distManhattan <= 1) {
+
         let newFacing = unit.facing;
 
-const absDx = Math.abs(dx);
-const absDy = Math.abs(dy);
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
 
-// 距離が大きい方向を優先
-if (absDx >= absDy && dx !== 0) {
-
-  newX += dx > 0 ? 1 : -1;
-  newFacing = dx > 0 ? "E" : "W";
-
-} else if (dy !== 0) {
-
-  newY += dy > 0 ? 1 : -1;
-  newFacing = dy > 0 ? "S" : "N";
-}
-
-        unit.x = newX;
-        unit.y = newY;
-        unit.facing = newFacing;
-
-        log.push({ type:"move", unit:unit.id, x:newX, y:newY });
-        log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
-      }
-else {
-
-  let newFacing = unit.facing;
-
-  const absDx = Math.abs(dx);
-  const absDy = Math.abs(dy);
-
-  if (absDx >= absDy && dx !== 0) {
-    newFacing = dx > 0 ? "E" : "W";
-  } else if (dy !== 0) {
-    newFacing = dy > 0 ? "S" : "N";
-  }
-
-  const facingChanged = newFacing !== unit.facing;
-
-  if (facingChanged) {
-
-    unit.facing = newFacing;
-
-    log.push({
-      type:"faceChange",
-      unit:unit.id,
-      facing:newFacing
-    });
-
-    // ====================
-    // 向き変更後に再スキル判定
-    // ====================
-
-    let usedAfterTurn = false;
-
-    for (let skill of (unit.skills || [])) {
-
-      if (skill._currentCooldown > 0) continue;
-
-      const handler = skillHandlers[skill.type];
-      if (!handler) continue;
-
-      const result = handler.generateActions(unit, context);
-      if (!result) continue;
-
-      const actions = result.actions || [];
-      if (actions.length === 0) continue;
-
-      const hasEffect = actions.some(a =>
-        a.type === "damage" ||
-        a.type === "heal" ||
-        a.type === "applyEffect"
-      );
-
-      if (!hasEffect) continue;
-
-      log.push({
-        type: "skillUse",
-        unit: unit.id,
-        skill: skill.type,
-        rangeCells: result.preview ? result.preview.cells : null,
-        rangeStyle: result.preview ? result.preview.style : null
-      });
-
-      for (let action of actions) {
-
-        if (
-          action.type !== "damage" &&
-          action.type !== "heal" &&
-          action.type !== "applyEffect"
-        ) continue;
-
-        const source = units.find(u => u.id === action.source);
-        const target = units.find(u => u.id === action.target);
-        if (!source || !target) continue;
-
-        if (action.type === "damage") {
-          context.applyDamage(source, target, action, context);
+        if (absDx >= absDy && dx !== 0) {
+          newFacing = dx > 0 ? "E" : "W";
+        } else if (dy !== 0) {
+          newFacing = dy > 0 ? "S" : "N";
         }
-        else if (action.type === "heal") {
-          context.applyHeal(source, target, action, context);
+
+        if (newFacing !== unit.facing) {
+          unit.facing = newFacing;
+
+          log.push({
+            type:"faceChange",
+            unit:unit.id,
+            facing:newFacing
+          });
+        } else {
+          log.push({
+            type:"wait",
+            unit:unit.id
+          });
         }
-        else if (action.type === "applyEffect") {
-          context.applyEffect(source, target, action, context);
-        }
+
+        log.push({
+          type: "actionEnd",
+          unit: unit.id
+        });
+
+        continue;
       }
 
-      if (handler.cooldown && handler.cooldown > 0) {
-        skill._currentCooldown = handler.cooldown;
+      // 1マス移動（現行の軸優先）
+      let newX = unit.x;
+      let newY = unit.y;
+      let newFacing = unit.facing;
+
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+
+      if (absDx >= absDy && dx !== 0) {
+        newX += dx > 0 ? 1 : -1;
+        newFacing = dx > 0 ? "E" : "W";
+      } else if (dy !== 0) {
+        newY += dy > 0 ? 1 : -1;
+        newFacing = dy > 0 ? "S" : "N";
+      } else {
+        // dx/dyどちらも0（実質起きない想定だが念のため）
+        log.push({
+          type:"wait",
+          unit:unit.id
+        });
+
+        log.push({
+          type: "actionEnd",
+          unit: unit.id
+        });
+
+        continue;
       }
 
-      usedAfterTurn = true;
-      break;
-    }
+      unit.x = newX;
+      unit.y = newY;
+      unit.facing = newFacing;
 
-    if (usedAfterTurn) {
-      log.push({
-        type: "actionEnd",
-        unit: unit.id
-      });
-      continue;
-    }
-  }
-
-  // 何もできない場合
-  log.push({
-    type:"wait",
-    unit:unit.id
-  });
-}
+      log.push({ type:"move", unit:unit.id, x:newX, y:newY });
+      log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
   
 // ====================
 // 行動終了
