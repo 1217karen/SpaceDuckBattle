@@ -30,8 +30,8 @@ export function createTestSnapshot() {
         atk:5,
         df: 2,
         speed:9,
-        x:5,
-        y:2,
+        x:1,
+        y:1,
         facing:"N",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
         skills:[
@@ -48,8 +48,8 @@ export function createTestSnapshot() {
         atk:5,
         df: 2,
         speed:8,
-        x:3,
-        y:5,
+        x:1,
+        y:2,
         facing:"W",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_100.webp",
         skills:[
