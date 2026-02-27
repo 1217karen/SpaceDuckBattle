@@ -1,3 +1,4 @@
+//battlelog-controller.js
 import { 
   createBoard, 
   placeUnit,
