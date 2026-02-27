@@ -131,11 +131,6 @@ else if (event.type === "death") {
     `${displayName(event.unit, nameMap)} が倒れた`;
 }
 
-  else if (event.type === "battleEnd") {
-    div.textContent =
-      `戦闘終了 勝者: ${event.winner}`;
-  }
-
   else if (event.type === "move") {
 
     moveUnit(
