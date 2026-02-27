@@ -9,7 +9,7 @@ export function createTestSnapshot() {
         id:"Eno01",
         name:"味方１",
         team:1,
-        hp:30,
+        hp:10,
         atk:5,
         df: 2,
         speed:10,
