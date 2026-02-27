@@ -120,7 +120,50 @@ export const skillHandlers = {
       };
     }
   },
+  
+  // =========================
+  // 周囲2マス 敵全体攻撃（減衰なし）
+  // =========================
 
+  attack_around2_all: {
+
+    generateActions(unit, ctx) {
+
+      const targets =
+        ctx.getUnitsInManhattanRange(
+          unit,
+          ctx.units,
+          2
+        ).filter(u =>
+          u.team !== unit.team
+        );
+
+      if (!targets || targets.length === 0)
+        return null;
+
+      const actions = [];
+
+      for (let t of targets) {
+        actions.push({
+          type:"damage",
+          source:unit.id,
+          target:t.id,
+          power:0,
+          damageType:"normal"
+          // falloffなし
+        });
+      }
+
+      return {
+        preview:{
+          cells: ctx.getManhattanCells(unit, 2),
+          style:"attack"
+        },
+        actions: actions
+      };
+    }
+  },
+  
   // =========================
   // 自分にバフ
   // =========================
