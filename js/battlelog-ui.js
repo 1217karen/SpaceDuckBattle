@@ -122,7 +122,7 @@ else if (event.type === "effectApplied") {
   
   else if (event.type === "death") {
     div.textContent =
-      `${displayName(event.unit, nameMap)} が倒れた`;
+      `${displayName(event.to, nameMap)}  が倒れた`;
   }
 
   else if (event.type === "battleEnd") {
