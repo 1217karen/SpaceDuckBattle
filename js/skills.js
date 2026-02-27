@@ -167,27 +167,39 @@ export const skillHandlers = {
 
   attack_random_falloff: {
 
-    generateActions(unit, ctx) {
+generateActions(unit, ctx) {
 
-      const target =
-        ctx.getRandomEnemy(unit, ctx.units);
+  const enemies =
+    ctx.getEnemies(ctx.units, unit.team);
 
-      if (!target) return null;
+  if (!enemies || enemies.length === 0)
+    return null;
 
-      return {
-        preview: null,
-        actions:[
-          {
-            type:"damage",
-            source:unit.id,
-            target:target.id,
-            power:0,
-            damageType:"normal",
-            falloff:true
-          }
-        ]
-      };
-    }
+  const target =
+    ctx.getRandomEnemy(unit, ctx.units);
+
+  if (!target) return null;
+
+  return {
+    preview:{
+      cells: enemies.map(e => ({
+        x: e.x,
+        y: e.y
+      })),
+      style:"attack"
+    },
+    actions:[
+      {
+        type:"damage",
+        source:unit.id,
+        target:target.id,
+        power:0,
+        damageType:"normal",
+        falloff:true
+      }
+    ]
+  };
+}
   },
   // =========================
   // 自分DF50%バフ（3T）
