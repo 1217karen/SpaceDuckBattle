@@ -292,21 +292,34 @@ const context = {
 
     log.push({ type:"turnStart", turn });
 
-    for (let unit of units) {
+for (let unit of units) {
 
-      if (unit.hp <= 0) continue;
+  if (unit.hp <= 0) continue;
+
+  // ====================
+  // 行動開始
+  // ====================
+  log.push({
+    type: "actionStart",
+    unit: unit.id
+  });
 
       const enemies = getEnemies(units, unit.team);
 
-      if (enemies.length === 0) {
+if (enemies.length === 0) {
 
-        log.push({
-          type:"battleEnd",
-          winner: unit.team
-        });
+  log.push({
+    type: "actionEnd",
+    unit: unit.id
+  });
 
-        return log;
-      }
+  log.push({
+    type:"battleEnd",
+    winner: unit.team
+  });
+
+  return log;
+}
 // ====================
 // スキル判定
 // ====================
@@ -382,15 +395,31 @@ if (handler.cooldown && handler.cooldown > 0) {
   break;
 }
 
-if (usedSkill) continue;
+if (usedSkill) {
+
+  log.push({
+    type: "actionEnd",
+    unit: unit.id
+  });
+
+  continue;
+}
 
       // ====================
       // fallback移動
       // ====================
 
-      const target = getNearestEnemy(unit, units);
+const target = getNearestEnemy(unit, units);
 
-      if (!target) continue;
+if (!target) {
+
+  log.push({
+    type: "actionEnd",
+    unit: unit.id
+  });
+
+  continue;
+}
 
       const dx = target.x - unit.x;
       const dy = target.y - unit.y;
@@ -454,6 +483,13 @@ else {
     });
   }
 }
+  // ====================
+// 行動終了
+// ====================
+log.push({
+  type: "actionEnd",
+  unit: unit.id
+});
     }
 // ターン終了時に全スキルのCT減少
 for (let u of units) {
