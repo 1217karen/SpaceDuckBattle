@@ -806,12 +806,44 @@ else if (role === "defense") {
         continue;
       }
 
-      unit.x = newX;
-      unit.y = newY;
-      unit.facing = newFacing;
+// 移動先にユニットがいるかチェック
+const occupied = units.some(u =>
+  u.hp > 0 &&
+  u.id !== unit.id &&
+  u.x === newX &&
+  u.y === newY
+);
 
-      log.push({ type:"move", unit:unit.id, x:newX, y:newY });
-      log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
+if (!occupied) {
+
+  unit.x = newX;
+  unit.y = newY;
+  unit.facing = newFacing;
+
+  log.push({ type:"move", unit:unit.id, x:newX, y:newY });
+  log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
+
+} else {
+
+  // 詰まった場合は向きだけ変える
+  if (newFacing !== unit.facing) {
+
+    unit.facing = newFacing;
+
+    log.push({
+      type:"faceChange",
+      unit:unit.id,
+      facing:newFacing
+    });
+
+  } else {
+
+    log.push({
+      type:"wait",
+      unit:unit.id
+    });
+  }
+}
   
 // ====================
 // 行動終了
