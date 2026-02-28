@@ -93,6 +93,57 @@ function getLowestHpAlly(unit, units) {
   return best;
 }
 
+function getDefenseTargetCell(unit, units) {
+
+  const ally = getLowestHpAlly(unit, units);
+  if (!ally) return null;
+
+  const enemy = getNearestEnemy(unit, units);
+  if (!enemy) return null;
+
+  const candidates = [
+    { x: ally.x, y: ally.y - 1 },
+    { x: ally.x, y: ally.y + 1 },
+    { x: ally.x - 1, y: ally.y },
+    { x: ally.x + 1, y: ally.y }
+  ];
+
+  // 盤内 & 空きマスだけ残す
+  const valid = candidates.filter(c => {
+
+    // 盤外チェック（6x10想定）
+    if (c.x < 0 || c.x >= 10) return false;
+    if (c.y < 0 || c.y >= 6) return false;
+
+    // ユニットがいるマスは不可
+    const occupied = units.some(u =>
+      u.hp > 0 &&
+      u.x === c.x &&
+      u.y === c.y
+    );
+
+    return !occupied;
+  });
+
+  if (valid.length === 0) return null;
+
+  // 敵に一番近いマス
+  let best = valid[0];
+  let bestDist = getDistance(best, enemy);
+
+  for (let c of valid) {
+
+    const d = getDistance(c, enemy);
+
+    if (d < bestDist) {
+      best = c;
+      bestDist = d;
+    }
+  }
+
+  return best;
+}
+
 function getRandomUnit(list) {
   if (!list || list.length === 0) return null;
   const index = Math.floor(Math.random() * list.length);
@@ -620,10 +671,23 @@ if (usedSkill) {
         moveMode = "toward";
       }
 
-      else if (role === "defense") {
-        targetUnit = getLowestHpAlly(unit, units);
-        moveMode = "toward";
-      }
+else if (role === "defense") {
+
+  const cell = getDefenseTargetCell(unit, units);
+
+  if (!cell) {
+    targetUnit = getLowestHpAlly(unit, units);
+    moveMode = "toward";
+  } else {
+
+    targetUnit = {
+      x: cell.x,
+      y: cell.y
+    };
+
+    moveMode = "toward";
+  }
+}
 
       else if (role === "heal") {
         const nearestEnemy = getNearestEnemy(unit, units);
