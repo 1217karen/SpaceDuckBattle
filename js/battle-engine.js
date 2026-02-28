@@ -285,6 +285,149 @@ function getUnitsInSameColumn(unit, units) {
   );
 }
 
+// ==========================
+// 盤面・移動ヘルパー（moveType用）
+// ==========================
+
+// 盤面サイズ（現状は engine 内でも 10x6 前提があるため固定）
+const BOARD_W = 10;
+const BOARD_H = 6;
+
+function inBounds(x, y) {
+  return x >= 0 && x < BOARD_W && y >= 0 && y < BOARD_H;
+}
+
+function isOccupiedCell(units, x, y, selfId) {
+  return units.some(u =>
+    u.hp > 0 &&
+    u.id !== selfId &&
+    u.x === x &&
+    u.y === y
+  );
+}
+
+function facingFromDelta(dx, dy, fallbackFacing) {
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  if (absDx >= absDy && dx !== 0) return dx > 0 ? "E" : "W";
+  if (dy !== 0) return dy > 0 ? "S" : "N";
+  return fallbackFacing;
+}
+
+// 4方向（順番は決め打ち。安定した挙動にするため）
+const DIR4 = [
+  { dx:  1, dy:  0, facing: "E" },
+  { dx: -1, dy:  0, facing: "W" },
+  { dx:  0, dy:  1, facing: "S" },
+  { dx:  0, dy: -1, facing: "N" }
+];
+
+// moveType に従って「次の1手」を決める（移動できないなら null）
+function chooseStep(unit, units, moveType, targetPos, options = {}) {
+  if (!targetPos) return null;
+
+
+  // 候補（空き & 盤内）
+  const candidates = DIR4
+    .map(d => ({
+      x: unit.x + d.dx,
+      y: unit.y + d.dy,
+      facing: d.facing
+    }))
+    .filter(c =>
+      inBounds(c.x, c.y) &&
+      !isOccupiedCell(units, c.x, c.y, unit.id)
+    );
+
+  if (candidates.length === 0) return null;
+
+  // --- axis（今の軸優先に近い挙動。詰まったらもう片方を試す） ---
+  if (moveType === "axis") {
+    const dx = targetPos.x - unit.x;
+    const dy = targetPos.y - unit.y;
+
+    let primary = null;
+    let secondary = null;
+
+    if (Math.abs(dx) >= Math.abs(dy) && dx !== 0) {
+      primary = { x: unit.x + (dx > 0 ? 1 : -1), y: unit.y, facing: dx > 0 ? "E" : "W" };
+      if (dy !== 0) secondary = { x: unit.x, y: unit.y + (dy > 0 ? 1 : -1), facing: dy > 0 ? "S" : "N" };
+    } else if (dy !== 0) {
+      primary = { x: unit.x, y: unit.y + (dy > 0 ? 1 : -1), facing: dy > 0 ? "S" : "N" };
+      if (dx !== 0) secondary = { x: unit.x + (dx > 0 ? 1 : -1), y: unit.y, facing: dx > 0 ? "E" : "W" };
+    } else {
+      return null;
+    }
+
+    const canUse = (step) =>
+      step &&
+      inBounds(step.x, step.y) &&
+      !isOccupiedCell(units, step.x, step.y, unit.id);
+
+    if (canUse(primary)) return primary;
+    if (canUse(secondary)) return secondary;
+
+    return null;
+  }
+
+  // --- target（targetPos に近づく。近づけないなら「最短になる手」を選ぶ＝迂回しやすい） ---
+  if (moveType === "target") {
+    let best = null;
+    let bestDist = Infinity;
+
+    for (const c of candidates) {
+      const d = Math.abs(targetPos.x - c.x) + Math.abs(targetPos.y - c.y);
+      if (d < bestDist) {
+        bestDist = d;
+        best = c;
+      }
+    }
+
+    // ここがポイント：
+    // 「必ず距離が縮む手」だけに制限しないことで、塞がれていても迂回に入りやすくする
+    return best;
+  }
+
+  // --- away（targetPos から遠ざかる＝距離最大化） ---
+  if (moveType === "away") {
+    let best = null;
+    let bestDist = -Infinity;
+
+    for (const c of candidates) {
+      const d = Math.abs(targetPos.x - c.x) + Math.abs(targetPos.y - c.y);
+      if (d > bestDist) {
+        bestDist = d;
+        best = c;
+      }
+    }
+    return best;
+  }
+
+  // --- keepRange（理想距離を維持：|距離-ideal| を最小化。タイブレークで「遠い方」を優先） ---
+  if (moveType === "keepRange") {
+    const ideal = options.idealRange ?? 2;
+
+    let best = null;
+    let bestScore = Infinity;
+    let bestDist = -Infinity;
+
+    for (const c of candidates) {
+      const d = Math.abs(targetPos.x - c.x) + Math.abs(targetPos.y - c.y);
+      const score = Math.abs(d - ideal);
+
+      if (score < bestScore || (score === bestScore && d > bestDist)) {
+        bestScore = score;
+        bestDist = d;
+        best = c;
+      }
+    }
+    return best;
+  }
+
+  return null;
+}
+
 function getEffectiveStat(unit, statName) {
 
   const base = unit[statName] || 0;
@@ -819,149 +962,133 @@ else if (role === "defense") {
         continue;
       }
 
-      // toward: target - unit
-      // away  : unit - target
-      let dx = 0;
-      let dy = 0;
+// ====================
+// moveType（移動アルゴリズム）決定
+// ====================
+// ・axis   : 現行に近い軸優先
+// ・target : targetPos に近づく（塞がれても迂回しやすい）
+// ・away   : targetPos から離れる
+// ・keepRange : targetPos との距離を理想値に保つ（将来用）
 
-      if (moveMode === "toward") {
-        dx = targetUnit.x - unit.x;
-        dy = targetUnit.y - unit.y;
-      } else {
-        dx = unit.x - targetUnit.x;
-        dy = unit.y - targetUnit.y;
-      }
+let moveType = "axis";
+let targetPos = null;
+let stopDistance = 1; // towardのとき、どこまで近づいたら「移動せず向きだけ」にするか
 
-      const distManhattan = Math.abs(dx) + Math.abs(dy);
-
-      // 「toward」の場合だけ、隣接なら移動せず向き変更（今の仕様を維持）
-      if (moveMode === "toward" && distManhattan <= 1) {
-
-        let newFacing = unit.facing;
-
-        const absDx = Math.abs(dx);
-        const absDy = Math.abs(dy);
-
-        if (absDx >= absDy && dx !== 0) {
-          newFacing = dx > 0 ? "E" : "W";
-        } else if (dy !== 0) {
-          newFacing = dy > 0 ? "S" : "N";
-        }
-
-        if (newFacing !== unit.facing) {
-          unit.facing = newFacing;
-
-          log.push({
-            type:"faceChange",
-            unit:unit.id,
-            facing:newFacing
-          });
-        } else {
-          log.push({
-            type:"wait",
-            unit:unit.id
-          });
-        }
-
-        log.push({
-          type: "actionEnd",
-          unit: unit.id
-        });
-
-        continue;
-      }
-
-      // 1マス移動（現行の軸優先）
-      let newX = unit.x;
-      let newY = unit.y;
-      let newFacing = unit.facing;
-
-      const absDx = Math.abs(dx);
-      const absDy = Math.abs(dy);
-
-      if (absDx >= absDy && dx !== 0) {
-        newX += dx > 0 ? 1 : -1;
-        newFacing = dx > 0 ? "E" : "W";
-      } else if (dy !== 0) {
-        newY += dy > 0 ? 1 : -1;
-        newFacing = dy > 0 ? "S" : "N";
-      } else {
-        // dx/dyどちらも0（実質起きない想定だが念のため）
-        log.push({
-          type:"wait",
-          unit:unit.id
-        });
-
-        log.push({
-          type: "actionEnd",
-          unit: unit.id
-        });
-
-        continue;
-      }
-
-// 移動先にユニットがいるかチェック
-const occupied = units.some(u =>
-  u.hp > 0 &&
-  u.id !== unit.id &&
-  u.x === newX &&
-  u.y === newY
-);
-
-if (!occupied) {
-
-  unit.x = newX;
-  unit.y = newY;
-  unit.facing = newFacing;
-
-  log.push({ type:"move", unit:unit.id, x:newX, y:newY });
-  log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
-
-} else {
-
-  // 詰まった場合は向きだけ変える
-  if (newFacing !== unit.facing) {
-
-    unit.facing = newFacing;
-
-    log.push({
-      type:"faceChange",
-      unit:unit.id,
-      facing:newFacing
-    });
-
-  } else {
-
-const newFacing = getIdleFacing(unit, units);
-
-if (newFacing !== unit.facing) {
-
-  unit.facing = newFacing;
-
-  log.push({
-    type:"faceChange",
-    unit:unit.id,
-    facing:newFacing
-  });
-
-} else {
-
-  log.push({
-    type:"wait",
-    unit:unit.id
-  });
-
+if (role === "attack") {
+  // 最寄り敵に「隣接」するまで近づく
+  targetPos = targetUnit;       // nearestEnemy（unit座標）
+  moveType = "axis";
+  stopDistance = 1;
 }
+
+else if (role === "heal") {
+  // 既存仕様を維持：敵が近いなら逃げる、そうでなければ味方へ
+  if (moveMode === "away") {
+    targetPos = targetUnit;     // nearestEnemy（unit座標）
+    moveType = "away";
+    stopDistance = -1;          // awayは隣接停止ルールを使わない
+  } else {
+    targetPos = targetUnit;     // lowestHpAlly（unit座標）
+    moveType = "axis";
+    stopDistance = 1;
   }
 }
-  
+
+else if (role === "defense") {
+  // defense は「セル」を踏みに行きたい
+  // getDefenseTargetCell が返した場合：targetPos はセル
+  // その場合は「隣接で止まらない（= 0 になるまで動く）」
+  targetPos = targetUnit;       // cell か ally座標（x,yだけ見れば同じ）
+  moveType = "target";
+  stopDistance = 0;
+}
+
+// 目標がある前提だが念のため
+if (!targetPos) {
+  log.push({ type:"wait", unit:unit.id });
+  log.push({ type:"actionEnd", unit: unit.id });
+  continue;
+}
+
+// ====================
+// 「近すぎるなら移動せず向きだけ変える」処理
+// （towardのときのみ。awayでは使わない）
+// ====================
+const dxToTarget = targetPos.x - unit.x;
+const dyToTarget = targetPos.y - unit.y;
+const distToTarget = Math.abs(dxToTarget) + Math.abs(dyToTarget);
+
+if (moveMode === "toward" && stopDistance >= 0 && distToTarget <= stopDistance) {
+
+  const newFacing = facingFromDelta(dxToTarget, dyToTarget, unit.facing);
+
+  if (newFacing !== unit.facing) {
+    unit.facing = newFacing;
+    log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
+  } else {
+    log.push({ type:"wait", unit:unit.id });
+  }
+
+  log.push({ type:"actionEnd", unit: unit.id });
+  continue;
+}
+
+// ====================
+// 1マス移動を決定（moveTypeごと）
+// ====================
+const step = chooseStep(
+  unit,
+  units,
+  moveType,
+  targetPos,
+  {
+    // keepRangeを将来使うときに渡す（今は未使用）
+    idealRange: 2
+  }
+);
+
+if (!step) {
+
+  // 動けない場合：向きだけ整える（今の仕様に近い）
+  // まずは「今回の目標方向」を向く
+  const face = facingFromDelta(dxToTarget, dyToTarget, unit.facing);
+
+  if (face !== unit.facing) {
+    unit.facing = face;
+    log.push({ type:"faceChange", unit:unit.id, facing:face });
+  } else {
+    // それも同じなら idleFacing（roleに応じた自然な向き）
+    const idle = getIdleFacing(unit, units);
+    if (idle !== unit.facing) {
+      unit.facing = idle;
+      log.push({ type:"faceChange", unit:unit.id, facing:idle });
+    } else {
+      log.push({ type:"wait", unit:unit.id });
+    }
+  }
+
+  log.push({ type:"actionEnd", unit: unit.id });
+  continue;
+}
+
+// ====================
+// 実際に移動
+// ====================
+unit.x = step.x;
+unit.y = step.y;
+
+log.push({ type:"move", unit:unit.id, x:step.x, y:step.y });
+
+// 向きは「移動方向」にする（現行と同じ）
+if (step.facing !== unit.facing) {
+  unit.facing = step.facing;
+  log.push({ type:"faceChange", unit:unit.id, facing:step.facing });
+}
+
 // ====================
 // 行動終了
 // ====================
-log.push({
-  type: "actionEnd",
-  unit: unit.id
-});
+log.push({ type:"actionEnd", unit: unit.id });
     }
     
 // ====================
