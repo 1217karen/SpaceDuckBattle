@@ -289,9 +289,15 @@ function getUnitsInSameColumn(unit, units) {
 // 盤面・移動ヘルパー（moveType用）
 // ==========================
 
-// 盤面サイズ（現状は engine 内でも 10x6 前提があるため固定）
+// 盤面サイズ
 const BOARD_W = 10;
 const BOARD_H = 6;
+
+// 移動タイプ定数
+const MOVE_AXIS = "axis";
+const MOVE_TARGET = "target";
+const MOVE_AWAY = "away";
+const MOVE_RANGE = "keepRange";
 
 function inBounds(x, y) {
   return x >= 0 && x < BOARD_W && y >= 0 && y < BOARD_H;
@@ -970,14 +976,14 @@ else if (role === "defense") {
 // ・away   : targetPos から離れる
 // ・keepRange : targetPos との距離を理想値に保つ（将来用）
 
-let moveType = "axis";
+let moveType = MOVE_AXIS;
 let targetPos = null;
 let stopDistance = 1; // towardのとき、どこまで近づいたら「移動せず向きだけ」にするか
 
 if (role === "attack") {
   // 最寄り敵に「隣接」するまで近づく
   targetPos = targetUnit;       // nearestEnemy（unit座標）
-  moveType = "axis";
+  moveType = MOVE_AXIS;
   stopDistance = 1;
 }
 
@@ -985,11 +991,11 @@ else if (role === "heal") {
   // 既存仕様を維持：敵が近いなら逃げる、そうでなければ味方へ
   if (moveMode === "away") {
     targetPos = targetUnit;     // nearestEnemy（unit座標）
-    moveType = "away";
+    moveType = MOVE_AWAY;
     stopDistance = -1;          // awayは隣接停止ルールを使わない
   } else {
     targetPos = targetUnit;     // lowestHpAlly（unit座標）
-    moveType = "axis";
+    moveType = MOVE_AXIS;
     stopDistance = 1;
   }
 }
@@ -999,7 +1005,7 @@ else if (role === "defense") {
   // getDefenseTargetCell が返した場合：targetPos はセル
   // その場合は「隣接で止まらない（= 0 になるまで動く）」
   targetPos = targetUnit;       // cell か ally座標（x,yだけ見れば同じ）
-  moveType = "target";
+  moveType = MOVE_TARGET;
   stopDistance = 0;
 }
 
