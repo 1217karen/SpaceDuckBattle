@@ -378,22 +378,38 @@ function chooseStep(unit, units, moveType, targetPos, options = {}) {
   }
 
   // --- target（targetPos に近づく。近づけないなら「最短になる手」を選ぶ＝迂回しやすい） ---
-  if (moveType === "target") {
-    let best = null;
-    let bestDist = Infinity;
+if (moveType === "target") {
 
-    for (const c of candidates) {
-      const d = Math.abs(targetPos.x - c.x) + Math.abs(targetPos.y - c.y);
-      if (d < bestDist) {
-        bestDist = d;
-        best = c;
-      }
+  const dx = targetPos.x - unit.x;
+  const dy = targetPos.y - unit.y;
+
+  let best = null;
+  let bestDist = Infinity;
+  let bestAlign = -1;
+
+  for (const c of candidates) {
+
+    const d =
+      Math.abs(targetPos.x - c.x) +
+      Math.abs(targetPos.y - c.y);
+
+    // 方向一致度
+    const align =
+      (Math.sign(c.x - unit.x) === Math.sign(dx) ? 1 : 0) +
+      (Math.sign(c.y - unit.y) === Math.sign(dy) ? 1 : 0);
+
+    if (
+      d < bestDist ||
+      (d === bestDist && align > bestAlign)
+    ) {
+      bestDist = d;
+      bestAlign = align;
+      best = c;
     }
-
-    // ここがポイント：
-    // 「必ず距離が縮む手」だけに制限しないことで、塞がれていても迂回に入りやすくする
-    return best;
   }
+
+  return best;
+}
 
   // --- away（targetPos から遠ざかる＝距離最大化） ---
   if (moveType === "away") {
