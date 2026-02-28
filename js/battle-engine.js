@@ -93,6 +93,99 @@ function getLowestHpAlly(unit, units) {
   return best;
 }
 
+function getIdleFacing(unit, units) {
+
+  const role = unit.role || "attack";
+
+  // ====================
+  // ATTACK
+  // ====================
+
+  if (role === "attack") {
+
+    const enemy = getNearestEnemy(unit, units);
+    if (!enemy) return unit.facing;
+
+    const dx = enemy.x - unit.x;
+    const dy = enemy.y - unit.y;
+
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      return dx > 0 ? "E" : "W";
+    } else {
+      return dy > 0 ? "S" : "N";
+    }
+  }
+
+  // ====================
+  // HEAL
+  // ====================
+
+  if (role === "heal") {
+
+    const allies = getAllies(units, unit.team, unit.id);
+    if (!allies || allies.length === 0) return unit.facing;
+
+    let best = allies[0];
+
+    for (let a of allies) {
+
+      const d1 = getDistance(unit, a);
+      const d2 = getDistance(unit, best);
+
+      if (d1 < d2) best = a;
+      else if (d1 === d2 && a.hp < best.hp) best = a;
+    }
+
+    const dx = best.x - unit.x;
+    const dy = best.y - unit.y;
+
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      return dx > 0 ? "E" : "W";
+    } else {
+      return dy > 0 ? "S" : "N";
+    }
+  }
+
+  // ====================
+  // DEFENSE
+  // ====================
+
+  if (role === "defense") {
+
+    const adjacentEnemies = getEnemies(units, unit.team).filter(e =>
+      getDistance(unit, e) === 1
+    );
+
+    if (adjacentEnemies.length > 0) {
+
+      const e = adjacentEnemies[0];
+
+      const dx = e.x - unit.x;
+      const dy = e.y - unit.y;
+
+      if (Math.abs(dx) >= Math.abs(dy)) {
+        return dx > 0 ? "E" : "W";
+      } else {
+        return dy > 0 ? "S" : "N";
+      }
+    }
+
+    const ally = getLowestHpAlly(unit, units);
+    if (!ally) return unit.facing;
+
+    const dx = ally.x - unit.x;
+    const dy = ally.y - unit.y;
+
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      return dx > 0 ? "E" : "W";
+    } else {
+      return dy > 0 ? "S" : "N";
+    }
+  }
+
+  return unit.facing;
+}
+
 function getDefenseTargetCell(unit, units) {
 
   const ally = getLowestHpAlly(unit, units);
@@ -524,6 +617,7 @@ const context = {
   getAllies,
   getNearestEnemy,
   getLowestHpAlly,
+  getIdleFacing,
   getUnitsInManhattanRange,
   getUnitsInSameRow,
   getUnitsInSameColumn,
@@ -838,10 +932,26 @@ if (!occupied) {
 
   } else {
 
-    log.push({
-      type:"wait",
-      unit:unit.id
-    });
+const newFacing = getIdleFacing(unit, units);
+
+if (newFacing !== unit.facing) {
+
+  unit.facing = newFacing;
+
+  log.push({
+    type:"faceChange",
+    unit:unit.id,
+    facing:newFacing
+  });
+
+} else {
+
+  log.push({
+    type:"wait",
+    unit:unit.id
+  });
+
+}
   }
 }
   
