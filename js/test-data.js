@@ -51,8 +51,23 @@ export function createTestSnapshot() {
         facing:"W",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_100.webp",
         skills:[{type:"buff_self_if_alone"}]
+      },
+      
+      {
+        id:"Eno04",
+        name:"敵２",
+        team:2,
+        role:"speed",
+        hp:30,
+        atk:5,
+        df: 2,
+        speed:8,
+        x:4,
+        y:6,
+        facing:"W",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+        skills:[{type:"buff_self_if_alone"}]
       }
-
     ]
   };
 }
