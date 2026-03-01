@@ -6,68 +6,165 @@ export function createTestSnapshot() {
     units: [
 
       {
-        id:"Eno01",
-        name:"味方１",
+        id:"Eno1",
+        name:"左軍１",
         team:1,
-        role:"heal",
-        hp:10,
-        atk:5,
-        df: 2,
+        role:"attack",
+        hp:30,
+        atk:8,
+        df:3,
         speed:10,
-        x:3,
-        y:4,
-        facing:"N",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_icon_str_30.webp",
-        skills:[{type:"buff_df50_self"}]
-      },
-
-      {
-        id:"Eno02",
-        name:"味方２",
-        team:1,
-        role:"defense",
-        hp:20,
-        atk:5,
-        df: 2,
-        speed:9,
-        x:7,
-        y:4,
-        facing:"N",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
+        x:0,
+        y:0,
+        facing:"E",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D06.png",
         skills:[]
       },
 
       {
-        id:"Eno03",
-        name:"敵１",
-        team:2,
-        role:"technical",
-        hp:30,
-        atk:5,
-        df: 2,
-        speed:8,
-        x:2,
-        y:1,
-        facing:"W",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_100.webp",
-        skills:[{type:"buff_self_if_alone"}]
+        id:"Eno2",
+        name:"左軍２",
+        team:1,
+        role:"defense",
+        hp:40,
+        atk:6,
+        df:6,
+        speed:7,
+        x:1,
+        y:2,
+        facing:"E",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D08.png",
+        skills:[]
       },
-      
+
       {
-        id:"Eno04",
-        name:"敵２",
+        id:"Eno3",
+        name:"左軍３",
+        team:1,
+        role:"heal",
+        hp:28,
+        atk:5,
+        df:3,
+        speed:9,
+        x:2,
+        y:4,
+        facing:"E",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D13.png",
+        skills:[]
+      },
+
+      {
+        id:"Eno4",
+        name:"左軍４",
+        team:1,
+        role:"speed",
+        hp:25,
+        atk:7,
+        df:2,
+        speed:12,
+        x:3,
+        y:1,
+        facing:"E",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D21.png",
+        skills:[]
+      },
+
+      {
+        id:"Eno5",
+        name:"左軍５",
+        team:1,
+        role:"technical",
+        hp:32,
+        atk:7,
+        df:4,
+        speed:8,
+        x:3,
+        y:3,
+        facing:"E",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D11.png",
+        skills:[]
+      },
+
+      {
+        id:"Nno1",
+        name:"右軍１",
+        team:2,
+        role:"attack",
+        hp:30,
+        atk:8,
+        df:3,
+        speed:9,
+        x:9,
+        y:0,
+        facing:"W",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D07.png",
+        skills:[]
+      },
+
+      {
+        id:"Nno2",
+        name:"右軍２",
+        team:2,
+        role:"defense",
+        hp:42,
+        atk:6,
+        df:7,
+        speed:6,
+        x:8,
+        y:2,
+        facing:"W",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D10.png",
+        skills:[]
+      },
+
+      {
+        id:"Nno3",
+        name:"右軍３",
+        team:2,
+        role:"heal",
+        hp:26,
+        atk:5,
+        df:3,
+        speed:10,
+        x:7,
+        y:4,
+        facing:"W",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D05.png",
+        skills:[]
+      },
+
+      {
+        id:"Nno4",
+        name:"右軍４",
         team:2,
         role:"speed",
-        hp:30,
-        atk:5,
-        df: 2,
+        hp:24,
+        atk:7,
+        df:2,
+        speed:12,
+        x:6,
+        y:1,
+        facing:"W",
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D03.png",
+        skills:[]
+      },
+
+      {
+        id:"Nno5",
+        name:"右軍５",
+        team:2,
+        role:"technical",
+        hp:31,
+        atk:7,
+        df:4,
         speed:8,
         x:6,
         y:3,
         facing:"W",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
-        skills:[{type:"buff_self_if_alone"}]
+        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D04.png",
+        skills:[]
       }
+
     ]
   };
 }
