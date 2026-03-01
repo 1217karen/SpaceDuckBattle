@@ -18,7 +18,7 @@ export function createTestSnapshot() {
         y:3,
         facing:"N",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_icon_str_30.webp",
-        skills:[]
+        skills:[{type:"buff_df50_self"}]
       },
 
       {
@@ -50,7 +50,7 @@ export function createTestSnapshot() {
         y:1,
         facing:"W",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=shima_f_icon3_100.webp",
-        skills:[]
+        skills:[{type:"buff_self_if_alone"}]
       }
 
     ]
