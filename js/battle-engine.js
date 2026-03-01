@@ -789,68 +789,72 @@ else if (role === "heal") {
       continue;
     }
 
-    // ======================
-    // 敵が近い → 逃げる
-    // ======================
-    if (enemyDist <= 2) {
+// ======================
+// 敵が近い → 逃げる
+// ======================
+if (enemyDist <= 2) {
 
-      const safeCells = [];
+  const dirs = [
+    {dx:1,dy:0},
+    {dx:-1,dy:0},
+    {dx:0,dy:1},
+    {dx:0,dy:-1}
+  ];
 
-      for (let y=0;y<BOARD_H;y++){
-        for (let x=0;x<BOARD_W;x++){
+  const safeSteps = [];
 
-          if (!isOccupiedCell(units,x,y,unit.id)
-            && isSafeFromEnemies(x,y,unit,units)) {
+  for (const d of dirs) {
 
-            safeCells.push({x,y});
-          }
-        }
-      }
+    const nx = unit.x + d.dx;
+    const ny = unit.y + d.dy;
 
-      if (safeCells.length > 0) {
+    if (nx < 0 || nx >= BOARD_W || ny < 0 || ny >= BOARD_H) continue;
 
-        const target =
-          safeCells[Math.floor(Math.random()*safeCells.length)];
+    if (isOccupiedCell(units, nx, ny, unit.id)) continue;
 
-        const step =
-          chooseStep(unit,units,target);
+    if (!isSafeFromEnemies(nx, ny, unit, units)) continue;
 
-        if (step) {
+    safeSteps.push({x:nx, y:ny});
+  }
 
-          const moveDx = step.x - unit.x;
-          const moveDy = step.y - unit.y;
+  if (safeSteps.length > 0) {
 
-          unit.x = step.x;
-          unit.y = step.y;
+    const step =
+      safeSteps[Math.floor(Math.random()*safeSteps.length)];
 
-          log.push({
-            type:"move",
-            unit:unit.id,
-            x:step.x,
-            y:step.y
-          });
+    const moveDx = step.x - unit.x;
+    const moveDy = step.y - unit.y;
 
-          const newFacing =
-            facingFromDelta(moveDx,moveDy,unit.facing);
+    unit.x = step.x;
+    unit.y = step.y;
 
-          if (newFacing !== unit.facing) {
-            unit.facing = newFacing;
-            log.push({
-              type:"faceChange",
-              unit:unit.id,
-              facing:newFacing
-            });
-          }
+    log.push({
+      type:"move",
+      unit:unit.id,
+      x:step.x,
+      y:step.y
+    });
 
-          log.push({
-            type:"actionEnd",
-            unit:unit.id
-          });
+    const newFacing =
+      facingFromDelta(moveDx,moveDy,unit.facing);
 
-          continue;
-        }
-      }
+    if (newFacing !== unit.facing) {
+      unit.facing = newFacing;
+      log.push({
+        type:"faceChange",
+        unit:unit.id,
+        facing:newFacing
+      });
     }
+
+    log.push({
+      type:"actionEnd",
+      unit:unit.id
+    });
+
+    continue;
+  }
+}
 
     // ======================
     // 味方へ近付く
