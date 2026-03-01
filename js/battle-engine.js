@@ -725,10 +725,10 @@ if (usedSkill) {
 
       const role = unit.role || "attack";
 
-      let moveMode = "toward";
+let moveMode = "toward";
 let targetUnit = null;
 let stopDistance = 1;
-let stopDistance = 1;
+let moveCount = 1;
 
       if (role === "attack") {
         targetUnit = getNearestEnemy(unit, units);
