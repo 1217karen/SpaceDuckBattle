@@ -393,7 +393,10 @@ function applyHeal(source, target, action, ctx) {
     finalHeal = atk + power;
   }
 
-  target.hp += finalHeal;
+  target.hp = Math.min(
+  target.hp + finalHeal,
+  target.mhp ?? target.hp
+);
 
   ctx.log.push({
     type:"heal",
