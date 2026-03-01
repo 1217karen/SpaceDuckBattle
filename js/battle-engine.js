@@ -288,39 +288,7 @@ const DIR4 = [
   { dx:  0, dy: -1, facing: "N" }
 ];
 
-function getOrderedDirs(from, target) {
-
-  const dx = target.x - from.x;
-  const dy = target.y - from.y;
-
-  const absDx = Math.abs(dx);
-  const absDy = Math.abs(dy);
-
-  if (absDx >= absDy) {
-
-    return [
-      { dx: dx > 0 ? 1 : -1, dy:0 },
-      { dx:0, dy: dy > 0 ? 1 : -1 },
-      { dx:0, dy: dy > 0 ? -1 : 1 },
-      { dx: dx > 0 ? -1 : 1, dy:0 }
-    ];
-
-  } else {
-
-    return [
-      { dx:0, dy: dy > 0 ? 1 : -1 },
-      { dx: dx > 0 ? 1 : -1, dy:0 },
-      { dx: dx > 0 ? -1 : 1, dy:0 },
-      { dx:0, dy: dy > 0 ? -1 : 1 }
-    ];
-
-  }
-}
-
 function getSafeCellsFromEnemies(units, selfId, minDist) {
-
-  const self = units.find(u => u.id === selfId);
-  const selfTeam = self ? self.team : null;
 
   const cells = [];
 
@@ -333,7 +301,7 @@ function getSafeCellsFromEnemies(units, selfId, minDist) {
 
       for (const u of units) {
         if (u.id === selfId || u.hp <= 0) continue;
-        if (u.team === selfTeam) continue;
+        if (u.team === units.find(a=>a.id===selfId).team) continue;
 
         const d =
           Math.abs(x - u.x) +
@@ -375,34 +343,6 @@ function getChebyshevCells(center) {
   return cells;
 }
 
-function getHealSafeCells(unit, units, ally) {
-
-  const cells = [];
-
-  for (let y = 0; y < BOARD_H; y++) {
-    for (let x = 0; x < BOARD_W; x++) {
-
-      if (isOccupiedCell(units, x, y, unit.id)) continue;
-
-      // 敵から安全か
-      if (!isSafeFromEnemies(x, y, unit, units)) continue;
-
-      // 味方の周囲8マスか
-      const cheb =
-        Math.max(
-          Math.abs(x - ally.x),
-          Math.abs(y - ally.y)
-        );
-
-      if (cheb <= 1) {
-        cells.push({x,y});
-      }
-    }
-  }
-
-  return cells;
-}
-
 function chooseStep(unit, units, targetPos) {
 
   // targetPos は「対象ユニットの座標」（例：敵の位置）
@@ -414,9 +354,7 @@ function chooseStep(unit, units, targetPos) {
   // =========================
   const goalCells = [];
 
-const dirs = getOrderedDirs(unit, targetPos);
-
-for (const d of dirs) {
+  for (const d of DIR4) {
     const gx = targetPos.x + d.dx;
     const gy = targetPos.y + d.dy;
 
@@ -462,10 +400,8 @@ for (const d of dirs) {
       break;
     }
 
-    // 4方向に展開
-    const dirs = getOrderedDirs(cur, targetPos);
-
-for (const d of dirs) {
+    // 4方向に展開（順序はDIR4固定で挙動安定）
+    for (const d of DIR4) {
 
       const nx = cur.x + d.dx;
       const ny = cur.y + d.dy;
@@ -1004,8 +940,7 @@ else if (role === "heal") {
     targetUnit = ally;
     moveMode = "toward";
   }
-}
-  
+
   else {
 
     const enemyDist =
@@ -1044,65 +979,63 @@ else if (role === "heal") {
     // ======================
     if (enemyDist <= 2) {
 
-const safeCells =
-  getHealSafeCells(unit, units, ally);
+      const safeCells = [];
 
-if (safeCells.length > 0) {
+      for (let y=0;y<BOARD_H;y++){
+        for (let x=0;x<BOARD_W;x++){
 
-  // 現在地から一番近い安全セルを選ぶ
-  let target = safeCells[0];
-  let bestDist = Infinity;
+          if (!isOccupiedCell(units,x,y,unit.id)
+            && isSafeFromEnemies(x,y,unit,units)) {
 
-  for (const c of safeCells) {
+            safeCells.push({x,y});
+          }
+        }
+      }
 
-    const d =
-      Math.abs(c.x - unit.x) +
-      Math.abs(c.y - unit.y);
+      if (safeCells.length > 0) {
 
-    if (d < bestDist) {
-      bestDist = d;
-      target = c;
+        const target =
+          safeCells[Math.floor(Math.random()*safeCells.length)];
+
+        const step =
+          chooseStep(unit,units,target);
+
+        if (step) {
+
+          const moveDx = step.x - unit.x;
+          const moveDy = step.y - unit.y;
+
+          unit.x = step.x;
+          unit.y = step.y;
+
+          log.push({
+            type:"move",
+            unit:unit.id,
+            x:step.x,
+            y:step.y
+          });
+
+          const newFacing =
+            facingFromDelta(moveDx,moveDy,unit.facing);
+
+          if (newFacing !== unit.facing) {
+            unit.facing = newFacing;
+            log.push({
+              type:"faceChange",
+              unit:unit.id,
+              facing:newFacing
+            });
+          }
+
+          log.push({
+            type:"actionEnd",
+            unit:unit.id
+          });
+
+          continue;
+        }
+      }
     }
-  }
-
-  const step =
-    chooseStep(unit, units, target);
-
-  if (step) {
-
-    const moveDx = step.x - unit.x;
-    const moveDy = step.y - unit.y;
-
-    unit.x = step.x;
-    unit.y = step.y;
-
-    log.push({
-      type:"move",
-      unit:unit.id,
-      x:step.x,
-      y:step.y
-    });
-
-    const newFacing =
-      facingFromDelta(moveDx, moveDy, unit.facing);
-
-    if (newFacing !== unit.facing) {
-      unit.facing = newFacing;
-      log.push({
-        type:"faceChange",
-        unit:unit.id,
-        facing:newFacing
-      });
-    }
-
-    log.push({
-      type:"actionEnd",
-      unit:unit.id
-    });
-
-    continue;
-  }
-}
 
     // ======================
     // 味方へ近付く
