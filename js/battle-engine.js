@@ -1004,7 +1004,8 @@ else if (role === "heal") {
     targetUnit = ally;
     moveMode = "toward";
   }
-
+}
+  
   else {
 
     const enemyDist =
