@@ -41,7 +41,7 @@ export function createTestSnapshot() {
         id:"Eno03",
         name:"敵１",
         team:2,
-        role:"attack",
+        role:"technical",
         hp:30,
         atk:5,
         df: 2,
