@@ -70,15 +70,13 @@ if (snapshot) {
 
     boardState.units[u.id] = { x:u.x, y:u.y };
 
-    placeUnit("board", {
-      id: u.id,
-      x: u.x,
-      y: u.y,
-      icon: u.icon || "https://placehold.co/60x60"
-    });
-
-    updateFacing("board", u.id, u.facing);
-  });
+placeUnit("board", {
+  id: u.id,
+  x: u.x,
+  y: u.y,
+  team: u.team,
+  icon: u.icon || "https://placehold.co/60x60"
+});
 }
 
 let logIndex = 0;
