@@ -186,57 +186,6 @@ function getIdleFacing(unit, units) {
   return unit.facing;
 }
 
-function getDefenseTargetCell(unit, units) {
-
-  const ally = getLowestHpAlly(unit, units);
-  if (!ally) return null;
-
-  const enemy = getNearestEnemy(unit, units);
-  if (!enemy) return null;
-
-  const candidates = [
-    { x: ally.x, y: ally.y - 1 },
-    { x: ally.x, y: ally.y + 1 },
-    { x: ally.x - 1, y: ally.y },
-    { x: ally.x + 1, y: ally.y }
-  ];
-
-  // 盤内 & 空きマスだけ残す
-  const valid = candidates.filter(c => {
-
-    // 盤外チェック（6x10想定）
-    if (c.x < 0 || c.x >= 10) return false;
-    if (c.y < 0 || c.y >= 6) return false;
-
-    // ユニットがいるマスは不可
-    const occupied = units.some(u =>
-      u.hp > 0 &&
-      u.x === c.x &&
-      u.y === c.y
-    );
-
-    return !occupied;
-  });
-
-  if (valid.length === 0) return null;
-
-  // 敵に一番近いマス
-  let best = valid[0];
-  let bestDist = getDistance(best, enemy);
-
-  for (let c of valid) {
-
-    const d = getDistance(c, enemy);
-
-    if (d < bestDist) {
-      best = c;
-      bestDist = d;
-    }
-  }
-
-  return best;
-}
-
 function getRandomUnit(list) {
   if (!list || list.length === 0) return null;
   const index = Math.floor(Math.random() * list.length);
@@ -293,12 +242,6 @@ function getUnitsInSameColumn(unit, units) {
 const BOARD_W = 10;
 const BOARD_H = 6;
 
-// 移動タイプ定数
-const MOVE_AXIS = "axis";
-const MOVE_TARGET = "target";
-const MOVE_AWAY = "away";
-const MOVE_RANGE = "keepRange";
-
 function inBounds(x, y) {
   return x >= 0 && x < BOARD_W && y >= 0 && y < BOARD_H;
 }
@@ -329,123 +272,35 @@ const DIR4 = [
   { dx:  0, dy: -1, facing: "N" }
 ];
 
-// moveType に従って「次の1手」を決める（移動できないなら null）
-function chooseStep(unit, units, moveType, targetPos, options = {}) {
+function chooseStep(unit, units, targetPos) {
+
   if (!targetPos) return null;
-
-
-  // 候補（空き & 盤内）
-  const candidates = DIR4
-    .map(d => ({
-      x: unit.x + d.dx,
-      y: unit.y + d.dy,
-      facing: d.facing
-    }))
-    .filter(c =>
-      inBounds(c.x, c.y) &&
-      !isOccupiedCell(units, c.x, c.y, unit.id)
-    );
-
-  if (candidates.length === 0) return null;
-
-  // --- axis（今の軸優先に近い挙動。詰まったらもう片方を試す） ---
-  if (moveType === "axis") {
-    const dx = targetPos.x - unit.x;
-    const dy = targetPos.y - unit.y;
-
-    let primary = null;
-    let secondary = null;
-
-    if (Math.abs(dx) >= Math.abs(dy) && dx !== 0) {
-      primary = { x: unit.x + (dx > 0 ? 1 : -1), y: unit.y, facing: dx > 0 ? "E" : "W" };
-      if (dy !== 0) secondary = { x: unit.x, y: unit.y + (dy > 0 ? 1 : -1), facing: dy > 0 ? "S" : "N" };
-    } else if (dy !== 0) {
-      primary = { x: unit.x, y: unit.y + (dy > 0 ? 1 : -1), facing: dy > 0 ? "S" : "N" };
-      if (dx !== 0) secondary = { x: unit.x + (dx > 0 ? 1 : -1), y: unit.y, facing: dx > 0 ? "E" : "W" };
-    } else {
-      return null;
-    }
-
-    const canUse = (step) =>
-      step &&
-      inBounds(step.x, step.y) &&
-      !isOccupiedCell(units, step.x, step.y, unit.id);
-
-    if (canUse(primary)) return primary;
-    if (canUse(secondary)) return secondary;
-
-    return null;
-  }
-
-  // --- target（targetPos に近づく。近づけないなら「最短になる手」を選ぶ＝迂回しやすい） ---
-if (moveType === "target") {
 
   const dx = targetPos.x - unit.x;
   const dy = targetPos.y - unit.y;
 
-  let best = null;
-  let bestDist = Infinity;
-  let bestAlign = -1;
+  let primary = null;
+  let secondary = null;
 
-  for (const c of candidates) {
-
-    const d =
-      Math.abs(targetPos.x - c.x) +
-      Math.abs(targetPos.y - c.y);
-
-    // 方向一致度
-    const align =
-      (Math.sign(c.x - unit.x) === Math.sign(dx) ? 1 : 0) +
-      (Math.sign(c.y - unit.y) === Math.sign(dy) ? 1 : 0);
-
-    if (
-      d < bestDist ||
-      (d === bestDist && align > bestAlign)
-    ) {
-      bestDist = d;
-      bestAlign = align;
-      best = c;
+  if (Math.abs(dx) >= Math.abs(dy) && dx !== 0) {
+    primary = { x: unit.x + (dx > 0 ? 1 : -1), y: unit.y };
+    if (dy !== 0) {
+      secondary = { x: unit.x, y: unit.y + (dy > 0 ? 1 : -1) };
+    }
+  } else if (dy !== 0) {
+    primary = { x: unit.x, y: unit.y + (dy > 0 ? 1 : -1) };
+    if (dx !== 0) {
+      secondary = { x: unit.x + (dx > 0 ? 1 : -1), y: unit.y };
     }
   }
 
-  return best;
-}
+  const canMove = (pos) =>
+    pos &&
+    inBounds(pos.x, pos.y) &&
+    !isOccupiedCell(units, pos.x, pos.y, unit.id);
 
-  // --- away（targetPos から遠ざかる＝距離最大化） ---
-  if (moveType === "away") {
-    let best = null;
-    let bestDist = -Infinity;
-
-    for (const c of candidates) {
-      const d = Math.abs(targetPos.x - c.x) + Math.abs(targetPos.y - c.y);
-      if (d > bestDist) {
-        bestDist = d;
-        best = c;
-      }
-    }
-    return best;
-  }
-
-  // --- keepRange（理想距離を維持：|距離-ideal| を最小化。タイブレークで「遠い方」を優先） ---
-  if (moveType === "keepRange") {
-    const ideal = options.idealRange ?? 2;
-
-    let best = null;
-    let bestScore = Infinity;
-    let bestDist = -Infinity;
-
-    for (const c of candidates) {
-      const d = Math.abs(targetPos.x - c.x) + Math.abs(targetPos.y - c.y);
-      const score = Math.abs(d - ideal);
-
-      if (score < bestScore || (score === bestScore && d > bestDist)) {
-        bestScore = score;
-        bestDist = d;
-        best = c;
-      }
-    }
-    return best;
-  }
+  if (canMove(primary)) return primary;
+  if (canMove(secondary)) return secondary;
 
   return null;
 }
@@ -922,8 +777,9 @@ if (usedSkill) {
 
       const role = unit.role || "attack";
 
-      let moveMode = "toward"; // "toward" or "away"
-      let targetUnit = null;
+      let moveMode = "toward";
+let targetUnit = null;
+let stopDistance = 1;
 
       if (role === "attack") {
         targetUnit = getNearestEnemy(unit, units);
@@ -931,43 +787,14 @@ if (usedSkill) {
       }
 
 else if (role === "defense") {
-
-  const cell = getDefenseTargetCell(unit, units);
-
-  if (!cell) {
-    targetUnit = getLowestHpAlly(unit, units);
-    moveMode = "toward";
-  } else {
-
-    targetUnit = {
-      x: cell.x,
-      y: cell.y
-    };
-
-    moveMode = "toward";
-  }
+  targetUnit = getNearestEnemy(unit, units);
+  moveMode = "toward";
 }
 
-      else if (role === "heal") {
-        const nearestEnemy = getNearestEnemy(unit, units);
-        if (!nearestEnemy) {
-          // 敵がいないのは上でbattleEndしている想定だが、念のため
-          targetUnit = getLowestHpAlly(unit, units);
-          moveMode = "toward";
-        } else {
-          const dist = getDistance(unit, nearestEnemy);
-
-          if (dist < 3) {
-            // 近い敵から離れる
-            targetUnit = nearestEnemy;
-            moveMode = "away";
-          } else {
-            // すでに距離3以上なら、最もHPの低い味方へ
-            targetUnit = getLowestHpAlly(unit, units);
-            moveMode = "toward";
-          }
-        }
-      }
+else if (role === "heal") {
+  targetUnit = getLowestHpAlly(unit, units);
+  moveMode = "toward";
+}
 
       // 目標がいないなら何もしない
       if (!targetUnit) {
@@ -983,41 +810,7 @@ else if (role === "defense") {
 
         continue;
       }
-
-// ====================
-// moveType（移動アルゴリズム）決定
-// ====================
-// ・axis   : 現行に近い軸優先
-// ・target : targetPos に近づく（塞がれても迂回しやすい）
-// ・away   : targetPos から離れる
-// ・keepRange : targetPos との距離を理想値に保つ（将来用）
-
-let moveType = MOVE_AXIS;
-let targetPos = null;
-let stopDistance = 1; // towardのとき、どこまで近づいたら「移動せず向きだけ」にするか
-
-// attack / defense → 最寄り敵に近付く
-if (role === "attack" || role === "defense") {
-
-  targetPos = targetUnit;
-  moveType = MOVE_AXIS;
-  stopDistance = 1;
-}
-
-// heal → 最低HP味方に近付く
-else if (role === "heal") {
-
-  targetPos = targetUnit;
-  moveType = MOVE_AXIS;
-  stopDistance = 1;
-}
-
-// 目標がある前提だが念のため
-if (!targetPos) {
-  log.push({ type:"wait", unit:unit.id });
-  log.push({ type:"actionEnd", unit: unit.id });
-  continue;
-}
+  const targetPos = targetUnit;
 
 // ====================
 // 「近すぎるなら移動せず向きだけ変える」処理
@@ -1042,18 +835,10 @@ if (moveMode === "toward" && stopDistance >= 0 && distToTarget <= stopDistance) 
   continue;
 }
 
-// ====================
-// 1マス移動を決定（moveTypeごと）
-// ====================
 const step = chooseStep(
   unit,
   units,
-  moveType,
-  targetPos,
-  {
-    // keepRangeを将来使うときに渡す（今は未使用）
-    idealRange: 2
-  }
+  targetPos
 );
 
 if (!step) {
@@ -1083,15 +868,20 @@ if (!step) {
 // ====================
 // 実際に移動
 // ====================
+const moveDx = step.x - unit.x;
+const moveDy = step.y - unit.y;
+
 unit.x = step.x;
 unit.y = step.y;
 
 log.push({ type:"move", unit:unit.id, x:step.x, y:step.y });
 
-// 向きは「移動方向」にする（現行と同じ）
-if (step.facing !== unit.facing) {
-  unit.facing = step.facing;
-  log.push({ type:"faceChange", unit:unit.id, facing:step.facing });
+const newFacing =
+  facingFromDelta(moveDx, moveDy, unit.facing);
+
+if (newFacing !== unit.facing) {
+  unit.facing = newFacing;
+  log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
 }
 
 // ====================
