@@ -728,6 +728,7 @@ if (usedSkill) {
       let moveMode = "toward";
 let targetUnit = null;
 let stopDistance = 1;
+let stopDistance = 1;
 
       if (role === "attack") {
         targetUnit = getNearestEnemy(unit, units);
@@ -737,6 +738,12 @@ let stopDistance = 1;
 else if (role === "defense") {
   targetUnit = getNearestEnemy(unit, units);
   moveMode = "toward";
+}
+
+  else if (role === "speed") {
+  targetUnit = getNearestEnemy(unit, units);
+  moveMode = "toward";
+  moveCount = 2;
 }
 
 else if (role === "heal") {
@@ -892,11 +899,15 @@ if (moveMode === "toward" && stopDistance >= 0 && distToTarget <= stopDistance) 
   continue;
 }
 
-const step = chooseStep(
-  unit,
-  units,
-  targetPos
-);
+for (let i = 0; i < moveCount; i++) {
+
+  const step = chooseStep(
+    unit,
+    units,
+    targetPos
+  );
+
+  if (!step) break;
 
 if (!step) {
 
@@ -939,6 +950,7 @@ const newFacing =
 if (newFacing !== unit.facing) {
   unit.facing = newFacing;
   log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
+}
 }
 
 // ====================
