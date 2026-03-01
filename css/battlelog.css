@@ -76,57 +76,17 @@
   inset: 0;
   pointer-events: none;
 }
+/* ===== 向きエッジ表示 ===== */
 
-.facingMarker::before {
-  content: "";
-  position: absolute;
+.team1.face-N { border-top: 3px solid #00ff88; }
+.team1.face-S { border-bottom: 3px solid #00ff88; }
+.team1.face-E { border-right: 3px solid #00ff88; }
+.team1.face-W { border-left: 3px solid #00ff88; }
 
-  width: 0;
-  height: 0;
-
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 10px solid;
-  border-bottom-color: white;
-
-  filter: drop-shadow(0 0 2px black);
-}
-
-.team1 .facingMarker::before {
-  border-bottom-color: #00ff88;
-  filter: drop-shadow(0 0 4px #00ff88);
-}
-
-.team2 .facingMarker::before {
-  border-bottom-color: #bb55ff;
-  filter: drop-shadow(0 0 4px #bb55ff);
-}
-
-/* 向きごとの位置＋回転 */
-.face-N::before {
-  top: 1px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.face-S::before {
-  bottom: 1px;
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-}
-
-.face-E::before {
-  right: -2px;
-  top: 50%;
-  transform: translateY(-50%) rotate(90deg);
-}
-
-.face-W::before {
-  left: -2px;
-  top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
-}
-
+.team2.face-N { border-top: 3px solid #bb55ff; }
+.team2.face-S { border-bottom: 3px solid #bb55ff; }
+.team2.face-E { border-right: 3px solid #bb55ff; }
+.team2.face-W { border-left: 3px solid #bb55ff; }
 .cell.attackHighlight {
   background-color: rgba(255,0,0,0.4);
 }
