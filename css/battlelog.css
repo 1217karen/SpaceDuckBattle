@@ -86,7 +86,7 @@
 
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-bottom: 12px solid;
+  border-bottom: 15px solid;
   border-bottom-color: white;
 
   filter: drop-shadow(0 0 2px black);
@@ -104,25 +104,25 @@
 
 /* 向きごとの位置＋回転 */
 .face-N::before {
-  top: 2px;
+  top: 1px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .face-S::before {
-  bottom: 2px;
+  bottom: 1px;
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
 }
 
 .face-E::before {
-  right: 2px;
+  right: 1px;
   top: 50%;
   transform: translateY(-50%) rotate(90deg);
 }
 
 .face-W::before {
-  left: 2px;
+  left: 1px;
   top: 50%;
   transform: translateY(-50%) rotate(-90deg);
 }
