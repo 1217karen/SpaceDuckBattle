@@ -274,35 +274,104 @@ const DIR4 = [
 
 function chooseStep(unit, units, targetPos) {
 
+  // targetPos は「対象ユニットの座標」（例：敵の位置）
   if (!targetPos) return null;
 
-  const dx = targetPos.x - unit.x;
-  const dy = targetPos.y - unit.y;
+  // =========================
+  // 目標セル：対象の周囲4マス（上下左右）
+  // ただし盤外・占有マスは除外
+  // =========================
+  const goalCells = [];
 
-  let primary = null;
-  let secondary = null;
+  for (const d of DIR4) {
+    const gx = targetPos.x + d.dx;
+    const gy = targetPos.y + d.dy;
 
-  if (Math.abs(dx) >= Math.abs(dy) && dx !== 0) {
-    primary = { x: unit.x + (dx > 0 ? 1 : -1), y: unit.y };
-    if (dy !== 0) {
-      secondary = { x: unit.x, y: unit.y + (dy > 0 ? 1 : -1) };
+    if (!inBounds(gx, gy)) continue;
+
+    // すでに誰かがいるマスには行かない（自分以外）
+    if (isOccupiedCell(units, gx, gy, unit.id)) continue;
+
+    goalCells.push({ x: gx, y: gy });
+  }
+
+  if (goalCells.length === 0) {
+    // 周囲4マスが全部埋まっているなど
+    return null;
+  }
+
+  // goal を高速判定するため Set 化
+  const goalSet = new Set(goalCells.map(c => `${c.x},${c.y}`));
+
+  // =========================
+  // BFS（幅優先探索）で最短経路を探す
+  // 盤面が小さいので毎手BFSでOK
+  // =========================
+  const startKey = `${unit.x},${unit.y}`;
+
+  const queue = [];
+  const visited = new Set();
+  const prev = new Map(); // key -> previousKey
+
+  queue.push({ x: unit.x, y: unit.y });
+  visited.add(startKey);
+
+  let foundGoalKey = null;
+
+  while (queue.length > 0) {
+
+    const cur = queue.shift();
+    const curKey = `${cur.x},${cur.y}`;
+
+    // ゴール到達（開始地点がゴールになることは基本ないが一応）
+    if (goalSet.has(curKey)) {
+      foundGoalKey = curKey;
+      break;
     }
-  } else if (dy !== 0) {
-    primary = { x: unit.x, y: unit.y + (dy > 0 ? 1 : -1) };
-    if (dx !== 0) {
-      secondary = { x: unit.x + (dx > 0 ? 1 : -1), y: unit.y };
+
+    // 4方向に展開（順序はDIR4固定で挙動安定）
+    for (const d of DIR4) {
+
+      const nx = cur.x + d.dx;
+      const ny = cur.y + d.dy;
+
+      if (!inBounds(nx, ny)) continue;
+
+      // 通行不可：自分以外がいるマスには入れない
+      if (isOccupiedCell(units, nx, ny, unit.id)) continue;
+
+      const nKey = `${nx},${ny}`;
+      if (visited.has(nKey)) continue;
+
+      visited.add(nKey);
+      prev.set(nKey, curKey);
+      queue.push({ x: nx, y: ny });
     }
   }
 
-  const canMove = (pos) =>
-    pos &&
-    inBounds(pos.x, pos.y) &&
-    !isOccupiedCell(units, pos.x, pos.y, unit.id);
+  if (!foundGoalKey) {
+    // 到達できるゴールが無い（壁やユニットで完全に塞がれている）
+    return null;
+  }
 
-  if (canMove(primary)) return primary;
-  if (canMove(secondary)) return secondary;
+  // =========================
+  // 見つかったゴールから start まで prev を辿り、
+  // start の「次の1歩」を返す
+  // =========================
+  let stepKey = foundGoalKey;
+  let p = prev.get(stepKey);
 
-  return null;
+  // p が startKey になる直前まで戻す
+  while (p && p !== startKey) {
+    stepKey = p;
+    p = prev.get(stepKey);
+  }
+
+  // startKey から1歩も動けない場合（start自体がgoalだった等）
+  if (!p) return null;
+
+  const [sx, sy] = stepKey.split(",").map(Number);
+  return { x: sx, y: sy };
 }
 
 function getEffectiveStat(unit, statName) {
