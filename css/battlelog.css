@@ -78,15 +78,15 @@
 }
 /* ===== 向きエッジ表示 ===== */
 
-.team1.face-N { border-top: 3px solid #00ff88; }
-.team1.face-S { border-bottom: 3px solid #00ff88; }
-.team1.face-E { border-right: 3px solid #00ff88; }
-.team1.face-W { border-left: 3px solid #00ff88; }
+.team1 .face-N { border-top: 3px solid #00ff88; }
+.team1 .face-S { border-bottom: 3px solid #00ff88; }
+.team1 .face-E { border-right: 3px solid #00ff88; }
+.team1 .face-W { border-left: 3px solid #00ff88; }
 
-.team2.face-N { border-top: 3px solid #bb55ff; }
-.team2.face-S { border-bottom: 3px solid #bb55ff; }
-.team2.face-E { border-right: 3px solid #bb55ff; }
-.team2.face-W { border-left: 3px solid #bb55ff; }
+.team2 .face-N { border-top: 3px solid #bb55ff; }
+.team2 .face-S { border-bottom: 3px solid #bb55ff; }
+.team2 .face-E { border-right: 3px solid #bb55ff; }
+.team2 .face-W { border-left: 3px solid #bb55ff; }
 .cell.attackHighlight {
   background-color: rgba(255,0,0,0.4);
 }
