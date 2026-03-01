@@ -746,6 +746,28 @@ else if (role === "defense") {
   moveCount = 2;
 }
 
+    else if (role === "technical") {
+
+  targetUnit = getNearestEnemy(unit, units);
+
+  if (targetUnit) {
+
+    const dist =
+      Math.abs(unit.x - targetUnit.x) +
+      Math.abs(unit.y - targetUnit.y);
+
+    if (dist > 2) {
+      moveMode = "toward";
+    }
+    else if (dist < 2) {
+      moveMode = "away";
+    }
+    else {
+      stopDistance = 2;
+    }
+  }
+}
+
 else if (role === "heal") {
 
   const nearestEnemy = getNearestEnemy(unit, units);
@@ -905,11 +927,12 @@ if (moveMode === "toward" && stopDistance >= 0 && distToTarget <= stopDistance) 
 
 for (let i = 0; i < moveCount; i++) {
 
-  const step = chooseStep(
-    unit,
-    units,
-    targetPos
-  );
+const step = chooseStep(
+  unit,
+  units,
+  targetPos,
+  moveMode
+);
 
   if (!step) break;
 
