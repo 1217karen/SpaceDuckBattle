@@ -62,8 +62,8 @@ export function createTestSnapshot() {
         atk:5,
         df: 2,
         speed:8,
-        x:4,
-        y:6,
+        x:6,
+        y:3,
         facing:"W",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
         skills:[{type:"buff_self_if_alone"}]
