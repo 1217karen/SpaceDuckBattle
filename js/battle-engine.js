@@ -280,6 +280,45 @@ function facingFromDelta(dx, dy, fallbackFacing) {
   return fallbackFacing;
 }
 
+function getPreferredDirs(unit, targetPos) {
+
+  const dx = targetPos.x - unit.x;
+  const dy = targetPos.y - unit.y;
+
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  const dirs = [];
+
+  const horiz =
+    dx > 0
+      ? { dx: 1, dy: 0 }
+      : { dx: -1, dy: 0 };
+
+  const vert =
+    dy > 0
+      ? { dx: 0, dy: 1 }
+      : { dx: 0, dy: -1 };
+
+  const horizOpp =
+    dx > 0
+      ? { dx: -1, dy: 0 }
+      : { dx: 1, dy: 0 };
+
+  const vertOpp =
+    dy > 0
+      ? { dx: 0, dy: -1 }
+      : { dx: 0, dy: 1 };
+
+  if (absDx >= absDy) {
+    dirs.push(horiz, vert, vertOpp, horizOpp);
+  } else {
+    dirs.push(vert, horiz, horizOpp, vertOpp);
+  }
+
+  return dirs;
+}
+
 // 4方向（順番は決め打ち。安定した挙動にするため）
 const DIR4 = [
   { dx:  1, dy:  0, facing: "E" },
@@ -354,7 +393,9 @@ function chooseStep(unit, units, targetPos) {
   // =========================
   const goalCells = [];
 
-  for (const d of DIR4) {
+  const preferredDirs = getPreferredDirs(unit, targetPos);
+
+for (const d of preferredDirs) {
     const gx = targetPos.x + d.dx;
     const gy = targetPos.y + d.dy;
 
