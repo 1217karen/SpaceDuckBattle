@@ -91,6 +91,16 @@
   filter: drop-shadow(0 0 2px black);
 }
 
+.team1 .facingMarker::before {
+  border-bottom-color: #00ff88;
+  filter: drop-shadow(0 0 4px #00ff88);
+}
+
+.team2 .facingMarker::before {
+  border-bottom-color: #bb55ff;
+  filter: drop-shadow(0 0 4px #bb55ff);
+}
+
 /* 向きごとの位置＋回転 */
 .face-N::before {
   top: 4px;
