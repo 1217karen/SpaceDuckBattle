@@ -288,6 +288,35 @@ const DIR4 = [
   { dx:  0, dy: -1, facing: "N" }
 ];
 
+function getOrderedDirs(from, target) {
+
+  const dx = target.x - from.x;
+  const dy = target.y - from.y;
+
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  if (absDx >= absDy) {
+
+    return [
+      { dx: dx > 0 ? 1 : -1, dy:0 },
+      { dx:0, dy: dy > 0 ? 1 : -1 },
+      { dx:0, dy: dy > 0 ? -1 : 1 },
+      { dx: dx > 0 ? -1 : 1, dy:0 }
+    ];
+
+  } else {
+
+    return [
+      { dx:0, dy: dy > 0 ? 1 : -1 },
+      { dx: dx > 0 ? 1 : -1, dy:0 },
+      { dx: dx > 0 ? -1 : 1, dy:0 },
+      { dx:0, dy: dy > 0 ? -1 : 1 }
+    ];
+
+  }
+}
+
 function getSafeCellsFromEnemies(units, selfId, minDist) {
 
   const cells = [];
@@ -354,7 +383,9 @@ function chooseStep(unit, units, targetPos) {
   // =========================
   const goalCells = [];
 
-  for (const d of DIR4) {
+const dirs = getOrderedDirs(unit, targetPos);
+
+for (const d of dirs) {
     const gx = targetPos.x + d.dx;
     const gy = targetPos.y + d.dy;
 
