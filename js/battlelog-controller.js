@@ -78,6 +78,7 @@ placeUnit("board", {
   icon: u.icon || "https://placehold.co/60x60"
 });
 }
+}
 
 let logIndex = 0;
 // =====================
