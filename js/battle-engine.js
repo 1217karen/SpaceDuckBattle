@@ -1030,11 +1030,14 @@ else if (role === "heal") {
 
       if (safeCells.length > 0) {
 
-        let target = safeCells[0];
-let bestDist = -1;
+let target = safeCells[0];
+let bestScore = -Infinity;
 
 for (const c of safeCells) {
 
+  // ======================
+  // 敵との距離（最も近い敵）
+  // ======================
   let nearestEnemyDist = Infinity;
 
   for (const e of enemies) {
@@ -1048,8 +1051,23 @@ for (const c of safeCells) {
     }
   }
 
-  if (nearestEnemyDist > bestDist) {
-    bestDist = nearestEnemyDist;
+  // ======================
+  // 味方との距離
+  // ======================
+  const allyDist =
+    Math.max(
+      Math.abs(c.x - ally.x),
+      Math.abs(c.y - ally.y)
+    );
+
+  // ======================
+  // 評価値
+  // ======================
+  const score =
+    nearestEnemyDist * 10 - allyDist;
+
+  if (score > bestScore) {
+    bestScore = score;
     target = c;
   }
 }
