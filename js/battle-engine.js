@@ -393,9 +393,7 @@ function chooseStep(unit, units, targetPos) {
   // =========================
   const goalCells = [];
 
-  const preferredDirs = getPreferredDirs(unit, targetPos);
-
-for (const d of preferredDirs) {
+  for (const d of DIR4) {
     const gx = targetPos.x + d.dx;
     const gy = targetPos.y + d.dy;
 
@@ -442,7 +440,9 @@ for (const d of preferredDirs) {
     }
 
     // 4方向に展開（順序はDIR4固定で挙動安定）
-    for (const d of DIR4) {
+    const preferredDirs = getPreferredDirs(unit, targetPos);
+
+for (const d of preferredDirs) {
 
       const nx = cur.x + d.dx;
       const ny = cur.y + d.dy;
