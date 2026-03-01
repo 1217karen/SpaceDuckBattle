@@ -1,170 +1,77 @@
-//test-data.js
-
 export function createTestSnapshot() {
 
-  return {
-    units: [
+  const roles = ["attack","defense","heal","speed","technical"];
 
-      {
-        id:"Eno1",
-        name:"左軍１",
-        team:1,
-        role:"attack",
-        hp:30,
-        atk:8,
-        df:3,
-        speed:10,
-        x:0,
-        y:0,
-        facing:"E",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
-        skills:[]
-      },
+  const leftIcons = [
+    "D06.webp",
+    "D08.webp",
+    "D13.webp",
+    "D21.webp",
+    "D11.webp"
+  ];
 
-      {
-        id:"Eno2",
-        name:"左軍２",
-        team:1,
-        role:"defense",
-        hp:40,
-        atk:6,
-        df:6,
-        speed:7,
-        x:1,
-        y:2,
-        facing:"E",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
-        skills:[]
-      },
+  const rightIcons = [
+    "D07.webp",
+    "D10.webp",
+    "D05.webp",
+    "D03.webp",
+    "D04.webp"
+  ];
 
-      {
-        id:"Eno3",
-        name:"左軍３",
-        team:1,
-        role:"heal",
-        hp:28,
-        atk:5,
-        df:3,
-        speed:9,
-        x:2,
-        y:4,
-        facing:"E",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
-        skills:[]
-      },
+  function shuffle(array){
+    const a = [...array];
+    for(let i = a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
 
-      {
-        id:"Eno4",
-        name:"左軍４",
-        team:1,
-        role:"speed",
-        hp:25,
-        atk:7,
-        df:2,
-        speed:12,
-        x:3,
-        y:1,
-        facing:"E",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D21.webp",
-        skills:[]
-      },
+  const leftY = [0,1,2,3,4];
+  let rightY = shuffle(leftY);
 
-      {
-        id:"Eno5",
-        name:"左軍５",
-        team:1,
-        role:"technical",
-        hp:32,
-        atk:7,
-        df:4,
-        speed:8,
-        x:3,
-        y:3,
-        facing:"E",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D11.webp",
-        skills:[]
-      },
+  while(rightY.some((y,i)=>y===leftY[i])){
+    rightY = shuffle(leftY);
+  }
 
-      {
-        id:"Nno1",
-        name:"右軍１",
-        team:2,
-        role:"attack",
-        hp:30,
-        atk:8,
-        df:3,
-        speed:9,
-        x:9,
-        y:0,
-        facing:"W",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D07.webp",
-        skills:[]
-      },
+  const units = [];
 
-      {
-        id:"Nno2",
-        name:"右軍２",
-        team:2,
-        role:"defense",
-        hp:42,
-        atk:6,
-        df:7,
-        speed:6,
-        x:8,
-        y:2,
-        facing:"W",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D10.webp",
-        skills:[]
-      },
+  for(let i=0;i<5;i++){
 
-      {
-        id:"Nno3",
-        name:"右軍３",
-        team:2,
-        role:"heal",
-        hp:26,
-        atk:5,
-        df:3,
-        speed:10,
-        x:7,
-        y:4,
-        facing:"W",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D05.webp",
-        skills:[]
-      },
+    units.push({
+      id:`Eno${i+1}`,
+      name:`左軍${i+1}`,
+      team:1,
+      role:roles[i],
+      hp:30,
+      atk:7,
+      df:3,
+      speed:9,
+      x:Math.floor(Math.random()*2), //0 or 1
+      y:leftY[i],
+      facing:"E",
+      icon:`https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=${leftIcons[i]}`,
+      skills:[]
+    });
 
-      {
-        id:"Nno4",
-        name:"右軍４",
-        team:2,
-        role:"speed",
-        hp:24,
-        atk:7,
-        df:2,
-        speed:12,
-        x:6,
-        y:1,
-        facing:"W",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D03.webp",
-        skills:[]
-      },
+    units.push({
+      id:`Nno${i+1}`,
+      name:`右軍${i+1}`,
+      team:2,
+      role:roles[i],
+      hp:30,
+      atk:7,
+      df:3,
+      speed:9,
+      x:8 + Math.floor(Math.random()*2), //8 or 9
+      y:rightY[i],
+      facing:"W",
+      icon:`https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=${rightIcons[i]}`,
+      skills:[]
+    });
 
-      {
-        id:"Nno5",
-        name:"右軍５",
-        team:2,
-        role:"technical",
-        hp:31,
-        atk:7,
-        df:4,
-        speed:8,
-        x:6,
-        y:3,
-        facing:"W",
-        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D04.webp",
-        skills:[]
-      }
+  }
 
-    ]
-  };
+  return { units };
+
 }
