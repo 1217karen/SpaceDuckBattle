@@ -375,6 +375,34 @@ function getChebyshevCells(center) {
   return cells;
 }
 
+function getHealSafeCells(unit, units, ally) {
+
+  const cells = [];
+
+  for (let y = 0; y < BOARD_H; y++) {
+    for (let x = 0; x < BOARD_W; x++) {
+
+      if (isOccupiedCell(units, x, y, unit.id)) continue;
+
+      // 敵から安全か
+      if (!isSafeFromEnemies(x, y, unit, units)) continue;
+
+      // 味方の周囲8マスか
+      const cheb =
+        Math.max(
+          Math.abs(x - ally.x),
+          Math.abs(y - ally.y)
+        );
+
+      if (cheb <= 1) {
+        cells.push({x,y});
+      }
+    }
+  }
+
+  return cells;
+}
+
 function chooseStep(unit, units, targetPos) {
 
   // targetPos は「対象ユニットの座標」（例：敵の位置）
@@ -1015,102 +1043,65 @@ else if (role === "heal") {
     // ======================
     if (enemyDist <= 2) {
 
-      const safeCells = [];
+const safeCells =
+  getHealSafeCells(unit, units, ally);
 
-      for (let y=0;y<BOARD_H;y++){
-        for (let x=0;x<BOARD_W;x++){
+if (safeCells.length > 0) {
 
-          if (!isOccupiedCell(units,x,y,unit.id)
-            && isSafeFromEnemies(x,y,unit,units)) {
+  // 現在地から一番近い安全セルを選ぶ
+  let target = safeCells[0];
+  let bestDist = Infinity;
 
-            safeCells.push({x,y});
-          }
-        }
-      }
-
-      if (safeCells.length > 0) {
-
-let target = safeCells[0];
-let bestScore = -Infinity;
-
-for (const c of safeCells) {
-
-  // ======================
-  // 敵との距離（最も近い敵）
-  // ======================
-  let nearestEnemyDist = Infinity;
-
-  for (const e of enemies) {
+  for (const c of safeCells) {
 
     const d =
-      Math.abs(c.x - e.x) +
-      Math.abs(c.y - e.y);
+      Math.abs(c.x - unit.x) +
+      Math.abs(c.y - unit.y);
 
-    if (d < nearestEnemyDist) {
-      nearestEnemyDist = d;
+    if (d < bestDist) {
+      bestDist = d;
+      target = c;
     }
   }
 
-  // ======================
-  // 味方との距離
-  // ======================
-  const allyDist =
-    Math.max(
-      Math.abs(c.x - ally.x),
-      Math.abs(c.y - ally.y)
-    );
+  const step =
+    chooseStep(unit, units, target);
 
-  // ======================
-  // 評価値
-  // ======================
-  const score =
-    nearestEnemyDist * 10 - allyDist;
+  if (step) {
 
-  if (score > bestScore) {
-    bestScore = score;
-    target = c;
+    const moveDx = step.x - unit.x;
+    const moveDy = step.y - unit.y;
+
+    unit.x = step.x;
+    unit.y = step.y;
+
+    log.push({
+      type:"move",
+      unit:unit.id,
+      x:step.x,
+      y:step.y
+    });
+
+    const newFacing =
+      facingFromDelta(moveDx, moveDy, unit.facing);
+
+    if (newFacing !== unit.facing) {
+      unit.facing = newFacing;
+      log.push({
+        type:"faceChange",
+        unit:unit.id,
+        facing:newFacing
+      });
+    }
+
+    log.push({
+      type:"actionEnd",
+      unit:unit.id
+    });
+
+    continue;
   }
 }
-
-        const step =
-          chooseStep(unit,units,target);
-
-        if (step) {
-
-          const moveDx = step.x - unit.x;
-          const moveDy = step.y - unit.y;
-
-          unit.x = step.x;
-          unit.y = step.y;
-
-          log.push({
-            type:"move",
-            unit:unit.id,
-            x:step.x,
-            y:step.y
-          });
-
-          const newFacing =
-            facingFromDelta(moveDx,moveDy,unit.facing);
-
-          if (newFacing !== unit.facing) {
-            unit.facing = newFacing;
-            log.push({
-              type:"faceChange",
-              unit:unit.id,
-              facing:newFacing
-            });
-          }
-
-          log.push({
-            type:"actionEnd",
-            unit:unit.id
-          });
-
-          continue;
-        }
-      }
-    }
 
     // ======================
     // 味方へ近付く
