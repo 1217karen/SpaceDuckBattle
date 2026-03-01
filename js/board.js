@@ -29,7 +29,7 @@ export function placeUnit(containerId, unit) {
   if (!cell) return;
 
   const wrapper = document.createElement("div");
-  wrapper.classList.add("unitWrapper");
+  wrapper.classList.add("unitWrapper", "team" + unit.team);
   wrapper.dataset.unitId = unit.id;
 
 const img = document.createElement("img");
