@@ -116,13 +116,13 @@
 }
 
 .face-E::before {
-  right: -1px;
+  right: -2px;
   top: 50%;
   transform: translateY(-50%) rotate(90deg);
 }
 
 .face-W::before {
-  left: -1px;
+  left: -2px;
   top: 50%;
   transform: translateY(-50%) rotate(-90deg);
 }
