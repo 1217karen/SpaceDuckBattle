@@ -319,6 +319,9 @@ function getOrderedDirs(from, target) {
 
 function getSafeCellsFromEnemies(units, selfId, minDist) {
 
+  const self = units.find(u => u.id === selfId);
+  const selfTeam = self ? self.team : null;
+
   const cells = [];
 
   for (let y = 0; y < BOARD_H; y++) {
@@ -330,7 +333,7 @@ function getSafeCellsFromEnemies(units, selfId, minDist) {
 
       for (const u of units) {
         if (u.id === selfId || u.hp <= 0) continue;
-        if (u.team === units.find(a=>a.id===selfId).team) continue;
+        if (u.team === selfTeam) continue;
 
         const d =
           Math.abs(x - u.x) +
@@ -1025,8 +1028,29 @@ else if (role === "heal") {
 
       if (safeCells.length > 0) {
 
-        const target =
-          safeCells[Math.floor(Math.random()*safeCells.length)];
+        let target = safeCells[0];
+let bestDist = -1;
+
+for (const c of safeCells) {
+
+  let nearestEnemyDist = Infinity;
+
+  for (const e of enemies) {
+
+    const d =
+      Math.abs(c.x - e.x) +
+      Math.abs(c.y - e.y);
+
+    if (d < nearestEnemyDist) {
+      nearestEnemyDist = d;
+    }
+  }
+
+  if (nearestEnemyDist > bestDist) {
+    bestDist = nearestEnemyDist;
+    target = c;
+  }
+}
 
         const step =
           chooseStep(unit,units,target);
