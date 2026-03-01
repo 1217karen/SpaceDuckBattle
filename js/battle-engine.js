@@ -736,8 +736,43 @@ let moveCount = 1;
       }
 
 else if (role === "defense") {
-  targetUnit = getNearestEnemy(unit, units);
-  moveMode = "toward";
+
+  const enemy = getNearestEnemy(unit, units);
+
+  if (enemy) {
+
+    const allies = getAllies(units, unit.team, unit.id);
+
+    let bestAlly = null;
+    let bestDist = Infinity;
+
+    for (const a of allies) {
+
+      const dist =
+        Math.abs(a.x - enemy.x) +
+        Math.abs(a.y - enemy.y);
+
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestAlly = a;
+      }
+    }
+
+    if (bestAlly) {
+
+      targetUnit = bestAlly;
+      moveMode = "toward";
+      stopDistance = 2;
+
+    } else {
+
+      targetUnit = enemy;
+      moveMode = "toward";
+      stopDistance = 1;
+
+    }
+
+  }
 }
 
   else if (role === "speed") {
