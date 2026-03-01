@@ -803,6 +803,56 @@ else if (role === "defense") {
   }
 }
 
+else if (role === "support") {
+
+  const enemy = getNearestEnemy(unit, units);
+
+  if (enemy) {
+
+    const allies = getAllies(units, unit.team, unit.id);
+
+    let bestAlly = null;
+    let bestDist = Infinity;
+
+    for (const a of allies) {
+
+      const dist =
+        Math.abs(a.x - enemy.x) +
+        Math.abs(a.y - enemy.y);
+
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestAlly = a;
+      }
+    }
+
+    if (bestAlly) {
+
+      targetUnit = bestAlly;
+      stopDistance = 1;
+
+      const enemyDist =
+        Math.abs(unit.x - enemy.x) +
+        Math.abs(unit.y - enemy.y);
+
+      if (enemyDist > 2) {
+        moveMode = "toward";
+      }
+      else if (enemyDist < 2) {
+        moveMode = "away";
+      }
+
+    } else {
+
+      targetUnit = enemy;
+      stopDistance = 2;
+      moveMode = "toward";
+
+    }
+
+  }
+}
+
 else if (role === "heal") {
 
   const nearestEnemy = getNearestEnemy(unit, units);
