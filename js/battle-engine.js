@@ -418,7 +418,8 @@ function chooseStep(unit, units, targetPos) {
   // 盤面が小さいので毎手BFSでOK
   // =========================
   const startKey = `${unit.x},${unit.y}`;
-
+const preferredDirs = getPreferredDirs(unit, targetPos);
+  
   const queue = [];
   const visited = new Set();
   const prev = new Map(); // key -> previousKey
@@ -438,9 +439,6 @@ function chooseStep(unit, units, targetPos) {
       foundGoalKey = curKey;
       break;
     }
-
-    // 4方向に展開（順序はDIR4固定で挙動安定）
-    const preferredDirs = getPreferredDirs(unit, targetPos);
 
 for (const d of preferredDirs) {
 
