@@ -7,7 +7,7 @@ function inBounds(x, y) {
   return x >= 0 && x < BOARD_W && y >= 0 && y < BOARD_H;
 }
 
-function isOccupiedCell(units, x, y, selfId) {
+export function isOccupiedCell(units, x, y, selfId){
   return units.some(u =>
     u.hp > 0 &&
     u.id !== selfId &&
