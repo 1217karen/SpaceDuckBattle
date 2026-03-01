@@ -93,6 +93,22 @@ function getLowestHpAlly(unit, units) {
   return best;
 }
 
+function isSafeFromEnemies(x, y, unit, units) {
+
+  const enemies = getEnemies(units, unit.team);
+
+  for (const e of enemies) {
+
+    const d =
+      Math.abs(x - e.x) +
+      Math.abs(y - e.y);
+
+    if (d <= 2) return false;
+  }
+
+  return true;
+}
+
 function getIdleFacing(unit, units) {
 
   const role = unit.role || "attack";
@@ -920,55 +936,109 @@ else if (role === "heal") {
   const nearestEnemy = getNearestEnemy(unit, units);
   const ally = getLowestHpAlly(unit, units);
 
-  if (!nearestEnemy) {
+  if (!nearestEnemy || !ally) {
     targetUnit = ally;
     moveMode = "toward";
   }
+
   else {
 
     const enemyDist =
       Math.abs(unit.x - nearestEnemy.x) +
       Math.abs(unit.y - nearestEnemy.y);
 
+    const dx = unit.x - ally.x;
+    const dy = unit.y - ally.y;
+
+    const allyChebyshev =
+      Math.max(Math.abs(dx), Math.abs(dy));
+
+    const safe = enemyDist >= 3;
+    const nearAlly = allyChebyshev <= 1;
+
+    // ======================
+    // 安全かつヒール位置 → 動かない
+    // ======================
+    if (safe && nearAlly) {
+
+      log.push({
+        type:"wait",
+        unit:unit.id
+      });
+
+      log.push({
+        type:"actionEnd",
+        unit:unit.id
+      });
+
+      continue;
+    }
+
     // ======================
     // 敵が近い → 逃げる
     // ======================
     if (enemyDist <= 2) {
 
-      const safeCells =
-        getSafeCellsFromEnemies(units, unit.id, 3);
+      const safeCells = [];
 
-      const step = chooseStep(
-        unit,
-        units,
-        safeCells[Math.floor(Math.random()*safeCells.length)]
-      );
+      for (let y=0;y<BOARD_H;y++){
+        for (let x=0;x<BOARD_W;x++){
 
-      if (step) {
+          if (!isOccupiedCell(units,x,y,unit.id)
+            && isSafeFromEnemies(x,y,unit,units)) {
 
-        const moveDx = step.x - unit.x;
-        const moveDy = step.y - unit.y;
-
-        unit.x = step.x;
-        unit.y = step.y;
-
-        log.push({ type:"move", unit:unit.id, x:step.x, y:step.y });
-
-        const newFacing =
-          facingFromDelta(moveDx, moveDy, unit.facing);
-
-        if (newFacing !== unit.facing) {
-          unit.facing = newFacing;
-          log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
+            safeCells.push({x,y});
+          }
         }
+      }
 
-        log.push({ type:"actionEnd", unit: unit.id });
-        continue;
+      if (safeCells.length > 0) {
+
+        const target =
+          safeCells[Math.floor(Math.random()*safeCells.length)];
+
+        const step =
+          chooseStep(unit,units,target);
+
+        if (step) {
+
+          const moveDx = step.x - unit.x;
+          const moveDy = step.y - unit.y;
+
+          unit.x = step.x;
+          unit.y = step.y;
+
+          log.push({
+            type:"move",
+            unit:unit.id,
+            x:step.x,
+            y:step.y
+          });
+
+          const newFacing =
+            facingFromDelta(moveDx,moveDy,unit.facing);
+
+          if (newFacing !== unit.facing) {
+            unit.facing = newFacing;
+            log.push({
+              type:"faceChange",
+              unit:unit.id,
+              facing:newFacing
+            });
+          }
+
+          log.push({
+            type:"actionEnd",
+            unit:unit.id
+          });
+
+          continue;
+        }
       }
     }
 
     // ======================
-    // 敵が遠い → 味方へ
+    // 味方へ近付く
     // ======================
     targetUnit = ally;
     moveMode = "toward";
