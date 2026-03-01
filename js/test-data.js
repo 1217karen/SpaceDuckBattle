@@ -17,7 +17,7 @@ export function createTestSnapshot() {
         x:0,
         y:0,
         facing:"E",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D06.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
         skills:[]
       },
 
@@ -33,7 +33,7 @@ export function createTestSnapshot() {
         x:1,
         y:2,
         facing:"E",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D08.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
         skills:[]
       },
 
@@ -49,7 +49,7 @@ export function createTestSnapshot() {
         x:2,
         y:4,
         facing:"E",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D13.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
         skills:[]
       },
 
@@ -65,7 +65,7 @@ export function createTestSnapshot() {
         x:3,
         y:1,
         facing:"E",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D21.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D21.webp",
         skills:[]
       },
 
@@ -81,7 +81,7 @@ export function createTestSnapshot() {
         x:3,
         y:3,
         facing:"E",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D11.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D11.webp",
         skills:[]
       },
 
@@ -97,7 +97,7 @@ export function createTestSnapshot() {
         x:9,
         y:0,
         facing:"W",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D07.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D07.webp",
         skills:[]
       },
 
@@ -113,7 +113,7 @@ export function createTestSnapshot() {
         x:8,
         y:2,
         facing:"W",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D10.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D10.webp",
         skills:[]
       },
 
@@ -129,7 +129,7 @@ export function createTestSnapshot() {
         x:7,
         y:4,
         facing:"W",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D05.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D05.webp",
         skills:[]
       },
 
@@ -145,7 +145,7 @@ export function createTestSnapshot() {
         x:6,
         y:1,
         facing:"W",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D03.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D03.webp",
         skills:[]
       },
 
@@ -161,7 +161,7 @@ export function createTestSnapshot() {
         x:6,
         y:3,
         facing:"W",
-        icon:"https://duckbattlebeta.web.fc2.com/img/Duck/D04.png",
+        icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D04.webp",
         skills:[]
       }
 
