@@ -4,8 +4,8 @@ export function createBoard(containerId, width, height) {
   container.innerHTML = "";
 
   container.style.display = "grid";
-container.style.gridTemplateColumns = `repeat(${width}, 80px)`;
-container.style.gridTemplateRows = `repeat(${height}, 80px)`;
+container.style.gridTemplateColumns = `repeat(${width}, 64px)`;
+container.style.gridTemplateRows = `repeat(${height}, 64px)`;
   container.style.gap = "2px";
 
   for (let y = 0; y < height; y++) {
