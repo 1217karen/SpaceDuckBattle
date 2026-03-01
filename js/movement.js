@@ -65,10 +65,46 @@ const DIR4 = [
   { dx: 0, dy: -1 }
 ];
 
-export function chooseStep(unit, units, targetPos) {
+export function chooseStep(unit, units, targetPos, mode="toward") {
 
   if (!targetPos) return null;
 
+// ======================
+// awayモード
+// ======================
+if (mode === "away") {
+
+  const dirs = [
+    {dx:1,dy:0},
+    {dx:-1,dy:0},
+    {dx:0,dy:1},
+    {dx:0,dy:-1}
+  ];
+
+  let best = null;
+  let bestDist = -1;
+
+  for (const d of dirs) {
+
+    const nx = unit.x + d.dx;
+    const ny = unit.y + d.dy;
+
+    if (!inBounds(nx,ny)) continue;
+    if (isOccupiedCell(units,nx,ny,unit.id)) continue;
+
+    const dist =
+      Math.abs(nx-targetPos.x) +
+      Math.abs(ny-targetPos.y);
+
+    if (dist > bestDist) {
+      bestDist = dist;
+      best = {x:nx,y:ny};
+    }
+  }
+
+  return best;
+}
+  
   const goalCells = [];
 
   for (const d of DIR4) {
