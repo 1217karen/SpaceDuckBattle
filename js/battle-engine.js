@@ -996,33 +996,20 @@ let moveType = MOVE_AXIS;
 let targetPos = null;
 let stopDistance = 1; // towardのとき、どこまで近づいたら「移動せず向きだけ」にするか
 
-if (role === "attack") {
-  // 最寄り敵に「隣接」するまで近づく
-  targetPos = targetUnit;       // nearestEnemy（unit座標）
+// attack / defense → 最寄り敵に近付く
+if (role === "attack" || role === "defense") {
+
+  targetPos = targetUnit;
   moveType = MOVE_AXIS;
   stopDistance = 1;
 }
 
+// heal → 最低HP味方に近付く
 else if (role === "heal") {
-  // 既存仕様を維持：敵が近いなら逃げる、そうでなければ味方へ
-  if (moveMode === "away") {
-    targetPos = targetUnit;     // nearestEnemy（unit座標）
-    moveType = MOVE_AWAY;
-    stopDistance = -1;          // awayは隣接停止ルールを使わない
-  } else {
-    targetPos = targetUnit;     // lowestHpAlly（unit座標）
-    moveType = MOVE_AXIS;
-    stopDistance = 1;
-  }
-}
 
-else if (role === "defense") {
-  // defense は「セル」を踏みに行きたい
-  // getDefenseTargetCell が返した場合：targetPos はセル
-  // その場合は「隣接で止まらない（= 0 になるまで動く）」
-  targetPos = targetUnit;       // cell か ally座標（x,yだけ見れば同じ）
-  moveType = MOVE_TARGET;
-  stopDistance = 0;
+  targetPos = targetUnit;
+  moveType = MOVE_AXIS;
+  stopDistance = 1;
 }
 
 // 目標がある前提だが念のため
