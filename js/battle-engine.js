@@ -434,8 +434,10 @@ for (const d of dirs) {
       break;
     }
 
-    // 4方向に展開（順序はDIR4固定で挙動安定）
-    for (const d of DIR4) {
+    // 4方向に展開
+    const dirs = getOrderedDirs(cur, targetPos);
+
+for (const d of dirs) {
 
       const nx = cur.x + d.dx;
       const ny = cur.y + d.dy;
