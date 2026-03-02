@@ -148,7 +148,7 @@ if (snapshot) {
 // 盤面作成
 // =====================
 
-createBoard("board", 10, 6);
+createBoard("board", 8, 6);
 
 
 // =====================
