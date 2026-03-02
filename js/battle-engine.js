@@ -782,23 +782,40 @@ if (
   action.type !== "move"
 ) continue;
 
-    const source = units.find(u => u.id === action.source);
-    const target = units.find(u => u.id === action.target);
-    if (!source || !target) continue;
-
 if (action.type === "damage") {
+
+  const source = units.find(u => u.id === action.source);
+  const target = units.find(u => u.id === action.target);
+  if (!source || !target) continue;
+
   context.applyDamage(source, target, action, context);
 }
+
 else if (action.type === "heal") {
+
+  const source = units.find(u => u.id === action.source);
+  const target = units.find(u => u.id === action.target);
+  if (!source || !target) continue;
+
   context.applyHeal(source, target, action, context);
 }
+
 else if (action.type === "applyEffect") {
+
+  const source = units.find(u => u.id === action.source);
+  const target = units.find(u => u.id === action.target);
+  if (!source || !target) continue;
+
   context.applyEffect(source, target, action, context);
 }
+
 else if (action.type === "move") {
+
+  const target = units.find(u => u.id === action.target);
+  if (!target) continue;
+
   context.applyMove(action, context);
-}
-    
+} 
   }
 // 使用したスキルにCTをセット
 if (handler.cooldown && handler.cooldown > 0) {
