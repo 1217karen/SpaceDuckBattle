@@ -181,7 +181,7 @@
 }
 
 .cell.activeUnit {
-  animation: activeGlow 0.8s ease-in-out;
+  animation: activeGlow 1s ease-in-out;
 }
 
 @keyframes activeGlow {
