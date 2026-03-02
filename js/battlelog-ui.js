@@ -69,6 +69,16 @@ if (cls) {
         unitState.y,
         "attackHighlight"
       );
+
+      const wrapper = document.querySelector(
+  `[data-unit-id="${event.to}"]`
+);
+
+if (wrapper) {
+  wrapper.classList.remove("shake");
+  void wrapper.offsetWidth; // アニメ再発火
+  wrapper.classList.add("shake");
+}
     }
 
 div.textContent =
