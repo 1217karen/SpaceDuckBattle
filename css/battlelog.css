@@ -37,6 +37,13 @@
   grid-template-columns: 150px auto 150px;
 }
 
+:root {
+  --attack-color: 255,0,0;
+  --heal-color: 0,255,0;
+  --buff-color: 255,230,0;
+  --debuff-color: 180,0,255;
+}
+
 .cell {
   width: 64px;
   height: 64px;
@@ -44,6 +51,7 @@
   border: 1px solid rgba(255,255,255,0.15);
   position: relative;
 }
+
 
 #turnDisplay {
   font-size: 24px;
@@ -112,35 +120,35 @@
 }
 
 .cell.attackHighlight {
-  background-color: rgba(255,0,0,0.4);
+  background-color: rgba(var(--attack-color),0.45);
 }
 
 .cell.healHighlight {
-  background-color: rgba(0,255,0,0.4);
+  background-color: rgba(var(--heal-color),0.45);
 }
 
 .cell.buffHighlight {
-  background-color: rgba(255, 230, 0, 0.6);
+  background-color: rgba(var(--buff-color),0.6);
 }
 
 .cell.debuffHighlight {
-  background-color: rgba(180, 0, 255, 0.6);
+  background-color: rgba(var(--debuff-color),0.6);
 }
 
 .cell.attackRange {
-  background-color: rgba(255,0,0,0.15);
+  background-color: rgba(var(--attack-color),0.15);
 }
 
 .cell.healRange {
-  background-color: rgba(0,255,0,0.15);
+  background-color: rgba(var(--heal-color),0.15);
 }
 
 .cell.buffRange {
-  background-color: rgba(255, 230, 0, 0.2);
+  background-color: rgba(var(--buff-color),0.2);
 }
 
 .cell.debuffRange {
-  background-color: rgba(180, 0, 255, 0.2);
+  background-color: rgba(var(--debuff-color),0.2);
 }
 
 .unitImage.shake {
