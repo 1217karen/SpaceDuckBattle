@@ -172,7 +172,18 @@
 }
 
 @keyframes activeGlow {
-  0%   { box-shadow: 0 0 0px rgba(255,255,255,0); }
-  50%  { box-shadow: 0 0 10px rgba(255,255,255,0.9); }
-  100% { box-shadow: 0 0 0px rgba(255,255,255,0); }
+  0% {
+    background-color: rgba(255,255,255,0.05);
+    box-shadow: 0 0 0px rgba(255,255,255,0);
+  }
+
+  50% {
+    background-color: rgba(255,255,255,0.18);
+    box-shadow: 0 0 10px rgba(255,255,255,0.9);
+  }
+
+  100% {
+    background-color: rgba(255,255,255,0.05);
+    box-shadow: 0 0 0px rgba(255,255,255,0);
+  }
 }
