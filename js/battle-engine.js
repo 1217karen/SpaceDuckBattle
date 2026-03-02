@@ -3,7 +3,7 @@
 import { skillHandlers } from "./skills.js";
 import { chooseStep, facingFromDelta, isOccupiedCell } from "./movement.js";
 
-const BOARD_W = 10;
+const BOARD_W = 8;
 const BOARD_H = 6;
 
 // ==========================
