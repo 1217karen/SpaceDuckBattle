@@ -34,6 +34,19 @@ const turnDisplay = document.getElementById("turnDisplay");
 const logArea = document.getElementById("logArea");
 const nextBtn = document.getElementById("nextBtn");
 
+const autoBtn = document.getElementById("autoBtn");
+
+autoBtn.addEventListener("click", () => {
+
+  autoPlay = !autoPlay;
+
+  autoBtn.textContent = autoPlay ? "Stop" : "Auto";
+
+  if (autoPlay) {
+    playNextAction();
+  }
+});
+
 const params = new URLSearchParams(window.location.search);
 const battleID = params.get("id");
 
@@ -85,6 +98,8 @@ if (snapshot) {
 }
 
 let logIndex = 0;
+let autoPlay = false;
+const UNIT_DELAY = 1000;
 // =====================
 // UIターン管理
 // =====================
@@ -110,7 +125,7 @@ if (snapshot) {
 // =====================
 // イベント再生
 // =====================
-nextBtn.addEventListener("click", async () => {
+async function playNextAction() {
 
   // 再生中の連打防止
   nextBtn.disabled = true;
@@ -317,5 +332,10 @@ clearEffectHighlights();
 }
   actedSet.add(actingUnit);
 logIndex = end + 1;
-  nextBtn.disabled = false;
-});
+nextBtn.disabled = false;
+
+if (autoPlay) {
+  setTimeout(playNextAction, UNIT_DELAY);
+}
+}
+xtBtn.addEventListener("click", playNextAction);
