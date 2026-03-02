@@ -808,9 +808,9 @@ else if (role === "defense") {
 
     if (bestAlly) {
 
-      targetUnit = bestAlly;
-      moveMode = "toward";
-      stopDistance = 2;
+targetUnit = enemy;
+moveMode = "toward";
+stopDistance = 1;
 
     } else {
 
