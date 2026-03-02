@@ -456,8 +456,14 @@ function getKnockbackCell(source, target, units) {
   const dx = target.x - source.x;
   const dy = target.y - source.y;
 
-  const stepX = dx === 0 ? 0 : dx / Math.abs(dx);
-  const stepY = dy === 0 ? 0 : dy / Math.abs(dy);
+let stepX = 0;
+let stepY = 0;
+
+if (Math.abs(dx) >= Math.abs(dy)) {
+  stepX = dx > 0 ? 1 : -1;
+} else {
+  stepY = dy > 0 ? 1 : -1;
+}
 
   const nx = target.x + stepX;
   const ny = target.y + stepY;
@@ -480,8 +486,14 @@ function getPullCell(source, target, units) {
   const dx = source.x - target.x;
   const dy = source.y - target.y;
 
-  const stepX = dx === 0 ? 0 : dx / Math.abs(dx);
-  const stepY = dy === 0 ? 0 : dy / Math.abs(dy);
+let stepX = 0;
+let stepY = 0;
+
+if (Math.abs(dx) >= Math.abs(dy)) {
+  stepX = dx > 0 ? 1 : -1;
+} else {
+  stepY = dy > 0 ? 1 : -1;
+}
 
   const nx = target.x + stepX;
   const ny = target.y + stepY;
