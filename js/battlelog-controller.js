@@ -290,7 +290,7 @@ for (let i = 0; i < actionEvents.length; i++) {
   
   //死んだら終わり
 if (ev.type === "death") {
-  requiredSet.delete(ev.target);
+requiredSet.delete(ev.unit);
 }
   
   // 毎イベント前にハイライトリセット
