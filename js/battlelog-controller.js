@@ -22,6 +22,14 @@ function clearEffectHighlights() {
       );
     });
 }
+
+function clearActiveUnit() {
+  document.querySelectorAll(".cell")
+    .forEach(cell => {
+      cell.classList.remove("activeUnit");
+    });
+}
+
 const HEADER_DELAY = 1000;
 const EVENT_DELAY = 500;
 const EFFECT_DELAY = 250;
@@ -216,6 +224,21 @@ const actionEvents = battleLog
 // ======================
 
 const actingUnit = battleLog[start].unit;
+
+  clearActiveUnit();
+
+const pos = boardState.units[actingUnit];
+
+if (pos) {
+
+  const cell = document.querySelector(
+    `.cell[data-x="${pos.x}"][data-y="${pos.y}"]`
+  );
+
+  if (cell) {
+    cell.classList.add("activeUnit");
+  }
+}
 
 // 初回行動時にTURN1へ
 if (uiTurn === 0) {
