@@ -8,8 +8,10 @@ import {
 import { playLogEvent }
   from "./battlelog-ui.js";
 
+let speed = 1;
+
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms / speed));
 }
 function clearEffectHighlights() {
   document.querySelectorAll(".cell")
@@ -43,6 +45,25 @@ const logArea = document.getElementById("logArea");
 const nextBtn = document.getElementById("nextBtn");
 
 const autoBtn = document.getElementById("autoBtn");
+
+const speedBtn = document.getElementById("speedBtn");
+
+speedBtn.addEventListener("click", () => {
+
+  if (speed === 1) {
+    speed = 2;
+    speedBtn.textContent = "x2";
+  } else {
+    speed = 1;
+    speedBtn.textContent = "x1";
+  }
+
+  document.documentElement.style.setProperty(
+    "--ui-speed",
+    speed
+  );
+
+});
 
 autoBtn.addEventListener("click", () => {
 
