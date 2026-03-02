@@ -25,6 +25,8 @@ console.log("clear called");
 }
 const HEADER_DELAY = 1000;
 const EVENT_DELAY = 500;
+const EFFECT_DELAY = 250;
+
 const turnDisplay = document.getElementById("turnDisplay");
 // =====================
 // ログ取得（最初にやる）
@@ -245,8 +247,6 @@ logArea.appendChild(header);
   // 0.5秒ずつ再生
   // ======================
 
-  let prevType = null;
-  
 for (let i = 0; i < actionEvents.length; i++) {
 
   const ev = actionEvents[i];
@@ -302,14 +302,18 @@ cell.classList.remove(
   }
 
   // 最後だけ待たない
-const delay =
-  prevType === ev.type
-    ? 250
-    : EVENT_DELAY;
+let wait = EVENT_DELAY;
 
-await sleep(delay);
+if (
+  ev.type === "attack" ||
+  ev.type === "heal" ||
+  ev.type === "effectApplied"
+) {
+  wait = EFFECT_DELAY;
+}
 
-prevType = ev.type;
+await sleep(wait);
+
 clearEffectHighlights();
 }
   actedSet.add(actingUnit);
