@@ -148,11 +148,11 @@
 }
 
 @keyframes unitShake {
-  0%   { transform: translateX(0); }
-  25%  { transform: translateX(-2px); }
-  50%  { transform: translateX(2px); }
-  75%  { transform: translateX(-2px); }
-  100% { transform: translateX(0); }
+  0%   { transform: translate(-50%, -50%) translateX(0); }
+  25%  { transform: translate(-50%, -50%) translateX(-2px); }
+  50%  { transform: translate(-50%, -50%) translateX(2px); }
+  75%  { transform: translate(-50%, -50%) translateX(-2px); }
+  100% { transform: translate(-50%, -50%) translateX(0); }
 }
 
 .unitImage.bounce {
@@ -160,9 +160,9 @@
 }
 
 @keyframes unitBounce {
-  0%   { transform: translateY(0); }
-  25%  { transform: translateY(-2px); }
-  50%  { transform: translateY(0); }
-  75%  { transform: translateY(-2px); }
-  100% { transform: translateY(0); }
+  0%   { transform: translate(-50%, -50%) translateY(0); }
+  25%  { transform: translate(-50%, -50%) translateY(-2px); }
+  50%  { transform: translate(-50%, -50%) translateY(0); }
+  75%  { transform: translate(-50%, -50%) translateY(-2px); }
+  100% { transform: translate(-50%, -50%) translateY(0); }
 }
