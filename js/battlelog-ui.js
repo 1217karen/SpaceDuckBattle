@@ -104,7 +104,23 @@ div.textContent =
         "healHighlight"
       );
     }
+    
+const wrapper = document.querySelector(
+  `[data-unit-id="${event.to}"]`
+);
 
+if (wrapper) {
+
+  wrapper.classList.remove("bounce");
+  void wrapper.offsetWidth; // アニメ再発火
+  wrapper.classList.add("bounce");
+
+  wrapper.addEventListener("animationend", () => {
+    wrapper.classList.remove("bounce");
+  }, { once: true });
+
+}
+    
 div.textContent =
   `${displayName(event.to, nameMap)} のHPが ${event.amount} 回復`;
   }
@@ -128,21 +144,6 @@ else if (event.type === "effectApplied") {
       unitState.y,
       cls
     );
-    const wrapper = document.querySelector(
-  `[data-unit-id="${event.to}"]`
-);
-
-if (wrapper) {
-
-  wrapper.classList.remove("bounce");
-  void wrapper.offsetWidth;
-  wrapper.classList.add("bounce");
-
-  wrapper.addEventListener("animationend", () => {
-    wrapper.classList.remove("bounce");
-  }, { once: true });
-
-}
   }
 
   const sign =
