@@ -977,30 +977,13 @@ if (enemyDist <= 2) {
     const step =
       safeSteps[Math.floor(Math.random()*safeSteps.length)];
 
-    const moveDx = step.x - unit.x;
-    const moveDy = step.y - unit.y;
-
-    unit.x = step.x;
-    unit.y = step.y;
-
-    log.push({
-      type:"move",
-      unit:unit.id,
-      x:step.x,
-      y:step.y
-    });
-
-    const newFacing =
-      facingFromDelta(moveDx,moveDy,unit.facing);
-
-    if (newFacing !== unit.facing) {
-      unit.facing = newFacing;
-      log.push({
-        type:"faceChange",
-        unit:unit.id,
-        facing:newFacing
-      });
-    }
+context.applyMove({
+  type:"move",
+  target:unit.id,
+  x:step.x,
+  y:step.y,
+  forced:false
+}, context);
 
     log.push({
       type:"actionEnd",
