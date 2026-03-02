@@ -57,40 +57,39 @@ if (cls) {
     }
   }
 
-  else if (event.type === "attack") {
+else if (event.type === "attack") {
 
-    const unitState =
-      boardState.units[event.to];
+  const unitState =
+    boardState.units[event.to];
 
-    if (unitState) {
-      highlightCell(
-        "board",
-        unitState.x,
-        unitState.y,
-        "attackHighlight"
-      );
+  if (unitState) {
+    highlightCell(
+      "board",
+      unitState.x,
+      unitState.y,
+      "attackHighlight"
+    );
 
-const wrapper = document.querySelector(
-  `[data-unit-id="${event.to}"]`
-);
+    const img = document.querySelector(
+      `[data-unit-id="${event.to}"] .unitImage`
+    );
 
-if (wrapper) {
+    if (img) {
 
-  wrapper.classList.remove("bounce");
-  void wrapper.offsetWidth;
-  wrapper.classList.add("bounce");
+      img.classList.remove("shake");
+      void img.offsetWidth;
+      img.classList.add("shake");
 
-  wrapper.addEventListener("animationend", () => {
-    wrapper.classList.remove("bounce");
-  }, { once: true });
+      img.addEventListener("animationend", () => {
+        img.classList.remove("shake");
+      }, { once: true });
 
-}
-}
     }
-
-div.textContent =
-  `${displayName(event.to, nameMap)} に ${event.amount} のダメージ`;
   }
+
+  div.textContent =
+    `${displayName(event.to, nameMap)} に ${event.amount} のダメージ`;
+}
 
   else if (event.type === "heal") {
 
@@ -106,18 +105,18 @@ div.textContent =
       );
     }
     
-const wrapper = document.querySelector(
-  `[data-unit-id="${event.to}"]`
+const img = document.querySelector(
+  `[data-unit-id="${event.to}"] .unitImage`
 );
 
-if (wrapper) {
+if (img) {
 
-  wrapper.classList.remove("bounce");
-  void wrapper.offsetWidth; // アニメ再発火
-  wrapper.classList.add("bounce");
+  img.classList.remove("bounce");
+  void img.offsetWidth;
+  img.classList.add("bounce");
 
-  wrapper.addEventListener("animationend", () => {
-    wrapper.classList.remove("bounce");
+  img.addEventListener("animationend", () => {
+    img.classList.remove("bounce");
   }, { once: true });
 
 }
