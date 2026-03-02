@@ -196,7 +196,7 @@ export function createTestSnapshot() {
         facing:"W",
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D04.webp",
         skills:["attack_around2_all"]
-      }
+      },
       {
         id:"Nno6",
         name:"右軍サポート",
@@ -213,7 +213,7 @@ export function createTestSnapshot() {
         icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D11.webp",
         skills:["pull_farthest_enemy",
                "attack_random_falloff"]
-      },
+      }
     ]
   };
 }
