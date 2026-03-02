@@ -70,14 +70,20 @@ if (cls) {
         "attackHighlight"
       );
 
-      const wrapper = document.querySelector(
+const wrapper = document.querySelector(
   `[data-unit-id="${event.to}"]`
 );
 
 if (wrapper) {
+
   wrapper.classList.remove("shake");
-  void wrapper.offsetWidth; // アニメ再発火
+  void wrapper.offsetWidth;
   wrapper.classList.add("shake");
+
+  wrapper.addEventListener("animationend", () => {
+    wrapper.classList.remove("shake");
+  }, { once: true });
+
 }
     }
 
