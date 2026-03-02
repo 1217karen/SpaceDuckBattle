@@ -232,7 +232,7 @@ units: [
     x:8,
     y:3,
     facing:"W",
-    icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=tmgifes_07.webp",
+    icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp",
     skills:[
       {type:"pull_farthest_enemy"},
       {type:"attack_random_falloff"}
