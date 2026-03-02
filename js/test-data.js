@@ -114,7 +114,7 @@ units: [
     x:0,
     y:2,
     facing:"E",
-    icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp",
+    icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
     skills:[
       {type:"pull_farthest_enemy"},
       {type:"attack_random_falloff"}
