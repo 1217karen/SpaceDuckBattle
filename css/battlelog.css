@@ -55,8 +55,8 @@
 }
 
 .cell {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   background: transparent;
   border: 1px solid rgba(255,255,255,0.2);
   position: relative;
@@ -80,8 +80,8 @@
 }
 
 .unitImage {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   position: absolute;
   top: 50%;
   left: 50%;
