@@ -2,7 +2,7 @@ export function createTestSnapshot() {
 
 return {
 units: [
-  
+
   {
     id:"Eno1",
     name:"左軍アタック",
@@ -17,8 +17,10 @@ units: [
     y:4,
     facing:"E",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
-    skills:["buff_self_if_alone",
-           "attack_nearest"]
+    skills:[
+      {type:"buff_self_if_alone"},
+      {type:"attack_nearest"}
+    ]
   },
 
   {
@@ -35,8 +37,10 @@ units: [
     y:1,
     facing:"E",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
-    skills:["buff_df50_self",
-            "attack_front_knockback"]
+    skills:[
+      {type:"buff_df50_self"},
+      {type:"attack_front_knockback"}
+    ]
   },
 
   {
@@ -53,7 +57,9 @@ units: [
     y:5,
     facing:"E",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
-    skills:["heal_cross2"]
+    skills:[
+      {type:"heal_cross2"}
+    ]
   },
 
   {
@@ -70,8 +76,10 @@ units: [
     y:3,
     facing:"E",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D21.webp",
-    skills:["buff_self_if_alone",
-           "attack_front1"]
+    skills:[
+      {type:"buff_self_if_alone"},
+      {type:"attack_front1"}
+    ]
   },
 
   {
@@ -88,7 +96,9 @@ units: [
     y:0,
     facing:"E",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D11.webp",
-    skills:["attack_around2_all"]
+    skills:[
+      {type:"attack_around2_all"}
+    ]
   },
 
   {
@@ -105,8 +115,10 @@ units: [
     y:2,
     facing:"E",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp",
-    skills:["pull_farthest_enemy",
-           "attack_random_falloff"]
+    skills:[
+      {type:"pull_farthest_enemy"},
+      {type:"attack_random_falloff"}
+    ]
   },
 
   {
@@ -123,8 +135,10 @@ units: [
     y:1,
     facing:"W",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D07.webp",
-    skills:["buff_self_if_alone",
-           "attack_nearest"]
+    skills:[
+      {type:"buff_self_if_alone"},
+      {type:"attack_nearest"}
+    ]
   },
 
   {
@@ -141,8 +155,10 @@ units: [
     y:4,
     facing:"W",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D10.webp",
-    skills:["buff_df50_self",
-            "attack_front_knockback"]
+    skills:[
+      {type:"buff_df50_self"},
+      {type:"attack_front_knockback"}
+    ]
   },
 
   {
@@ -159,7 +175,9 @@ units: [
     y:0,
     facing:"W",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D05.webp",
-    skills:["heal_cross2"]
+    skills:[
+      {type:"heal_cross2"}
+    ]
   },
 
   {
@@ -176,8 +194,10 @@ units: [
     y:5,
     facing:"W",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D03.webp",
-    skills:["buff_self_if_alone",
-           "attack_front1"]
+    skills:[
+      {type:"buff_self_if_alone"},
+      {type:"attack_front1"}
+    ]
   },
 
   {
@@ -194,7 +214,9 @@ units: [
     y:2,
     facing:"W",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D04.webp",
-    skills:["attack_around2_all"]
+    skills:[
+      {type:"attack_around2_all"}
+    ]
   },
 
   {
@@ -211,9 +233,12 @@ units: [
     y:3,
     facing:"W",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
-    skills:["pull_farthest_enemy",
-           "attack_random_falloff"]
+    skills:[
+      {type:"pull_farthest_enemy"},
+      {type:"attack_random_falloff"}
+    ]
   }
+
 ]
 
 };
