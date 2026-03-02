@@ -756,7 +756,8 @@ const rangeStyle = result.preview ? result.preview.style : null;
 const hasEffect = actions.some(a =>
   a.type === "damage" ||
   a.type === "heal" ||
-  a.type === "applyEffect"
+  a.type === "applyEffect" ||
+  a.type === "move"
 );
 
   // 効果がないなら「使えなかった扱い」にして次のスキルへ（移動に回せる）
