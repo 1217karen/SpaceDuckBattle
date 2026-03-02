@@ -128,7 +128,7 @@ export const skillHandlers = {
   // =========================
 
   attack_around2_all: {
-    cooldown: 2,
+    cooldown: 3,
     
     generateActions(unit, ctx) {
 
@@ -212,7 +212,7 @@ export const skillHandlers = {
   // =========================
 
   attack_random_falloff: {
-    cooldown: 2,
+    cooldown: 4,
     
 generateActions(unit, ctx) {
 
@@ -252,7 +252,7 @@ generateActions(unit, ctx) {
 // 前方攻撃＋ノックバック
 // =========================
 attack_front_knockback: {
-  cooldown: 2,
+  cooldown: 3,
 
   generateActions(unit, ctx) {
 
@@ -304,7 +304,7 @@ attack_front_knockback: {
 // 最遠敵引き寄せ
 // =========================
 pull_farthest_enemy: {
-  cooldown: 3,
+  cooldown: 2,
 
   generateActions(unit, ctx) {
 
