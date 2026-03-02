@@ -1,18 +1,61 @@
-//battlelog-controller.js
+// =====================
+// import
+// =====================
+
 import { 
   createBoard, 
   placeUnit,
   updateFacing
 } from "./board.js";
-  
+
 import { playLogEvent }
   from "./battlelog-ui.js";
 
+
+// =====================
+// 設定値
+// =====================
+
+const HEADER_DELAY = 1000;
+const EVENT_DELAY = 500;
+const EFFECT_DELAY = 250;
+const UNIT_DELAY = 1000;
+
+
+// =====================
+// 状態変数
+// =====================
+
 let speed = 1;
+let autoPlay = false;
+let logIndex = 0;
+
+let boardState = { units:{} };
+
+let uiTurn = 0;
+let requiredSet = new Set();
+let actedSet = new Set();
+
+
+// =====================
+// DOM取得
+// =====================
+
+const turnDisplay = document.getElementById("turnDisplay");
+const logArea = document.getElementById("logArea");
+const nextBtn = document.getElementById("nextBtn");
+const autoBtn = document.getElementById("autoBtn");
+const speedBtn = document.getElementById("speedBtn");
+
+
+// =====================
+// ユーティリティ
+// =====================
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms / speed));
 }
+
 function clearEffectHighlights() {
   document.querySelectorAll(".cell")
     .forEach(cell => {
@@ -32,21 +75,10 @@ function clearActiveUnit() {
     });
 }
 
-const HEADER_DELAY = 1000;
-const EVENT_DELAY = 500;
-const EFFECT_DELAY = 250;
 
-const turnDisplay = document.getElementById("turnDisplay");
 // =====================
-// ログ取得（最初にやる）
+// UIイベント
 // =====================
-
-const logArea = document.getElementById("logArea");
-const nextBtn = document.getElementById("nextBtn");
-
-const autoBtn = document.getElementById("autoBtn");
-
-const speedBtn = document.getElementById("speedBtn");
 
 speedBtn.addEventListener("click", () => {
 
@@ -74,7 +106,15 @@ autoBtn.addEventListener("click", () => {
   if (autoPlay) {
     playNextAction();
   }
+
 });
+
+nextBtn.addEventListener("click", playNextAction);
+
+
+// =====================
+// ログ取得
+// =====================
 
 const params = new URLSearchParams(window.location.search);
 const battleID = params.get("id");
@@ -89,8 +129,12 @@ if (!stored) {
 const battleData = stored ? JSON.parse(stored) : null;
 const snapshot = battleData ? battleData.snapshot : null;
 const battleLog = battleData ? battleData.log : [];
-  
-// id → name 変換テーブル
+
+
+// =====================
+// 名前マップ作成
+// =====================
+
 const nameMap = {};
 
 if (snapshot) {
@@ -99,16 +143,20 @@ if (snapshot) {
   });
 }
 
+
 // =====================
 // 盤面作成
 // =====================
 
 createBoard("board", 10, 6);
 
-let boardState = { units:{} };
 
-// snapshot から初期配置
+// =====================
+// 初期配置
+// =====================
+
 if (snapshot) {
+
   snapshot.units.forEach(u => {
 
     boardState.units[u.id] = { x:u.x, y:u.y };
@@ -124,24 +172,25 @@ if (snapshot) {
     updateFacing("board", u.id, u.facing);
 
   });
+
 }
 
-let logIndex = 0;
-let autoPlay = false;
-const UNIT_DELAY = 1000;
+
 // =====================
-// UIターン管理
+// 初期ターンUI
 // =====================
-let uiTurn = 0;
-let requiredSet = new Set();
-let actedSet = new Set();
 
 if (turnDisplay) {
   turnDisplay.textContent = "BATTLE START";
 }
 
-// 初期の行動対象（生存ユニット）
+
+// =====================
+// 初期行動順
+// =====================
+
 if (snapshot) {
+
   const sorted = [...snapshot.units]
     .sort((a,b)=>b.speed-a.speed);
 
@@ -150,237 +199,271 @@ if (snapshot) {
       requiredSet.add(u.id);
     }
   });
+
 }
+
+
 // =====================
-// イベント再生
+// メイン再生
 // =====================
+
 async function playNextAction() {
 
-  // 再生中の連打防止
   nextBtn.disabled = true;
 
-  // 前回のハイライトを消す
   document.querySelectorAll(".cell")
     .forEach(cell => {
-cell.classList.remove(
-  "attackRange",
-  "healRange",
-  "buffRange",
-  "debuffRange"
-);
+      cell.classList.remove(
+        "attackRange",
+        "healRange",
+        "buffRange",
+        "debuffRange"
+      );
     });
 
   if (logIndex >= battleLog.length) {
     nextBtn.disabled = false;
     return;
   }
-// ======================
-// battleEnd 単独処理
-// ======================
 
-if (battleLog[logIndex]?.type === "battleEnd") {
 
-  logArea.innerHTML = "";
-
-  const div = document.createElement("div");
-  div.classList.add("battleEndBlock");
-
-  div.innerHTML = `
-    <div style="font-size:20px;font-weight:bold;">
-      BATTLE FINISHED
-    </div>
-    <div style="margin-top:8px;">
-      TEAM ${battleLog[logIndex].winner} 勝利
-    </div>
-  `;
-
-  logArea.appendChild(div);
-
-  logIndex++;
-  nextBtn.disabled = false;
-  return;
-}
-// ======================
-// actionStart を探す
-// ======================
-
-let start = logIndex;
-
-while (
-  start < battleLog.length &&
-  battleLog[start].type !== "actionStart"
-) {
-  start++;
-}
-
-if (start >= battleLog.length) {
-  logIndex = battleLog.length;
-  nextBtn.disabled = false;
-  return;
-}
-
-// ======================
-// actionEnd を探す
-// ======================
-
-let end = start + 1;
-
-while (
-  end < battleLog.length &&
-  battleLog[end].type !== "actionEnd"
-) {
-  end++;
-}
-
-if (end >= battleLog.length) {
-  nextBtn.disabled = false;
-  return;
-}
-
-const actionEvents = battleLog
-  .slice(start + 1, end) // actionStart と actionEnd は除く
-  .filter(ev => ev.type !== "hpChange");
   // ======================
-// ターン進行判定
-// ======================
+  // battleEnd
+  // ======================
 
-const actingUnit = battleLog[start].unit;
+  if (battleLog[logIndex]?.type === "battleEnd") {
+
+    logArea.innerHTML = "";
+
+    const div = document.createElement("div");
+    div.classList.add("battleEndBlock");
+
+    div.innerHTML = `
+      <div style="font-size:20px;font-weight:bold;">
+        BATTLE FINISHED
+      </div>
+      <div style="margin-top:8px;">
+        TEAM ${battleLog[logIndex].winner} 勝利
+      </div>
+    `;
+
+    logArea.appendChild(div);
+
+    logIndex++;
+    nextBtn.disabled = false;
+    return;
+  }
+
+
+  // ======================
+  // actionStart 探索
+  // ======================
+
+  let start = logIndex;
+
+  while (
+    start < battleLog.length &&
+    battleLog[start].type !== "actionStart"
+  ) {
+    start++;
+  }
+
+  if (start >= battleLog.length) {
+    logIndex = battleLog.length;
+    nextBtn.disabled = false;
+    return;
+  }
+
+
+  // ======================
+  // actionEnd 探索
+  // ======================
+
+  let end = start + 1;
+
+  while (
+    end < battleLog.length &&
+    battleLog[end].type !== "actionEnd"
+  ) {
+    end++;
+  }
+
+  if (end >= battleLog.length) {
+    nextBtn.disabled = false;
+    return;
+  }
+
+
+  const actionEvents = battleLog
+    .slice(start + 1, end)
+    .filter(ev => ev.type !== "hpChange");
+
+
+  // ======================
+  // 行動ユニット
+  // ======================
+
+  const actingUnit = battleLog[start].unit;
 
   clearActiveUnit();
 
-const pos = boardState.units[actingUnit];
+  const pos = boardState.units[actingUnit];
 
-if (pos) {
+  if (pos) {
 
-  const cell = document.querySelector(
-    `.cell[data-x="${pos.x}"][data-y="${pos.y}"]`
-  );
+    const cell = document.querySelector(
+      `.cell[data-x="${pos.x}"][data-y="${pos.y}"]`
+    );
 
-  if (cell) {
-    cell.classList.add("activeUnit");
-  }
-}
+    if (cell) {
+      cell.classList.add("activeUnit");
+    }
 
-// 初回行動時にTURN1へ
-if (uiTurn === 0) {
-  uiTurn = 1;
-  if (turnDisplay) {
-    turnDisplay.textContent = "TURN 1";
-  }
-}
-
-// 全員が行動したら次ターンへ
-// 行動重複対策でeveryを使う
-else if (
-  [...requiredSet].every(id => actedSet.has(id))
-) {
-
-  uiTurn++;
-
-  if (turnDisplay) {
-    turnDisplay.textContent = `TURN ${uiTurn}`;
   }
 
-  actedSet.clear();
-}
-// 行動ヘッダを先に表示
-const firstEvent = actionEvents[0];
-  if (!firstEvent) {
-  logIndex = end + 1;
-  nextBtn.disabled = false;
-  return;
-}
-const header = document.createElement("div");
-const displayName = nameMap?.[firstEvent.unit] || firstEvent.unit;
-header.textContent = `▶ ${displayName} の行動`;
-header.classList.add("actionHeader");
-
-logArea.innerHTML = "";
-logArea.appendChild(header);
-
-await sleep(HEADER_DELAY);
-clearActiveUnit();
-  // 「最新の行動だけ」表示するため、ここでログを全消し
 
   // ======================
-  // 0.5秒ずつ再生
+  // ターン表示
   // ======================
 
-for (let i = 0; i < actionEvents.length; i++) {
+  if (uiTurn === 0) {
 
-  const ev = actionEvents[i];
-  
-  //死んだら終わり
-if (ev.type === "death") {
-requiredSet.delete(ev.unit);
-}
-  
-  // 毎イベント前にハイライトリセット
-  document.querySelectorAll(".cell")
-    .forEach(cell => {
-cell.classList.remove(
-  "attackRange",
-  "healRange",
-  "buffRange",
-  "debuffRange"
-);
-    });
+    uiTurn = 1;
 
-  // ==========================
-  // move + faceChange 同時処理
-  // ==========================
+    if (turnDisplay) {
+      turnDisplay.textContent = "TURN 1";
+    }
 
-  if (
-    ev.type === "move" &&
-    i + 1 < actionEvents.length &&
-    actionEvents[i + 1].type === "faceChange"
+  }
+
+  else if (
+    [...requiredSet].every(id => actedSet.has(id))
   ) {
-    playLogEvent(
-      ev,
-      boardState,
-      logArea,
-      nameMap
-    );
 
-    playLogEvent(
-      actionEvents[i + 1],
-      boardState,
-      logArea,
-      nameMap
-    );
+    uiTurn++;
 
-    i++; // faceChangeスキップ
-  }
-  else {
-    playLogEvent(
-      ev,
-      boardState,
-      logArea,
-      nameMap
-    );
+    if (turnDisplay) {
+      turnDisplay.textContent = `TURN ${uiTurn}`;
+    }
+
+    actedSet.clear();
+
   }
 
-  // 最後だけ待たない
-let wait = EVENT_DELAY;
 
-if (
-  ev.type === "attack" ||
-  ev.type === "heal" ||
-  ev.type === "effectApplied"
-) {
-  wait = EFFECT_DELAY;
-}
+  // ======================
+  // 行動ヘッダー
+  // ======================
 
-await sleep(wait);
+  const firstEvent = actionEvents[0];
 
-clearEffectHighlights();
-}
+  if (!firstEvent) {
+    logIndex = end + 1;
+    nextBtn.disabled = false;
+    return;
+  }
+
+  const header = document.createElement("div");
+
+  const displayName =
+    nameMap?.[firstEvent.unit] || firstEvent.unit;
+
+  header.textContent = `▶ ${displayName} の行動`;
+  header.classList.add("actionHeader");
+
+  logArea.innerHTML = "";
+  logArea.appendChild(header);
+
+
+  await sleep(HEADER_DELAY);
+
+  clearActiveUnit();
+
+
+  // ======================
+  // イベント再生
+  // ======================
+
+  for (let i = 0; i < actionEvents.length; i++) {
+
+    const ev = actionEvents[i];
+
+    if (ev.type === "death") {
+      requiredSet.delete(ev.unit);
+    }
+
+    document.querySelectorAll(".cell")
+      .forEach(cell => {
+        cell.classList.remove(
+          "attackRange",
+          "healRange",
+          "buffRange",
+          "debuffRange"
+        );
+      });
+
+
+    if (
+      ev.type === "move" &&
+      i + 1 < actionEvents.length &&
+      actionEvents[i + 1].type === "faceChange"
+    ) {
+
+      playLogEvent(
+        ev,
+        boardState,
+        logArea,
+        nameMap
+      );
+
+      playLogEvent(
+        actionEvents[i + 1],
+        boardState,
+        logArea,
+        nameMap
+      );
+
+      i++;
+
+    }
+
+    else {
+
+      playLogEvent(
+        ev,
+        boardState,
+        logArea,
+        nameMap
+      );
+
+    }
+
+
+    let wait = EVENT_DELAY;
+
+    if (
+      ev.type === "attack" ||
+      ev.type === "heal" ||
+      ev.type === "effectApplied"
+    ) {
+      wait = EFFECT_DELAY;
+    }
+
+    await sleep(wait);
+
+    clearEffectHighlights();
+
+  }
+
+
   actedSet.add(actingUnit);
-logIndex = end + 1;
-nextBtn.disabled = false;
 
-if (autoPlay) {
-  setTimeout(playNextAction, UNIT_DELAY);
+  logIndex = end + 1;
+
+  nextBtn.disabled = false;
+
+  if (autoPlay) {
+    setTimeout(playNextAction, UNIT_DELAY);
+  }
+
 }
-}
-nextBtn.addEventListener("click", playNextAction);
