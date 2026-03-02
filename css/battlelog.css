@@ -31,10 +31,17 @@
 }
 
 /* 下段 */
-#bottomArea {
-  width: 900px;
-  display: grid;
-  grid-template-columns: 150px auto 150px;
+#boardArea {
+  display: flex;
+  justify-content: center;
+
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.25) 1px, transparent 2px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.2) 1px, transparent 2px),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.15) 1px, transparent 2px),
+    radial-gradient(circle at center, #0b0f1c 0%, #02040a 100%);
+
+  padding: 6px;
 }
 
 :root {
@@ -47,8 +54,8 @@
 .cell {
   width: 64px;
   height: 64px;
-  background: radial-gradient(circle at center, #101626 0%, #060913 100%);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.18);
   position: relative;
 }
 
