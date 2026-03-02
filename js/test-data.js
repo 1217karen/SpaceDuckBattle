@@ -2,8 +2,7 @@ export function createTestSnapshot() {
 
 return {
 units: [
-
-```
+  
   {
     id:"Eno1",
     name:"左軍アタック",
@@ -216,7 +215,6 @@ units: [
            "attack_random_falloff"]
   }
 ]
-```
 
 };
 }
