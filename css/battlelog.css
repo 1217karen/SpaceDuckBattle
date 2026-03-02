@@ -142,3 +142,15 @@
 .cell.debuffRange {
   background-color: rgba(180, 0, 255, 0.2);
 }
+
+.unitWrapper.shake {
+  animation: unitShake 0.25s ease;
+}
+
+@keyframes unitShake {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-2px); }
+  50%  { transform: translateX(2px); }
+  75%  { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
