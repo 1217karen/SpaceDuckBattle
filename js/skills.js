@@ -249,6 +249,109 @@ generateActions(unit, ctx) {
 }
   },
   // =========================
+// 前方攻撃＋ノックバック
+// =========================
+attack_front_knockback: {
+  cooldown: 2,
+
+  generateActions(unit, ctx) {
+
+    const target = getFrontTarget(unit, ctx);
+    if (!target) return null;
+    if (target.team === unit.team) return null;
+
+    const cell =
+      ctx.getKnockbackCell(unit, target, ctx.units);
+
+    const actions = [];
+
+    actions.push({
+      type:"damage",
+      source:unit.id,
+      target:target.id,
+      power:0,
+      damageType:"normal"
+    });
+
+    if (cell) {
+      actions.push({
+        type:"move",
+        target:target.id,
+        x:cell.x,
+        y:cell.y,
+        forced:true
+      });
+    }
+
+    let x = unit.x;
+    let y = unit.y;
+
+    if (unit.facing === "N") y -= 1;
+    if (unit.facing === "S") y += 1;
+    if (unit.facing === "E") x += 1;
+    if (unit.facing === "W") x -= 1;
+
+    return {
+      preview:{
+        cells:[{x,y}],
+        style:"attack"
+      },
+      actions:actions
+    };
+  }
+},
+  // =========================
+// 最遠敵引き寄せ
+// =========================
+pull_farthest_enemy: {
+  cooldown: 3,
+
+  generateActions(unit, ctx) {
+
+    const enemies =
+      ctx.getEnemies(ctx.units, unit.team);
+
+    if (!enemies || enemies.length === 0)
+      return null;
+
+    let farthest = enemies[0];
+    let maxDist =
+      ctx.getDistance(unit, farthest);
+
+    for (const e of enemies) {
+
+      const d =
+        ctx.getDistance(unit, e);
+
+      if (d > maxDist) {
+        maxDist = d;
+        farthest = e;
+      }
+    }
+
+    const cell =
+      ctx.getPullCell(unit, farthest, ctx.units);
+
+    if (!cell) return null;
+
+    return {
+      preview:{
+        cells:[{x:farthest.x, y:farthest.y}],
+        style:"attack"
+      },
+      actions:[
+        {
+          type:"move",
+          target:farthest.id,
+          x:cell.x,
+          y:cell.y,
+          forced:true
+        }
+      ]
+    };
+  }
+},
+  // =========================
   // 自分DF50%バフ（3T）
   // =========================
   buff_df50_self: {
