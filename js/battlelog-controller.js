@@ -12,7 +12,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 function clearEffectHighlights() {
-console.log("clear called");
   document.querySelectorAll(".cell")
     .forEach(cell => {
       cell.classList.remove(
