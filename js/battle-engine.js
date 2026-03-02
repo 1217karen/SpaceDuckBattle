@@ -6,9 +6,11 @@ import { chooseStep, facingFromDelta, isOccupiedCell } from "./movement.js";
 const BOARD_W = 8;
 const BOARD_H = 6;
 
-// ==========================
+
+// ==========================================================
 // 共通ユーティリティ
-// ==========================
+// ==========================================================
+
 function getManhattanCells(center, range) {
 
   const cells = [];
@@ -17,33 +19,39 @@ function getManhattanCells(center, range) {
     for (let dy = -range; dy <= range; dy++) {
 
       if (Math.abs(dx) + Math.abs(dy) <= range) {
-
         cells.push({
           x: center.x + dx,
           y: center.y + dy
         });
       }
+
     }
   }
 
   return cells;
 }
+
+
 function getAliveUnits(units) {
   return units.filter(u => u.hp > 0);
 }
+
 
 function getEnemies(units, team) {
   return units.filter(u => u.team !== team && u.hp > 0);
 }
 
+
 function getAllies(units, team, selfId) {
   return units.filter(u => u.team === team && u.id !== selfId && u.hp > 0);
 }
+
 
 function getDistance(a, b) {
   // 今はマンハッタン距離（将来トーラス化可能）
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 }
+
 
 function getChebyshevDistance(a, b) {
   return Math.max(
@@ -52,10 +60,14 @@ function getChebyshevDistance(a, b) {
   );
 }
 
+
+// ==========================================================
+// ターゲット探索
+// ==========================================================
+
 function getNearestEnemy(unit, units) {
 
   const enemies = getEnemies(units, unit.team);
-
   if (enemies.length === 0) return null;
 
   let nearest = enemies[0];
@@ -69,10 +81,12 @@ function getNearestEnemy(unit, units) {
       minDist = d;
       nearest = e;
     }
+
   }
 
   return nearest;
 }
+
 
 function getLowestHpAlly(unit, units) {
 
@@ -81,20 +95,32 @@ function getLowestHpAlly(unit, units) {
 
   // HPが低い順、同値なら近い順
   let best = allies[0];
+
   for (let a of allies) {
+
     if (a.hp < best.hp) {
       best = a;
       continue;
     }
+
     if (a.hp === best.hp) {
+
       const da = getDistance(unit, a);
       const db = getDistance(unit, best);
+
       if (da < db) best = a;
+
     }
+
   }
 
   return best;
 }
+
+
+// ==========================================================
+// 安全判定
+// ==========================================================
 
 function isSafeFromEnemies(x, y, unit, units) {
 
@@ -107,10 +133,16 @@ function isSafeFromEnemies(x, y, unit, units) {
       Math.abs(y - e.y);
 
     if (d <= 2) return false;
+
   }
 
   return true;
 }
+
+
+// ==========================================================
+// 向き決定
+// ==========================================================
 
 function getIdleFacing(unit, units) {
 
@@ -133,6 +165,7 @@ function getIdleFacing(unit, units) {
     } else {
       return dy > 0 ? "S" : "N";
     }
+
   }
 
   // ====================
@@ -153,6 +186,7 @@ function getIdleFacing(unit, units) {
 
       if (d1 < d2) best = a;
       else if (d1 === d2 && a.hp < best.hp) best = a;
+
     }
 
     const dx = best.x - unit.x;
@@ -163,6 +197,7 @@ function getIdleFacing(unit, units) {
     } else {
       return dy > 0 ? "S" : "N";
     }
+
   }
 
   // ====================
@@ -171,9 +206,10 @@ function getIdleFacing(unit, units) {
 
   if (role === "defense") {
 
-    const adjacentEnemies = getEnemies(units, unit.team).filter(e =>
-      getDistance(unit, e) === 1
-    );
+    const adjacentEnemies =
+      getEnemies(units, unit.team).filter(e =>
+        getDistance(unit, e) === 1
+      );
 
     if (adjacentEnemies.length > 0) {
 
@@ -187,6 +223,7 @@ function getIdleFacing(unit, units) {
       } else {
         return dy > 0 ? "S" : "N";
       }
+
     }
 
     const ally = getLowestHpAlly(unit, units);
@@ -200,10 +237,16 @@ function getIdleFacing(unit, units) {
     } else {
       return dy > 0 ? "S" : "N";
     }
+
   }
 
   return unit.facing;
 }
+
+
+// ==========================================================
+// ランダム取得
+// ==========================================================
 
 function getRandomUnit(list) {
   if (!list || list.length === 0) return null;
@@ -226,6 +269,11 @@ function getRandomAny(units) {
   return getRandomUnit(alive);
 }
 
+
+// ==========================================================
+// 範囲取得
+// ==========================================================
+
 function getUnitsInManhattanRange(center, units, range) {
 
   return units.filter(u => {
@@ -237,8 +285,12 @@ function getUnitsInManhattanRange(center, units, range) {
       Math.abs(center.y - u.y);
 
     return dist <= range;
+
   });
+
 }
+
+
 function getUnitsInSameRow(unit, units) {
   return units.filter(u =>
     u.hp > 0 &&
@@ -252,6 +304,11 @@ function getUnitsInSameColumn(unit, units) {
     u.x === unit.x
   );
 }
+
+
+// ==========================================================
+// ステータス計算
+// ==========================================================
 
 function getEffectiveStat(unit, statName) {
 
@@ -275,6 +332,7 @@ function getEffectiveStat(unit, statName) {
     if (effect.mode === "rate") {
       rateBonus += effect.value;
     }
+
   }
 
   const afterFlat = base + flatBonus;
@@ -282,6 +340,11 @@ function getEffectiveStat(unit, statName) {
 
   return finalValue;
 }
+
+
+// ==========================================================
+// ダメージ処理
+// ==========================================================
 
 function applyDamage(source, target, action, ctx) {
 
@@ -291,14 +354,19 @@ function applyDamage(source, target, action, ctx) {
   const type = action.damageType || "normal";
 
   if (type === "normal") {
-const atk = getEffectiveStat(source, "atk");
-const df = getEffectiveStat(target, "df");
-finalDamage = Math.max(atk + power - df, 0);
+
+    const atk = getEffectiveStat(source, "atk");
+    const df = getEffectiveStat(target, "df");
+
+    finalDamage = Math.max(atk + power - df, 0);
+
   }
 
   else if (type === "pierce") {
-const atk = getEffectiveStat(source, "atk");
-finalDamage = atk + power;
+
+    const atk = getEffectiveStat(source, "atk");
+    finalDamage = atk + power;
+
   }
 
   else if (type === "fixed") {
@@ -308,10 +376,12 @@ finalDamage = atk + power;
   else if (type === "effect") {
     finalDamage = power;
   }
-  
+
+
   // =========================
-  // 距離減衰（falloff:true の場合のみ）
+  // 距離減衰
   // =========================
+
   if (action.falloff) {
 
     const distance =
@@ -319,7 +389,7 @@ finalDamage = atk + power;
 
     if (distance > 1) {
 
-      const FALLOFF_RATE = 0.2; // 1マスごと20%
+      const FALLOFF_RATE = 0.2;
 
       const multiplier =
         1 - (distance - 1) * FALLOFF_RATE;
@@ -329,53 +399,59 @@ finalDamage = atk + power;
 
       finalDamage =
         Math.floor(finalDamage * clamped);
+
     }
+
   }
-  
+
+
   target.hp -= finalDamage;
 
   ctx.log.push({
-    type:"attack",
-    from:source.id,
-    to:target.id,
-    amount:finalDamage,
-    damageType:type
+    type: "attack",
+    from: source.id,
+    to: target.id,
+    amount: finalDamage,
+    damageType: type
   });
 
   ctx.log.push({
-    type:"hpChange",
-    target:target.id,
-    hp:Math.max(target.hp,0)
+    type: "hpChange",
+    target: target.id,
+    hp: Math.max(target.hp, 0)
   });
 
-if (target.hp <= 0) {
 
-  ctx.log.push({
-    type:"death",
-    unit:target.id
-  });
-
-  // ====================
-  // 勝敗判定
-  // ====================
-
-  const aliveTeams = new Set(
-    ctx.units
-      .filter(u => u.hp > 0)
-      .map(u => u.team)
-  );
-
-  if (aliveTeams.size === 1) {
-
-    const winner = [...aliveTeams][0];
+  if (target.hp <= 0) {
 
     ctx.log.push({
-      type:"battleEnd",
-      winner: winner
+      type: "death",
+      unit: target.id
     });
+
+    const aliveTeams = new Set(
+      ctx.units
+        .filter(u => u.hp > 0)
+        .map(u => u.team)
+    );
+
+    if (aliveTeams.size === 1) {
+
+      const winner = [...aliveTeams][0];
+
+      ctx.log.push({
+        type: "battleEnd",
+        winner: winner
+      });
+
+    }
+
   }
+
 }
-}
+// ==========================================================
+// 回復処理
+// ==========================================================
 
 function applyHeal(source, target, action, ctx) {
 
@@ -394,24 +470,30 @@ function applyHeal(source, target, action, ctx) {
   }
 
   target.hp = Math.min(
-  target.hp + finalHeal,
-  target.mhp ?? target.hp
-);
+    target.hp + finalHeal,
+    target.mhp ?? target.hp
+  );
 
   ctx.log.push({
-    type:"heal",
-    from:source.id,
-    to:target.id,
-    amount:finalHeal,
-    healType:type
+    type: "heal",
+    from: source.id,
+    to: target.id,
+    amount: finalHeal,
+    healType: type
   });
 
   ctx.log.push({
-    type:"hpChange",
-    target:target.id,
-    hp:target.hp
+    type: "hpChange",
+    target: target.id,
+    hp: target.hp
   });
+
 }
+
+
+// ==========================================================
+// 移動処理
+// ==========================================================
 
 function applyMove(action, ctx) {
 
@@ -427,10 +509,10 @@ function applyMove(action, ctx) {
   unit.y = action.y;
 
   ctx.log.push({
-    type:"move",
-    unit:unit.id,
-    x:action.x,
-    y:action.y
+    type: "move",
+    unit: unit.id,
+    x: action.x,
+    y: action.y
   });
 
   const dx = action.x - fromX;
@@ -444,72 +526,87 @@ function applyMove(action, ctx) {
     unit.facing = newFacing;
 
     ctx.log.push({
-      type:"faceChange",
-      unit:unit.id,
-      facing:newFacing
+      type: "faceChange",
+      unit: unit.id,
+      facing: newFacing
     });
+
   }
+
 }
+
+
+// ==========================================================
+// ノックバック
+// ==========================================================
 
 function getKnockbackCell(source, target, units) {
 
   const dx = target.x - source.x;
   const dy = target.y - source.y;
 
-let stepX = 0;
-let stepY = 0;
+  let stepX = 0;
+  let stepY = 0;
 
-if (Math.abs(dx) >= Math.abs(dy)) {
-  stepX = dx > 0 ? 1 : -1;
-} else {
-  stepY = dy > 0 ? 1 : -1;
-}
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    stepX = dx > 0 ? 1 : -1;
+  } else {
+    stepY = dy > 0 ? 1 : -1;
+  }
 
   const nx = target.x + stepX;
   const ny = target.y + stepY;
 
-  // 盤外
   if (nx < 0 || nx >= BOARD_W || ny < 0 || ny >= BOARD_H) {
     return null;
   }
 
-  // 占有
   if (isOccupiedCell(units, nx, ny, target.id)) {
     return null;
   }
 
-  return { x:nx, y:ny };
+  return { x: nx, y: ny };
+
 }
+
+
+// ==========================================================
+// 引き寄せ
+// ==========================================================
 
 function getPullCell(source, target, units) {
 
   const dx = source.x - target.x;
   const dy = source.y - target.y;
 
-let stepX = 0;
-let stepY = 0;
+  let stepX = 0;
+  let stepY = 0;
 
-if (Math.abs(dx) >= Math.abs(dy)) {
-  stepX = dx > 0 ? 1 : -1;
-} else {
-  stepY = dy > 0 ? 1 : -1;
-}
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    stepX = dx > 0 ? 1 : -1;
+  } else {
+    stepY = dy > 0 ? 1 : -1;
+  }
 
   const nx = target.x + stepX;
   const ny = target.y + stepY;
 
-  // 盤外
   if (nx < 0 || nx >= BOARD_W || ny < 0 || ny >= BOARD_H) {
     return null;
   }
 
-  // 占有
   if (isOccupiedCell(units, nx, ny, target.id)) {
     return null;
   }
 
-  return { x:nx, y:ny };
+  return { x: nx, y: ny };
+
 }
+
+
+// ==========================================================
+// エフェクト処理
+// ==========================================================
 
 function applyEffect(source, target, action, ctx) {
 
@@ -520,42 +617,46 @@ function applyEffect(source, target, action, ctx) {
     target.effects = [];
   }
 
+
   // =========================
   // 永続 flat
   // =========================
+
   if (effectData.duration === null) {
 
     const stackKey = effectData.stat + "_flat";
     const DIMINISH = 0.75;
 
-    const stackCount = target.effects.filter(
-      e => e.stackKey === stackKey
-    ).length;
+    const stackCount =
+      target.effects.filter(
+        e => e.stackKey === stackKey
+      ).length;
 
     const finalValue =
       effectData.value *
       Math.pow(DIMINISH, stackCount);
 
     const newEffect = {
-      category:"permanent",
+      category: "permanent",
       stat: effectData.stat,
-      mode:"flat",
+      mode: "flat",
       value: finalValue,
-      duration:null,
+      duration: null,
       stackKey: stackKey
     };
 
     target.effects.push(newEffect);
 
     ctx.log.push({
-      type:"effectApplied",
-      from:source.id,
-      to:target.id,
-      effect:newEffect
+      type: "effectApplied",
+      from: source.id,
+      to: target.id,
+      effect: newEffect
     });
 
     return;
   }
+
 
   // =========================
   // ターン制 rate
@@ -572,13 +673,15 @@ function applyEffect(source, target, action, ctx) {
       e.mode === "rate"
   );
 
-  // 既存が無い → そのまま追加
+
+  // 既存が無い → 追加
+
   if (!existing) {
 
     const newEffect = {
-      category:"timed",
+      category: "timed",
       stat: stat,
-      mode:"rate",
+      mode: "rate",
       value: newValue,
       duration: newDuration
     };
@@ -586,507 +689,426 @@ function applyEffect(source, target, action, ctx) {
     target.effects.push(newEffect);
 
     ctx.log.push({
-      type:"effectApplied",
-      from:source.id,
-      to:target.id,
-      effect:newEffect
+      type: "effectApplied",
+      from: source.id,
+      to: target.id,
+      effect: newEffect
     });
 
     return;
   }
 
+
   const absCurrent = Math.abs(existing.value);
   const absNew = Math.abs(newValue);
 
+
   // =========================
-  // ① 強い → 上書き
+  // 強い → 上書き
   // =========================
+
   if (absNew > absCurrent) {
 
     existing.value = newValue;
     existing.duration = newDuration;
 
     ctx.log.push({
-      type:"effectApplied",
-      from:source.id,
-      to:target.id,
-      effect:existing
+      type: "effectApplied",
+      from: source.id,
+      to: target.id,
+      effect: existing
     });
 
     return;
   }
 
+
   // =========================
-  // ② 同値 → 延長
+  // 同値 → 延長
   // =========================
+
   if (newValue === existing.value) {
 
     existing.duration += newDuration;
 
     ctx.log.push({
-      type:"effectApplied",
-      from:source.id,
-      to:target.id,
-      effect:existing
+      type: "effectApplied",
+      from: source.id,
+      to: target.id,
+      effect: existing
     });
 
     return;
   }
 
+
   // =========================
-  // ③ 弱い → 総量換算
+  // 弱い → 総量換算
   // =========================
 
   const addedTotal = absNew * newDuration;
+
   const convertTurn =
     Math.floor(addedTotal / absCurrent);
 
   if (convertTurn > 0) {
+
     existing.duration += convertTurn;
 
     ctx.log.push({
-      type:"effectApplied",
-      from:source.id,
-      to:target.id,
-      effect:existing
+      type: "effectApplied",
+      from: source.id,
+      to: target.id,
+      effect: existing
     });
+
   }
 
 }
-// ==========================
+// ==========================================================
 // メイン
-// ==========================
+// ==========================================================
 
 export function simulateBattle(snapshot) {
 
   const log = [];
 
-  // snapshotをコピー
-const units = snapshot.units.map(u => ({
+  // ======================================================
+  // snapshotコピー
+  // ======================================================
 
-  ...u,
+  const units = snapshot.units.map(u => ({
 
-  effects: [],
+    ...u,
 
-  skills: (u.skills || []).map(s => ({
-    ...s,
-    _currentCooldown: 0
-  }))
+    effects: [],
 
-}));
+    skills: (u.skills || []).map(s => ({
+      ...s,
+      _currentCooldown: 0
+    }))
 
+  }));
+
+
+  // ======================================================
   // 行動順固定
-  units.sort((a,b)=>b.speed-a.speed);
+  // ======================================================
 
-const context = {
-  units,
-  log,
-  getDistance,
-  getChebyshevDistance,
-  getEnemies,
-  getAllies,
-  getNearestEnemy,
-  getLowestHpAlly,
-  getIdleFacing,
-  getUnitsInManhattanRange,
-  getUnitsInSameRow,
-  getUnitsInSameColumn,
-  getEffectiveStat,
-  applyDamage,
-  applyHeal,
-  applyMove,
-  getKnockbackCell,
-  getPullCell,
-  applyEffect,
-  getManhattanCells,
-  getRandomEnemy,
-  getRandomAlly,
-  getRandomAny
-};
+  units.sort((a, b) => b.speed - a.speed);
+
+
+  // ======================================================
+  // context
+  // ======================================================
+
+  const context = {
+    units,
+    log,
+
+    getDistance,
+    getChebyshevDistance,
+
+    getEnemies,
+    getAllies,
+    getNearestEnemy,
+    getLowestHpAlly,
+
+    getIdleFacing,
+
+    getUnitsInManhattanRange,
+    getUnitsInSameRow,
+    getUnitsInSameColumn,
+
+    getEffectiveStat,
+
+    applyDamage,
+    applyHeal,
+    applyMove,
+
+    getKnockbackCell,
+    getPullCell,
+
+    applyEffect,
+
+    getManhattanCells,
+
+    getRandomEnemy,
+    getRandomAlly,
+    getRandomAny
+  };
+
+
+  // ======================================================
+  // ターンループ
+  // ======================================================
 
   let turn = 1;
   const MAX_TURNS = 50;
 
   while (turn <= MAX_TURNS) {
 
-    log.push({ type:"turnStart", turn });
+    log.push({ type: "turnStart", turn });
 
-for (let unit of units) {
 
-  if (unit.hp <= 0) continue;
+    // ==================================================
+    // ユニット行動
+    // ==================================================
 
-  // ====================
-  // 行動開始
-  // ====================
-  log.push({
-    type: "actionStart",
-    unit: unit.id
-  });
+    for (let unit of units) {
+
+      if (unit.hp <= 0) continue;
+
+
+      // ----------------------------------------------
+      // 行動開始
+      // ----------------------------------------------
+
+      log.push({
+        type: "actionStart",
+        unit: unit.id
+      });
+
 
       const enemies = getEnemies(units, unit.team);
 
-if (enemies.length === 0) {
+      if (enemies.length === 0) {
 
-  log.push({
-    type: "actionEnd",
-    unit: unit.id
-  });
+        log.push({
+          type: "actionEnd",
+          unit: unit.id
+        });
 
-  log.push({
-    type:"battleEnd",
-    winner: unit.team
-  });
+        log.push({
+          type: "battleEnd",
+          winner: unit.team
+        });
 
-  return log;
-}
-// ====================
-// スキル判定
-// ====================
+        return log;
+      }
 
-let usedSkill = false;
 
-for (let skill of (unit.skills || [])) {
+      // ==================================================
+      // スキル処理
+      // ==================================================
 
-  // クールタイム中ならスキップ
-  if (skill._currentCooldown > 0) continue;
+      let usedSkill = false;
 
-  const handler = skillHandlers[skill.type];
-  if (!handler) continue;
+      for (let skill of (unit.skills || [])) {
 
-const result = handler.generateActions(unit, context);
+        // クールタイム中
+        if (skill._currentCooldown > 0) continue;
 
-if (!result) continue;
+        const handler = skillHandlers[skill.type];
+        if (!handler) continue;
 
-const actions = result.actions || [];
+        const result = handler.generateActions(unit, context);
+        if (!result) continue;
 
-if (actions.length === 0) continue;
+        const actions = result.actions || [];
+        if (actions.length === 0) continue;
 
-const rangeCells = result.preview ? result.preview.cells : null;
-const rangeStyle = result.preview ? result.preview.style : null;
+        const rangeCells =
+          result.preview ? result.preview.cells : null;
 
-  // 「効果がある」Action が1つでもあるか。足すときここに追加する
-const hasEffect = actions.some(a =>
-  a.type === "damage" ||
-  a.type === "heal" ||
-  a.type === "applyEffect" ||
-  a.type === "move"
-);
+        const rangeStyle =
+          result.preview ? result.preview.style : null;
 
-  // 効果がないなら「使えなかった扱い」にして次のスキルへ（移動に回せる）
-  if (!hasEffect) continue;
 
-  // 自動スキルログ（範囲を同時に出すため skillUse に載せる）
-  log.push({
-    type: "skillUse",
-    unit: unit.id,
-    skill: skill.type,
-    rangeCells: rangeCells,
-    rangeStyle: rangeStyle
-  });
+        // ----------------------------------------------
+        // 効果判定
+        // ----------------------------------------------
 
-  // action実行（rangePreview は実行しない）
-  for (let action of actions) {
+        const hasEffect = actions.some(a =>
+          a.type === "damage" ||
+          a.type === "heal" ||
+          a.type === "applyEffect" ||
+          a.type === "move"
+        );
 
-if (
-  action.type !== "damage" &&
-  action.type !== "heal" &&
-  action.type !== "applyEffect" &&
-  action.type !== "move"
-) continue;
+        if (!hasEffect) continue;
 
-if (action.type === "damage") {
 
-  const source = units.find(u => u.id === action.source);
-  const target = units.find(u => u.id === action.target);
-  if (!source || !target) continue;
+        // ----------------------------------------------
+        // スキル使用ログ
+        // ----------------------------------------------
 
-  context.applyDamage(source, target, action, context);
-}
+        log.push({
+          type: "skillUse",
+          unit: unit.id,
+          skill: skill.type,
+          rangeCells: rangeCells,
+          rangeStyle: rangeStyle
+        });
 
-else if (action.type === "heal") {
 
-  const source = units.find(u => u.id === action.source);
-  const target = units.find(u => u.id === action.target);
-  if (!source || !target) continue;
+        // ----------------------------------------------
+        // Action実行
+        // ----------------------------------------------
 
-  context.applyHeal(source, target, action, context);
-}
+        for (let action of actions) {
 
-else if (action.type === "applyEffect") {
+          if (
+            action.type !== "damage" &&
+            action.type !== "heal" &&
+            action.type !== "applyEffect" &&
+            action.type !== "move"
+          ) continue;
 
-  const source = units.find(u => u.id === action.source);
-  const target = units.find(u => u.id === action.target);
-  if (!source || !target) continue;
 
-  context.applyEffect(source, target, action, context);
-}
+          if (action.type === "damage") {
 
-else if (action.type === "move") {
+            const source =
+              units.find(u => u.id === action.source);
 
-  const target = units.find(u => u.id === action.target);
-  if (!target) continue;
+            const target =
+              units.find(u => u.id === action.target);
 
-  context.applyMove(action, context);
-} 
-  }
-// 使用したスキルにCTをセット
-if (handler.cooldown && handler.cooldown > 0) {
-  skill._currentCooldown = handler.cooldown;
-}
-  usedSkill = true;
-  break;
-}
+            if (!source || !target) continue;
 
-if (usedSkill) {
+            context.applyDamage(source, target, action, context);
+          }
 
-  log.push({
-    type: "actionEnd",
-    unit: unit.id
-  });
+          else if (action.type === "heal") {
 
-  continue;
-}
+            const source =
+              units.find(u => u.id === action.source);
 
-      // ====================
-      // fallback移動（role別）
-      // ====================
+            const target =
+              units.find(u => u.id === action.target);
+
+            if (!source || !target) continue;
+
+            context.applyHeal(source, target, action, context);
+          }
+
+          else if (action.type === "applyEffect") {
+
+            const source =
+              units.find(u => u.id === action.source);
+
+            const target =
+              units.find(u => u.id === action.target);
+
+            if (!source || !target) continue;
+
+            context.applyEffect(source, target, action, context);
+          }
+
+          else if (action.type === "move") {
+
+            const target =
+              units.find(u => u.id === action.target);
+
+            if (!target) continue;
+
+            context.applyMove(action, context);
+          }
+
+        }
+
+
+        // ----------------------------------------------
+        // クールタイム設定
+        // ----------------------------------------------
+
+        if (handler.cooldown && handler.cooldown > 0) {
+          skill._currentCooldown = handler.cooldown;
+        }
+
+        usedSkill = true;
+        break;
+
+      }
+
+
+      // ==================================================
+      // スキル使用した場合
+      // ==================================================
+
+      if (usedSkill) {
+
+        log.push({
+          type: "actionEnd",
+          unit: unit.id
+        });
+
+        continue;
+      }
+
+
+      // ==================================================
+      // fallback移動
+      // ==================================================
 
       const role = unit.role || "attack";
 
-let moveMode = "toward";
-let targetUnit = null;
-let stopDistance = 1;
-let moveCount = 1;
+      let moveMode = "toward";
+      let targetUnit = null;
+      let stopDistance = 1;
+      let moveCount = 1;
+
+
+      // --------------------------------------------------
+      // ATTACK
+      // --------------------------------------------------
 
       if (role === "attack") {
         targetUnit = getNearestEnemy(unit, units);
         moveMode = "toward";
       }
 
-else if (role === "defense") {
 
-  const enemy = getNearestEnemy(unit, units);
+      // --------------------------------------------------
+      // SPEED
+      // --------------------------------------------------
 
-  if (enemy) {
-
-    const allies = getAllies(units, unit.team, unit.id);
-
-    let bestAlly = null;
-    let bestDist = Infinity;
-
-    for (const a of allies) {
-
-      const dist =
-        Math.abs(a.x - enemy.x) +
-        Math.abs(a.y - enemy.y);
-
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestAlly = a;
-      }
-    }
-
-    if (bestAlly) {
-
-targetUnit = enemy;
-moveMode = "toward";
-stopDistance = 1;
-
-    } else {
-
-      targetUnit = enemy;
-      moveMode = "toward";
-      stopDistance = 1;
-
-    }
-
-  }
-}
-
-  else if (role === "speed") {
-  targetUnit = getNearestEnemy(unit, units);
-  moveMode = "toward";
-  moveCount = 2;
-}
-
-    else if (role === "technical") {
-
-  targetUnit = getNearestEnemy(unit, units);
-
-  if (targetUnit) {
-
-    const dist =
-      Math.abs(unit.x - targetUnit.x) +
-      Math.abs(unit.y - targetUnit.y);
-
-    if (dist > 2) {
-      moveMode = "toward";
-    }
-    else if (dist < 2) {
-      moveMode = "away";
-    }
-    else {
-      stopDistance = 2;
-    }
-  }
-}
-
-else if (role === "support") {
-
-  const enemy = getNearestEnemy(unit, units);
-
-  if (enemy) {
-
-    const allies = getAllies(units, unit.team, unit.id);
-
-    let bestAlly = null;
-    let bestDist = Infinity;
-
-    for (const a of allies) {
-
-      const dist =
-        Math.abs(a.x - enemy.x) +
-        Math.abs(a.y - enemy.y);
-
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestAlly = a;
-      }
-    }
-
-    if (bestAlly) {
-
-      targetUnit = bestAlly;
-      stopDistance = 1;
-
-      const enemyDist =
-        Math.abs(unit.x - enemy.x) +
-        Math.abs(unit.y - enemy.y);
-
-      if (enemyDist > 2) {
+      else if (role === "speed") {
+        targetUnit = getNearestEnemy(unit, units);
         moveMode = "toward";
-      }
-      else if (enemyDist < 2) {
-        moveMode = "away";
+        moveCount = 2;
       }
 
-    } else {
 
-      targetUnit = enemy;
-      stopDistance = 2;
-      moveMode = "toward";
+      // --------------------------------------------------
+      // TECHNICAL
+      // --------------------------------------------------
 
-    }
+      else if (role === "technical") {
 
-  }
-}
+        targetUnit = getNearestEnemy(unit, units);
 
-else if (role === "heal") {
+        if (targetUnit) {
 
-  const nearestEnemy = getNearestEnemy(unit, units);
-  const ally = getLowestHpAlly(unit, units);
+          const dist =
+            Math.abs(unit.x - targetUnit.x) +
+            Math.abs(unit.y - targetUnit.y);
 
-  if (!nearestEnemy || !ally) {
-    targetUnit = ally;
-    moveMode = "toward";
-  }
+          if (dist > 2) {
+            moveMode = "toward";
+          }
 
-  else {
+          else if (dist < 2) {
+            moveMode = "away";
+          }
 
-    const enemyDist =
-      Math.abs(unit.x - nearestEnemy.x) +
-      Math.abs(unit.y - nearestEnemy.y);
+          else {
+            stopDistance = 2;
+          }
 
-    const dx = unit.x - ally.x;
-    const dy = unit.y - ally.y;
+        }
+      }
 
-    const allyChebyshev =
-      Math.max(Math.abs(dx), Math.abs(dy));
 
-    const safe = enemyDist >= 3;
-    const nearAlly = allyChebyshev <= 1;
+      // --------------------------------------------------
+      // ターゲットなし
+      // --------------------------------------------------
 
-    // ======================
-    // 安全かつヒール位置 → 動かない
-    // ======================
-    if (safe && nearAlly) {
-
-      log.push({
-        type:"wait",
-        unit:unit.id
-      });
-
-      log.push({
-        type:"actionEnd",
-        unit:unit.id
-      });
-
-      continue;
-    }
-
-// ======================
-// 敵が近い → 逃げる
-// ======================
-if (enemyDist <= 2) {
-
-  const dirs = [
-    {dx:1,dy:0},
-    {dx:-1,dy:0},
-    {dx:0,dy:1},
-    {dx:0,dy:-1}
-  ];
-
-  const safeSteps = [];
-
-  for (const d of dirs) {
-
-    const nx = unit.x + d.dx;
-    const ny = unit.y + d.dy;
-
-    if (nx < 0 || nx >= BOARD_W || ny < 0 || ny >= BOARD_H) continue;
-
-    if (isOccupiedCell(units, nx, ny, unit.id)) continue;
-
-    if (!isSafeFromEnemies(nx, ny, unit, units)) continue;
-
-    safeSteps.push({x:nx, y:ny});
-  }
-
-  if (safeSteps.length > 0) {
-
-    const step =
-      safeSteps[Math.floor(Math.random()*safeSteps.length)];
-
-context.applyMove({
-  type:"move",
-  target:unit.id,
-  x:step.x,
-  y:step.y,
-  forced:false
-}, context);
-
-    log.push({
-      type:"actionEnd",
-      unit:unit.id
-    });
-
-    continue;
-  }
-}
-
-    // ======================
-    // 味方へ近付く
-    // ======================
-    targetUnit = ally;
-    moveMode = "toward";
-  }
-}
-
-      // 目標がいないなら何もしない
       if (!targetUnit) {
+
         log.push({
-          type:"wait",
-          unit:unit.id
+          type: "wait",
+          unit: unit.id
         });
 
         log.push({
@@ -1096,118 +1118,149 @@ context.applyMove({
 
         continue;
       }
-  const targetPos = targetUnit;
 
-// ====================
-// 「近すぎるなら移動せず向きだけ変える」処理
-// （towardのときのみ。awayでは使わない）
-// ====================
-const dxToTarget = targetPos.x - unit.x;
-const dyToTarget = targetPos.y - unit.y;
-const distToTarget = Math.abs(dxToTarget) + Math.abs(dyToTarget);
 
-if (moveMode === "toward" && stopDistance >= 0 && distToTarget <= stopDistance) {
+      const targetPos = targetUnit;
 
-  const newFacing = facingFromDelta(dxToTarget, dyToTarget, unit.facing);
 
-  if (newFacing !== unit.facing) {
-    unit.facing = newFacing;
-    log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
-  } else {
-    log.push({ type:"wait", unit:unit.id });
-  }
+      // ==================================================
+      // 距離チェック
+      // ==================================================
 
-  log.push({ type:"actionEnd", unit: unit.id });
-  continue;
-}
+      const dxToTarget = targetPos.x - unit.x;
+      const dyToTarget = targetPos.y - unit.y;
 
-for (let i = 0; i < moveCount; i++) {
+      const distToTarget =
+        Math.abs(dxToTarget) + Math.abs(dyToTarget);
 
-const step = chooseStep(
-  unit,
-  units,
-  targetPos,
-  moveMode
-);
 
-  if (!step) break;
+      if (
+        moveMode === "toward" &&
+        stopDistance >= 0 &&
+        distToTarget <= stopDistance
+      ) {
 
-if (!step) {
+        const newFacing =
+          facingFromDelta(dxToTarget, dyToTarget, unit.facing);
 
-  // 動けない場合：向きだけ整える（今の仕様に近い）
-  // まずは「今回の目標方向」を向く
-  const face = facingFromDelta(dxToTarget, dyToTarget, unit.facing);
+        if (newFacing !== unit.facing) {
 
-  if (face !== unit.facing) {
-    unit.facing = face;
-    log.push({ type:"faceChange", unit:unit.id, facing:face });
-  } else {
-    // それも同じなら idleFacing（roleに応じた自然な向き）
-    const idle = getIdleFacing(unit, units);
-    if (idle !== unit.facing) {
-      unit.facing = idle;
-      log.push({ type:"faceChange", unit:unit.id, facing:idle });
-    } else {
-      log.push({ type:"wait", unit:unit.id });
-    }
-  }
+          unit.facing = newFacing;
 
-  log.push({ type:"actionEnd", unit: unit.id });
-  continue;
-}
+          log.push({
+            type: "faceChange",
+            unit: unit.id,
+            facing: newFacing
+          });
 
-// ====================
-// 実際に移動
-// ====================
-context.applyMove({
-  type:"move",
-  target:unit.id,
-  x:step.x,
-  y:step.y,
-  forced:false
-}, context);
-}
+        }
 
-// ====================
-// 行動終了
-// ====================
-log.push({ type:"actionEnd", unit: unit.id });
-    }
-    
-// ====================
-// ターン制effect減少
-// ====================
-for (let u of units) {
+        else {
 
-  if (!u.effects) continue;
+          log.push({
+            type: "wait",
+            unit: unit.id
+          });
 
-  for (let i = u.effects.length - 1; i >= 0; i--) {
+        }
 
-    const e = u.effects[i];
+        log.push({
+          type: "actionEnd",
+          unit: unit.id
+        });
 
-    if (e.category === "timed" && e.duration !== null) {
-
-      e.duration--;
-
-      if (e.duration <= 0) {
-        u.effects.splice(i, 1);
+        continue;
       }
+
+
+      // ==================================================
+      // 移動処理
+      // ==================================================
+
+      for (let i = 0; i < moveCount; i++) {
+
+        const step =
+          chooseStep(unit, units, targetPos, moveMode);
+
+        if (!step) break;
+
+        context.applyMove({
+          type: "move",
+          target: unit.id,
+          x: step.x,
+          y: step.y,
+          forced: false
+        }, context);
+
+      }
+
+
+      log.push({
+        type: "actionEnd",
+        unit: unit.id
+      });
+
     }
-  }
-}
-    
-// ターン終了時に全スキルのCT減少
-for (let u of units) {
-  for (let s of (u.skills || [])) {
-    if (s._currentCooldown > 0) {
-      s._currentCooldown--;
+
+
+    // ==================================================
+    // ターン制effect減少
+    // ==================================================
+
+    for (let u of units) {
+
+      if (!u.effects) continue;
+
+      for (let i = u.effects.length - 1; i >= 0; i--) {
+
+        const e = u.effects[i];
+
+        if (e.category === "timed" && e.duration !== null) {
+
+          e.duration--;
+
+          if (e.duration <= 0) {
+            u.effects.splice(i, 1);
+          }
+
+        }
+
+      }
+
     }
-  }
-}
+
+
+    // ==================================================
+    // クールタイム減少
+    // ==================================================
+
+    for (let u of units) {
+
+      for (let s of (u.skills || [])) {
+
+        if (s._currentCooldown > 0) {
+          s._currentCooldown--;
+        }
+
+      }
+
+    }
+
+
     turn++;
+
   }
 
-  log.push({ type:"battleEnd", winner:null });
+
+  // ======================================================
+  // 引き分け
+  // ======================================================
+
+  log.push({
+    type: "battleEnd",
+    winner: null
+  });
 
   return log;
+
 }
