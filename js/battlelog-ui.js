@@ -76,14 +76,15 @@ const wrapper = document.querySelector(
 
 if (wrapper) {
 
-  wrapper.classList.remove("shake");
+  wrapper.classList.remove("bounce");
   void wrapper.offsetWidth;
-  wrapper.classList.add("shake");
+  wrapper.classList.add("bounce");
 
   wrapper.addEventListener("animationend", () => {
-    wrapper.classList.remove("shake");
+    wrapper.classList.remove("bounce");
   }, { once: true });
 
+}
 }
     }
 
