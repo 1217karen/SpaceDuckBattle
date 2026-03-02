@@ -451,6 +451,54 @@ function applyMove(action, ctx) {
   }
 }
 
+function getKnockbackCell(source, target, units) {
+
+  const dx = target.x - source.x;
+  const dy = target.y - source.y;
+
+  const stepX = dx === 0 ? 0 : dx / Math.abs(dx);
+  const stepY = dy === 0 ? 0 : dy / Math.abs(dy);
+
+  const nx = target.x + stepX;
+  const ny = target.y + stepY;
+
+  // 盤外
+  if (nx < 0 || nx >= BOARD_W || ny < 0 || ny >= BOARD_H) {
+    return null;
+  }
+
+  // 占有
+  if (isOccupiedCell(units, nx, ny, target.id)) {
+    return null;
+  }
+
+  return { x:nx, y:ny };
+}
+
+function getPullCell(source, target, units) {
+
+  const dx = source.x - target.x;
+  const dy = source.y - target.y;
+
+  const stepX = dx === 0 ? 0 : dx / Math.abs(dx);
+  const stepY = dy === 0 ? 0 : dy / Math.abs(dy);
+
+  const nx = target.x + stepX;
+  const ny = target.y + stepY;
+
+  // 盤外
+  if (nx < 0 || nx >= BOARD_W || ny < 0 || ny >= BOARD_H) {
+    return null;
+  }
+
+  // 占有
+  if (isOccupiedCell(units, nx, ny, target.id)) {
+    return null;
+  }
+
+  return { x:nx, y:ny };
+}
+
 function applyEffect(source, target, action, ctx) {
 
   const effectData = action.effect;
@@ -635,6 +683,8 @@ const context = {
   applyDamage,
   applyHeal,
   applyMove,
+  getKnockbackCell,
+  getPullCell,
   applyEffect,
   getManhattanCells,
   getRandomEnemy,
