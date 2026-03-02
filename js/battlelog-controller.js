@@ -338,4 +338,4 @@ if (autoPlay) {
   setTimeout(playNextAction, UNIT_DELAY);
 }
 }
-xtBtn.addEventListener("click", playNextAction);
+nextBtn.addEventListener("click", playNextAction);
