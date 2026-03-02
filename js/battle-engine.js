@@ -412,6 +412,45 @@ function applyHeal(source, target, action, ctx) {
     hp:target.hp
   });
 }
+
+function applyMove(action, ctx) {
+
+  const unit =
+    ctx.units.find(u => u.id === action.target);
+
+  if (!unit) return;
+
+  const fromX = unit.x;
+  const fromY = unit.y;
+
+  unit.x = action.x;
+  unit.y = action.y;
+
+  ctx.log.push({
+    type:"move",
+    unit:unit.id,
+    x:action.x,
+    y:action.y
+  });
+
+  const dx = action.x - fromX;
+  const dy = action.y - fromY;
+
+  const newFacing =
+    facingFromDelta(dx, dy, unit.facing);
+
+  if (newFacing !== unit.facing) {
+
+    unit.facing = newFacing;
+
+    ctx.log.push({
+      type:"faceChange",
+      unit:unit.id,
+      facing:newFacing
+    });
+  }
+}
+
 function applyEffect(source, target, action, ctx) {
 
   const effectData = action.effect;
@@ -595,6 +634,7 @@ const context = {
   getEffectiveStat,
   applyDamage,
   applyHeal,
+  applyMove,
   applyEffect,
   getManhattanCells,
   getRandomEnemy,
@@ -687,7 +727,8 @@ const hasEffect = actions.some(a =>
 if (
   action.type !== "damage" &&
   action.type !== "heal" &&
-  action.type !== "applyEffect"
+  action.type !== "applyEffect" &&
+  action.type !== "move"
 ) continue;
 
     const source = units.find(u => u.id === action.source);
@@ -703,6 +744,10 @@ else if (action.type === "heal") {
 else if (action.type === "applyEffect") {
   context.applyEffect(source, target, action, context);
 }
+else if (action.type === "move") {
+  context.applyMove(action, context);
+}
+    
   }
 // 使用したスキルにCTをセット
 if (handler.cooldown && handler.cooldown > 0) {
@@ -1051,21 +1096,13 @@ if (!step) {
 // ====================
 // 実際に移動
 // ====================
-const moveDx = step.x - unit.x;
-const moveDy = step.y - unit.y;
-
-unit.x = step.x;
-unit.y = step.y;
-
-log.push({ type:"move", unit:unit.id, x:step.x, y:step.y });
-
-const newFacing =
-  facingFromDelta(moveDx, moveDy, unit.facing);
-
-if (newFacing !== unit.facing) {
-  unit.facing = newFacing;
-  log.push({ type:"faceChange", unit:unit.id, facing:newFacing });
-}
+context.applyMove({
+  type:"move",
+  target:unit.id,
+  x:step.x,
+  y:step.y,
+  forced:false
+}, context);
 }
 
 // ====================
