@@ -245,6 +245,8 @@ logArea.appendChild(header);
   // 0.5秒ずつ再生
   // ======================
 
+  let prevType = null;
+  
 for (let i = 0; i < actionEvents.length; i++) {
 
   const ev = actionEvents[i];
@@ -300,7 +302,14 @@ cell.classList.remove(
   }
 
   // 最後だけ待たない
-await sleep(EVENT_DELAY);
+const delay =
+  prevType === ev.type
+    ? 250
+    : EVENT_DELAY;
+
+await sleep(delay);
+
+prevType = ev.type;
 clearEffectHighlights();
 }
   actedSet.add(actingUnit);
