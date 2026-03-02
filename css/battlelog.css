@@ -50,6 +50,10 @@
   --debuff-color: 180,0,255;
 }
 
+:root {
+  --ui-speed: 1;
+}
+
 .cell {
   width: 64px;
   height: 64px;
@@ -157,7 +161,7 @@
 }
 
 .unitImage.shake {
-  animation: unitShake 0.25s ease;
+  animation: unitShake calc(0.25s / var(--ui-speed)) ease;
 }
 
 @keyframes unitShake {
@@ -169,7 +173,7 @@
 }
 
 .unitImage.bounce {
-  animation: unitBounce 0.25s ease;
+  animation: unitBounce calc(0.25s / var(--ui-speed)) ease;
 }
 
 @keyframes unitBounce {
@@ -181,7 +185,7 @@
 }
 
 .cell.activeUnit {
-  animation: activeGlow 1s ease-in-out;
+  animation: activeGlow calc(0.8s / var(--ui-speed)) ease-in-out;
 }
 
 @keyframes activeGlow {
