@@ -131,12 +131,43 @@ else if (event.type === "effectApplied") {
   const unitState =
     boardState.units[event.to];
 
+  let isBuff = true;
+  let text = "";
+
+  // ==========================
+  // corrosion / repair
+  // ==========================
+  if (e.type === "corrosion" || e.type === "repair") {
+
+    isBuff = (e.type === "repair");
+
+    text =
+      e.type === "corrosion"
+        ? "侵食"
+        : "修復";
+
+    div.textContent =
+      `${displayName(event.to, nameMap)} に ${text} が付与された`;
+  }
+
+  // ==========================
+  // stat系
+  // ==========================
+  else {
+
+    isBuff = e.value >= 0;
+
+    const sign =
+      e.value >= 0 ? "+" : "";
+
+    div.textContent =
+      `${displayName(event.to, nameMap)} の ${e.stat} ${sign}${e.value}`;
+  }
+
   if (unitState) {
 
     const cls =
-      e.value >= 0
-        ? "buffHighlight"
-        : "debuffHighlight";
+      isBuff ? "buffHighlight" : "debuffHighlight";
 
     highlightCell(
       "board",
@@ -145,30 +176,25 @@ else if (event.type === "effectApplied") {
       cls
     );
   }
-const img = document.querySelector(
-  `[data-unit-id="${event.to}"] .unitImage`
-);
 
-if (img) {
+  const img = document.querySelector(
+    `[data-unit-id="${event.to}"] .unitImage`
+  );
 
-  const isBuff = event.effect.value >= 0;
+  if (img) {
 
-  const cls = isBuff ? "buffFloat" : "debuffSink";
+    const cls =
+      isBuff ? "buffFloat" : "debuffSink";
 
-  img.classList.remove(cls);
-  void img.offsetWidth;
-  img.classList.add(cls);
-
-  img.addEventListener("animationend", () => {
     img.classList.remove(cls);
-  }, { once: true });
+    void img.offsetWidth;
+    img.classList.add(cls);
 
-}
-  const sign =
-    e.value >= 0 ? "+" : "";
+    img.addEventListener("animationend", () => {
+      img.classList.remove(cls);
+    }, { once: true });
 
-  div.textContent =
-    `${displayName(event.to, nameMap)} の ${e.stat} ${sign}${e.value}`
+  }
 }
   
 else if (event.type === "death") {
