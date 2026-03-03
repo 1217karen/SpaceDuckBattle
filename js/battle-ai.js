@@ -277,14 +277,11 @@ if (adjacentEnemy) {
   else {
 
     // 敵に最も近い味方を取得
-    const allies =
-      getEnemies(units, unit.team).length >= 0
-        ? units.filter(u =>
-            u.team === unit.team &&
-            u.id !== unit.id &&
-            u.hp > 0
-          )
-        : [];
+    const allies = units.filter(u =>
+  u.team === unit.team &&
+  u.id !== unit.id &&
+  u.hp > 0
+);
 
     let frontAlly = null;
     let bestDist = Infinity;
