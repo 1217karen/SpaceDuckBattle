@@ -1,6 +1,9 @@
 export function createTestSnapshot() {
 
 return {
+  board: { width: 8, height: 6 },
+
+  
 units: [
 
   {
