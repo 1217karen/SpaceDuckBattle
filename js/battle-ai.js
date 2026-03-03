@@ -165,7 +165,13 @@ export function getIdleFacing(
 // fallback移動判断
 // ==============================
 
-export function decideFallbackMove(unit, units, getDistance, getNearestEnemy) {
+export function decideFallbackMove(
+  unit,
+  units,
+  getDistance,
+  getEnemies,
+  getNearestEnemy
+) {
 
   const role = unit.role || "attack";
 
@@ -176,19 +182,19 @@ export function decideFallbackMove(unit, units, getDistance, getNearestEnemy) {
 
   if (role === "attack") {
     targetUnit =
-      getNearestEnemy(unit, units, getDistance, (u,t)=>u);
+      getNearestEnemy(unit, units, getDistance, getEnemies);
   }
 
   else if (role === "speed") {
     targetUnit =
-      getNearestEnemy(unit, units, getDistance, (u,t)=>u);
+      getNearestEnemy(unit, units, getDistance, getEnemies);
     moveCount = 2;
   }
 
   else if (role === "technical") {
 
     targetUnit =
-      getNearestEnemy(unit, units, getDistance, (u,t)=>u);
+      getNearestEnemy(unit, units, getDistance, getEnemies);
 
     if (targetUnit) {
 
