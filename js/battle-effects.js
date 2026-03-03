@@ -35,83 +35,11 @@ export function getEffectiveStat(unit, statName) {
 export function applyEffect(source, target, action, ctx) {
 
   const effectData = action.effect;
-  
   if (!effectData) return;
 
   if (!target.effects) {
     target.effects = [];
   }
-
-  // battle-effects.js
-
-export function getEffectiveStat(unit, statName) {
-
-  const base = unit[statName] || 0;
-
-  if (!unit.effects || unit.effects.length === 0) {
-    return base;
-  }
-
-  let flatBonus = 0;
-  let rateBonus = 0;
-
-  for (let effect of unit.effects) {
-
-    if (effect.stat !== statName) continue;
-
-    if (effect.mode === "flat") {
-      flatBonus += effect.value;
-    }
-
-    if (effect.mode === "rate") {
-      rateBonus += effect.value;
-    }
-
-  }
-
-  const afterFlat = base + flatBonus;
-  const finalValue = afterFlat * (1 + rateBonus);
-
-  return finalValue;
-}
-
-
-export function applyEffect(source, target, action, ctx) {
-
-  const effectData = action.effect;
-
-// ===============================
-// 毎ターン発動系（腐食・修復）
-// ===============================
-
-if (effectData.effectType === "dot" ||
-    effectData.effectType === "hot") {
-
-  const newEffect = {
-    category: "timed",
-    effectType: effectData.effectType,
-    value: effectData.value,
-    duration: effectData.duration
-  };
-
-  target.effects.push(newEffect);
-
-  ctx.log.push({
-    type: "effectApplied",
-    from: source.id,
-    to: target.id,
-    effect: newEffect
-  });
-
-  return;
-}
-  
-  if (!effectData) return;
-
-  if (!target.effects) {
-    target.effects = [];
-  }
-
 
   // 永続 flat
   if (effectData.duration === null) {
