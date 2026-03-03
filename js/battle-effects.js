@@ -40,6 +40,30 @@ export function applyEffect(source, target, action, ctx) {
   if (!target.effects) {
     target.effects = [];
   }
+  
+  // 特殊効果（漢字二文字系）
+if (effectData.kind === "special") {
+
+  const newEffect = {
+    kind: "special",
+    tag: effectData.tag,         // 例: "腐食"
+    group: effectData.group,     // "buff" or "debuff"
+    subType: effectData.subType, // damage / heal など
+    value: effectData.value,
+    stock: effectData.stock ?? 1
+  };
+
+  target.effects.push(newEffect);
+
+  ctx.log.push({
+    type: "effectApplied",
+    from: source.id,
+    to: target.id,
+    effect: newEffect
+  });
+
+  return;
+}
 
   // 永続 flat
   if (effectData.duration === null) {
@@ -171,7 +195,8 @@ export function processOverTimeEffects(units, ctx) {
 
       const e = unit.effects[i];
 
-      if (e.kind !== "overTime") continue;
+      if (e.kind !== "special") continue;
+      if (e.subType !== "damage" && e.subType !== "heal") continue;
 
       const baseHp = unit.mhp ?? unit.hp;
 
@@ -248,4 +273,21 @@ if (e.subType === "damage") {
       }
     }
   }
+}
+export function getEffectsByGroup(unit, group) {
+  if (!unit.effects) return [];
+  return unit.effects.filter(e => e.group === group);
+}
+
+export function removeRandomEffectByGroup(unit, group) {
+
+  const list = getEffectsByGroup(unit, group);
+  if (list.length === 0) return null;
+
+  const index = Math.floor(Math.random() * list.length);
+  const target = list[index];
+
+  unit.effects = unit.effects.filter(e => e !== target);
+
+  return target;
 }
