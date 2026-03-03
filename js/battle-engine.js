@@ -4,7 +4,7 @@ import { skillHandlers
        } from "./skills.js";
 import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell
        } from "./movement.js";
-import {getEffectiveStat,applyEffect,processOverTimeEffects
+import {getEffectiveStat,applyEffect,processBeforeAction,processAfterAction
        } from "./battle-effects.js";
 import {getNearestEnemy,getLowestHpAlly,getIdleFacing,decideFallbackMove
        } from "./battle-ai.js";
@@ -154,6 +154,7 @@ function getUnitsInSameColumn(unit, units) {
 export function simulateBattle(snapshot) {
 
   const log = [];
+  let battleFinished = false;
 
   const board = snapshot.board ?? { width: 8, height: 6 };
   const MAX_TURNS = snapshot.maxTurns ?? 50;
@@ -226,10 +227,48 @@ export function simulateBattle(snapshot) {
 
     getRandomEnemy,
     getRandomAlly,
-    getRandomAny
+    getRandomAny,
+         
+    killUnit
   };
+       
+function endAction(unit) {
+  processAfterAction(unit);
+  log.push({
+    type: "actionEnd",
+    unit: unit.id
+  });
+}
+       
+function killUnit(unit) {
 
+  if (unit._isDead) return;
 
+  unit.hp = 0;
+  unit._isDead = true;
+
+  log.push({
+    type: "death",
+    unit: unit.id
+  });
+
+  const aliveTeams = new Set(
+    units
+      .filter(u => u.hp > 0)
+      .map(u => u.team)
+  );
+
+  if (aliveTeams.size === 1) {
+
+    log.push({
+      type: "battleEnd",
+      winner: [...aliveTeams][0]
+    });
+
+    battleFinished = true;
+  }
+}
+       
   // ======================================================
   // ターンループ
   // ======================================================
@@ -237,6 +276,8 @@ export function simulateBattle(snapshot) {
   let turn = 1;
 
   while (turn <= MAX_TURNS) {
+         
+ if (battleFinished) return log;
 
     log.push({ type: "turnStart", turn });
 
@@ -246,6 +287,8 @@ export function simulateBattle(snapshot) {
     // ==================================================
 
     for (let unit of units) {
+
+           if (battleFinished) return log;
 
       if (unit.hp <= 0) continue;
 
@@ -259,23 +302,22 @@ export function simulateBattle(snapshot) {
         unit: unit.id
       });
 
+processBeforeAction(unit, context);
 
+if (unit.hp <= 0) {
+
+endAction(unit);
+
+  continue;
+}
       const enemies = getEnemies(units, unit.team);
 
-      if (enemies.length === 0) {
+if (enemies.length === 0) {
 
-        log.push({
-          type: "actionEnd",
-          unit: unit.id
-        });
+  endAction(unit);
+  return log;
 
-        log.push({
-          type: "battleEnd",
-          winner: unit.team
-        });
-
-        return log;
-      }
+}
 
 
       // ==================================================
@@ -418,10 +460,7 @@ export function simulateBattle(snapshot) {
 
       if (usedSkill) {
 
-        log.push({
-          type: "actionEnd",
-          unit: unit.id
-        });
+endAction(unit);
 
         continue;
       }
@@ -450,10 +489,7 @@ const {
           unit: unit.id
         });
 
-        log.push({
-          type: "actionEnd",
-          unit: unit.id
-        });
+endAction(unit);
 
         continue;
       }
@@ -503,10 +539,7 @@ const {
 
         }
 
-        log.push({
-          type: "actionEnd",
-          unit: unit.id
-        });
+endAction(unit);
 
         continue;
       }
@@ -533,15 +566,9 @@ const {
 
       }
 
-
-      log.push({
-        type: "actionEnd",
-        unit: unit.id
-      });
+endAction(unit);
 
     }
-
- processOverTimeEffects(units, context);
          
     // ==================================================
     // ターン制effect減少
