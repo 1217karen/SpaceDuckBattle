@@ -422,13 +422,7 @@ const {
   getAllies,
   board
 );
-log.push({
-  type: "debugMove",
-  unit: unit.id,
-  target: targetUnit?.id ?? null,
-  moveMode,
-  stopDistance
-});
+
       // --------------------------------------------------
       // ターゲットなし
       // --------------------------------------------------
