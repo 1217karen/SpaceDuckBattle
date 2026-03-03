@@ -145,7 +145,25 @@ else if (event.type === "effectApplied") {
       cls
     );
   }
+const img = document.querySelector(
+  `[data-unit-id="${event.to}"] .unitImage`
+);
 
+if (img) {
+
+  const isBuff = event.effect.value >= 0;
+
+  const cls = isBuff ? "buffFloat" : "debuffSink";
+
+  img.classList.remove(cls);
+  void img.offsetWidth;
+  img.classList.add(cls);
+
+  img.addEventListener("animationend", () => {
+    img.classList.remove(cls);
+  }, { once: true });
+
+}
   const sign =
     e.value >= 0 ? "+" : "";
 
