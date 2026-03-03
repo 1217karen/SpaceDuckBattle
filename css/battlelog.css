@@ -166,9 +166,9 @@
 
 @keyframes unitShake {
   0%   { transform: translate(-50%, -50%) translateX(0); }
-  25%  { transform: translate(-50%, -50%) translateX(-2px); }
-  50%  { transform: translate(-50%, -50%) translateX(2px); }
-  75%  { transform: translate(-50%, -50%) translateX(-2px); }
+  25%  { transform: translate(-50%, -50%) translateX(-4px); }
+  50%  { transform: translate(-50%, -50%) translateX(4px); }
+  75%  { transform: translate(-50%, -50%) translateX(-4px); }
   100% { transform: translate(-50%, -50%) translateX(0); }
 }
 
@@ -178,9 +178,9 @@
 
 @keyframes unitBounce {
   0%   { transform: translate(-50%, -50%) translateY(0); }
-  25%  { transform: translate(-50%, -50%) translateY(-2px); }
+  25%  { transform: translate(-50%, -50%) translateY(-4px); }
   50%  { transform: translate(-50%, -50%) translateY(0); }
-  75%  { transform: translate(-50%, -50%) translateY(-2px); }
+  75%  { transform: translate(-50%, -50%) translateY(-4px); }
   100% { transform: translate(-50%, -50%) translateY(0); }
 }
 
