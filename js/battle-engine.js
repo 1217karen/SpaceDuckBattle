@@ -239,6 +239,89 @@ function endAction(unit) {
     unit: unit.id
   });
 }
+
+function tryUseSkill(unit) {
+
+  for (let skill of (unit.skills || [])) {
+
+    if (skill._currentCooldown > 0) continue;
+
+    const handler = skillHandlers[skill.type];
+    if (!handler) continue;
+
+    const result = handler.generateActions(unit, context);
+    if (!result) continue;
+
+    const actions = result.actions || [];
+    if (actions.length === 0) continue;
+
+    const hasEffect = actions.some(a =>
+      a.type === "damage" ||
+      a.type === "heal" ||
+      a.type === "applyEffect" ||
+      a.type === "move"
+    );
+
+    if (!hasEffect) continue;
+
+    log.push({
+      type: "skillUse",
+      unit: unit.id,
+      skill: skill.type,
+      rangeCells: result.preview?.cells ?? null,
+      rangeStyle: result.preview?.style ?? null
+    });
+
+    for (let action of actions) {
+
+      if (action.type === "damage") {
+
+        const source =
+          units.find(u => u.id === action.source);
+        const target =
+          units.find(u => u.id === action.target);
+
+        if (source && target)
+          applyDamage(source, target, action, context);
+      }
+
+      else if (action.type === "heal") {
+
+        const source =
+          units.find(u => u.id === action.source);
+        const target =
+          units.find(u => u.id === action.target);
+
+        if (source && target)
+          applyHeal(source, target, action, context);
+      }
+
+      else if (action.type === "applyEffect") {
+
+        const source =
+          units.find(u => u.id === action.source);
+        const target =
+          units.find(u => u.id === action.target);
+
+        if (source && target)
+          context.applyEffect(source, target, action, context);
+      }
+
+      else if (action.type === "move") {
+
+        applyMove(action, context);
+      }
+    }
+
+    if (handler.cooldown && handler.cooldown > 0) {
+      skill._currentCooldown = handler.cooldown;
+    }
+
+    return true;
+  }
+
+  return false;
+}
        
 function killUnit(unit) {
 
@@ -319,151 +402,10 @@ if (enemies.length === 0) {
 
 }
 
-
-      // ==================================================
-      // スキル処理
-      // ==================================================
-
-      let usedSkill = false;
-
-      for (let skill of (unit.skills || [])) {
-
-        // クールタイム中
-        if (skill._currentCooldown > 0) continue;
-
-        const handler = skillHandlers[skill.type];
-        if (!handler) continue;
-
-        const result = handler.generateActions(unit, context);
-        if (!result) continue;
-
-        const actions = result.actions || [];
-        if (actions.length === 0) continue;
-
-        const rangeCells =
-          result.preview ? result.preview.cells : null;
-
-        const rangeStyle =
-          result.preview ? result.preview.style : null;
-
-
-        // ----------------------------------------------
-        // 効果判定
-        // ----------------------------------------------
-
-        const hasEffect = actions.some(a =>
-          a.type === "damage" ||
-          a.type === "heal" ||
-          a.type === "applyEffect" ||
-          a.type === "move"
-        );
-
-        if (!hasEffect) continue;
-
-
-        // ----------------------------------------------
-        // スキル使用ログ
-        // ----------------------------------------------
-
-        log.push({
-          type: "skillUse",
-          unit: unit.id,
-          skill: skill.type,
-          rangeCells: rangeCells,
-          rangeStyle: rangeStyle
-        });
-
-
-        // ----------------------------------------------
-        // Action実行
-        // ----------------------------------------------
-
-        for (let action of actions) {
-
-          if (
-            action.type !== "damage" &&
-            action.type !== "heal" &&
-            action.type !== "applyEffect" &&
-            action.type !== "move"
-          ) continue;
-
-
-          if (action.type === "damage") {
-
-            const source =
-              units.find(u => u.id === action.source);
-
-            const target =
-              units.find(u => u.id === action.target);
-
-            if (!source || !target) continue;
-
-            applyDamage(source, target, action, context);
-          }
-
-          else if (action.type === "heal") {
-
-            const source =
-              units.find(u => u.id === action.source);
-
-            const target =
-              units.find(u => u.id === action.target);
-
-            if (!source || !target) continue;
-
-            applyHeal(source, target, action, context);
-          }
-
-          else if (action.type === "applyEffect") {
-
-            const source =
-              units.find(u => u.id === action.source);
-
-            const target =
-              units.find(u => u.id === action.target);
-
-            if (!source || !target) continue;
-
-            context.applyEffect(source, target, action, context);
-          }
-
-          else if (action.type === "move") {
-
-            const target =
-              units.find(u => u.id === action.target);
-
-            if (!target) continue;
-
-            applyMove(action, context);
-          }
-
-        }
-
-
-        // ----------------------------------------------
-        // クールタイム設定
-        // ----------------------------------------------
-
-        if (handler.cooldown && handler.cooldown > 0) {
-          skill._currentCooldown = handler.cooldown;
-        }
-
-        usedSkill = true;
-        break;
-
-      }
-
-
-      // ==================================================
-      // スキル使用した場合
-      // ==================================================
-
-      if (usedSkill) {
-
-endAction(unit);
-
-        continue;
-      }
+if (tryUseSkill(unit)) {
+  endAction(unit);
+  continue;
+}
 
 const {
   targetUnit,
@@ -511,40 +453,51 @@ endAction(unit);
         Math.abs(dxToTarget) + Math.abs(dyToTarget);
 
 
-      if (
-        moveMode === "toward" &&
-        stopDistance >= 0 &&
-        distToTarget <= stopDistance
-      ) {
+if (
+  moveMode === "toward" &&
+  stopDistance >= 0 &&
+  distToTarget <= stopDistance
+) {
 
-        const newFacing =
-          facingFromDelta(dxToTarget, dyToTarget, unit.facing);
+  const newFacing =
+    facingFromDelta(dxToTarget, dyToTarget, unit.facing);
 
-        if (newFacing !== unit.facing) {
+  const facedChanged =
+    newFacing !== unit.facing;
 
-          unit.facing = newFacing;
+  if (facedChanged) {
 
-          log.push({
-            type: "faceChange",
-            unit: unit.id,
-            facing: newFacing
-          });
+    unit.facing = newFacing;
 
-        }
+    log.push({
+      type: "faceChange",
+      unit: unit.id,
+      facing: newFacing
+    });
 
-        else {
+    // 向き変更のみ → スキル再判定
+    if (tryUseSkill(unit)) {
+      endAction(unit);
+      continue;
+    }
 
-          log.push({
-            type: "wait",
-            unit: unit.id
-          });
+    log.push({
+      type: "wait",
+      unit: unit.id
+    });
+  }
 
-        }
+  else {
 
-endAction(unit);
+    log.push({
+      type: "wait",
+      unit: unit.id
+    });
+  }
 
-        continue;
-      }
+  endAction(unit);
+  continue;
+}
 
 
       // ==================================================
