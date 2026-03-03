@@ -31,6 +31,8 @@ export function getEffectiveStat(unit, statName) {
   return finalValue;
 }
 
+const CORROSION_RATE = 0.005;
+const MAX_STACK = 100;
 
 export function applyEffect(source, target, action, ctx) {
 
@@ -40,30 +42,47 @@ export function applyEffect(source, target, action, ctx) {
   if (!target.effects) {
     target.effects = [];
   }
-  
-  // 特殊効果（漢字二文字系）
-if (effectData.kind === "special") {
 
-  const newEffect = {
-    kind: "special",
-    tag: effectData.tag,         // 例: "腐食"
-    group: effectData.group,     // "buff" or "debuff"
-    subType: effectData.subType, // damage / heal など
-    value: effectData.value,
-    stock: effectData.stock ?? 1
-  };
+  // === corrosion / repair ===
+  if (effectData.type === "corrosion" || effectData.type === "repair") {
 
-  target.effects.push(newEffect);
+    const existing =
+      target.effects.find(e => e.type === effectData.type);
 
-  ctx.log.push({
-    type: "effectApplied",
-    from: source.id,
-    to: target.id,
-    effect: newEffect
-  });
+    if (existing) {
 
-  return;
-}
+      existing.stock = Math.min(
+        (existing.stock ?? 0) + (effectData.stock ?? 1),
+        MAX_STACK
+      );
+
+      ctx.log.push({
+        type: "effectApplied",
+        from: source.id,
+        to: target.id,
+        effect: existing
+      });
+
+      return;
+    }
+
+    const newEffect = {
+      type: effectData.type,
+      stock: Math.min(effectData.stock ?? 1, MAX_STACK),
+      group: effectData.group
+    };
+
+    target.effects.push(newEffect);
+
+    ctx.log.push({
+      type: "effectApplied",
+      from: source.id,
+      to: target.id,
+      effect: newEffect
+    });
+
+    return;
+  }
 
   // 永続 flat
   if (effectData.duration === null) {
@@ -184,96 +203,7 @@ if (effectData.kind === "special") {
 
   }
 }
-export function processOverTimeEffects(units, ctx) {
 
-  for (let unit of units) {
-
-    if (!unit.effects) continue;
-    if (unit.hp <= 0) continue;
-
-    for (let i = unit.effects.length - 1; i >= 0; i--) {
-
-      const e = unit.effects[i];
-
-      if (e.kind !== "special") continue;
-      if (e.subType !== "damage" && e.subType !== "heal") continue;
-
-      const baseHp = unit.mhp ?? unit.hp;
-
-      const amount =
-        Math.floor(baseHp * e.value * e.stock);
-
-      if (amount <= 0) continue;
-
-if (e.subType === "damage") {
-
-  unit.hp -= amount;
-
-  ctx.log.push({
-    type: "attack",
-    from: null,
-    to: unit.id,
-    amount: amount,
-    damageType: "effect"
-  });
-
-  if (unit.hp <= 0) {
-
-    unit.hp = 0;
-
-    ctx.log.push({
-      type: "death",
-      unit: unit.id
-    });
-
-    const aliveTeams = new Set(
-      ctx.units
-        .filter(u => u.hp > 0)
-        .map(u => u.team)
-    );
-
-    if (aliveTeams.size === 1) {
-
-      ctx.log.push({
-        type: "battleEnd",
-        winner: [...aliveTeams][0]
-      });
-
-    }
-  }
-}
-      else if (e.subType === "heal") {
-
-        unit.hp = Math.min(
-          unit.hp + amount,
-          unit.mhp ?? unit.hp
-        );
-
-        ctx.log.push({
-          type: "heal",
-          from: null,
-          to: unit.id,
-          amount: amount,
-          healType: "effect"
-        });
-
-      }
-
-      ctx.log.push({
-        type: "hpChange",
-        target: unit.id,
-        hp: Math.max(unit.hp, 0)
-      });
-
-      // ストック減衰
-      e.stock--;
-
-      if (e.stock <= 0) {
-        unit.effects.splice(i, 1);
-      }
-    }
-  }
-}
 export function getEffectsByGroup(unit, group) {
   if (!unit.effects) return [];
   return unit.effects.filter(e => e.group === group);
@@ -290,4 +220,91 @@ export function removeRandomEffectByGroup(unit, group) {
   unit.effects = unit.effects.filter(e => e !== target);
 
   return target;
+}
+
+export function processBeforeAction(unit, ctx) {
+
+  if (!unit.effects || unit.effects.length === 0) return;
+  if (unit.hp <= 0) return;
+
+  const mhp = unit.mhp ?? unit.hp;
+
+  for (let e of unit.effects) {
+
+    if (e.type !== "corrosion" && e.type !== "repair") continue;
+
+    const stock = Math.min(e.stock ?? 0, MAX_STACK);
+    if (stock <= 0) continue;
+
+    const amount =
+      Math.floor(mhp * CORROSION_RATE * stock);
+
+    if (amount <= 0) continue;
+
+    if (e.type === "corrosion") {
+
+      unit.hp -= amount;
+
+      ctx.log.push({
+        type: "attack",
+        from: null,
+        to: unit.id,
+        amount: amount,
+        damageType: "effect"
+      });
+
+      if (unit.hp <= 0) {
+        unit.hp = 0;
+
+        ctx.log.push({
+          type: "death",
+          unit: unit.id
+        });
+      }
+
+    }
+
+    else if (e.type === "repair") {
+
+      unit.hp = Math.min(unit.hp + amount, mhp);
+
+      ctx.log.push({
+        type: "heal",
+        from: null,
+        to: unit.id,
+        amount: amount,
+        healType: "effect"
+      });
+
+    }
+
+    ctx.log.push({
+      type: "hpChange",
+      target: unit.id,
+      hp: unit.hp
+    });
+
+  }
+
+}
+
+
+export function processAfterAction(unit) {
+
+  if (!unit.effects) return;
+
+  for (let i = unit.effects.length - 1; i >= 0; i--) {
+
+    const e = unit.effects[i];
+
+    if (e.type !== "corrosion" && e.type !== "repair") continue;
+
+    e.stock--;
+
+    if (e.stock <= 0) {
+      unit.effects.splice(i, 1);
+    }
+
+  }
+
 }
