@@ -207,24 +207,28 @@ else if (event.type === "death") {
     `${displayName(event.unit, nameMap)} が倒れた`;
 }
 
-  else if (event.type === "move") {
+else if (event.type === "move") {
 
-    moveUnit(
-      "board",
-      event.unit,
-      event.x,
-      event.y
-    );
+  const unitState =
+    boardState.units[event.unit];
 
-    boardState.units[event.unit].x =
-      event.x;
-
-    boardState.units[event.unit].y =
-      event.y;
-
-    div.textContent =
-      `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
+  if (!unitState) {
+    return; // 既に死亡している場合は無視
   }
+
+  moveUnit(
+    "board",
+    event.unit,
+    event.x,
+    event.y
+  );
+
+  unitState.x = event.x;
+  unitState.y = event.y;
+
+  div.textContent =
+    `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
+}
     
 else if (event.type === "wait") {
 
