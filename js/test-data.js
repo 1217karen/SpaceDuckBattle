@@ -82,7 +82,8 @@ units: [
     facing:"E",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
     skills:[
-      {type:"heal_cross2"}
+      {type:"heal_cross2"},
+      {type:"repair_wave"}
     ]
   },
 
@@ -121,7 +122,8 @@ units: [
     facing:"E",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D11.webp",
     skills:[
-      {type:"attack_around2_all"}
+      {type:"attack_around2_all"},
+      {type:"attack_random_falloff"}
     ]
   },
 
@@ -141,7 +143,7 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
     skills:[
       {type:"pull_farthest_enemy"},
-      {type:"attack_random_falloff"}
+      {type:"corrosion_wave"}
     ]
   },
 
@@ -200,7 +202,8 @@ units: [
     facing:"W",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D05.webp",
     skills:[
-      {type:"heal_cross2"}
+      {type:"heal_cross2"},
+      {type:"repair_wave"}
     ]
   },
 
@@ -239,7 +242,8 @@ units: [
     facing:"W",
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D04.webp",
     skills:[
-      {type:"attack_around2_all"}
+      {type:"attack_around2_all"},
+      {type:"attack_random_falloff"}
     ]
   },
 
@@ -259,7 +263,7 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp",
     skills:[
       {type:"pull_farthest_enemy"},
-      {type:"attack_random_falloff"}
+      {type:"corrosion_wave"}
     ]
   }
 
