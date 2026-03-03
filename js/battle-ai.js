@@ -228,15 +228,21 @@ if (role === "attack") {
 
   const enemies = getEnemies(units, unit.team);
 
-  const adjacent = enemies.find(e => getDistance(unit, e) === 1);
+  const adjacent =
+    enemies.find(e => getDistance(unit, e) === 1);
+
   if (adjacent) {
     targetUnit = adjacent;
   }
+
   else {
 
-    enemies.sort((a, b) => getDistance(unit, a) - getDistance(unit, b));
+    enemies.sort(
+      (a, b) => getDistance(unit, a) - getDistance(unit, b)
+    );
 
-    targetUnit = enemies.find(e => canReduceDistanceOneStepToward(e))
+    targetUnit =
+      enemies.find(e => canReduceDistanceOneStepToward(e))
       ?? enemies[0]
       ?? null;
   }
@@ -246,17 +252,24 @@ else if (role === "speed") {
 
   const enemies = getEnemies(units, unit.team);
 
-  const adjacent = enemies.find(e => getDistance(unit, e) === 1);
+  const adjacent =
+    enemies.find(e => getDistance(unit, e) === 1);
+
   if (adjacent) {
     targetUnit = adjacent;
   }
+
   else {
 
-    enemies.sort((a, b) => getDistance(unit, a) - getDistance(unit, b));
+    enemies.sort(
+      (a, b) => getDistance(unit, a) - getDistance(unit, b)
+    );
 
-    targetUnit = enemies.find(e => canReduceDistanceOneStepToward(e))
+    targetUnit =
+      enemies.find(e => canReduceDistanceOneStepToward(e))
       ?? enemies[0]
       ?? null;
+  }
 
   moveCount = 2;
 }
