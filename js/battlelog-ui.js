@@ -22,14 +22,7 @@ const div = document.createElement("div");
 if (event.type === "turnStart") {
   return;
 }
-else if (event.type === "debugMove") {
 
-  div.textContent =
-    `[DEBUG] ${displayName(event.unit, nameMap)} → ` +
-    `target:${event.target} ` +
-    `mode:${event.moveMode} ` +
-    `stop:${event.stopDistance}`;
-}
 else if (event.type === "faceChange") {
 
   updateFacing(
