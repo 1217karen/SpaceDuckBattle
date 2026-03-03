@@ -1,7 +1,28 @@
-export function createTestSnapshot() {
+// test-data.js
 
-return {
-  board: { width: 8, height: 6 },
+const STAGES = {
+  tutorial: {
+    width: 4,
+    height: 4,
+    maxTurns: 20
+  },
+  normal: {
+    width: 8,
+    height: 6,
+    maxTurns: 50
+  }
+};
+
+export function createTestSnapshot(stageType = "normal") {
+
+  const stage = STAGES[stageType] ?? STAGES.normal;
+
+  return {
+    board: {
+      width: stage.width,
+      height: stage.height
+    },
+    maxTurns: stage.maxTurns,
 
   
 units: [
