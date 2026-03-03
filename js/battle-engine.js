@@ -6,6 +6,8 @@ import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell
        } from "./movement.js";
 import {getEffectiveStat,applyEffect
        } from "./battle-effects.js";
+import {getNearestEnemy,getLowestHpAlly,getIdleFacing,decideFallbackMove
+       } from "./battle-ai.js";
 
 // ==========================================================
 // 共通ユーティリティ
