@@ -7,10 +7,6 @@ import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell
 import {getEffectiveStat,applyEffect
        } from "./battle-effects.js";
 
-const BOARD_W = 8;
-const BOARD_H = 6;
-
-
 // ==========================================================
 // 共通ユーティリティ
 // ==========================================================
@@ -509,7 +505,7 @@ function applyMove(action, ctx) {
 export function simulateBattle(snapshot) {
 
   const log = [];
-
+  const board = snapshot.board ?? { width: 8, height: 6 };
   // ======================================================
   // snapshotコピー
   // ======================================================
@@ -563,8 +559,11 @@ export function simulateBattle(snapshot) {
     applyHeal,
     applyMove,
 
-    getKnockbackCell,
-    getPullCell,
+    getKnockbackCell: (source, target, units) =>
+    getKnockbackCell(source, target, units, board),
+
+    getPullCell: (source, target, units) =>
+    getPullCell(source, target, units, board),
 
     applyEffect,
 
@@ -917,7 +916,7 @@ export function simulateBattle(snapshot) {
       for (let i = 0; i < moveCount; i++) {
 
         const step =
-          chooseStep(unit, units, targetPos, moveMode);
+          chooseStep(unit, units, targetPos, board, moveMode);
 
         if (!step) break;
 
