@@ -7,29 +7,38 @@
 <body>
 
 <h1>Battle Test</h1>
+
+<select id="stageSelect">
+  <option value="tutorial">チュートリアル (4×4)</option>
+  <option value="normal" selected>通常戦 (8×6)</option>
+</select>
+
 <button id="startBtn">戦闘開始</button>
 
 <script type="module">
 import { simulateBattle } from './js/battle-engine.js';
 import { createTestSnapshot } from "./js/test-data.js";
-  
+
 const startBtn = document.getElementById("startBtn");
+const stageSelect = document.getElementById("stageSelect");
 
 startBtn.addEventListener("click", () => {
 
-const snapshot = createTestSnapshot();
+  const stageType = stageSelect.value;
+
+  const snapshot = createTestSnapshot(stageType);
 
   const log = simulateBattle(snapshot);
 
   const battleID = "battle_" + Date.now();
 
-localStorage.setItem(
-  battleID,
-  JSON.stringify({
-    snapshot: snapshot,
-    log: log
-  })
-);
+  localStorage.setItem(
+    battleID,
+    JSON.stringify({
+      snapshot: snapshot,
+      log: log
+    })
+  );
 
   window.location.href = `battlelog.html?id=${battleID}`;
 });
