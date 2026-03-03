@@ -4,7 +4,7 @@ import { skillHandlers
        } from "./skills.js";
 import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell
        } from "./movement.js";
-import {getEffectiveStat,applyEffect
+import {getEffectiveStat,applyEffect,processOverTimeEffects
        } from "./battle-effects.js";
 import {getNearestEnemy,getLowestHpAlly,getIdleFacing,decideFallbackMove
        } from "./battle-ai.js";
