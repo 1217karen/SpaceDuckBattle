@@ -475,7 +475,8 @@ const {
   units,
   getDistance,
   getEnemies,
-  getNearestEnemy
+  getNearestEnemy,
+  getLowestHpAlly
 );
 
       // --------------------------------------------------
