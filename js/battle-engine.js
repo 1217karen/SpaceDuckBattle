@@ -505,7 +505,9 @@ function applyMove(action, ctx) {
 export function simulateBattle(snapshot) {
 
   const log = [];
+
   const board = snapshot.board ?? { width: 8, height: 6 };
+  const MAX_TURNS = snapshot.maxTurns ?? 50;
   // ======================================================
   // snapshotコピー
   // ======================================================
@@ -580,7 +582,6 @@ export function simulateBattle(snapshot) {
   // ======================================================
 
   let turn = 1;
-  const MAX_TURNS = 50;
 
   while (turn <= MAX_TURNS) {
 
