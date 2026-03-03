@@ -62,64 +62,6 @@ function getChebyshevDistance(a, b) {
   );
 }
 
-
-// ==========================================================
-// ターゲット探索
-// ==========================================================
-
-function getNearestEnemy(unit, units) {
-
-  const enemies = getEnemies(units, unit.team);
-  if (enemies.length === 0) return null;
-
-  let nearest = enemies[0];
-  let minDist = getDistance(unit, nearest);
-
-  for (let e of enemies) {
-
-    const d = getDistance(unit, e);
-
-    if (d < minDist) {
-      minDist = d;
-      nearest = e;
-    }
-
-  }
-
-  return nearest;
-}
-
-
-function getLowestHpAlly(unit, units) {
-
-  const allies = getAllies(units, unit.team, unit.id);
-  if (!allies || allies.length === 0) return null;
-
-  // HPが低い順、同値なら近い順
-  let best = allies[0];
-
-  for (let a of allies) {
-
-    if (a.hp < best.hp) {
-      best = a;
-      continue;
-    }
-
-    if (a.hp === best.hp) {
-
-      const da = getDistance(unit, a);
-      const db = getDistance(unit, best);
-
-      if (da < db) best = a;
-
-    }
-
-  }
-
-  return best;
-}
-
-
 // ==========================================================
 // 安全判定
 // ==========================================================
@@ -139,110 +81,6 @@ function isSafeFromEnemies(x, y, unit, units) {
   }
 
   return true;
-}
-
-
-// ==========================================================
-// 向き決定
-// ==========================================================
-
-function getIdleFacing(unit, units) {
-
-  const role = unit.role || "attack";
-
-  // ====================
-  // ATTACK
-  // ====================
-
-  if (role === "attack") {
-
-    const enemy = getNearestEnemy(unit, units);
-    if (!enemy) return unit.facing;
-
-    const dx = enemy.x - unit.x;
-    const dy = enemy.y - unit.y;
-
-    if (Math.abs(dx) >= Math.abs(dy)) {
-      return dx > 0 ? "E" : "W";
-    } else {
-      return dy > 0 ? "S" : "N";
-    }
-
-  }
-
-  // ====================
-  // HEAL
-  // ====================
-
-  if (role === "heal") {
-
-    const allies = getAllies(units, unit.team, unit.id);
-    if (!allies || allies.length === 0) return unit.facing;
-
-    let best = allies[0];
-
-    for (let a of allies) {
-
-      const d1 = getDistance(unit, a);
-      const d2 = getDistance(unit, best);
-
-      if (d1 < d2) best = a;
-      else if (d1 === d2 && a.hp < best.hp) best = a;
-
-    }
-
-    const dx = best.x - unit.x;
-    const dy = best.y - unit.y;
-
-    if (Math.abs(dx) >= Math.abs(dy)) {
-      return dx > 0 ? "E" : "W";
-    } else {
-      return dy > 0 ? "S" : "N";
-    }
-
-  }
-
-  // ====================
-  // DEFENSE
-  // ====================
-
-  if (role === "defense") {
-
-    const adjacentEnemies =
-      getEnemies(units, unit.team).filter(e =>
-        getDistance(unit, e) === 1
-      );
-
-    if (adjacentEnemies.length > 0) {
-
-      const e = adjacentEnemies[0];
-
-      const dx = e.x - unit.x;
-      const dy = e.y - unit.y;
-
-      if (Math.abs(dx) >= Math.abs(dy)) {
-        return dx > 0 ? "E" : "W";
-      } else {
-        return dy > 0 ? "S" : "N";
-      }
-
-    }
-
-    const ally = getLowestHpAlly(unit, units);
-    if (!ally) return unit.facing;
-
-    const dx = ally.x - unit.x;
-    const dy = ally.y - unit.y;
-
-    if (Math.abs(dx) >= Math.abs(dy)) {
-      return dx > 0 ? "E" : "W";
-    } else {
-      return dy > 0 ? "S" : "N";
-    }
-
-  }
-
-  return unit.facing;
 }
 
 
@@ -548,10 +386,16 @@ export function simulateBattle(snapshot) {
 
     getEnemies,
     getAllies,
-    getNearestEnemy,
-    getLowestHpAlly,
+         
+    getNearestEnemy: (unit, units) =>
+    getNearestEnemy(unit, units, getDistance, getEnemies),
 
-    getIdleFacing,
+    getLowestHpAlly: (unit, units) =>
+    getLowestHpAlly(unit, units, getDistance, getAllies),
+
+    getIdleFacing: (unit, units) =>
+    getIdleFacing(unit,units,getDistance,getEnemies,getAllies,getNearestEnemy,getLowestHpAlly
+  ),
 
     getUnitsInManhattanRange,
     getUnitsInSameRow,
@@ -775,69 +619,18 @@ export function simulateBattle(snapshot) {
         continue;
       }
 
-
-      // ==================================================
-      // fallback移動
-      // ==================================================
-
-      const role = unit.role || "attack";
-
-      let moveMode = "toward";
-      let targetUnit = null;
-      let stopDistance = 1;
-      let moveCount = 1;
-
-
-      // --------------------------------------------------
-      // ATTACK
-      // --------------------------------------------------
-
-      if (role === "attack") {
-        targetUnit = getNearestEnemy(unit, units);
-        moveMode = "toward";
-      }
-
-
-      // --------------------------------------------------
-      // SPEED
-      // --------------------------------------------------
-
-      else if (role === "speed") {
-        targetUnit = getNearestEnemy(unit, units);
-        moveMode = "toward";
-        moveCount = 2;
-      }
-
-
-      // --------------------------------------------------
-      // TECHNICAL
-      // --------------------------------------------------
-
-      else if (role === "technical") {
-
-        targetUnit = getNearestEnemy(unit, units);
-
-        if (targetUnit) {
-
-          const dist =
-            Math.abs(unit.x - targetUnit.x) +
-            Math.abs(unit.y - targetUnit.y);
-
-          if (dist > 2) {
-            moveMode = "toward";
-          }
-
-          else if (dist < 2) {
-            moveMode = "away";
-          }
-
-          else {
-            stopDistance = 2;
-          }
-
-        }
-      }
-
+const {
+  targetUnit,
+  moveMode,
+  stopDistance,
+  moveCount
+} = decideFallbackMove(
+  unit,
+  units,
+  getDistance,
+  getEnemies,
+  getNearestEnemy
+);
 
       // --------------------------------------------------
       // ターゲットなし
