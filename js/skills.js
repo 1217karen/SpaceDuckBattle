@@ -352,6 +352,88 @@ pull_farthest_enemy: {
   }
 },
   // =========================
+// 腐食波
+// =========================
+corrosion_wave: {
+  cooldown: 3,
+
+  generateActions(unit, ctx) {
+
+    const enemies = ctx.units.filter(u =>
+      u.hp > 0 &&
+      u.team !== unit.team &&
+      ctx.getChebyshevDistance(unit, u) <= 2
+    );
+
+    if (enemies.length === 0) return null;
+
+    const cells = enemies.map(u => ({ x: u.x, y: u.y }));
+
+    return {
+      preview: {
+        cells,
+        style: "debuff"
+      },
+      actions: enemies.map(target => ({
+        type: "applyEffect",
+        source: unit.id,
+        target: target.id,
+        effect: {
+          type: "corrosion",
+          stock: 5,
+          group: "debuff"
+        }
+      }))
+    };
+  }
+},
+  // =========================
+// 修復の波
+// =========================
+repair_wave: {
+  cooldown: 3,
+
+  generateActions(unit, ctx) {
+
+    // チェビシェフ1以内に敵がいるか
+    const closeEnemy = ctx.units.some(u =>
+      u.hp > 0 &&
+      u.team !== unit.team &&
+      ctx.getChebyshevDistance(unit, u) <= 1
+    );
+
+    if (closeEnemy) return null;
+
+    // マンハッタン2以内の味方（自分含む）
+    const allies = ctx.units.filter(u =>
+      u.hp > 0 &&
+      u.team === unit.team &&
+      ctx.getDistance(unit, u) <= 2
+    );
+
+    if (allies.length === 0) return null;
+
+    const cells = allies.map(u => ({ x: u.x, y: u.y }));
+
+    return {
+      preview: {
+        cells,
+        style: "buff"
+      },
+      actions: allies.map(target => ({
+        type: "applyEffect",
+        source: unit.id,
+        target: target.id,
+        effect: {
+          type: "repair",
+          stock: 5,
+          group: "buff"
+        }
+      }))
+    };
+  }
+},
+  // =========================
   // 自分DF50%バフ（3T）
   // =========================
   buff_df50_self: {
