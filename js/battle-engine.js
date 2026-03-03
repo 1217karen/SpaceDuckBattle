@@ -421,7 +421,13 @@ const {
   getLowestHpAlly,
   getAllies
 );
-
+console.log(
+  "DEF DEBUG:",
+  unit.id,
+  "target:", targetUnit?.id,
+  "mode:", moveMode,
+  "stop:", stopDistance
+);
       // --------------------------------------------------
       // ターゲットなし
       // --------------------------------------------------
