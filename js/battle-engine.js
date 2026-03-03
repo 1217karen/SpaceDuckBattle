@@ -1,4 +1,5 @@
 //battle-engine.js
+console.log("ENGINE LOADED");
 
 import { skillHandlers 
        } from "./skills.js";
