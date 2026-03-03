@@ -182,3 +182,56 @@ if (mode === "away") {
 
   return { x: sx, y: sy };
 }
+
+export function getKnockbackCell(source, target, units) {
+
+  const dx = target.x - source.x;
+  const dy = target.y - source.y;
+
+  let stepX = 0;
+  let stepY = 0;
+
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    stepX = dx > 0 ? 1 : -1;
+  } else {
+    stepY = dy > 0 ? 1 : -1;
+  }
+
+  const nx = target.x + stepX;
+  const ny = target.y + stepY;
+
+  if (!inBounds(nx, ny)) return null;
+
+  if (isOccupiedCell(units, nx, ny, target.id)) {
+    return null;
+  }
+
+  return { x: nx, y: ny };
+}
+
+
+export function getPullCell(source, target, units) {
+
+  const dx = source.x - target.x;
+  const dy = source.y - target.y;
+
+  let stepX = 0;
+  let stepY = 0;
+
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    stepX = dx > 0 ? 1 : -1;
+  } else {
+    stepY = dy > 0 ? 1 : -1;
+  }
+
+  const nx = target.x + stepX;
+  const ny = target.y + stepY;
+
+  if (!inBounds(nx, ny)) return null;
+
+  if (isOccupiedCell(units, nx, ny, target.id)) {
+    return null;
+  }
+
+  return { x: nx, y: ny };
+}
