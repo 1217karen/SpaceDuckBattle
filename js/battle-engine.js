@@ -1,7 +1,11 @@
 //battle-engine.js
 
-import { skillHandlers } from "./skills.js";
-import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell} from "./movement.js";
+import { skillHandlers 
+       } from "./skills.js";
+import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell
+       } from "./movement.js";
+import {getEffectiveStat,applyEffect
+       } from "./battle-effects.js";
 
 const BOARD_W = 8;
 const BOARD_H = 6;
