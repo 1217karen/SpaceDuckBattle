@@ -150,7 +150,8 @@ if (snapshot) {
 // 盤面作成
 // =====================
 
-createBoard("board", 8, 6);
+const board = snapshot?.board ?? { width: 8, height: 6 };
+createBoard("board", board.width, board.height);
 
 
 // =====================
