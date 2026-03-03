@@ -183,16 +183,72 @@ export function decideFallbackMove(
   let stopDistance = 1;
   let moveCount = 1;
 
-  if (role === "attack") {
-    targetUnit =
-      getNearestEnemy(unit, units, getDistance, getEnemies);
+function canReduceDistanceOneStepToward(target) {
+
+  if (!target || !board) return false;
+
+  const currentDist = getDistance(unit, target);
+
+  const dirs = [
+    { dx: 1, dy: 0 },
+    { dx: -1, dy: 0 },
+    { dx: 0, dy: 1 },
+    { dx: 0, dy: -1 }
+  ];
+
+  for (const d of dirs) {
+
+    const nx = unit.x + d.dx;
+    const ny = unit.y + d.dy;
+
+    // 盤外
+    if (nx < 0 || nx >= board.width || ny < 0 || ny >= board.height) {
+      continue;
+    }
+
+    // 占有（生存ユニットのみ）
+    const occupied = units.some(u =>
+      u.hp > 0 &&
+      u.id !== unit.id &&
+      u.x === nx &&
+      u.y === ny
+    );
+    if (occupied) continue;
+
+    const newDist = Math.abs(nx - target.x) + Math.abs(ny - target.y);
+
+    // 1歩で距離を縮められるならOK
+    if (newDist < currentDist) return true;
   }
 
-  else if (role === "speed") {
-    targetUnit =
-      getNearestEnemy(unit, units, getDistance, getEnemies);
-    moveCount = 2;
-  }
+  return false;
+}
+  
+if (role === "attack") {
+
+  const enemies = getEnemies(units, unit.team);
+
+  // 距離が近い順に並べる
+  enemies.sort((a, b) => getDistance(unit, a) - getDistance(unit, b));
+
+  // 「1歩で距離を縮められる敵」を優先して選ぶ
+  targetUnit = enemies.find(e => canReduceDistanceOneStepToward(e))
+    ?? enemies[0]
+    ?? null;
+}
+
+else if (role === "speed") {
+
+  const enemies = getEnemies(units, unit.team);
+
+  enemies.sort((a, b) => getDistance(unit, a) - getDistance(unit, b));
+
+  targetUnit = enemies.find(e => canReduceDistanceOneStepToward(e))
+    ?? enemies[0]
+    ?? null;
+
+  moveCount = 2;
+}
 
   else if (role === "technical") {
 
