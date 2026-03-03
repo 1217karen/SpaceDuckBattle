@@ -172,7 +172,8 @@ export function decideFallbackMove(
   getEnemies,
   getNearestEnemy,
   getLowestHpAlly,
-  getAllies
+  getAllies,
+  board
 ) {
 
   const role = unit.role || "attack";
