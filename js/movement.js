@@ -1,6 +1,6 @@
 // movement.js
 
-const BOARD_W = 10;
+const BOARD_W = 8;
 const BOARD_H = 6;
 
 function inBounds(x, y) {
