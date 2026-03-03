@@ -160,3 +160,68 @@ export function applyEffect(source, target, action, ctx) {
 
   }
 }
+export function processOverTimeEffects(units, ctx) {
+
+  for (let unit of units) {
+
+    if (!unit.effects) continue;
+    if (unit.hp <= 0) continue;
+
+    for (let i = unit.effects.length - 1; i >= 0; i--) {
+
+      const e = unit.effects[i];
+
+      if (e.kind !== "overTime") continue;
+
+      const baseHp = unit.mhp ?? unit.hp;
+
+      const amount =
+        Math.floor(baseHp * e.value * e.stock);
+
+      if (amount <= 0) continue;
+
+      if (e.subType === "damage") {
+
+        unit.hp -= amount;
+
+        ctx.log.push({
+          type: "attack",
+          from: null,
+          to: unit.id,
+          amount: amount,
+          damageType: "effect"
+        });
+
+      }
+      else if (e.subType === "heal") {
+
+        unit.hp = Math.min(
+          unit.hp + amount,
+          unit.mhp ?? unit.hp
+        );
+
+        ctx.log.push({
+          type: "heal",
+          from: null,
+          to: unit.id,
+          amount: amount,
+          healType: "effect"
+        });
+
+      }
+
+      ctx.log.push({
+        type: "hpChange",
+        target: unit.id,
+        hp: unit.hp
+      });
+
+      // ストック減衰
+      e.stock--;
+
+      if (e.stock <= 0) {
+        unit.effects.splice(i, 1);
+      }
+    }
+  }
+}
