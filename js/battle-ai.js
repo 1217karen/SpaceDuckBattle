@@ -255,6 +255,18 @@ else if (role === "heal") {
 
   else if (role === "defense") {
 
+// すでに隣接している敵がいる場合は固定
+const adjacentEnemy =
+  getEnemies(units, unit.team)
+    .find(e => getDistance(unit, e) === 1);
+
+if (adjacentEnemy) {
+  targetUnit = adjacentEnemy;
+  moveMode = "toward";
+  stopDistance = 1;
+  return { targetUnit, moveMode, stopDistance, moveCount };
+}
+    
   const enemy =
     getNearestEnemy(unit, units, getDistance, getEnemies);
 
