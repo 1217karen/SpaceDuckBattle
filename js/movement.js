@@ -1,7 +1,8 @@
 // movement.js
 
-const BOARD_W = 8;
-const BOARD_H = 6;
+function inBounds(x, y) {
+  return x >= 0 && x < BOARD_W && y >= 0 && y < BOARD_H;
+}
 
 function inBounds(x, y) {
   return x >= 0 && x < BOARD_W && y >= 0 && y < BOARD_H;
