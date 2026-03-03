@@ -61,29 +61,9 @@ export function applyDamage(source, target, action, ctx) {
     target: target.id,
     hp: Math.max(target.hp, 0)
   });
-
   if (target.hp <= 0) {
-
-    ctx.log.push({
-      type: "death",
-      unit: target.id
-    });
-
-    const aliveTeams = new Set(
-      ctx.units
-        .filter(u => u.hp > 0)
-        .map(u => u.team)
-    );
-
-    if (aliveTeams.size === 1) {
-
-      ctx.log.push({
-        type: "battleEnd",
-        winner: [...aliveTeams][0]
-      });
-
-    }
-  }
+  ctx.killUnit(target);
+}
 }
 
 //========================================================== 
