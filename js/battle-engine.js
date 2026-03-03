@@ -419,7 +419,8 @@ const {
   getEnemies,
   getNearestEnemy,
   getLowestHpAlly,
-  getAllies
+  getAllies,
+  board
 );
 log.push({
   type: "debugMove",
