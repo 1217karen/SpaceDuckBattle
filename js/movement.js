@@ -1,11 +1,12 @@
 // movement.js
 
-function inBounds(x, y) {
-  return x >= 0 && x < BOARD_W && y >= 0 && y < BOARD_H;
-}
-
-function inBounds(x, y) {
-  return x >= 0 && x < BOARD_W && y >= 0 && y < BOARD_H;
+function inBounds(x, y, board) {
+  return (
+    x >= 0 &&
+    x < board.width &&
+    y >= 0 &&
+    y < board.height
+  );
 }
 
 export function isOccupiedCell(units, x, y, selfId){
@@ -66,7 +67,7 @@ const DIR4 = [
   { dx: 0, dy: -1 }
 ];
 
-export function chooseStep(unit, units, targetPos, mode="toward") {
+export function chooseStep(unit, units, targetPos, board, mode="toward") {
 
   if (!targetPos) return null;
 
@@ -90,7 +91,7 @@ if (mode === "away") {
     const nx = unit.x + d.dx;
     const ny = unit.y + d.dy;
 
-    if (!inBounds(nx,ny)) continue;
+    if (!inBounds(nx, ny, board)) continue;
     if (isOccupiedCell(units,nx,ny,unit.id)) continue;
 
     const dist =
@@ -113,7 +114,7 @@ if (mode === "away") {
     const gx = targetPos.x + d.dx;
     const gy = targetPos.y + d.dy;
 
-    if (!inBounds(gx, gy)) continue;
+    if (!inBounds(gx, gy, board)) continue;
 
     if (isOccupiedCell(units, gx, gy, unit.id)) continue;
 
@@ -152,7 +153,7 @@ if (mode === "away") {
       const nx = cur.x + d.dx;
       const ny = cur.y + d.dy;
 
-      if (!inBounds(nx, ny)) continue;
+      if (!inBounds(nx, ny, board)) continue;
 
       if (isOccupiedCell(units, nx, ny, unit.id)) continue;
 
@@ -184,7 +185,7 @@ if (mode === "away") {
   return { x: sx, y: sy };
 }
 
-export function getKnockbackCell(source, target, units) {
+export function getKnockbackCell(source, target, units, board) {
 
   const dx = target.x - source.x;
   const dy = target.y - source.y;
@@ -201,7 +202,7 @@ export function getKnockbackCell(source, target, units) {
   const nx = target.x + stepX;
   const ny = target.y + stepY;
 
-  if (!inBounds(nx, ny)) return null;
+  if (!inBounds(nx, ny, board)) return null;
 
   if (isOccupiedCell(units, nx, ny, target.id)) {
     return null;
@@ -211,7 +212,7 @@ export function getKnockbackCell(source, target, units) {
 }
 
 
-export function getPullCell(source, target, units) {
+export function getPullCell(source, target, units, board) {
 
   const dx = source.x - target.x;
   const dy = source.y - target.y;
@@ -228,7 +229,7 @@ export function getPullCell(source, target, units) {
   const nx = target.x + stepX;
   const ny = target.y + stepY;
 
-  if (!inBounds(nx, ny)) return null;
+  if (!inBounds(nx, ny, board)) return null;
 
   if (isOccupiedCell(units, nx, ny, target.id)) {
     return null;
