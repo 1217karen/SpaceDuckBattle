@@ -253,14 +253,10 @@ export function processBeforeAction(unit, ctx) {
         damageType: "effect"
       });
 
-      if (unit.hp <= 0) {
-        unit.hp = 0;
-
-        ctx.log.push({
-          type: "death",
-          unit: unit.id
-        });
-      }
+if (unit.hp <= 0) {
+  ctx.killUnit(unit);
+  break;
+}
 
     }
 
