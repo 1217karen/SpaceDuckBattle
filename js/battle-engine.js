@@ -1,7 +1,7 @@
 //battle-engine.js
 
 import { skillHandlers } from "./skills.js";
-import { chooseStep, facingFromDelta, isOccupiedCell } from "./movement.js";
+import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell} from "./movement.js";
 
 const BOARD_W = 8;
 const BOARD_H = 6;
@@ -534,75 +534,6 @@ function applyMove(action, ctx) {
   }
 
 }
-
-
-// ==========================================================
-// ノックバック
-// ==========================================================
-
-function getKnockbackCell(source, target, units) {
-
-  const dx = target.x - source.x;
-  const dy = target.y - source.y;
-
-  let stepX = 0;
-  let stepY = 0;
-
-  if (Math.abs(dx) >= Math.abs(dy)) {
-    stepX = dx > 0 ? 1 : -1;
-  } else {
-    stepY = dy > 0 ? 1 : -1;
-  }
-
-  const nx = target.x + stepX;
-  const ny = target.y + stepY;
-
-  if (nx < 0 || nx >= BOARD_W || ny < 0 || ny >= BOARD_H) {
-    return null;
-  }
-
-  if (isOccupiedCell(units, nx, ny, target.id)) {
-    return null;
-  }
-
-  return { x: nx, y: ny };
-
-}
-
-
-// ==========================================================
-// 引き寄せ
-// ==========================================================
-
-function getPullCell(source, target, units) {
-
-  const dx = source.x - target.x;
-  const dy = source.y - target.y;
-
-  let stepX = 0;
-  let stepY = 0;
-
-  if (Math.abs(dx) >= Math.abs(dy)) {
-    stepX = dx > 0 ? 1 : -1;
-  } else {
-    stepY = dy > 0 ? 1 : -1;
-  }
-
-  const nx = target.x + stepX;
-  const ny = target.y + stepY;
-
-  if (nx < 0 || nx >= BOARD_W || ny < 0 || ny >= BOARD_H) {
-    return null;
-  }
-
-  if (isOccupiedCell(units, nx, ny, target.id)) {
-    return null;
-  }
-
-  return { x: nx, y: ny };
-
-}
-
 
 // ==========================================================
 // エフェクト処理
