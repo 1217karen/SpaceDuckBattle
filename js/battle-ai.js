@@ -228,24 +228,35 @@ if (role === "attack") {
 
   const enemies = getEnemies(units, unit.team);
 
-  // 距離が近い順に並べる
-  enemies.sort((a, b) => getDistance(unit, a) - getDistance(unit, b));
+  const adjacent = enemies.find(e => getDistance(unit, e) === 1);
+  if (adjacent) {
+    targetUnit = adjacent;
+  }
+  else {
 
-  // 「1歩で距離を縮められる敵」を優先して選ぶ
-  targetUnit = enemies.find(e => canReduceDistanceOneStepToward(e))
-    ?? enemies[0]
-    ?? null;
+    enemies.sort((a, b) => getDistance(unit, a) - getDistance(unit, b));
+
+    targetUnit = enemies.find(e => canReduceDistanceOneStepToward(e))
+      ?? enemies[0]
+      ?? null;
+  }
 }
 
 else if (role === "speed") {
 
   const enemies = getEnemies(units, unit.team);
 
-  enemies.sort((a, b) => getDistance(unit, a) - getDistance(unit, b));
+  const adjacent = enemies.find(e => getDistance(unit, e) === 1);
+  if (adjacent) {
+    targetUnit = adjacent;
+  }
+  else {
 
-  targetUnit = enemies.find(e => canReduceDistanceOneStepToward(e))
-    ?? enemies[0]
-    ?? null;
+    enemies.sort((a, b) => getDistance(unit, a) - getDistance(unit, b));
+
+    targetUnit = enemies.find(e => canReduceDistanceOneStepToward(e))
+      ?? enemies[0]
+      ?? null;
 
   moveCount = 2;
 }
