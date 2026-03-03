@@ -67,122 +67,58 @@ const DIR4 = [
   { dx: 0, dy: -1 }
 ];
 
-export function chooseStep(unit, units, targetPos, board, mode="toward") {
-
-  if (!targetPos) return null;
-
-// ======================
-// awayモード
-// ======================
-if (mode === "away") {
+export function chooseStep(unit, units, targetPos, board, moveMode) {
 
   const dirs = [
-    {dx:1,dy:0},
-    {dx:-1,dy:0},
-    {dx:0,dy:1},
-    {dx:0,dy:-1}
+    { dx: 1, dy: 0 },
+    { dx: -1, dy: 0 },
+    { dx: 0, dy: 1 },
+    { dx: 0, dy: -1 }
   ];
 
-  let best = null;
-  let bestDist = -1;
+  const currentDist =
+    Math.abs(unit.x - targetPos.x) +
+    Math.abs(unit.y - targetPos.y);
+
+  let candidates = [];
 
   for (const d of dirs) {
 
     const nx = unit.x + d.dx;
     const ny = unit.y + d.dy;
 
-    if (!inBounds(nx, ny, board)) continue;
-    if (isOccupiedCell(units,nx,ny,unit.id)) continue;
-
-    const dist =
-      Math.abs(nx-targetPos.x) +
-      Math.abs(ny-targetPos.y);
-
-    if (dist > bestDist) {
-      bestDist = dist;
-      best = {x:nx,y:ny};
-    }
-  }
-
-  return best;
-}
-  
-  const goalCells = [];
-
-  for (const d of DIR4) {
-
-    const gx = targetPos.x + d.dx;
-    const gy = targetPos.y + d.dy;
-
-    if (!inBounds(gx, gy, board)) continue;
-
-    if (isOccupiedCell(units, gx, gy, unit.id)) continue;
-
-    goalCells.push({ x: gx, y: gy });
-  }
-
-  if (goalCells.length === 0) return null;
-
-  const goalSet = new Set(goalCells.map(c => `${c.x},${c.y}`));
-
-  const startKey = `${unit.x},${unit.y}`;
-
-  const preferredDirs = getPreferredDirs(unit, targetPos);
-
-  const queue = [];
-  const visited = new Set();
-  const prev = new Map();
-
-  queue.push({ x: unit.x, y: unit.y });
-  visited.add(startKey);
-
-  let foundGoalKey = null;
-
-  while (queue.length > 0) {
-
-    const cur = queue.shift();
-    const curKey = `${cur.x},${cur.y}`;
-
-    if (goalSet.has(curKey)) {
-      foundGoalKey = curKey;
-      break;
+    // 盤外
+    if (nx < 0 || nx >= board.width ||
+        ny < 0 || ny >= board.height) {
+      continue;
     }
 
-    for (const d of preferredDirs) {
-
-      const nx = cur.x + d.dx;
-      const ny = cur.y + d.dy;
-
-      if (!inBounds(nx, ny, board)) continue;
-
-      if (isOccupiedCell(units, nx, ny, unit.id)) continue;
-
-      const nKey = `${nx},${ny}`;
-
-      if (visited.has(nKey)) continue;
-
-      visited.add(nKey);
-      prev.set(nKey, curKey);
-
-      queue.push({ x: nx, y: ny });
+    // 占有
+    if (isOccupiedCell(units, nx, ny, unit.id)) {
+      continue;
     }
+
+    const newDist =
+      Math.abs(nx - targetPos.x) +
+      Math.abs(ny - targetPos.y);
+
+    candidates.push({ x: nx, y: ny, dist: newDist });
   }
 
-  if (!foundGoalKey) return null;
+  if (candidates.length === 0) return null;
 
-  let stepKey = foundGoalKey;
-  let p = prev.get(stepKey);
-
-  while (p && p !== startKey) {
-    stepKey = p;
-    p = prev.get(stepKey);
+  if (moveMode === "toward") {
+    candidates.sort((a, b) => a.dist - b.dist);
   }
 
-  if (!p) return null;
+  else if (moveMode === "away") {
+    candidates.sort((a, b) => b.dist - a.dist);
+  }
 
-  const [sx, sy] = stepKey.split(",").map(Number);
-
-  return { x: sx, y: sy };
+  return {
+    x: candidates[0].x,
+    y: candidates[0].y
+  };
 }
 
 export function getKnockbackCell(source, target, units, board) {
