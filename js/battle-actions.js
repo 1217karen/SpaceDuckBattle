@@ -1,5 +1,8 @@
 // battle-actions.js
 
+//========================================================== 
+// ダメージ処理 
+//==========================================================
 export function applyDamage(source, target, action, ctx) {
 
   let finalDamage = 0;
@@ -21,7 +24,10 @@ export function applyDamage(source, target, action, ctx) {
   else if (type === "fixed" || type === "effect") {
     finalDamage = power;
   }
-
+  
+//========================================================== 
+// 距離減衰
+//==========================================================
   if (action.falloff) {
 
     const distance =
@@ -80,7 +86,9 @@ export function applyDamage(source, target, action, ctx) {
   }
 }
 
-
+//========================================================== 
+// 回復処理
+//==========================================================
 export function applyHeal(source, target, action, ctx) {
 
   let finalHeal = 0;
@@ -116,7 +124,9 @@ export function applyHeal(source, target, action, ctx) {
   });
 }
 
-
+//========================================================== 
+// 移動処理
+//==========================================================
 export function applyMove(action, ctx) {
 
   const unit =
