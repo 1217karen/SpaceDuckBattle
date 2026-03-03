@@ -8,6 +8,8 @@ import {getEffectiveStat,applyEffect
        } from "./battle-effects.js";
 import {getNearestEnemy,getLowestHpAlly,getIdleFacing,decideFallbackMove
        } from "./battle-ai.js";
+import {applyDamage,applyHeal,applyMove
+       } from "./battle-actions.js";
 
 // ==========================================================
 // 共通ユーティリティ
@@ -146,199 +148,6 @@ function getUnitsInSameColumn(unit, units) {
 }
 
 // ==========================================================
-// ダメージ処理
-// ==========================================================
-
-function applyDamage(source, target, action, ctx) {
-
-  let finalDamage = 0;
-
-  const power = action.power || 0;
-  const type = action.damageType || "normal";
-
-  if (type === "normal") {
-
-    const atk = getEffectiveStat(source, "atk");
-    const df = getEffectiveStat(target, "df");
-
-    finalDamage = Math.max(atk + power - df, 0);
-
-  }
-
-  else if (type === "pierce") {
-
-    const atk = getEffectiveStat(source, "atk");
-    finalDamage = atk + power;
-
-  }
-
-  else if (type === "fixed") {
-    finalDamage = power;
-  }
-
-  else if (type === "effect") {
-    finalDamage = power;
-  }
-
-
-  // =========================
-  // 距離減衰
-  // =========================
-
-  if (action.falloff) {
-
-    const distance =
-      ctx.getChebyshevDistance(source, target);
-
-    if (distance > 1) {
-
-      const FALLOFF_RATE = 0.2;
-
-      const multiplier =
-        1 - (distance - 1) * FALLOFF_RATE;
-
-      const clamped =
-        multiplier < 0 ? 0 : multiplier;
-
-      finalDamage =
-        Math.floor(finalDamage * clamped);
-
-    }
-
-  }
-
-
-  target.hp -= finalDamage;
-
-  ctx.log.push({
-    type: "attack",
-    from: source.id,
-    to: target.id,
-    amount: finalDamage,
-    damageType: type
-  });
-
-  ctx.log.push({
-    type: "hpChange",
-    target: target.id,
-    hp: Math.max(target.hp, 0)
-  });
-
-
-  if (target.hp <= 0) {
-
-    ctx.log.push({
-      type: "death",
-      unit: target.id
-    });
-
-    const aliveTeams = new Set(
-      ctx.units
-        .filter(u => u.hp > 0)
-        .map(u => u.team)
-    );
-
-    if (aliveTeams.size === 1) {
-
-      const winner = [...aliveTeams][0];
-
-      ctx.log.push({
-        type: "battleEnd",
-        winner: winner
-      });
-
-    }
-
-  }
-
-}
-// ==========================================================
-// 回復処理
-// ==========================================================
-
-function applyHeal(source, target, action, ctx) {
-
-  let finalHeal = 0;
-
-  const power = action.power || 0;
-  const type = action.healType || "fixed";
-
-  if (type === "fixed") {
-    finalHeal = power;
-  }
-
-  else if (type === "scale") {
-    const atk = source.atk || 0;
-    finalHeal = atk + power;
-  }
-
-  target.hp = Math.min(
-    target.hp + finalHeal,
-    target.mhp ?? target.hp
-  );
-
-  ctx.log.push({
-    type: "heal",
-    from: source.id,
-    to: target.id,
-    amount: finalHeal,
-    healType: type
-  });
-
-  ctx.log.push({
-    type: "hpChange",
-    target: target.id,
-    hp: target.hp
-  });
-
-}
-
-
-// ==========================================================
-// 移動処理
-// ==========================================================
-
-function applyMove(action, ctx) {
-
-  const unit =
-    ctx.units.find(u => u.id === action.target);
-
-  if (!unit) return;
-
-  const fromX = unit.x;
-  const fromY = unit.y;
-
-  unit.x = action.x;
-  unit.y = action.y;
-
-  ctx.log.push({
-    type: "move",
-    unit: unit.id,
-    x: action.x,
-    y: action.y
-  });
-
-  const dx = action.x - fromX;
-  const dy = action.y - fromY;
-
-  const newFacing =
-    facingFromDelta(dx, dy, unit.facing);
-
-  if (newFacing !== unit.facing) {
-
-    unit.facing = newFacing;
-
-    ctx.log.push({
-      type: "faceChange",
-      unit: unit.id,
-      facing: newFacing
-    });
-
-  }
-
-}
-
-// ==========================================================
 // メイン
 // ==========================================================
 
@@ -403,9 +212,7 @@ export function simulateBattle(snapshot) {
 
     getEffectiveStat,
 
-    applyDamage,
-    applyHeal,
-    applyMove,
+    facingFromDelta,
 
     getKnockbackCell: (source, target, units) =>
     getKnockbackCell(source, target, units, board),
@@ -549,7 +356,7 @@ export function simulateBattle(snapshot) {
 
             if (!source || !target) continue;
 
-            context.applyDamage(source, target, action, context);
+            applyDamage(source, target, action, context);
           }
 
           else if (action.type === "heal") {
@@ -562,7 +369,7 @@ export function simulateBattle(snapshot) {
 
             if (!source || !target) continue;
 
-            context.applyHeal(source, target, action, context);
+            applyHeal(source, target, action, context);
           }
 
           else if (action.type === "applyEffect") {
@@ -585,7 +392,7 @@ export function simulateBattle(snapshot) {
 
             if (!target) continue;
 
-            context.applyMove(action, context);
+            applyMove(action, context);
           }
 
         }
@@ -716,7 +523,7 @@ const {
 
         if (!step) break;
 
-        context.applyMove({
+        applyMove({
           type: "move",
           target: unit.id,
           x: step.x,
