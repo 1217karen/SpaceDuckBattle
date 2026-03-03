@@ -180,19 +180,43 @@ export function processOverTimeEffects(units, ctx) {
 
       if (amount <= 0) continue;
 
-      if (e.subType === "damage") {
+if (e.subType === "damage") {
 
-        unit.hp -= amount;
+  unit.hp -= amount;
 
-        ctx.log.push({
-          type: "attack",
-          from: null,
-          to: unit.id,
-          amount: amount,
-          damageType: "effect"
-        });
+  ctx.log.push({
+    type: "attack",
+    from: null,
+    to: unit.id,
+    amount: amount,
+    damageType: "effect"
+  });
 
-      }
+  if (unit.hp <= 0) {
+
+    unit.hp = 0;
+
+    ctx.log.push({
+      type: "death",
+      unit: unit.id
+    });
+
+    const aliveTeams = new Set(
+      ctx.units
+        .filter(u => u.hp > 0)
+        .map(u => u.team)
+    );
+
+    if (aliveTeams.size === 1) {
+
+      ctx.log.push({
+        type: "battleEnd",
+        winner: [...aliveTeams][0]
+      });
+
+    }
+  }
+}
       else if (e.subType === "heal") {
 
         unit.hp = Math.min(
@@ -213,7 +237,7 @@ export function processOverTimeEffects(units, ctx) {
       ctx.log.push({
         type: "hpChange",
         target: unit.id,
-        hp: unit.hp
+        hp: Math.max(unit.hp, 0)
       });
 
       // ストック減衰
