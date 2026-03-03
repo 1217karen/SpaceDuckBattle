@@ -1,5 +1,4 @@
 //battle-engine.js
-console.log("ENGINE LOADED");
 
 import { skillHandlers 
        } from "./skills.js";
@@ -422,13 +421,7 @@ const {
   getLowestHpAlly,
   getAllies
 );
-console.log(
-  "DEF DEBUG:",
-  unit.id,
-  "target:", targetUnit?.id,
-  "mode:", moveMode,
-  "stop:", stopDistance
-);
+
       // --------------------------------------------------
       // ターゲットなし
       // --------------------------------------------------
