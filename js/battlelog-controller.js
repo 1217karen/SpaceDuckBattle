@@ -193,11 +193,16 @@ if (snapshot) {
     div.dataset.unit = u.id;
 
     div.innerHTML = `
-      <div class="unitHeader">
-        <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
-        <span>${u.name || u.id}</span>
-        <div class="effectList"></div>
-      </div>
+<div class="unitHeader">
+  <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
+
+  <div class="nameBlock">
+    <div class="unitName">${u.name || u.id}</div>
+    <div class="nameDivider"></div>
+    <div class="effectList"></div>
+  </div>
+
+</div>
       <div class="hpBar">
         <div class="hpFill" data-maxhp="${u.mhp}" style="width:100%"></div>
       </div>
