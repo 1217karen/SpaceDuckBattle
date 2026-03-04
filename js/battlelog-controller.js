@@ -206,11 +206,13 @@ if (snapshot) {
 <div class="hpRow">
 
   <div class="hpText">
-    HP ${u.hp}/${u.mhp ?? u.hp}
+    HP ${(u.hp ?? u.mhp ?? 0)}/${u.mhp ?? u.hp ?? 0}
   </div>
 
   <div class="hpBar">
-    <div class="hpFill" style="width:100%"></div>
+    <div class="hpFill" style="width:${
+  ((u.hp ?? u.mhp ?? 0) / (u.mhp ?? u.hp ?? 1)) * 100
+}%"></div>
   </div>
 
 </div>
