@@ -285,12 +285,14 @@ else if (event.type === "move") {
     `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
 }
 
-  else if (event.type === "mobilityBlocked") {
+else if (event.type === "mobilityChange") {
 
   if (event.delta < 0) {
     div.textContent =
       `${displayName(event.unit, nameMap)} は 重力 で機動力低下`;
-  } else {
+  }
+
+  else if (event.delta > 0) {
     div.textContent =
       `${displayName(event.unit, nameMap)} は 浮力 で機動力上昇`;
   }
