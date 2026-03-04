@@ -46,6 +46,36 @@ export function applyDamage(source, target, action, ctx) {
     }
   }
 
+  // ================================
+// 妨害 / 共振
+// ================================
+
+let resonanceStock = 0;
+let interferenceStock = 0;
+
+if (source.effects) {
+
+  for (const e of source.effects) {
+
+    if (e.type === "resonance") {
+      resonanceStock += (e.stock ?? 0);
+    }
+
+    if (e.type === "interference") {
+      interferenceStock += (e.stock ?? 0);
+    }
+
+  }
+
+}
+
+const modifier =
+  1 + (resonanceStock * 0.0025)
+    - (interferenceStock * 0.0025);
+
+finalDamage =
+  Math.floor(finalDamage * Math.max(modifier, 0));
+  
   target.hp -= finalDamage;
 
   ctx.log.push({
