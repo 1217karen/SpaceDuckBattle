@@ -267,3 +267,4 @@ else if (event.type === "wait") {
 }
   logArea.appendChild(div);
 }
+
