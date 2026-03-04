@@ -55,35 +55,39 @@ else if (type === "pierce") {
     }
   }
 
-  // ================================
-// 妨害 / 共振
+// ================================
+// 妨害 / 共振（normal / pierceのみ）
 // ================================
 
-let resonanceStock = 0;
-let interferenceStock = 0;
+if (type === "normal" || type === "pierce") {
 
-if (source.effects) {
+  let resonanceStock = 0;
+  let interferenceStock = 0;
 
-  for (const e of source.effects) {
+  if (source.effects) {
 
-    if (e.type === "resonance") {
-      resonanceStock += (e.stock ?? 0);
-    }
+    for (const e of source.effects) {
 
-    if (e.type === "interference") {
-      interferenceStock += (e.stock ?? 0);
+      if (e.type === "resonance") {
+        resonanceStock += (e.stock ?? 0);
+      }
+
+      if (e.type === "interference") {
+        interferenceStock += (e.stock ?? 0);
+      }
+
     }
 
   }
 
+  const modifier =
+    1 + (resonanceStock * 0.0025)
+      - (interferenceStock * 0.0025);
+
+  finalDamage =
+    Math.floor(finalDamage * Math.max(modifier, 0));
+
 }
-
-const modifier =
-  1 + (resonanceStock * 0.0025)
-    - (interferenceStock * 0.0025);
-
-finalDamage =
-  Math.floor(finalDamage * Math.max(modifier, 0));
   
   target.hp -= finalDamage;
 
