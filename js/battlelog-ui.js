@@ -26,6 +26,11 @@ if (event.type === "turnStart") {
 
 else if (event.type === "hpChange") {
 
+  const unit = boardState.units[event.target];
+if (unit) {
+  unit.hp = event.hp;
+}
+
   const bar = document.querySelector(
     `.unitStatus[data-unit="${event.target}"] .hpFill`
   );
