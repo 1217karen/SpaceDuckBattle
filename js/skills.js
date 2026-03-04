@@ -31,7 +31,7 @@ export const skillHandlers = {
             type: "damage",
             source: unit.id,
             target: target.id,
-            power: 0,
+            power: 2,
             damageType: "normal"
           }
         ]
@@ -67,7 +67,7 @@ export const skillHandlers = {
             type: "damage",
             source: unit.id,
             target: target.id,
-            power: 0,
+            power: 1,
             damageType: "normal"
           }
         ]
@@ -108,7 +108,7 @@ export const skillHandlers = {
           type: "heal",
           source: unit.id,
           target: t.id,
-          power: 5,
+          power: 2,
           healType: "fixed"
         });
       }
@@ -151,7 +151,7 @@ export const skillHandlers = {
           type:"damage",
           source:unit.id,
           target:t.id,
-          power:0,
+          power:1,
           damageType:"normal"
           // falloffなし
         });
@@ -240,7 +240,7 @@ generateActions(unit, ctx) {
         type:"damage",
         source:unit.id,
         target:target.id,
-        power:0,
+        power:2,
         damageType:"normal",
         falloff:true
       }
@@ -269,7 +269,7 @@ attack_front_knockback: {
       type:"damage",
       source:unit.id,
       target:target.id,
-      power:0,
+      power:2,
       damageType:"normal"
     });
 
