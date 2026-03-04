@@ -127,6 +127,7 @@
 }
 
 .hpBar {
+  flex: 1;
   height: 8px;
   background: rgba(0,0,0,0.6);
   border: 1px solid rgba(120,180,255,0.5);
