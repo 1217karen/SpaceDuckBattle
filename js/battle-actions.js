@@ -10,16 +10,25 @@ export function applyDamage(source, target, action, ctx) {
   const power = action.power || 0;
   const type = action.damageType || "normal";
 
-  if (type === "normal") {
-    const atk = ctx.getEffectiveStat(source, "atk");
-    const df = ctx.getEffectiveStat(target, "df");
-    finalDamage = Math.max(atk + power - df, 0);
-  }
+if (type === "normal") {
+  const atk = ctx.getEffectiveStat(source, "atk");
+  const df = ctx.getEffectiveStat(target, "df");
 
-  else if (type === "pierce") {
-    const atk = ctx.getEffectiveStat(source, "atk");
-    finalDamage = atk + power;
-  }
+  const base = atk * power;
+  const reduced = df * 0.5;
+
+  finalDamage = Math.max(
+    Math.floor(base - reduced),
+    0
+  );
+}
+
+else if (type === "pierce") {
+  const atk = ctx.getEffectiveStat(source, "atk");
+
+  finalDamage =
+    Math.floor(atk * power);
+}
 
   else if (type === "fixed" || type === "effect") {
     finalDamage = power;
