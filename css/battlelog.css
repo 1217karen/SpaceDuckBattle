@@ -108,7 +108,8 @@
   display: flex;
   gap: 3px;
 }
-.unitHeader span {
+
+.unitName {
   font-size: 13px;
   font-weight: bold;
   color: #aee0ff;
