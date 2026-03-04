@@ -19,6 +19,11 @@ export function playLogEvent(
 
 const div = document.createElement("div");
 
+  
+if (event.type === "turnStart") {
+  return;
+}
+
 else if (event.type === "hpChange") {
 
   const bar = document.querySelector(
@@ -37,10 +42,6 @@ else if (event.type === "hpChange") {
 
 }
   
-if (event.type === "turnStart") {
-  return;
-}
-
 else if (event.type === "faceChange") {
 
   updateFacing(
