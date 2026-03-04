@@ -579,6 +579,22 @@ if (
 
       for (let i = 0; i < finalMoveCount; i++) {
 
+// stopDistance 再判定
+if (
+  moveMode === "toward" &&
+  stopDistance >= 0
+) {
+
+  const dist =
+    Math.abs(unit.x - targetPos.x) +
+    Math.abs(unit.y - targetPos.y);
+
+  if (dist <= stopDistance) {
+    break;
+  }
+
+}
+
         const step =
           chooseStep(unit, units, targetPos, board, moveMode);
 
