@@ -493,12 +493,30 @@ const actionEvents = battleLog
 
 let wait = EVENT_DELAY;
 
-if (
-  ev.type === "attack" ||
-  ev.type === "heal" ||
-  ev.type === "effectApplied"
-) {
+if (ev.type === "attack") {
+
+  if (ev.damageType === "effect") {
+    wait = EVENT_DELAY;
+  } else {
+    wait = EFFECT_DELAY;
+  }
+
+}
+
+else if (ev.type === "heal") {
+
+  if (ev.healType === "effect") {
+    wait = EVENT_DELAY;
+  } else {
+    wait = EFFECT_DELAY;
+  }
+
+}
+
+else if (ev.type === "effectApplied") {
+
   wait = EFFECT_DELAY;
+
 }
 
 if (ev.type !== "hpChange") {
