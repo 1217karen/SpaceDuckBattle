@@ -491,17 +491,19 @@ const actionEvents = battleLog
     }
 
 
-    let wait = EVENT_DELAY;
+let wait = EVENT_DELAY;
 
-    if (
-      ev.type === "attack" ||
-      ev.type === "heal" ||
-      ev.type === "effectApplied"
-    ) {
-      wait = EFFECT_DELAY;
-    }
+if (
+  ev.type === "attack" ||
+  ev.type === "heal" ||
+  ev.type === "effectApplied"
+) {
+  wait = EFFECT_DELAY;
+}
 
-    await sleep(wait);
+if (ev.type !== "hpChange") {
+  await sleep(wait);
+}
 
     clearEffectHighlights();
 
