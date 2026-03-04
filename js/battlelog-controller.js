@@ -407,18 +407,12 @@ const actionEvents = battleLog
   // 行動ヘッダー
   // ======================
 
-  const firstEvent = actionEvents[0];
 
-  if (!firstEvent) {
-    logIndex = end + 1;
-    nextBtn.disabled = false;
-    return;
-  }
 
   const header = document.createElement("div");
 
-  const displayName =
-    nameMap?.[firstEvent.unit] || firstEvent.unit;
+const displayName =
+  nameMap?.[actingUnit] || actingUnit;
 
   header.textContent = `▶ ${displayName} の行動`;
   header.classList.add("actionHeader");
