@@ -83,7 +83,31 @@
   align-items: center;
   gap: 6px;
 }
+.nameBlock {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 60px;
+  flex: 1;
+}
 
+.unitName {
+  font-size: 13px;
+  font-weight: bold;
+  color: #aee0ff;
+  letter-spacing: 0.5px;
+}
+
+.nameDivider {
+  height: 1px;
+  background: #00ff9c;
+  margin: 3px 0;
+}
+
+.effectList {
+  display: flex;
+  gap: 3px;
+}
 .unitHeader span {
   font-size: 13px;
   font-weight: bold;
@@ -99,7 +123,6 @@
 .effectList {
   display: flex;
   gap: 3px;
-  margin-left: auto;
 }
 
 .hpBar {
