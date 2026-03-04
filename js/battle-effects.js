@@ -31,7 +31,7 @@ export function getEffectiveStat(unit, statName) {
   return finalValue;
 }
 
-const CORROSION_RATE = 0.01;
+const CORROSION_RATE = 0.0025;
 const MAX_STACK = 100;
 const EFFECT_CAP = 25;
 
@@ -62,6 +62,22 @@ export function applyEffect(source, target, action, ctx) {
 
   const effectData = action.effect;
   if (!effectData) return;
+
+  // ========================================
+// group自動設定
+// ========================================
+
+if (!effectData.group) {
+
+  if (BUFF_TYPES.has(effectData.type)) {
+    effectData.group = "buff";
+  }
+
+  else if (DEBUFF_TYPES.has(effectData.type)) {
+    effectData.group = "debuff";
+  }
+
+}
 
   if (!target.effects) {
     target.effects = [];
@@ -263,10 +279,11 @@ export function processBeforeAction(unit, ctx) {
 const effectiveStock =
   Math.min(stock, EFFECT_CAP);
 
-const amount =
+const rawAmount =
   Math.floor(mhp * CORROSION_RATE * effectiveStock);
 
-    if (amount <= 0) continue;
+const amount =
+  Math.max(rawAmount, 1);
 
     if (e.type === "corrosion") {
 
