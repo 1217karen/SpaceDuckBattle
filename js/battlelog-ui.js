@@ -55,7 +55,9 @@ else if (event.type === "hpChange") {
     text.textContent = `HP ${event.hp}/${max}`;
   }
 
+  return;
 }
+  
 else if (event.type === "faceChange") {
 
   updateFacing(
