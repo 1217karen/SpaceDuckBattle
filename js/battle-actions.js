@@ -1,5 +1,36 @@
 // battle-actions.js
 
+//==========================================================
+// 妨害 / 共振倍率
+//==========================================================
+
+function getResonanceModifier(unit) {
+
+  let resonanceStock = 0;
+  let interferenceStock = 0;
+
+  if (unit.effects) {
+
+    for (const e of unit.effects) {
+
+      if (e.type === "resonance") {
+        resonanceStock += (e.stock ?? 0);
+      }
+
+      if (e.type === "interference") {
+        interferenceStock += (e.stock ?? 0);
+      }
+
+    }
+
+  }
+
+  return Math.max(
+    1 + (resonanceStock * 0.0025)
+      - (interferenceStock * 0.0025),
+    0
+  );
+}
 //========================================================== 
 // ダメージ処理 
 //==========================================================
@@ -61,31 +92,11 @@ else if (type === "pierce") {
 
 if (type === "normal" || type === "pierce") {
 
-  let resonanceStock = 0;
-  let interferenceStock = 0;
+const modifier =
+  getResonanceModifier(source);
 
-  if (source.effects) {
-
-    for (const e of source.effects) {
-
-      if (e.type === "resonance") {
-        resonanceStock += (e.stock ?? 0);
-      }
-
-      if (e.type === "interference") {
-        interferenceStock += (e.stock ?? 0);
-      }
-
-    }
-
-  }
-
-  const modifier =
-    1 + (resonanceStock * 0.0025)
-      - (interferenceStock * 0.0025);
-
-  finalDamage =
-    Math.floor(finalDamage * Math.max(modifier, 0));
+finalDamage =
+  Math.floor(finalDamage * modifier);
 
 }
   
@@ -119,14 +130,26 @@ export function applyHeal(source, target, action, ctx) {
   const power = action.power || 0;
   const type = action.healType || "fixed";
 
-  if (type === "fixed") {
-    finalHeal = power;
-  }
+if (type === "fixed") {
+  finalHeal = power;
+}
 
-  else if (type === "scale") {
-    finalHeal = (source.atk || 0) + power;
-  }
+else if (type === "scale") {
 
+  const healStat =
+    ctx.getEffectiveStat(source, "heal");
+
+  finalHeal =
+    Math.floor(healStat * power);
+
+  const modifier =
+    getResonanceModifier(source);
+
+  finalHeal =
+    Math.floor(finalHeal * modifier);
+
+}
+  
   target.hp = Math.min(
     target.hp + finalHeal,
     target.mhp ?? target.hp
