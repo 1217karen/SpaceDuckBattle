@@ -231,8 +231,22 @@ export function simulateBattle(snapshot) {
          
     killUnit
   };
+
+
        
 function endAction(unit) {
+
+// ==================================================
+// 加速 / 減速 消費
+// ==================================================
+
+if (unit.effects) {
+  unit.effects = unit.effects.filter(
+    e => e.type !== "accel" && e.type !== "slow"
+  );
+}
+       
+       
   processAfterAction(unit);
   log.push({
     type: "actionEnd",
@@ -423,6 +437,35 @@ const {
   board
 );
 
+// ==================================================
+// 加速 / 減速補正
+// ==================================================
+
+let accel = 0;
+let slow = 0;
+
+if (unit.effects) {
+
+  for (const e of unit.effects) {
+
+    if (e.type === "accel") {
+      accel = Math.max(accel, e.value ?? 1);
+    }
+
+    if (e.type === "slow") {
+      slow = Math.max(slow, e.value ?? 1);
+    }
+
+  }
+
+}
+
+const finalMoveCount =
+  moveCount + accel - slow;
+
+const mobilityDelta =
+  accel - slow;
+
       // --------------------------------------------------
       // ターゲットなし
       // --------------------------------------------------
@@ -442,6 +485,31 @@ endAction(unit);
 
       const targetPos = targetUnit;
 
+// ==================================================
+// 移動不能（加速/減速の結果）
+// ==================================================
+
+if (finalMoveCount <= 0) {
+
+  if (mobilityDelta !== 0) {
+
+    log.push({
+      type: "mobilityBlocked",
+      unit: unit.id,
+      delta: mobilityDelta
+    });
+
+  }
+
+  log.push({
+    type: "wait",
+    unit: unit.id
+  });
+
+  endAction(unit);
+  continue;
+
+}
 
       // ==================================================
       // 距離チェック
@@ -505,7 +573,7 @@ if (
       // 移動処理
       // ==================================================
 
-      for (let i = 0; i < moveCount; i++) {
+      for (let i = 0; i < finalMoveCount; i++) {
 
         const step =
           chooseStep(unit, units, targetPos, board, moveMode);
