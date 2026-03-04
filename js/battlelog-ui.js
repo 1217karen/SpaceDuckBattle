@@ -40,8 +40,19 @@ else if (event.type === "hpChange") {
     bar.style.width = (rate * 100) + "%";
   }
 
+  const text = document.querySelector(
+    `.unitStatus[data-unit="${event.target}"] .hpText`
+  );
+
+  if (text) {
+
+    const unit = boardState.units[event.target];
+    const max = unit?.mhp || event.hp;
+
+    text.textContent = `HP ${event.hp}/${max}`;
+  }
+
 }
-  
 else if (event.type === "faceChange") {
 
   updateFacing(
