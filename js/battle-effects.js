@@ -35,6 +35,29 @@ const CORROSION_RATE = 0.01;
 const MAX_STACK = 100;
 const EFFECT_CAP = 25;
 
+// ========================================
+// 状態変化グループ
+// ========================================
+
+const BUFF_TYPES = new Set([
+  "repair",
+  "resonance",
+  "accel",
+  "float",
+  "converge",
+  "satellite"
+]);
+
+const DEBUFF_TYPES = new Set([
+  "corrosion",
+  "interference",
+  "slow",
+  "gravity",
+  "diffuse",
+  "meteor"
+]);
+
+
 export function applyEffect(source, target, action, ctx) {
 
   const effectData = action.effect;
