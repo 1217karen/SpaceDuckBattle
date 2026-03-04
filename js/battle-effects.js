@@ -31,8 +31,9 @@ export function getEffectiveStat(unit, statName) {
   return finalValue;
 }
 
-const CORROSION_RATE = 0.005;
+const CORROSION_RATE = 0.01;
 const MAX_STACK = 100;
+const EFFECT_CAP = 25;
 
 export function applyEffect(source, target, action, ctx) {
 
@@ -236,8 +237,11 @@ export function processBeforeAction(unit, ctx) {
     const stock = Math.min(e.stock ?? 0, MAX_STACK);
     if (stock <= 0) continue;
 
-    const amount =
-      Math.floor(mhp * CORROSION_RATE * stock);
+const effectiveStock =
+  Math.min(stock, EFFECT_CAP);
+
+const amount =
+  Math.floor(mhp * CORROSION_RATE * effectiveStock);
 
     if (amount <= 0) continue;
 
