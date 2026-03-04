@@ -27,17 +27,16 @@ if (event.type === "turnStart") {
 else if (event.type === "hpChange") {
 
   const unit = boardState.units[event.target];
-if (unit) {
-  unit.hp = event.hp;
-}
+
+  if (unit) {
+    unit.hp = event.hp;
+  }
 
   const bar = document.querySelector(
     `.unitStatus[data-unit="${event.target}"] .hpFill`
   );
 
   if (bar) {
-
-    const unit = boardState.units[event.target];
 
     const max = unit?.mhp || 1;
     const rate = Math.max(event.hp / max, 0);
@@ -51,7 +50,6 @@ if (unit) {
 
   if (text) {
 
-    const unit = boardState.units[event.target];
     const max = unit?.mhp || event.hp;
 
     text.textContent = `HP ${event.hp}/${max}`;
