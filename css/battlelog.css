@@ -5,23 +5,26 @@
   gap: 20px;
 }
 
-/* 上段 */
-#topArea {
-  width: 900px;
+/* 中列 */
+
+#battleLayout {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
+  grid-template-columns: 220px 1fr 220px;
+  grid-template-rows: auto auto 1fr;
+  gap: 20px;
+  justify-items: center;
 }
+
+#centerArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
 #turnDisplay {
   text-align: center;
   justify-self: center;
-}
-/* 中段 */
-#middleArea {
-  width: 900px;
-  display: grid;
-  grid-template-columns: 150px 1fr 150px;
-  align-items: center;
 }
 
 /* グリッド中央固定 */
