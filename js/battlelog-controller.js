@@ -347,9 +347,8 @@ async function playNextAction() {
   }
 
 
-  const actionEvents = battleLog
-    .slice(start + 1, end)
-    .filter(ev => ev.type !== "hpChange");
+const actionEvents = battleLog
+  .slice(start + 1, end);
 
 
   // ======================
