@@ -466,6 +466,20 @@ const finalMoveCount =
 const mobilityDelta =
   accel - slow;
 
+// ==================================================
+// 加速 / 減速ログ
+// ==================================================
+
+if (mobilityDelta !== 0) {
+
+  log.push({
+    type: "mobilityChange",
+    unit: unit.id,
+    delta: mobilityDelta
+  });
+
+}
+
       // --------------------------------------------------
       // ターゲットなし
       // --------------------------------------------------
@@ -490,16 +504,6 @@ endAction(unit);
 // ==================================================
 
 if (finalMoveCount <= 0) {
-
-  if (mobilityDelta !== 0) {
-
-    log.push({
-      type: "mobilityBlocked",
-      unit: unit.id,
-      delta: mobilityDelta
-    });
-
-  }
 
   log.push({
     type: "wait",
