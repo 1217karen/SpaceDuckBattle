@@ -210,9 +210,7 @@ if (snapshot) {
   </div>
 
   <div class="hpBar">
-    <div class="hpFill" style="width:${
-  ((u.hp ?? u.mhp ?? 0) / (u.mhp ?? u.hp ?? 1)) * 100
-}%"></div>
+    <div class="hpFill" style="width:100%"></div>
   </div>
 
 </div>
