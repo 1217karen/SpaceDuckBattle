@@ -199,7 +199,7 @@ if (snapshot) {
         <div class="effectList"></div>
       </div>
       <div class="hpBar">
-        <div class="hpFill" style="width:100%"></div>
+        <div class="hpFill" data-maxhp="${u.mhp}" style="width:100%"></div>
       </div>
     `;
 
