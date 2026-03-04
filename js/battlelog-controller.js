@@ -105,6 +105,8 @@ autoBtn.addEventListener("click", () => {
 
   autoBtn.textContent = autoPlay ? "Stop" : "Auto";
 
+  nextBtn.disabled = autoPlay;
+
   if (autoPlay) {
     playNextAction();
   }
