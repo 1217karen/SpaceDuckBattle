@@ -19,6 +19,24 @@ export function playLogEvent(
 
 const div = document.createElement("div");
 
+else if (event.type === "hpChange") {
+
+  const bar = document.querySelector(
+    `.unitStatus[data-unit="${event.target}"] .hpFill`
+  );
+
+  if (bar) {
+
+    const unit = boardState.units[event.target];
+
+    const max = unit?.mhp || 1;
+    const rate = Math.max(event.hp / max, 0);
+
+    bar.style.width = (rate * 100) + "%";
+  }
+
+}
+  
 if (event.type === "turnStart") {
   return;
 }
