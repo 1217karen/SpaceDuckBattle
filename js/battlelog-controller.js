@@ -164,7 +164,11 @@ if (snapshot) {
 
   snapshot.units.forEach(u => {
 
-    boardState.units[u.id] = { x:u.x, y:u.y };
+    boardState.units[u.id] = {
+  x: u.x,
+  y: u.y,
+  mhp: u.mhp ?? u.hp
+};
 
     placeUnit("board", {
       id: u.id,
