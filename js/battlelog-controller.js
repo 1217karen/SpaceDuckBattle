@@ -180,6 +180,34 @@ if (snapshot) {
 
 }
 
+const leftSide = document.getElementById("leftSide");
+
+if (snapshot) {
+
+  const team1 = snapshot.units.filter(u => u.team === 1);
+
+  team1.forEach(u => {
+
+    const div = document.createElement("div");
+    div.className = "unitStatus";
+    div.dataset.unit = u.id;
+
+    div.innerHTML = `
+      <div class="unitHeader">
+        <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
+        <span>${u.name || u.id}</span>
+        <div class="effectList"></div>
+      </div>
+      <div class="hpBar">
+        <div class="hpFill" style="width:100%"></div>
+      </div>
+    `;
+
+    leftSide.appendChild(div);
+
+  });
+
+}
 
 // =====================
 // 初期ターンUI
