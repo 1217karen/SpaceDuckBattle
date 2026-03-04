@@ -122,8 +122,18 @@ else if (event.type === "attack") {
     }
   }
 
+if (event.damageType === "effect") {
+
   div.textContent =
-    `${displayName(event.to, nameMap)} に ${event.amount} のダメージ`;
+    `${displayName(event.to, nameMap)} は 侵食 で ${event.amount} ダメージ`;
+
+}
+else {
+
+  div.textContent =
+    `${displayName(event.to, nameMap)} に ${event.amount} ダメージ`;
+
+}
 }
 
   else if (event.type === "heal") {
@@ -156,8 +166,18 @@ if (img) {
 
 }
     
-div.textContent =
-  `${displayName(event.to, nameMap)} のHPが ${event.amount} 回復`;
+if (event.healType === "effect") {
+
+  div.textContent =
+    `${displayName(event.to, nameMap)} は 修復 でHPが ${event.amount} 回復`;
+
+}
+else {
+
+  div.textContent =
+    `${displayName(event.to, nameMap)} のHPが ${event.amount} 回復`;
+
+}
   }
 else if (event.type === "effectApplied") {
 
