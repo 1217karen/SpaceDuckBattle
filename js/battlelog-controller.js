@@ -203,9 +203,17 @@ if (snapshot) {
   </div>
 
 </div>
-      <div class="hpBar">
-        <div class="hpFill" data-maxhp="${u.mhp}" style="width:100%"></div>
-      </div>
+<div class="hpRow">
+
+  <div class="hpText">
+    HP ${u.hp}/${u.mhp ?? u.hp}
+  </div>
+
+  <div class="hpBar">
+    <div class="hpFill" style="width:100%"></div>
+  </div>
+
+</div>
     `;
 
     leftSide.appendChild(div);
