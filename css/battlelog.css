@@ -36,7 +36,7 @@
 #leftSide {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
 }
 
 .unitStatus {
@@ -45,7 +45,7 @@
 
   background: rgba(10,15,30,0.85);
 
-  border: 2px solid rgba(120,180,255,0.6);
+  border: 1px solid rgba(120,180,255,0.6);
   border-radius: 6px;
 
   box-shadow:
@@ -59,9 +59,9 @@
 .unitStatus::after {
   content: "";
   position: absolute;
-  width: 10px;
-  height: 10px;
-  border: 2px solid rgba(120,180,255,0.9);
+  width: 14px;
+  height: 14px;
+  border: 3px solid rgba(120,180,255,1);
 }
 
 .unitStatus::before {
