@@ -1,11 +1,6 @@
-#battleLayout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-/* 中列 */
+/* =======================================================
+   レイアウト
+======================================================= */
 
 #battleLayout {
   display: grid;
@@ -24,7 +19,40 @@
 
 #turnDisplay {
   text-align: center;
-  justify-self: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#logArea {
+  width: 500px;
+  min-height: 120px;
+}
+
+/* =======================================================
+   サイドUI
+======================================================= */
+
+#leftSide {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.unitStatus {
+  width: 200px;
+  padding: 6px;
+
+  background: rgba(10,15,30,0.85);
+
+  border: 2px solid rgba(120,180,255,0.6);
+  border-radius: 6px;
+
+  box-shadow:
+    0 0 6px rgba(80,140,255,0.5),
+    inset 0 0 6px rgba(80,140,255,0.25);
+
+  position: relative;
 }
 
 .unitStatus::before,
@@ -48,35 +76,6 @@
   right: -2px;
   border-left: none;
   border-top: none;
-}
-
-/* グリッド中央固定 */
-#boardArea {
-  display: flex;
-  justify-content: center;
-}
-
-/* 左列 */
-#leftSide {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.unitStatus {
-  width: 200px;
-  padding: 6px;
-
-  background: rgba(10,15,30,0.85);
-
-  border: 2px solid rgba(120,180,255,0.6);
-  border-radius: 6px;
-
-  box-shadow:
-    0 0 6px rgba(80,140,255,0.5),
-    inset 0 0 6px rgba(80,140,255,0.25);
-
-  position: relative;
 }
 
 .unitHeader {
@@ -120,7 +119,10 @@
   );
 }
 
-/* 下段 */
+/* =======================================================
+   盤面
+======================================================= */
+
 #boardArea {
   display: flex;
   justify-content: center;
@@ -138,9 +140,7 @@
   --heal-color: 0,255,0;
   --buff-color: 255,230,0;
   --debuff-color: 180,0,255;
-}
 
-:root {
   --ui-speed: 1;
 }
 
@@ -152,16 +152,9 @@
   position: relative;
 }
 
-#turnDisplay {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-#logArea {
-  width: 500px;
-  min-height: 120px;
-}
+/* =======================================================
+   ユニット表示
+======================================================= */
 
 .unitWrapper {
   position: relative;
@@ -184,78 +177,84 @@
   pointer-events: none;
 }
 
-/* ===== 向きグラデーション ===== */
-.team1 .face-N {
-  background: linear-gradient(to bottom, #00ff88 0px, transparent 6px);
+/* 向き */
+
+.team1 .face-N { background: linear-gradient(to bottom, #00ff88 0px, transparent 6px); }
+.team1 .face-S { background: linear-gradient(to top, #00ff88 0px, transparent 6px); }
+.team1 .face-E { background: linear-gradient(to left, #00ff88 0px, transparent 6px); }
+.team1 .face-W { background: linear-gradient(to right, #00ff88 0px, transparent 6px); }
+
+.team2 .face-N { background: linear-gradient(to bottom, #bb55ff 0px, transparent 6px); }
+.team2 .face-S { background: linear-gradient(to top, #bb55ff 0px, transparent 6px); }
+.team2 .face-E { background: linear-gradient(to left, #bb55ff 0px, transparent 6px); }
+.team2 .face-W { background: linear-gradient(to right, #bb55ff 0px, transparent 6px); }
+
+/* =======================================================
+   エフェクト / ハイライト
+======================================================= */
+
+.cell.attackHighlight { background-color: rgba(var(--attack-color),0.45); }
+.cell.healHighlight { background-color: rgba(var(--heal-color),0.45); }
+.cell.buffHighlight { background-color: rgba(var(--buff-color),0.6); }
+.cell.debuffHighlight { background-color: rgba(var(--debuff-color),0.6); }
+
+.cell.attackRange { background-color: rgba(var(--attack-color),0.15); }
+.cell.healRange { background-color: rgba(var(--heal-color),0.15); }
+.cell.buffRange { background-color: rgba(var(--buff-color),0.2); }
+.cell.debuffRange { background-color: rgba(var(--debuff-color),0.2); }
+
+.cell.activeUnit {
+  animation: activeGlow calc(0.8s / var(--ui-speed)) ease-in-out;
 }
 
-.team1 .face-S {
-  background: linear-gradient(to top, #00ff88 0px, transparent 6px);
-}
-
-.team1 .face-E {
-  background: linear-gradient(to left, #00ff88 0px, transparent 6px);
-}
-
-.team1 .face-W {
-  background: linear-gradient(to right, #00ff88 0px, transparent 6px);
-}
-
-
-.team2 .face-N {
-  background: linear-gradient(to bottom, #bb55ff 0px, transparent 6px);
-}
-
-.team2 .face-S {
-  background: linear-gradient(to top, #bb55ff 0px, transparent 6px);
-}
-
-.team2 .face-E {
-  background: linear-gradient(to left, #bb55ff 0px, transparent 6px);
-}
-
-.team2 .face-W {
-  background: linear-gradient(to right, #bb55ff 0px, transparent 6px);
-}
-
-.cell.attackHighlight {
-  background-color: rgba(var(--attack-color),0.45);
-}
-
-.cell.healHighlight {
-  background-color: rgba(var(--heal-color),0.45);
-}
-
-.cell.buffHighlight {
-  background-color: rgba(var(--buff-color),0.6);
-}
-
-.cell.debuffHighlight {
-  background-color: rgba(var(--debuff-color),0.6);
-}
-
-.cell.attackRange {
-  background-color: rgba(var(--attack-color),0.15);
-}
-
-.cell.healRange {
-  background-color: rgba(var(--heal-color),0.15);
-}
-
-.cell.buffRange {
-  background-color: rgba(var(--buff-color),0.2);
-}
-
-.cell.debuffRange {
-  background-color: rgba(var(--debuff-color),0.2);
-}
+/* =======================================================
+   アニメーション
+======================================================= */
 
 .unitImage.shake {
   animation: unitShake calc(0.25s / var(--ui-speed)) ease;
 }
 
-.cell.activeUnit {
-  animation: activeGlow calc(0.8s / var(--ui-speed)) ease-in-out;
+.unitImage.bounce {
+  animation: unitBounce calc(0.25s / var(--ui-speed)) ease;
+}
+
+.unitImage.buffFloat {
+  animation: unitBuffFloat calc(0.5s / var(--ui-speed)) ease;
+}
+
+.unitImage.debuffSink {
+  animation: unitDebuffSink calc(0.5s / var(--ui-speed)) ease;
+}
+
+@keyframes unitShake {
+  0%   { transform: translate(-50%, -50%) translateX(0); }
+  25%  { transform: translate(-50%, -50%) translateX(-4px); }
+  50%  { transform: translate(-50%, -50%) translateX(4px); }
+  75%  { transform: translate(-50%, -50%) translateX(-4px); }
+  100% { transform: translate(-50%, -50%) translateX(0); }
+}
+
+@keyframes unitBounce {
+  0%   { transform: translate(-50%, -50%) translateY(0); }
+  25%  { transform: translate(-50%, -50%) translateY(-4px); }
+  50%  { transform: translate(-50%, -50%) translateY(0); }
+  75%  { transform: translate(-50%, -50%) translateY(-4px); }
+  100% { transform: translate(-50%, -50%) translateY(0); }
+}
+
+@keyframes unitBuffFloat {
+  0%   { transform: translate(-50%, -50%) translateY(0); }
+  80%  { transform: translate(-50%, -50%) translateY(-4px); }
+  90%  { transform: translate(-50%, -50%) translateY(-4px); }
+  100% { transform: translate(-50%, -50%) translateY(0); }
+}
+
+@keyframes unitDebuffSink {
+  0%   { transform: translate(-50%, -50%) translateY(0); }
+  80%  { transform: translate(-50%, -50%) translateY(4px); }
+  99%  { transform: translate(-50%, -50%) translateY(4px); }
+  100% { transform: translate(-50%, -50%) translateY(0); }
 }
 
 @keyframes activeGlow {
@@ -273,45 +272,4 @@
     background-color: rgba(255,255,255,0.15);
     box-shadow: inset 0 0 0px rgba(255,255,255,0);
   }
-}
-.unitImage.buffFloat {
-  animation: unitBuffFloat calc(0.5s / var(--ui-speed)) ease;
-}
-
-@keyframes unitShake {
-  0%   { transform: translate(-50%, -50%) translateX(0); }
-  25%  { transform: translate(-50%, -50%) translateX(-4px); }
-  50%  { transform: translate(-50%, -50%) translateX(4px); }
-  75%  { transform: translate(-50%, -50%) translateX(-4px); }
-  100% { transform: translate(-50%, -50%) translateX(0); }
-}
-
-.unitImage.bounce {
-  animation: unitBounce calc(0.25s / var(--ui-speed)) ease;
-}
-
-@keyframes unitBounce {
-  0%   { transform: translate(-50%, -50%) translateY(0); }
-  25%  { transform: translate(-50%, -50%) translateY(-4px); }
-  50%  { transform: translate(-50%, -50%) translateY(0); }
-  75%  { transform: translate(-50%, -50%) translateY(-4px); }
-  100% { transform: translate(-50%, -50%) translateY(0); }
-}
-
-
-@keyframes unitBuffFloat {
-  0%   { transform: translate(-50%, -50%) translateY(0); }
-  80%  { transform: translate(-50%, -50%) translateY(-4px); }
-  90%  { transform: translate(-50%, -50%) translateY(-4px); }
-  100% { transform: translate(-50%, -50%) translateY(0); }
-}
-.unitImage.debuffSink {
-  animation: unitDebuffSink calc(0.5s / var(--ui-speed)) ease;
-}
-
-@keyframes unitDebuffSink {
-  0%   { transform: translate(-50%, -50%) translateY(0); }
-  80%  { transform: translate(-50%, -50%) translateY(4px); }
-  99%  { transform: translate(-50%, -50%) translateY(4px); }
-  100% { transform: translate(-50%, -50%) translateY(0); }
 }
