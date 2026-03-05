@@ -107,9 +107,24 @@
 }
 
 .effectList {
-  display: flex;
-  gap: 3px;
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  gap: 1px;
   color: #aee0ff;
+}
+
+.effectItem {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 10px;
+}
+
+.effectCount {
+  display: inline-block;
+  width: 12px;      /* 2桁固定 */
+  text-align: right;
+  font-size: 10px;
 }
 
 .unitName {
@@ -122,31 +137,6 @@
 .statusIcon {
   width: 60px;
   height: 60px;
-}
-
-.effectList {
-  display: grid;
-  grid-template-columns: repeat(6, auto);
-  gap: 2px;
-}
-
-.effectItem {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-
-  justify-content: space-between;
-   
-  gap: 2px;
-  font-size: 10px;
-  color: #aee0ff;
-}
-
-.effectCount {
-  display: inline-block;
-  width: 10px;      /* 2桁固定幅 */
-  text-align: right;
-  font-size: 10px;
 }
 
 .hpBar {
