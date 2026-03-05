@@ -142,11 +142,11 @@
   color: #aee0ff;
 }
 
-.effectItem img {
-
-  width: 10px;
-  height: 10px;
-
+.effectCount {
+  display: inline-block;
+  width: 18px;      /* 2桁固定幅 */
+  text-align: right;
+  font-size: 10px;
 }
 
 .hpBar {
