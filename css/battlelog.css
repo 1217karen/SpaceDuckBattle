@@ -144,7 +144,7 @@
 
 .effectCount {
   display: inline-block;
-  width: 18px;      /* 2桁固定幅 */
+  width: 13px;      /* 2桁固定幅 */
   text-align: right;
   font-size: 10px;
 }
