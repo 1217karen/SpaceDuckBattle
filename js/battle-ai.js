@@ -215,7 +215,8 @@ function canReduceDistanceOneStepToward(target) {
     );
     if (occupied) continue;
 
-    const newDist = Math.abs(nx - target.x) + Math.abs(ny - target.y);
+const newDist =
+  getDistance({ x: nx, y: ny }, target);
 
     // 1歩で距離を縮められるならOK
     if (newDist < currentDist) return true;
