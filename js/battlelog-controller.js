@@ -207,7 +207,23 @@ if (snapshot) {
   <div class="nameBlock">
     <div class="unitName">${u.name || u.id}</div>
     <div class="nameDivider"></div>
-    <div class="effectList"></div>
+    <div class="effectList">
+
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+<div class="effectItem"><img src="https://placehold.co/10x10"><span>0</span></div>
+
+</div>
   </div>
 
 </div>
