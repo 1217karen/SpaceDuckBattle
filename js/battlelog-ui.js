@@ -11,52 +11,6 @@ function displayName(id, nameMap) {
   return nameMap?.[id] || id;
 }
 
-function updateEffectList(unitId, boardState) {
-
-  const unit = boardState.units[unitId];
-  if (!unit) return;
-
-  const root = document.querySelector(
-    `.unitStatus[data-unit="${unitId}"] .effectList`
-  );
-
-  if (!root) return;
-
-  root.innerHTML = "";
-
-  if (!unit.effects || unit.effects.length === 0) return;
-
-  for (const e of unit.effects) {
-
-    const span = document.createElement("span");
-
-    const name =
-      EFFECT_SHORT[e.type] || e.type;
-
-    const value =
-      e.stock ?? "";
-
-    span.textContent = `${name}${value}`;
-
-    root.appendChild(span);
-  }
-}
-
-const EFFECT_SHORT = {
-  corrosion: "侵",
-  repair: "修",
-  resonance: "共",
-  interference: "妨",
-  slow: "減",
-  accel: "加",
-  gravity: "重",
-  float: "浮",
-  diffuse: "拡",
-  converge: "収",
-  meteor: "流",
-  satellite: "衛"
-};
-
 export function playLogEvent(
   event,
   boardState,
@@ -229,27 +183,6 @@ else {
 else if (event.type === "effectApplied") {
 
   const e = event.effect;
-
-  // UI側effects更新
-  const unit = boardState.units[event.target];
-
-  if (unit && e?.type) {
-
-    const existing =
-      unit.effects.find(x => x.type === e.type);
-
-    if (existing) {
-      existing.stock = e.stock;
-    }
-    else {
-      unit.effects.push({
-        type: e.type,
-        stock: e.stock
-      });
-    }
-
-    updateEffectList(event.target, boardState);
-  }
   
   const unitState = boardState.units[event.target];
 
