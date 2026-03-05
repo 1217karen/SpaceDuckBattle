@@ -230,11 +230,10 @@ else if (event.type === "effectApplied") {
 
     // UI側effects更新
   const unit = boardState.units[event.target];
-  if (unit) {
-
+const unit = boardState.units[event.target];
 const e = event.effect;
 
-if (e.type) {
+if (unit && e?.type) {
 
   const existing =
     unit.effects.find(x => x.type === e.type);
