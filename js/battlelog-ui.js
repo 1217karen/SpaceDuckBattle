@@ -182,42 +182,101 @@ else {
 else if (event.type === "effectApplied") {
 
   const e = event.effect;
+  const unitState = boardState.units[event.target];
 
-  const unitState =
-    boardState.units[event.target];
+  const effectNames = {
+    corrosion: "侵食",
+    repair: "修復",
+    resonance: "共振",
+    interference: "妨害",
+    slow: "減速",
+    accel: "加速",
+    gravity: "重力",
+    float: "浮力",
+    diffuse: "拡散",
+    converge: "収束",
+    meteor: "流星",
+    satellite: "衛星"
+  };
 
-  let isBuff = true;
+  const name =
+    effectNames[e.type] || e.type;
+
   let text = "";
+  let isBuff = true;
+
+  const STOCK_TYPES = new Set([
+    "corrosion",
+    "repair",
+    "resonance",
+    "interference"
+  ]);
+
+  const OVERWRITE_TYPES = new Set([
+    "slow",
+    "accel",
+    "gravity",
+    "float",
+    "diffuse",
+    "converge",
+    "meteor",
+    "satellite"
+  ]);
 
   // ==========================
-  // corrosion / repair
+  // stock型
   // ==========================
-  if (e.type === "corrosion" || e.type === "repair") {
 
-    isBuff = (e.type === "repair");
+  if (STOCK_TYPES.has(e.type)) {
+
+    const n = e.stock ?? 1;
+
+    isBuff =
+      e.type === "repair" ||
+      e.type === "resonance";
 
     text =
-      e.type === "corrosion"
-        ? "侵食"
-        : "修復";
+      `${displayName(event.target, nameMap)} に ${name} を ${n} 追加`;
 
-    div.textContent =
-      `${displayName(event.target, nameMap)} に ${text} が付与された`;
+  }
+
+  // ==========================
+  // 上書き型
+  // ==========================
+
+  else if (OVERWRITE_TYPES.has(e.type)) {
+
+    const n = e.stock ?? 1;
+
+    isBuff =
+      e.type === "accel" ||
+      e.type === "float" ||
+      e.type === "converge" ||
+      e.type === "satellite";
+
+    text =
+      `${displayName(event.target, nameMap)} の ${name} が ${n} に変化`;
+
   }
 
   // ==========================
   // stat系
   // ==========================
-  else {
 
-    isBuff = e.value >= 0;
+else {
 
-    const sign =
-      e.value >= 0 ? "+" : "";
+  const amount = Math.abs(e.value);
 
-    div.textContent =
-      `${displayName(event.target, nameMap)} の ${e.stat} ${sign}${e.value}`;
-  }
+  const word =
+    e.value >= 0 ? "増加" : "減少";
+
+  isBuff = e.value >= 0;
+
+  text =
+    `${displayName(event.target, nameMap)} の ${e.stat} が ${amount} ${word}`;
+}
+
+  div.textContent = text;
 
   if (unitState) {
 
@@ -250,6 +309,7 @@ else if (event.type === "effectApplied") {
     }, { once: true });
 
   }
+
 }
   
 else if (event.type === "death") {
