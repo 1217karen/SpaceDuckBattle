@@ -64,7 +64,8 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
     skills:[
       {type:"buff_df50_self"},
-      {type:"attack_front_knockback"}
+      {type:"attack_front_knockback"},
+      {type:"buff_wave"}
     ]
   },
 
@@ -85,7 +86,8 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
     skills:[
       {type:"heal_cross2"},
-      {type:"repair_wave"}
+      {type:"repair_wave"},
+      {type:"buff_wave"}
     ]
   },
 
@@ -106,7 +108,8 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D21.webp",
     skills:[
       {type:"buff_self_if_alone"},
-      {type:"attack_front1"}
+      {type:"attack_front1"},
+      {type:"debuff_wave"}
     ]
   },
 
@@ -148,7 +151,8 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
     skills:[
       {type:"pull_farthest_enemy"},
-      {type:"corrosion_wave"}
+      {type:"corrosion_wave"},
+      {type:"debuff_wave"}
     ]
   },
 
@@ -190,7 +194,8 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D10.webp",
     skills:[
       {type:"buff_df50_self"},
-      {type:"attack_front_knockback"}
+      {type:"attack_front_knockback"},
+      {type:"buff_wave"}
     ]
   },
 
@@ -211,7 +216,8 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D05.webp",
     skills:[
       {type:"heal_cross2"},
-      {type:"repair_wave"}
+      {type:"repair_wave"},
+      {type:"buff_wave"}
     ]
   },
 
@@ -232,7 +238,8 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D03.webp",
     skills:[
       {type:"buff_self_if_alone"},
-      {type:"attack_front1"}
+      {type:"attack_front1"},
+      {type:"debuff_wave"}
     ]
   },
 
@@ -274,7 +281,8 @@ units: [
     icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp",
     skills:[
       {type:"pull_farthest_enemy"},
-      {type:"corrosion_wave"}
+      {type:"corrosion_wave"},
+      {type:"debuff_wave"}
     ]
   }
 
