@@ -2,7 +2,7 @@
 
 import { skillHandlers 
        } from "./skills.js";
-import {chooseStep,facingFromDelta,isOccupiedCell,geｆtKnockbackCell,getPullCell
+import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell
        } from "./movement.js";
 import {getEffectiveStat,applyEffect,processBeforeAction,processAfterAction
        } from "./battle-effects.js";
