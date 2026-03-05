@@ -83,8 +83,14 @@ if (!effectData.group) {
     target.effects = [];
   }
 
-  // === corrosion / repair ===
-  if (effectData.type === "corrosion" || effectData.type === "repair") {
+  // === stock型（corrosion / repair / resonance / interference）===
+  // ・stockは加算（上限あり）
+  if (
+    effectData.type === "corrosion" ||
+    effectData.type === "repair" ||
+    effectData.type === "resonance" ||
+    effectData.type === "interference"
+  ) {
 
     const existing =
       target.effects.find(e => e.type === effectData.type);
@@ -96,11 +102,13 @@ if (!effectData.group) {
         MAX_STACK
       );
 
+      existing.group = effectData.group;
+
       ctx.log.push({
         type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: existing
+        source: source.id,
+        target: target.id,
+        effect: existing
       });
 
       return;
@@ -116,18 +124,26 @@ if (!effectData.group) {
 
     ctx.log.push({
       type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: newEffect
+      source: source.id,
+      target: target.id,
+      effect: newEffect
     });
 
     return;
   }
 
-  // === gravity / float ===
+  // === 上書き型（gravity / float / slow / accel / diffuse / converge / meteor / satellite）===
   // ・stockは加算しない（強い方に上書き）
-  // ・発動は processBeforeAction 側で行い、発動したら全消費
-  if (effectData.type === "gravity" || effectData.type === "float") {
+  if (
+    effectData.type === "gravity" ||
+    effectData.type === "float" ||
+    effectData.type === "slow" ||
+    effectData.type === "accel" ||
+    effectData.type === "diffuse" ||
+    effectData.type === "converge" ||
+    effectData.type === "meteor" ||
+    effectData.type === "satellite"
+  ) {
 
     const incomingStock =
       Math.min(effectData.stock ?? 1, MAX_STACK);
