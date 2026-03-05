@@ -38,7 +38,137 @@ export const skillHandlers = {
       };
     }
   },
+// =========================
+// 周囲デバフ波
+// =========================
+debuff_wave: {
+  cooldown: 1,
 
+  generateActions(unit, ctx) {
+
+    const enemies =
+      ctx.units.filter(u =>
+        u.hp > 0 &&
+        u.team !== unit.team &&
+        ctx.getChebyshevDistance(unit, u) <= 1
+      );
+
+    if (enemies.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of enemies) {
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "slow",
+          stock: 1
+        }
+      });
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "gravity",
+          stock: 1
+        }
+      });
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "interference",
+          stock: 1
+        }
+      });
+
+    }
+
+    const cells =
+      ctx.getManhattanCells(unit, 1);
+
+    return {
+      preview: {
+        cells,
+        style: "debuff"
+      },
+      actions
+    };
+  }
+},
+
+  // =========================
+// 周囲バフ波
+// =========================
+buff_wave: {
+  cooldown: 1,
+
+  generateActions(unit, ctx) {
+
+    const allies =
+      ctx.units.filter(u =>
+        u.hp > 0 &&
+        u.team === unit.team &&
+        ctx.getChebyshevDistance(unit, u) <= 1
+      );
+
+    if (allies.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of allies) {
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "accel",
+          stock: 1
+        }
+      });
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "float",
+          stock: 1
+        }
+      });
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "resonance",
+          stock: 1
+        }
+      });
+
+    }
+
+    const cells =
+      ctx.getManhattanCells(unit, 1);
+
+    return {
+      preview: {
+        cells,
+        style: "buff"
+      },
+      actions
+    };
+  }
+},
   // =========================
   // 最寄り敵攻撃
   // =========================
