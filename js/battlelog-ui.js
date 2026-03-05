@@ -228,26 +228,15 @@ else {
   }
 else if (event.type === "effectApplied") {
 
-    // UI側effects更新
-const e = event.effect;
+  const e = event.effect;
 
-if (unit && e?.type) {
+  // UI側effects更新
+  const unit = boardState.units[event.target];
 
-  const existing =
-    unit.effects.find(x => x.type === e.type);
+  if (unit && e?.type) {
 
-  if (existing) {
-    existing.stock = e.stock;
-  }
-  else {
-    unit.effects.push({
-      type: e.type,
-      stock: e.stock
-    });
-  }
-
-  updateEffectList(event.target, boardState);
-}
+    const existing =
+      unit.effects.find(x => x.type === e.type);
 
     if (existing) {
       existing.stock = e.stock;
