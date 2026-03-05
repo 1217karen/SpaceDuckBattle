@@ -349,12 +349,12 @@ else if (event.type === "mobilityChange") {
 
   if (event.delta < 0) {
     div.textContent =
-      `${displayName(event.unit, nameMap)} は 重力 で機動力低下`;
+      `${displayName(event.unit, nameMap)} は 減速 で機動力低下`;
   }
 
   else if (event.delta > 0) {
     div.textContent =
-      `${displayName(event.unit, nameMap)} は 浮力 で機動力上昇`;
+      `${displayName(event.unit, nameMap)} は 加速 で機動力上昇`;
   }
 
 }
