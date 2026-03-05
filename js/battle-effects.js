@@ -26,9 +26,9 @@ export function getEffectiveStat(unit, statName) {
   }
 
   const afterFlat = base + flatBonus;
-  const finalValue = afterFlat * (1 + rateBonus);
+const finalValue = afterFlat * (1 + rateBonus);
 
-  return finalValue;
+return Math.round(finalValue);
 }
 
 const CORROSION_RATE = 0.0025;
