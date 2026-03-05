@@ -103,6 +103,7 @@
   height: 1px;
   background: #00ff9c;
   margin: 3px 0;
+  width: 100%;
 }
 
 .effectList {
@@ -132,8 +133,9 @@
 .effectItem {
   display: flex;
   align-items: center;
-  gap: 2px;
+  flex-direction: row;
 
+  gap: 2px;
   font-size: 10px;
   color: #aee0ff;
 }
