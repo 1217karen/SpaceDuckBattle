@@ -298,6 +298,23 @@ else if (event.type === "mobilityChange") {
   }
 
 }
+
+  else if (event.type === "cooldownChange") {
+
+  const text =
+    event.delta > 0
+      ? "クールタイムが 1 増加"
+      : "クールタイムが 1 減少";
+
+  div.textContent =
+    `${displayName(event.unit, nameMap)} の ${event.skill} の ${text}`;
+}
+
+else if (event.type === "cooldownLimit") {
+
+  div.textContent =
+    `${displayName(event.unit, nameMap)} のクールタイムはこれ以上変化しない`;
+}
     
 else if (event.type === "wait") {
 
