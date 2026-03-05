@@ -229,8 +229,6 @@ else {
 else if (event.type === "effectApplied") {
 
     // UI側effects更新
-  const unit = boardState.units[event.target];
-const unit = boardState.units[event.target];
 const e = event.effect;
 
 if (unit && e?.type) {
