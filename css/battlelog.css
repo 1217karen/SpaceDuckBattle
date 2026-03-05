@@ -124,8 +124,25 @@
 }
 
 .effectList {
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  gap: 2px;
+}
+
+.effectItem {
   display: flex;
-  gap: 3px;
+  align-items: center;
+  gap: 2px;
+
+  font-size: 10px;
+  color: #aee0ff;
+}
+
+.effectItem img {
+
+  width: 10px;
+  height: 10px;
+
 }
 
 .hpBar {
