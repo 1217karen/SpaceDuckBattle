@@ -234,11 +234,23 @@ else if (event.type === "effectApplied") {
 
 const e = event.effect;
 
-// stat系effectは表示しない
-if (!e.type) return;
+if (e.type) {
 
-const existing =
-  unit.effects.find(x => x.type === e.type);
+  const existing =
+    unit.effects.find(x => x.type === e.type);
+
+  if (existing) {
+    existing.stock = e.stock;
+  }
+  else {
+    unit.effects.push({
+      type: e.type,
+      stock: e.stock
+    });
+  }
+
+  updateEffectList(event.target, boardState);
+}
 
     if (existing) {
       existing.stock = e.stock;
