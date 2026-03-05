@@ -2,7 +2,7 @@
 
 import { skillHandlers 
        } from "./skills.js";
-import {chooseStep,facingFromDelta,isOccupiedCell,getKnockbackCell,getPullCell
+import {chooseStep,facingFromDelta,isOccupiedCell,geｆtKnockbackCell,getPullCell
        } from "./movement.js";
 import {getEffectiveStat,applyEffect,processBeforeAction,processAfterAction
        } from "./battle-effects.js";
@@ -63,27 +63,6 @@ function getChebyshevDistance(a, b) {
     Math.abs(a.y - b.y)
   );
 }
-
-// ==========================================================
-// 安全判定
-// ==========================================================
-
-function isSafeFromEnemies(x, y, unit, units) {
-
-  const enemies = getEnemies(units, unit.team);
-
-  for (const e of enemies) {
-
-const d =
-  getDistance({ x, y }, e);
-
-    if (d <= 2) return false;
-
-  }
-
-  return true;
-}
-
 
 // ==========================================================
 // ランダム取得
