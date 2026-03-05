@@ -74,9 +74,8 @@ function isSafeFromEnemies(x, y, unit, units) {
 
   for (const e of enemies) {
 
-    const d =
-      Math.abs(x - e.x) +
-      Math.abs(y - e.y);
+const d =
+  getDistance({ x, y }, e);
 
     if (d <= 2) return false;
 
@@ -122,9 +121,8 @@ function getUnitsInManhattanRange(center, units, range) {
 
     if (u.hp <= 0) return false;
 
-    const dist =
-      Math.abs(center.x - u.x) +
-      Math.abs(center.y - u.y);
+const dist =
+  getDistance(center, u);
 
     return dist <= range;
 
@@ -253,7 +251,17 @@ if (unit.effects) {
     unit: unit.id
   });
 }
+       
+function waitAction(unit) {
 
+  log.push({
+    type: "wait",
+    unit: unit.id
+  });
+
+  endAction(unit);
+
+}
 function tryUseSkill(unit) {
 
   for (let skill of (unit.skills || [])) {
@@ -288,38 +296,32 @@ function tryUseSkill(unit) {
 
     for (let action of actions) {
 
-      if (action.type === "damage") {
+const source =
+  units.find(u => u.id === action.source);
 
-        const source =
-          units.find(u => u.id === action.source);
-        const target =
-          units.find(u => u.id === action.target);
+const target =
+  units.find(u => u.id === action.target);
 
-        if (source && target)
-          applyDamage(source, target, action, context);
-      }
+if (action.type === "damage") {
 
-      else if (action.type === "heal") {
+  if (source && target)
+    applyDamage(source, target, action, context);
 
-        const source =
-          units.find(u => u.id === action.source);
-        const target =
-          units.find(u => u.id === action.target);
+}
 
-        if (source && target)
-          applyHeal(source, target, action, context);
-      }
+else if (action.type === "heal") {
 
-      else if (action.type === "applyEffect") {
+  if (source && target)
+    applyHeal(source, target, action, context);
 
-        const source =
-          units.find(u => u.id === action.source);
-        const target =
-          units.find(u => u.id === action.target);
+}
 
-        if (source && target)
-          context.applyEffect(source, target, action, context);
-      }
+else if (action.type === "applyEffect") {
+
+  if (source && target)
+    context.applyEffect(source, target, action, context);
+
+}
 
       else if (action.type === "move") {
 
@@ -484,17 +486,12 @@ if (mobilityDelta !== 0) {
       // ターゲットなし
       // --------------------------------------------------
 
-      if (!targetUnit) {
+if (!targetUnit) {
 
-        log.push({
-          type: "wait",
-          unit: unit.id
-        });
+  waitAction(unit);
+  continue;
 
-endAction(unit);
-
-        continue;
-      }
+}
 
 
       const targetPos = targetUnit;
@@ -505,12 +502,7 @@ endAction(unit);
 
 if (finalMoveCount <= 0) {
 
-  log.push({
-    type: "wait",
-    unit: unit.id
-  });
-
-  endAction(unit);
+  waitAction(unit);
   continue;
 
 }
@@ -523,7 +515,7 @@ if (finalMoveCount <= 0) {
       const dyToTarget = targetPos.y - unit.y;
 
       const distToTarget =
-        Math.abs(dxToTarget) + Math.abs(dyToTarget);
+        getDistance(unit, targetPos);
 
 
 if (
@@ -554,21 +546,16 @@ if (
       continue;
     }
 
-    log.push({
-      type: "wait",
-      unit: unit.id
-    });
+    waitAction(unit);
+
   }
 
   else {
 
-    log.push({
-      type: "wait",
-      unit: unit.id
-    });
+    waitAction(unit);
+
   }
 
-  endAction(unit);
   continue;
 }
 
@@ -585,9 +572,8 @@ if (
   stopDistance >= 0
 ) {
 
-  const dist =
-    Math.abs(unit.x - targetPos.x) +
-    Math.abs(unit.y - targetPos.y);
+const dist =
+  getDistance(unit, targetPos);
 
   if (dist <= stopDistance) {
     break;
