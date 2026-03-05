@@ -389,8 +389,6 @@ else {
     }, { once: true });
 
   }
-
-}
   
 else if (event.type === "death") {
 
