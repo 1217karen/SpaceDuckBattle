@@ -108,7 +108,7 @@ if (!effectData.group) {
         type: "effectApplied",
         source: source.id,
         target: target.id,
-        effect: existing
+        effect: { ...existing }
       });
 
       return;
@@ -126,7 +126,7 @@ if (!effectData.group) {
       type: "effectApplied",
       source: source.id,
       target: target.id,
-      effect: newEffect
+      effect: { ...newEffect }
     });
 
     return;
@@ -166,7 +166,7 @@ if (!effectData.group) {
         type: "effectApplied",
         source: source.id,
         target: target.id,
-        effect: existing
+        effect: { ...existing }
       });
 
       return;
@@ -184,7 +184,7 @@ if (!effectData.group) {
       type: "effectApplied",
       source: source.id,
       target: target.id,
-      effect: newEffect
+      effect: { ...newEffect }
     });
 
     return;
@@ -220,7 +220,7 @@ if (!effectData.group) {
       type: "effectApplied",
   source: source.id,
   target: target.id,
-  effect: newEffect
+  effect: { ...newEffect }
     });
 
     return;
@@ -254,7 +254,7 @@ if (!effectData.group) {
       type: "effectApplied",
   source: source.id,
   target: target.id,
-  effect: newEffect
+  effect: { ...newEffect }
     });
 
     return;
@@ -272,7 +272,7 @@ if (!effectData.group) {
       type: "effectApplied",
   source: source.id,
   target: target.id,
-  effect: existing
+  effect: { ...existing }
     });
 
     return;
@@ -286,7 +286,7 @@ if (!effectData.group) {
       type: "effectApplied",
   source: source.id,
   target: target.id,
-  effect: existing
+  effect: { ...existing }
     });
 
     return;
@@ -304,7 +304,7 @@ if (!effectData.group) {
       type: "effectApplied",
   source: source.id,
   target: target.id,
-  effect: existing
+  effect: { ...existing }
     });
 
   }
