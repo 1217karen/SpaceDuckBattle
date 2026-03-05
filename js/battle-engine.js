@@ -190,6 +190,9 @@ export function simulateBattle(snapshot) {
 
     getEffectiveStat,
 
+　  getSkillMaxCooldown: (skillType) =>
+　  skillHandlers[skillType]?.cooldown ?? 0,
+
     facingFromDelta,
 
     getKnockbackCell: (source, target, units) =>
