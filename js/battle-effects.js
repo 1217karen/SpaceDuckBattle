@@ -98,9 +98,9 @@ if (!effectData.group) {
 
       ctx.log.push({
         type: "effectApplied",
-        from: source.id,
-        to: target.id,
-        effect: existing
+  source: source.id,
+  target: target.id,
+  effect: existing
       });
 
       return;
@@ -116,9 +116,9 @@ if (!effectData.group) {
 
     ctx.log.push({
       type: "effectApplied",
-      from: source.id,
-      to: target.id,
-      effect: newEffect
+  source: source.id,
+  target: target.id,
+  effect: existing
     });
 
     return;
@@ -152,9 +152,9 @@ if (!effectData.group) {
 
     ctx.log.push({
       type: "effectApplied",
-      from: source.id,
-      to: target.id,
-      effect: newEffect
+  source: source.id,
+  target: target.id,
+  effect: existing
     });
 
     return;
@@ -186,9 +186,9 @@ if (!effectData.group) {
 
     ctx.log.push({
       type: "effectApplied",
-      from: source.id,
-      to: target.id,
-      effect: newEffect
+  source: source.id,
+  target: target.id,
+  effect: existing
     });
 
     return;
@@ -204,9 +204,9 @@ if (!effectData.group) {
 
     ctx.log.push({
       type: "effectApplied",
-      from: source.id,
-      to: target.id,
-      effect: existing
+  source: source.id,
+  target: target.id,
+  effect: existing
     });
 
     return;
@@ -218,9 +218,9 @@ if (!effectData.group) {
 
     ctx.log.push({
       type: "effectApplied",
-      from: source.id,
-      to: target.id,
-      effect: existing
+  source: source.id,
+  target: target.id,
+  effect: existing
     });
 
     return;
@@ -236,9 +236,9 @@ if (!effectData.group) {
 
     ctx.log.push({
       type: "effectApplied",
-      from: source.id,
-      to: target.id,
-      effect: existing
+  source: source.id,
+  target: target.id,
+  effect: existing
     });
 
   }
