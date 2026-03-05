@@ -109,7 +109,7 @@
 .effectList {
   display: grid;
   grid-template-columns: repeat(6, auto);
-  gap: 1px;
+  gap: 2px;
   color: #aee0ff;
 }
 
