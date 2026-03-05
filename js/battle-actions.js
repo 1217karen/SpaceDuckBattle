@@ -102,13 +102,13 @@ finalDamage =
   
   target.hp -= finalDamage;
 
-  ctx.log.push({
-    type: "attack",
-    from: source.id,
-    to: target.id,
-    amount: finalDamage,
-    damageType: type
-  });
+ctx.log.push({
+  type: "damage",
+  source: source.id,
+  target: target.id,
+  amount: finalDamage,
+  damageType: type
+});
 
   ctx.log.push({
     type: "hpChange",
@@ -155,13 +155,13 @@ else if (type === "scale") {
     target.mhp ?? target.hp
   );
 
-  ctx.log.push({
-    type: "heal",
-    from: source.id,
-    to: target.id,
-    amount: finalHeal,
-    healType: type
-  });
+ctx.log.push({
+  type: "heal",
+  source: source.id,
+  target: target.id,
+  amount: finalHeal,
+  healType: type
+});
 
   ctx.log.push({
     type: "hpChange",
