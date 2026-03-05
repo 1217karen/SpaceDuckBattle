@@ -124,6 +124,56 @@ if (!effectData.group) {
     return;
   }
 
+  // === gravity / float ===
+  // ・stockは加算しない（強い方に上書き）
+  // ・発動は processBeforeAction 側で行い、発動したら全消費
+  if (effectData.type === "gravity" || effectData.type === "float") {
+
+    const incomingStock =
+      Math.min(effectData.stock ?? 1, MAX_STACK);
+
+    const existing =
+      target.effects.find(e => e.type === effectData.type);
+
+    if (existing) {
+
+      const currentStock = existing.stock ?? 0;
+
+      // 強い方に上書き（同値以下は変更なし）
+      if (incomingStock > currentStock) {
+        existing.stock = incomingStock;
+      }
+
+      existing.group = effectData.group;
+
+      ctx.log.push({
+        type: "effectApplied",
+        source: source.id,
+        target: target.id,
+        effect: existing
+      });
+
+      return;
+    }
+
+    const newEffect = {
+      type: effectData.type,
+      stock: incomingStock,
+      group: effectData.group
+    };
+
+    target.effects.push(newEffect);
+
+    ctx.log.push({
+      type: "effectApplied",
+      source: source.id,
+      target: target.id,
+      effect: newEffect
+    });
+
+    return;
+  }
+
   // 永続 flat
   if (effectData.duration === null) {
 
@@ -267,6 +317,93 @@ export function processBeforeAction(unit, ctx) {
   if (!unit.effects || unit.effects.length === 0) return;
   if (unit.hp <= 0) return;
 
+  // ========================================
+  // gravity / float（行動開始時にCTをランダム増減）
+  // 仕様：
+  // ・net = gravity.stock - float.stock
+  // ・|net| 回、ランダムに対象スキルのCTを ±1
+  // ・CTは 0 ～ スキル固有max（handler.cooldown）に収める
+  // ・増やせない/減らせないスキルは抽選対象外
+  // ・処理後、gravity/float は全消費（削除）
+  // ========================================
+
+  let gravityStock = 0;
+  let floatStock = 0;
+
+  for (const e of unit.effects) {
+    if (e.type === "gravity") gravityStock = Math.max(gravityStock, e.stock ?? 0);
+    if (e.type === "float") floatStock = Math.max(floatStock, e.stock ?? 0);
+  }
+
+  const net = gravityStock - floatStock;
+
+  if (net !== 0 && unit.skills && unit.skills.length > 0) {
+
+    const steps = Math.abs(net);
+    const dir = net > 0 ? +1 : -1; // +1: gravity, -1: float
+
+    for (let i = 0; i < steps; i++) {
+
+      // 抽選対象を毎回作る（同じスキルが連続で選ばれるのもOK）
+      const eligible = [];
+
+      for (const s of unit.skills) {
+
+        const maxCt = ctx.getSkillMaxCooldown?.(s.type) ?? 0;
+        const cur = s._currentCooldown ?? 0;
+
+        if (dir > 0) {
+          // gravity: 増やせるものだけ（maxCtに達しているものは対象外）
+          if (maxCt > 0 && cur < maxCt) eligible.push({ s, maxCt, cur });
+        } else {
+          // float: 減らせるものだけ（0のものは対象外）
+          if (cur > 0) eligible.push({ s, maxCt, cur });
+        }
+
+      }
+
+      if (eligible.length === 0) {
+
+  ctx.log.push({
+    type: "cooldownLimit",
+    unit: unit.id
+  });
+
+  break;
+}
+
+      const pick = eligible[Math.floor(Math.random() * eligible.length)];
+      const s = pick.s;
+
+      const maxCt = pick.maxCt ?? 0;
+      const cur = s._currentCooldown ?? 0;
+
+let newCt;
+
+if (dir > 0) {
+  newCt = Math.min(cur + 1, maxCt);
+} else {
+  newCt = Math.max(cur - 1, 0);
+}
+
+s._currentCooldown = newCt;
+
+ctx.log.push({
+  type: "cooldownChange",
+  unit: unit.id,
+  skill: s.type,
+  delta: dir
+});
+
+    }
+
+  }
+
+  // 全消費（削除）
+  if (gravityStock > 0 || floatStock > 0) {
+    unit.effects = unit.effects.filter(e => e.type !== "gravity" && e.type !== "float");
+  }
+  
   const mhp = unit.mhp ?? unit.hp;
 
   for (let e of unit.effects) {
