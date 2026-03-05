@@ -92,10 +92,10 @@ if (cls) {
     }
   }
 
-else if (event.type === "attack") {
+else if (event.type === "damage") {
 
   const unitState =
-    boardState.units[event.to];
+    boardState.units[event.target];
 
   if (unitState) {
     highlightCell(
@@ -106,7 +106,7 @@ else if (event.type === "attack") {
     );
 
     const img = document.querySelector(
-      `[data-unit-id="${event.to}"] .unitImage`
+      `[data-unit-id="${event.target}"] .unitImage`
     );
 
     if (img) {
@@ -125,13 +125,13 @@ else if (event.type === "attack") {
 if (event.damageType === "effect") {
 
   div.textContent =
-    `${displayName(event.to, nameMap)} は 侵食 で ${event.amount} ダメージ`;
+    `${displayName(event.target, nameMap)} は 侵食 で ${event.amount} ダメージ`;
 
 }
 else {
 
   div.textContent =
-    `${displayName(event.to, nameMap)} に ${event.amount} ダメージ`;
+    `${displayName(event.target, nameMap)} に ${event.amount} ダメージ`;
 
 }
 }
@@ -139,7 +139,7 @@ else {
   else if (event.type === "heal") {
 
     const unitState =
-      boardState.units[event.to];
+      boardState.units[event.target];
 
     if (unitState) {
       highlightCell(
@@ -151,7 +151,7 @@ else {
     }
     
 const img = document.querySelector(
-  `[data-unit-id="${event.to}"] .unitImage`
+  `[data-unit-id="${event.target}"] .unitImage`
 );
 
 if (img) {
@@ -169,13 +169,13 @@ if (img) {
 if (event.healType === "effect") {
 
   div.textContent =
-    `${displayName(event.to, nameMap)} は 修復 でHPが ${event.amount} 回復`;
+    `${displayName(event.target, nameMap)} は 修復 でHPが ${event.amount} 回復`;
 
 }
 else {
 
   div.textContent =
-    `${displayName(event.to, nameMap)} のHPが ${event.amount} 回復`;
+    `${displayName(event.target, nameMap)} のHPが ${event.amount} 回復`;
 
 }
   }
@@ -184,7 +184,7 @@ else if (event.type === "effectApplied") {
   const e = event.effect;
 
   const unitState =
-    boardState.units[event.to];
+    boardState.units[event.target];
 
   let isBuff = true;
   let text = "";
@@ -202,7 +202,7 @@ else if (event.type === "effectApplied") {
         : "修復";
 
     div.textContent =
-      `${displayName(event.to, nameMap)} に ${text} が付与された`;
+      `${displayName(event.target, nameMap)} に ${text} が付与された`;
   }
 
   // ==========================
@@ -216,7 +216,7 @@ else if (event.type === "effectApplied") {
       e.value >= 0 ? "+" : "";
 
     div.textContent =
-      `${displayName(event.to, nameMap)} の ${e.stat} ${sign}${e.value}`;
+      `${displayName(event.target, nameMap)} の ${e.stat} ${sign}${e.value}`;
   }
 
   if (unitState) {
@@ -233,7 +233,7 @@ else if (event.type === "effectApplied") {
   }
 
   const img = document.querySelector(
-    `[data-unit-id="${event.to}"] .unitImage`
+    `[data-unit-id="${event.target}"] .unitImage`
   );
 
   if (img) {
