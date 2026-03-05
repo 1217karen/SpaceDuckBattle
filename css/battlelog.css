@@ -83,6 +83,7 @@
   align-items: center;
   gap: 6px;
 }
+
 .nameBlock {
   display: flex;
   flex-direction: column;
@@ -107,6 +108,7 @@
 .effectList {
   display: flex;
   gap: 3px;
+  color: #aee0ff;
 }
 
 .unitName {
