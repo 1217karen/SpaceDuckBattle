@@ -306,12 +306,14 @@ else {
     void img.offsetWidth;
     img.classList.add(cls);
 
-    img.addEventListener("animationend", () => {
-      img.classList.remove(cls);
-    }, { once: true });
+img.addEventListener("animationend", () => {
+  img.classList.remove(cls);
+}, { once: true });
 
-  }
-  
+}
+
+}
+
 else if (event.type === "death") {
 
   removeUnit("board", event.unit);
