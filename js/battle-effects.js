@@ -118,7 +118,7 @@ if (!effectData.group) {
       type: "effectApplied",
   source: source.id,
   target: target.id,
-  effect: existing
+  effect: newEffect
     });
 
     return;
@@ -154,7 +154,7 @@ if (!effectData.group) {
       type: "effectApplied",
   source: source.id,
   target: target.id,
-  effect: existing
+  effect: newEffect
     });
 
     return;
@@ -188,7 +188,7 @@ if (!effectData.group) {
       type: "effectApplied",
   source: source.id,
   target: target.id,
-  effect: existing
+  effect: newEffect
     });
 
     return;
