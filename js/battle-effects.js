@@ -97,20 +97,24 @@ if (!effectData.group) {
 
     if (existing) {
 
-      existing.stock = Math.min(
-        (existing.stock ?? 0) + (effectData.stock ?? 1),
-        MAX_STACK
-      );
+const addAmount = effectData.stock ?? 1;
 
-      existing.group = effectData.group;
+existing.stock = Math.min(
+  (existing.stock ?? 0) + addAmount,
+  MAX_STACK
+);
 
-      ctx.log.push({
-        type: "effectApplied",
-        source: source.id,
-        target: target.id,
-        effect: { ...existing }
-      });
+existing.group = effectData.group;
 
+ctx.log.push({
+  type: "effectApplied",
+  source: source.id,
+  target: target.id,
+  effect: {
+    ...existing,
+    delta: addAmount
+  }
+});
       return;
     }
 
@@ -122,12 +126,15 @@ if (!effectData.group) {
 
     target.effects.push(newEffect);
 
-    ctx.log.push({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: { ...newEffect }
-    });
+ctx.log.push({
+  type: "effectApplied",
+  source: source.id,
+  target: target.id,
+  effect: {
+    ...newEffect,
+    delta: newEffect.stock
+  }
+});
 
     return;
   }
@@ -162,12 +169,15 @@ if (!effectData.group) {
 
       existing.group = effectData.group;
 
-      ctx.log.push({
-        type: "effectApplied",
-        source: source.id,
-        target: target.id,
-        effect: { ...existing }
-      });
+ctx.log.push({
+  type: "effectApplied",
+  source: source.id,
+  target: target.id,
+  effect: {
+    ...existing,
+    delta: incomingStock
+  }
+});
 
       return;
     }
@@ -180,12 +190,15 @@ if (!effectData.group) {
 
     target.effects.push(newEffect);
 
-    ctx.log.push({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: { ...newEffect }
-    });
+ctx.log.push({
+  type: "effectApplied",
+  source: source.id,
+  target: target.id,
+  effect: {
+    ...newEffect,
+    delta: newEffect.stock
+  }
+});
 
     return;
   }
