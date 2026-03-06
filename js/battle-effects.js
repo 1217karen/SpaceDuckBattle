@@ -421,7 +421,7 @@ const amount =
       ctx.log.push({
         type: "attack",
         from: null,
-        to: unit.id,
+        target: unit.id,
         amount: amount,
         damageType: "effect"
       });
@@ -440,7 +440,7 @@ if (unit.hp <= 0) {
       ctx.log.push({
         type: "heal",
         from: null,
-        to: unit.id,
+        target: unit.id,
         amount: amount,
         healType: "effect"
       });
