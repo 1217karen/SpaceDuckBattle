@@ -342,7 +342,7 @@ const name =
   // stock型
   // ==========================
 
-  if (STOCK_TYPES.has(e.type)) {
+  if (EFFECTS[e.type]?.stack === "stock") {
 
     const n = e.stock ?? 1;
 
@@ -359,7 +359,7 @@ text =
   // 上書き型
   // ==========================
 
-  else if (OVERWRITE_TYPES.has(e.type)) {
+  else if (EFFECTS[e.type]?.stack === "overwrite") {
 
     const n = e.stock ?? 1;
 
