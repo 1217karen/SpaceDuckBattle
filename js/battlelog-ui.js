@@ -48,14 +48,15 @@ const mapping = [
   ["float",0],
   ["accel",1],
   ["diffuse",2],
-  ["resonance",3],
-  ["repair",4],
+  ["repair",3],
+  ["resonance",4],
   ["satellite",5],
+
   ["gravity",6],
   ["slow",7],
-  ["converge",8],
-  ["interference",9],
-  ["corrosion",10],
+  ["interference",8],
+  ["corrosion",9],
+  ["converge",10],
   ["meteor",11]
 ];
 
