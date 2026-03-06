@@ -210,18 +210,18 @@ if (snapshot) {
     <div class="effectList">
 
 <div class="effectItem"><span class="effectIcon">重</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">浮</span><span class="effectCount">0</span></div>
-<div class="effectItem"><span class="effectIcon">加</span><span class="effectCount">0</span></div>
+<div class="effectItem"><span class="effectIcon">浮</span><span class="effectCount">00</span></div>
+<div class="effectItem"><span class="effectIcon">加</span><span class="effectCount">00</span></div>
 <div class="effectItem"><span class="effectIcon">減</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">拡</span><span class="effectCount">0</span></div>
-<div class="effectItem"><span class="effectIcon">収</span><span class="effectCount">0</span></div>
+<div class="effectItem"><span class="effectIcon">拡</span><span class="effectCount">00</span></div>
+<div class="effectItem"><span class="effectIcon">収</span><span class="effectCount">00</span></div>
 
 <div class="effectItem"><span class="effectIcon">共</span><span class="effectCount">00</span></div>
 <div class="effectItem"><span class="effectIcon">妨</span><span class="effectCount">00</span></div>
 <div class="effectItem"><span class="effectIcon">修</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">侵</span><span class="effectCount">0</span></div>
-<div class="effectItem"><span class="effectIcon">星</span><span class="effectCount">0</span></div>
-<div class="effectItem"><span class="effectIcon">流</span><span class="effectCount">0</span></div>
+<div class="effectItem"><span class="effectIcon">侵</span><span class="effectCount">00</span></div>
+<div class="effectItem"><span class="effectIcon">星</span><span class="effectCount">00</span></div>
+<div class="effectItem"><span class="effectIcon">流</span><span class="effectCount">00</span></div>
 
 </div>
   </div>
