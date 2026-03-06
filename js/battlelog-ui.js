@@ -11,6 +11,76 @@ function displayName(id, nameMap) {
   return nameMap?.[id] || id;
 }
 
+function updateUnitEffectUI(unitId, boardState) {
+
+  const unit = boardState.units[unitId];
+  if (!unit) return;
+
+  const container =
+    document.querySelector(`.unitStatus[data-unit="${unitId}"]`);
+
+  if (!container) return;
+
+  const counts = {
+    gravity:0,
+    float:0,
+    accel:0,
+    slow:0,
+    diffuse:0,
+    converge:0,
+    resonance:0,
+    interference:0,
+    repair:0,
+    corrosion:0,
+    satellite:0,
+    meteor:0
+  };
+
+  for (const e of (unit.effects || [])) {
+
+    if (counts.hasOwnProperty(e.type)) {
+
+      counts[e.type] =
+        e.stock ?? 1;
+
+    }
+
+  }
+
+  const mapping = [
+    ["gravity",0],
+    ["float",1],
+    ["accel",2],
+    ["slow",3],
+    ["diffuse",4],
+    ["converge",5],
+    ["resonance",6],
+    ["interference",7],
+    ["repair",8],
+    ["corrosion",9],
+    ["satellite",10],
+    ["meteor",11]
+  ];
+
+  const items =
+    container.querySelectorAll(".effectItem");
+
+  for (const [type,index] of mapping) {
+
+    const el =
+      items[index]?.querySelector(".effectCount");
+
+    if (!el) continue;
+
+    const v = counts[type] ?? 0;
+
+    el.textContent =
+      String(v).padStart(2,"0");
+
+  }
+
+}
+
 export function playLogEvent(
   event,
   boardState,
@@ -185,6 +255,23 @@ else if (event.type === "effectDecay") {
 
   const e = event.effect;
 
+  if (boardState.units[event.unit]) {
+
+  const unit = boardState.units[event.unit];
+
+  const existing =
+    unit.effects.find(x => x.type === e.type);
+
+  if (existing) {
+
+    existing.stock = e.stock;
+
+  }
+
+  updateUnitEffectUI(event.unit, boardState);
+
+}
+
   const effectNames = {
     corrosion: "侵食",
     repair: "修復",
@@ -225,6 +312,17 @@ else if (event.type === "effectDecay") {
 
   const e = event.effect;
 
+if (boardState.units[event.unit]) {
+
+  const unit = boardState.units[event.unit];
+
+  unit.effects =
+    unit.effects.filter(x => x.type !== e.type);
+
+  updateUnitEffectUI(event.unit, boardState);
+
+}
+    
   const effectNames = {
     corrosion: "侵食",
     repair: "修復",
@@ -392,6 +490,33 @@ img.addEventListener("animationend", () => {
 }, { once: true });
 
 }
+
+  if (boardState.units[event.target]) {
+
+  const unit = boardState.units[event.target];
+
+  unit.effects = unit.effects || [];
+
+  const existing =
+    unit.effects.find(e => e.type === event.effect.type);
+
+  if (existing) {
+
+    existing.stock =
+      event.effect.stock ?? existing.stock ?? 1;
+
+  }
+
+  else {
+
+    unit.effects.push({
+      type:event.effect.type,
+      stock:event.effect.stock ?? 1
+    });
+
+  }
+
+  updateUnitEffectUI(event.target, boardState);
 
 }
 
