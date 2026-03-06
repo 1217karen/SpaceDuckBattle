@@ -47,11 +47,10 @@ function updateUnitEffectUI(unitId, boardState) {
 const mapping = [
   ["float",0],
   ["accel",1],
-  ["diffuse",2],
+  ["resonance",2],
   ["repair",3],
-  ["resonance",4],
+  ["diffuse",4],
   ["satellite",5],
-
   ["gravity",6],
   ["slow",7],
   ["interference",8],
