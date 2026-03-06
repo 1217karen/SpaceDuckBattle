@@ -318,8 +318,8 @@ else if (event.type === "effectApplied") {
       e.type === "repair" ||
       e.type === "resonance";
 
-    text =
-      `${displayName(event.target, nameMap)} に ${name} を ${n} 追加`;
+text =
+  `${displayName(event.target, nameMap)} に ${name} を ${event.effect.delta ?? n} 付与 (${n})`;
 
   }
 
