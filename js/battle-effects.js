@@ -419,7 +419,7 @@ const amount =
       unit.hp -= amount;
 
       ctx.log.push({
-        type: "attack",
+        type: "damage",
         from: null,
         target: unit.id,
         amount: amount,
