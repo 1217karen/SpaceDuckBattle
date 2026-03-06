@@ -180,6 +180,87 @@ else {
 
 }
   }
+
+else if (event.type === "effectDecay") {
+
+  const e = event.effect;
+
+  const effectNames = {
+    corrosion: "侵食",
+    repair: "修復",
+    resonance: "共振",
+    interference: "妨害",
+    slow: "減速",
+    accel: "加速",
+    gravity: "重力",
+    float: "浮力",
+    diffuse: "拡散",
+    converge: "収束",
+    meteor: "流星",
+    satellite: "衛星"
+  };
+
+  const name =
+    effectNames[e.type] || e.type;
+
+  const unitState = boardState.units[event.unit];
+
+  div.textContent =
+    `${displayName(event.unit, nameMap)} の ${name} が 1 減衰 (${e.stock})`;
+
+  if (unitState) {
+
+    highlightCell(
+      "board",
+      unitState.x,
+      unitState.y,
+      "debuffHighlight"
+    );
+
+  }
+
+}
+
+  else if (event.type === "effectRemoved") {
+
+  const e = event.effect;
+
+  const effectNames = {
+    corrosion: "侵食",
+    repair: "修復",
+    resonance: "共振",
+    interference: "妨害",
+    slow: "減速",
+    accel: "加速",
+    gravity: "重力",
+    float: "浮力",
+    diffuse: "拡散",
+    converge: "収束",
+    meteor: "流星",
+    satellite: "衛星"
+  };
+
+  const name =
+    effectNames[e.type] || e.type;
+
+  const unitState = boardState.units[event.unit];
+
+  div.textContent =
+    `${displayName(event.unit, nameMap)} の ${name} が全て解除された`;
+
+  if (unitState) {
+
+    highlightCell(
+      "board",
+      unitState.x,
+      unitState.y,
+      "debuffHighlight"
+    );
+
+  }
+
+}
+    
 else if (event.type === "effectApplied") {
 
   const e = event.effect;
