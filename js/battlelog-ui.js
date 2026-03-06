@@ -455,8 +455,6 @@ img.addEventListener("animationend", () => {
 }
   
 
-}
-
 else if (event.type === "death") {
 
   removeUnit("board", event.unit);
