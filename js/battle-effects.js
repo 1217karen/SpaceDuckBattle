@@ -507,8 +507,6 @@ export function processAfterAction(unit, ctx) {
 
     e.stock--;
 
-    e.stock--;
-
 if (e.stock > 0) {
 
   ctx.log.push({
