@@ -358,7 +358,7 @@ text =
 
 else {
 
-  const amount = Math.abs(e.value);
+  const amount = Math.round(Math.abs(e.value));
 
   const word =
     e.value >= 0 ? "増加" : "減少";
