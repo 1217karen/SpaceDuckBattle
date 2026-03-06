@@ -424,34 +424,36 @@ img.addEventListener("animationend", () => {
 }, { once: true });
 
 }
+    if (boardState.units[event.target]) {
+
+    const unit = boardState.units[event.target];
+
+    unit.effects = unit.effects || [];
+
+    const existing =
+      unit.effects.find(e => e.type === event.effect.type);
+
+    if (existing) {
+
+      existing.stock =
+        event.effect.stock ?? existing.stock ?? 1;
+
+    }
+
+    else {
+
+      unit.effects.push({
+        type:event.effect.type,
+        stock:event.effect.stock ?? 1
+      });
+
+    }
+
+    updateUnitEffectUI(event.target, boardState);
+
+  }
 }
   
-  if (boardState.units[event.target]) {
-
-  const unit = boardState.units[event.target];
-
-  unit.effects = unit.effects || [];
-
-  const existing =
-    unit.effects.find(e => e.type === event.effect.type);
-
-  if (existing) {
-
-    existing.stock =
-      event.effect.stock ?? existing.stock ?? 1;
-
-  }
-
-  else {
-
-    unit.effects.push({
-      type:event.effect.type,
-      stock:event.effect.stock ?? 1
-    });
-
-  }
-
-  updateUnitEffectUI(event.target, boardState);
 
 }
 
