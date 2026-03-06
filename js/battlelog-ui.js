@@ -338,24 +338,6 @@ const name =
   let text = "";
   let isBuff = true;
 
-  const STOCK_TYPES = new Set([
-    "corrosion",
-    "repair",
-    "resonance",
-    "interference"
-  ]);
-
-  const OVERWRITE_TYPES = new Set([
-    "slow",
-    "accel",
-    "gravity",
-    "float",
-    "diffuse",
-    "converge",
-    "meteor",
-    "satellite"
-  ]);
-
   // ==========================
   // stock型
   // ==========================
@@ -441,6 +423,7 @@ img.addEventListener("animationend", () => {
   img.classList.remove(cls);
 }, { once: true });
 
+}
 }
 
   if (boardState.units[event.target]) {
