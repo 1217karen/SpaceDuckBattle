@@ -1,5 +1,7 @@
 // battle-effects.js
 
+import { EFFECTS } from "./effects-config.js";
+
 export function getEffectiveStat(unit, statName) {
 
   const base = unit[statName] || 0;
@@ -35,29 +37,6 @@ const CORROSION_RATE = 0.0025;
 const MAX_STACK = 100;
 const EFFECT_CAP = 25;
 
-// ========================================
-// 状態変化グループ
-// ========================================
-
-const BUFF_TYPES = new Set([
-  "repair",
-  "resonance",
-  "accel",
-  "float",
-  "converge",
-  "satellite"
-]);
-
-const DEBUFF_TYPES = new Set([
-  "corrosion",
-  "interference",
-  "slow",
-  "gravity",
-  "diffuse",
-  "meteor"
-]);
-
-
 export function applyEffect(source, target, action, ctx) {
 
   const effectData = action.effect;
@@ -69,12 +48,10 @@ export function applyEffect(source, target, action, ctx) {
 
 if (!effectData.group) {
 
-  if (BUFF_TYPES.has(effectData.type)) {
-    effectData.group = "buff";
-  }
+  const def = EFFECTS[effectData.type];
 
-  else if (DEBUFF_TYPES.has(effectData.type)) {
-    effectData.group = "debuff";
+  if (def?.group) {
+    effectData.group = def.group;
   }
 
 }
@@ -83,14 +60,9 @@ if (!effectData.group) {
     target.effects = [];
   }
 
-  // === stock型（corrosion / repair / resonance / interference）===
+  // === stock型===
   // ・stockは加算（上限あり）
-  if (
-    effectData.type === "corrosion" ||
-    effectData.type === "repair" ||
-    effectData.type === "resonance" ||
-    effectData.type === "interference"
-  ) {
+if (EFFECTS[effectData.type]?.stack === "stock") {
 
     const existing =
       target.effects.find(e => e.type === effectData.type);
@@ -139,18 +111,9 @@ ctx.log.push({
     return;
   }
 
-  // === 上書き型（gravity / float / slow / accel / diffuse / converge / meteor / satellite）===
+  // === 上書き型===
   // ・stockは加算しない（強い方に上書き）
-  if (
-    effectData.type === "gravity" ||
-    effectData.type === "float" ||
-    effectData.type === "slow" ||
-    effectData.type === "accel" ||
-    effectData.type === "diffuse" ||
-    effectData.type === "converge" ||
-    effectData.type === "meteor" ||
-    effectData.type === "satellite"
-  ) {
+if (EFFECTS[effectData.type]?.stack === "overwrite") {
 
     const incomingStock =
       Math.min(effectData.stock ?? 1, MAX_STACK);
