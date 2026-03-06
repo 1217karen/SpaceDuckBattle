@@ -193,7 +193,7 @@ else if (event.type === "damage") {
 if (event.damageType === "effect") {
 
   div.textContent =
-    `${displayName(event.target, nameMap)} は 侵食 で ${event.amount} ダメージ`;
+    `侵食 で ${event.amount} ダメージ`;
 
 }
 else {
@@ -237,7 +237,7 @@ if (img) {
 if (event.healType === "effect") {
 
   div.textContent =
-    `${displayName(event.target, nameMap)} は 修復 でHPが ${event.amount} 回復`;
+    `修復 の効果でHPが ${event.amount} 回復`;
 
 }
 else {
@@ -275,7 +275,7 @@ const name =
   const unitState = boardState.units[event.unit];
 
   div.textContent =
-    `${displayName(event.unit, nameMap)} の ${name} が 1 減衰 (${e.stock})`;
+    `${name} が 1 減衰 (${e.stock})`;
 
 }
 
@@ -440,7 +440,7 @@ else if (event.type === "death") {
   delete boardState.units[event.unit];
 
   div.textContent =
-    `${displayName(event.unit, nameMap)} が倒れた`;
+    `${displayName(event.unit, nameMap)} は戦線を離脱した`;
 }
 
 else if (event.type === "move") {
@@ -468,33 +468,37 @@ else if (event.type === "move") {
 
 else if (event.type === "mobilityChange") {
 
+  const amount = Math.abs(event.delta);
+
   if (event.delta < 0) {
     div.textContent =
-      `${displayName(event.unit, nameMap)} は 減速 で機動力低下`;
+      `減速 で 機動力 が ${amount} 減少`;
   }
 
   else if (event.delta > 0) {
     div.textContent =
-      `${displayName(event.unit, nameMap)} は 加速 で機動力上昇`;
+      `加速 で 機動力 が ${amount} 増加`;
   }
 
 }
 
-  else if (event.type === "cooldownChange") {
+else if (event.type === "cooldownChange") {
 
   const text =
     event.delta > 0
-      ? "クールタイムが 1 増加"
-      : "クールタイムが 1 減少";
+      ? "CT が 1 増加"
+      : "CT が 1 減少";
+
+  const cause =
+    event.delta > 0 ? "重力" : "浮力";
 
   div.textContent =
-    `${displayName(event.unit, nameMap)} の ${event.skill} の ${text}`;
+    `${cause} で ${event.skill} の ${text}`;
 }
-
 else if (event.type === "cooldownLimit") {
 
   div.textContent =
-    `${displayName(event.unit, nameMap)} のクールタイムはこれ以上変化しない`;
+    `CT はこれ以上変化しない……`;
 }
     
 else if (event.type === "wait") {
