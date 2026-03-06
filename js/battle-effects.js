@@ -482,7 +482,7 @@ if (unit.hp <= 0) {
 }
 
 
-export function processAfterAction(unit) {
+export function processAfterAction(unit, ctx) {
 
   if (!unit.effects) return;
 
@@ -494,10 +494,33 @@ export function processAfterAction(unit) {
 
     e.stock--;
 
-    if (e.stock <= 0) {
-      unit.effects.splice(i, 1);
-    }
+    e.stock--;
 
+if (e.stock > 0) {
+
+  ctx.log.push({
+    type: "effectDecay",
+    unit: unit.id,
+    effect: {
+      type: e.type,
+      stock: e.stock
+    }
+  });
+
+}
+
+if (e.stock <= 0) {
+
+  ctx.log.push({
+    type: "effectRemoved",
+    unit: unit.id,
+    effect: {
+      type: e.type
+    }
+  });
+
+  unit.effects.splice(i, 1);
+}
   }
 
 }
