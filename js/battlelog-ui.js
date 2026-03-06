@@ -277,17 +277,6 @@ const name =
   div.textContent =
     `${displayName(event.unit, nameMap)} の ${name} が 1 減衰 (${e.stock})`;
 
-  if (unitState) {
-
-    highlightCell(
-      "board",
-      unitState.x,
-      unitState.y,
-      "debuffHighlight"
-    );
-
-  }
-
 }
 
   else if (event.type === "effectRemoved") {
@@ -312,17 +301,6 @@ const name =
 
   div.textContent =
     `${displayName(event.unit, nameMap)} の ${name} が全て解除された`;
-
-  if (unitState) {
-
-    highlightCell(
-      "board",
-      unitState.x,
-      unitState.y,
-      "debuffHighlight"
-    );
-
-  }
 
 }
     
