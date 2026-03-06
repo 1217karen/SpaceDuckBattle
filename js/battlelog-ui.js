@@ -7,6 +7,21 @@ import {
   removeUnit
 } from "./board.js";
 
+const EFFECT_NAMES = {
+  corrosion: "侵食",
+  repair: "修復",
+  resonance: "共振",
+  interference: "妨害",
+  slow: "減速",
+  accel: "加速",
+  gravity: "重力",
+  float: "浮力",
+  diffuse: "拡散",
+  converge: "収束",
+  meteor: "流星",
+  satellite: "衛星"
+};
+
 function displayName(id, nameMap) {
   return nameMap?.[id] || id;
 }
@@ -272,23 +287,9 @@ else if (event.type === "effectDecay") {
 
 }
 
-  const effectNames = {
-    corrosion: "侵食",
-    repair: "修復",
-    resonance: "共振",
-    interference: "妨害",
-    slow: "減速",
-    accel: "加速",
-    gravity: "重力",
-    float: "浮力",
-    diffuse: "拡散",
-    converge: "収束",
-    meteor: "流星",
-    satellite: "衛星"
-  };
 
-  const name =
-    effectNames[e.type] || e.type;
+const name =
+  EFFECT_NAMES[e.type] || e.type;
 
   const unitState = boardState.units[event.unit];
 
@@ -322,24 +323,9 @@ if (boardState.units[event.unit]) {
   updateUnitEffectUI(event.unit, boardState);
 
 }
-    
-  const effectNames = {
-    corrosion: "侵食",
-    repair: "修復",
-    resonance: "共振",
-    interference: "妨害",
-    slow: "減速",
-    accel: "加速",
-    gravity: "重力",
-    float: "浮力",
-    diffuse: "拡散",
-    converge: "収束",
-    meteor: "流星",
-    satellite: "衛星"
-  };
 
-  const name =
-    effectNames[e.type] || e.type;
+const name =
+  EFFECT_NAMES[e.type] || e.type;
 
   const unitState = boardState.units[event.unit];
 
@@ -365,23 +351,8 @@ else if (event.type === "effectApplied") {
   
   const unitState = boardState.units[event.target];
 
-  const effectNames = {
-    corrosion: "侵食",
-    repair: "修復",
-    resonance: "共振",
-    interference: "妨害",
-    slow: "減速",
-    accel: "加速",
-    gravity: "重力",
-    float: "浮力",
-    diffuse: "拡散",
-    converge: "収束",
-    meteor: "流星",
-    satellite: "衛星"
-  };
-
-  const name =
-    effectNames[e.type] || e.type;
+const name =
+  EFFECT_NAMES[e.type] || e.type;
 
   let text = "";
   let isBuff = true;
