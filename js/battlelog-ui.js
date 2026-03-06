@@ -424,7 +424,8 @@ img.addEventListener("animationend", () => {
 }, { once: true });
 
 }
-
+}
+  
   if (boardState.units[event.target]) {
 
   const unit = boardState.units[event.target];
