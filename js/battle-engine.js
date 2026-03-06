@@ -227,7 +227,7 @@ if (unit.effects) {
 }
        
        
-  processAfterAction(unit);
+  processAfterAction(unit, context);
   log.push({
     type: "actionEnd",
     unit: unit.id
