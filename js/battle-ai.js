@@ -275,21 +275,31 @@ else if (role === "speed") {
   moveCount = 2;
 }
 
-  else if (role === "technical") {
+else if (role === "technical") {
 
-    targetUnit =
-      getNearestEnemy(unit, units, getDistance, getEnemies);
+  targetUnit =
+    getNearestEnemy(unit, units, getDistance, getEnemies);
 
-    if (targetUnit) {
+  if (targetUnit) {
 
-      const dist = getDistance(unit, targetUnit);
+    const dist = getDistance(unit, targetUnit);
 
-      if (dist > 2) moveMode = "toward";
-      else if (dist < 2) moveMode = "away";
-      else stopDistance = 2;
-
+    if (dist > 2) {
+      moveMode = "toward";
+      stopDistance = 2;
     }
+
+    else if (dist < 2) {
+      moveMode = "away";
+      stopDistance = -1;
+    }
+
+    else {
+      targetUnit = null;
+    }
+
   }
+}
 
 else if (role === "heal") {
 
