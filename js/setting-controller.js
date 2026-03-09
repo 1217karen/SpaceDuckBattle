@@ -18,6 +18,77 @@ for (const select of selects) {
     select.appendChild(option);
   }
 }
+
+loadDuck();
+
+function loadDuck(){
+
+  const data =
+    localStorage.getItem("duck");
+
+  if (!data) return;
+
+  const duck =
+    JSON.parse(data);
+
+  document.getElementById("duckName").value =
+    duck.name ?? "";
+
+  document.getElementById("duckType").value =
+    duck.type ?? "attack";
+
+  document.getElementById("iconMain").value =
+    duck.icon?.main ?? "";
+
+  document.getElementById("iconN").value =
+    duck.icon?.N ?? "";
+
+  document.getElementById("iconE").value =
+    duck.icon?.E ?? "";
+
+  document.getElementById("iconS").value =
+    duck.icon?.S ?? "";
+
+  document.getElementById("iconW").value =
+    duck.icon?.W ?? "";
+
+  document.getElementById("statAT").value =
+    duck.stats?.atk ?? 0;
+
+  document.getElementById("statDF").value =
+    duck.stats?.df ?? 0;
+
+  document.getElementById("statHEAL").value =
+    duck.stats?.heal ?? 0;
+
+  document.getElementById("statSPEED").value =
+    duck.stats?.speed ?? 0;
+
+  document.getElementById("statCRI").value =
+    duck.stats?.cri ?? 0;
+
+  document.getElementById("statINT").value =
+    duck.stats?.int ?? 0;
+
+  const selects =
+    document.querySelectorAll(".skillSelect");
+
+  if (duck.skills){
+
+    duck.skills.forEach((skill, i) => {
+
+      if (selects[i]) {
+        selects[i].value = skill;
+      }
+
+    });
+
+  }
+
+}
+
+
+
 const saveBtn =
   document.getElementById("saveDuck");
 
