@@ -92,15 +92,10 @@
 }
 
 .unitName {
-  font-size: clamp(8px, 1vw, 13px);
-  font-weight: bold;
-  color: #aee0ff;
-  letter-spacing: 0.5px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-}
+   font-size: 13px;
+   font-weight:
+   bold; color: #aee0ff;
+   letter-spacing: 0.5px; }
 
 .nameDivider {
   height: 1px;
