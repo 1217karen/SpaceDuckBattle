@@ -200,7 +200,11 @@ if (snapshot) {
     div.className = "unitStatus";
     div.dataset.unit = u.id;
 
-    div.innerHTML = `
+div.innerHTML = `
+<div class="unitRow">
+
+<div class="unitMain">
+
 <div class="unitHeader">
   <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
 
@@ -227,6 +231,7 @@ if (snapshot) {
   </div>
 
 </div>
+
 <div class="hpRow">
 
   <div class="hpText">
@@ -238,7 +243,24 @@ if (snapshot) {
   </div>
 
 </div>
-    `;
+
+</div>
+
+<div class="skillSlots">
+
+<div class="skillSlot"></div>
+<div class="skillSlot"></div>
+
+<div class="skillSlot"></div>
+<div class="skillSlot"></div>
+
+<div class="skillSlot"></div>
+<div class="skillSlot"></div>
+
+</div>
+
+</div>
+`;
 
     leftSide.appendChild(div);
 
