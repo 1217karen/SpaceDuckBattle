@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Battle Rulebook</title>
+  <style>
+    :root {
+      --bg: #0f1220;
+      --panel: #171b2e;
+      --panel2: #1f2540;
+      --text: #eef2ff;
+      --muted: #aab3d6;
+      --line: #313a63;
+      --accent: #8fb4ff;
+      --good: #8ee3b3;
+      --bad: #ff9b9b;
+      --warn: #ffd38a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b0f1b 0%, #12172a 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    .wrap {
+      width: min(1040px, calc(100% - 32px));
+      margin: 32px auto 64px;
+    }
+    h1, h2, h3 { line-height: 1.25; margin: 0 0 12px; }
+    h1 {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+    .lead {
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+    .note {
+      background: rgba(255, 211, 138, 0.08);
+      border: 1px solid rgba(255, 211, 138, 0.24);
+      color: #ffe5b7;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .card {
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 18px 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+    .section {
+      margin-top: 26px;
+    }
+    .section > .card {
+      margin-top: 12px;
+    }
+    ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+    }
+    li + li { margin-top: 6px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--accent);
+      font-weight: 700;
+      background: rgba(255,255,255,0.02);
+    }
+    tr:last-child td { border-bottom: none; }
+    .mini {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--accent);
+      margin-right: 6px;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Battle Rulebook</h1>
+    <p class="lead">提示された戦闘コードをもとに整理した、戦闘仕様の仮ルールブックです。遊び方ではなく、処理仕様・数値ルール・行動傾向を短く確認できる形にまとめています。</p>
+
+    <div class="note">
+      このページはコードベースの暫定仕様書です。スキル個別仕様（<code>skills.js</code>）や盤面 UI 側の見た目は含めず、今回共有されたロジックから確認できる範囲のみを記載しています。
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>戦闘の基本</h2>
+        <ul>
+          <li>盤面の既定サイズは <strong>8 × 6</strong>。</li>
+          <li>距離は基本的に <strong>マンハッタン距離</strong>（縦横のみの合計）を使用。</li>
+          <li>行動順は <strong>speed の高い順で固定</strong>。戦闘中に並び替えは行われません。</li>
+          <li>既定の最大ターン数は <strong>50</strong>。到達時は勝者なしで終了。</li>
+          <li>生存チームが 1 つだけになった時点で戦闘終了。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>各行動の流れ</h2>
+        <ul>
+          <li>行動開始時に <strong>行動前効果</strong> を処理。</li>
+          <li>次に <strong>スキル使用判定</strong>。有効なスキルがあれば通常移動は行わない。</li>
+          <li>スキルが使えない場合のみ、ロール別の <strong>fallback 移動</strong> を行う。</li>
+          <li>行動終了時に <strong>accel / slow を消費</strong>。</li>
+          <li>その後に <strong>行動後効果</strong> を処理。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>移動の共通仕様</h2>
+        <ul>
+          <li>通常移動は <strong>上下左右 1 マス</strong> 単位。斜め移動なし。</li>
+          <li>盤外には移動不可。</li>
+          <li>生存中ユニットがいるマスには移動不可。</li>
+          <li><span class="tag">toward</span> 目標との距離が最も縮む 1 マスを選択。</li>
+          <li><span class="tag">away</span> 目標との距離が最も離れる 1 マスを選択。</li>
+          <li>移動時、実際の移動方向に合わせて向きが更新されます。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>ロール別の fallback 移動</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>role</th>
+              <th>移動傾向</th>
+              <th>移動数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>attack</strong></td>
+              <td>隣接敵がいればその敵を維持。いなければ、1 歩で距離を詰められる最寄り敵を優先して接近。</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td><strong>speed</strong></td>
+              <td>基本方針は attack と同じ。</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td><strong>technical</strong></td>
+              <td>最寄り敵との距離を <strong>2</strong> に保とうとする。遠ければ接近、近ければ離脱、ちょうど 2 なら停止。</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td><strong>heal</strong></td>
+              <td>敵が近距離（距離 2 以下）なら離脱。そうでなければ低 HP 味方へ接近。回復対象がいない場合は敵へ距離 2 を目安に接近。</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td><strong>defense</strong></td>
+              <td>隣接敵がいればその場で前線維持。いなければ、敵に最も近い味方との距離を詰め、十分近ければ敵へ接近。</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td><strong>support</strong></td>
+              <td>敵が近距離なら離脱。そうでなければ敵に最も近い味方の 1 マス後方付近へ寄る。</td>
+              <td>1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>加速・減速と機動力</h2>
+        <ul>
+          <li><strong>accel</strong> と <strong>slow</strong> は行動中の移動数にのみ影響。</li>
+          <li>最終移動数は <code>moveCount + accel - slow</code>。</li>
+          <li>0 以下になった場合、その行動では移動できません。</li>
+          <li>同一行動の終了時に <strong>accel / slow は除去</strong> されます。</li>
+          <li>同種効果が複数ある場合、移動補正にはそれぞれ <strong>最大値のみ</strong> を使います。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>ダメージ計算</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>種別</th>
+              <th>計算式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>normal</strong></td>
+              <td><code>floor(atk × power - df × 0.5)</code>。最低 0。</td>
+            </tr>
+            <tr>
+              <td><strong>pierce</strong></td>
+              <td><code>floor(atk × power)</code>。</td>
+            </tr>
+            <tr>
+              <td><strong>fixed</strong></td>
+              <td><code>power</code> 固定。</td>
+            </tr>
+            <tr>
+              <td><strong>effect</strong></td>
+              <td><code>power</code> 固定。</td>
+            </tr>
+          </tbody>
+        </table>
+        <ul>
+          <li>ステータス参照時は、効果反映後の <strong>有効ステータス</strong> を使います。</li>
+          <li>有効ステータスは <code>round((base + flat合計) × (1 + rate合計))</code>。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>クリティカル</h2>
+        <ul>
+          <li>対象は <strong>normal / pierce ダメージ</strong>。</li>
+          <li>発生率は <code>cri</code> を使用。下限 <strong>1%</strong>、上限 <strong>90%</strong>。</li>
+          <li>発生時の最終ダメージは <strong>1.5 倍</strong>（切り捨て）。</li>
+        </ul>
+        <p class="mini">注: 回復・付与効果まわりにもクリティカル処理らしき記述がありますが、共有コードだけでは実装の整合性を断定できないため、ここでは確実に確認できるものだけを仕様化しています。</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>距離減衰</h2>
+        <ul>
+          <li><code>falloff</code> が有効な攻撃のみ適用。</li>
+          <li>距離計算は <strong>チェビシェフ距離</strong>（縦横斜めの最大差）。</li>
+          <li>距離 1 は減衰なし。</li>
+          <li>距離 2 以上は、<strong>1 マス増えるごとに 20% 減衰</strong>。</li>
+          <li>倍率は <code>1 - (distance - 1) × 0.2</code>。0 未満にはならない。</li>
+        </ul>
+        <table>
+          <thead>
+            <tr><th>距離</th><th>倍率</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>100%</td></tr>
+            <tr><td>2</td><td>80%</td></tr>
+            <tr><td>3</td><td>60%</td></tr>
+            <tr><td>4</td><td>40%</td></tr>
+            <tr><td>5</td><td>20%</td></tr>
+            <tr><td>6 以上</td><td>0% まで低下</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>共振・妨害</h2>
+        <ul>
+          <li><strong>resonance</strong> は与ダメージ・回復量を増加。</li>
+          <li><strong>interference</strong> は与ダメージ・回復量を減少。</li>
+          <li>補正は <code>1 + resonance×0.25% - interference×0.25%</code>。</li>
+          <li>下限は 0。負の倍率にはなりません。</li>
+          <li>適用対象は <strong>normal / pierce ダメージ</strong> と <strong>scale 回復</strong>。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>回復計算</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>種別</th>
+              <th>計算式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>fixed</strong></td>
+              <td><code>power</code> 固定。</td>
+            </tr>
+            <tr>
+              <td><strong>scale</strong></td>
+              <td><code>floor(heal × power)</code> に共振・妨害補正を乗算。</td>
+            </tr>
+          </tbody>
+        </table>
+        <ul>
+          <li>回復後 HP は <code>mhp</code> を超えません。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>状態変化の共通ルール</h2>
+        <ul>
+          <li>状態は大きく <strong>stock 型</strong>、<strong>overwrite 型</strong>、<strong>stat 補正型</strong> に分かれます。</li>
+          <li>stock 型の上限は <strong>100</strong>。</li>
+          <li>overwrite 型は、同種効果がある場合 <strong>より強い stock のみ採用</strong>。</li>
+          <li>ターン制の stat rate 効果は、より強い値なら上書き、同値なら持続延長、弱い値なら一部が持続時間へ変換されます。</li>
+          <li>永続 flat 効果は重ね掛け時に <strong>0.75 の逓減</strong> がかかります。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>個別状態変化</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>効果</th>
+              <th>種別</th>
+              <th>内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>corrosion / 侵食</strong></td>
+              <td>stock</td>
+              <td>行動開始時に自傷ダメージ。1 回の計算に使う有効 stock は最大 25。ダメージは <code>max(floor(mhp × 0.0025 × 有効stock), 1)</code>。行動後に stock が 1 減少。</td>
+            </tr>
+            <tr>
+              <td><strong>repair / 修復</strong></td>
+              <td>stock</td>
+              <td>行動開始時に自動回復。計算式は侵食と同じで、HP を回復。行動後に stock が 1 減少。</td>
+            </tr>
+            <tr>
+              <td><strong>resonance / 共振</strong></td>
+              <td>stock</td>
+              <td>攻撃・回復倍率を上げる。</td>
+            </tr>
+            <tr>
+              <td><strong>interference / 妨害</strong></td>
+              <td>stock</td>
+              <td>攻撃・回復倍率を下げる。</td>
+            </tr>
+            <tr>
+              <td><strong>gravity / 重力</strong></td>
+              <td>overwrite</td>
+              <td>行動開始時、ランダムなスキルの CT を stock 回だけ <strong>+1</strong>。上限に達しているスキルは対象外。処理後に解除。</td>
+            </tr>
+            <tr>
+              <td><strong>float / 浮力</strong></td>
+              <td>overwrite</td>
+              <td>行動開始時、ランダムなスキルの CT を stock 回だけ <strong>-1</strong>。CT 0 のスキルは対象外。処理後に解除。</td>
+            </tr>
+            <tr>
+              <td><strong>slow / 減速</strong></td>
+              <td>overwrite</td>
+              <td>その行動の移動数を減らす。行動終了時に解除。</td>
+            </tr>
+            <tr>
+              <td><strong>accel / 加速</strong></td>
+              <td>overwrite</td>
+              <td>その行動の移動数を増やす。行動終了時に解除。</td>
+            </tr>
+            <tr>
+              <td><strong>meteor / 流星</strong></td>
+              <td>overwrite</td>
+              <td>normal / pierce 被弾時、被ダメージの <strong>20%</strong> を攻撃者へ固定反射。最低 1。発動ごとに stock -1。</td>
+            </tr>
+            <tr>
+              <td><strong>satellite / 衛星</strong></td>
+              <td>overwrite</td>
+              <td>normal / pierce 被弾時、stock 1 につき <strong>5%</strong> 軽減。軽減率上限は 100%。軽減に応じて stock を消費。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>衛星・流星の補足</h2>
+        <ul>
+          <li><strong>衛星</strong> は軽減量を <code>floor(finalDamage × reductionRate)</code> で計算し、最低 1 は軽減。</li>
+          <li>衛星の stock 消費量は <code>ceil(reductionRate / 0.05)</code>。</li>
+          <li><strong>流星</strong> の反射は、攻撃者が生存している場合のみ成立。</li>
+          <li>どちらも対象は <strong>normal / pierce</strong> のみで、fixed / effect には反応しません。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>ターン終了時処理</h2>
+        <ul>
+          <li><strong>timed</strong> かつ <code>duration !== null</code> の効果は、ターン終了ごとに持続時間を 1 減少。</li>
+          <li>持続時間が 0 以下になった効果は除去。</li>
+          <li>全スキルの現在 CT は、ターン終了ごとに <strong>1 減少</strong>。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>距離・範囲判定の補足</h2>
+        <ul>
+          <li>範囲取得では <strong>マンハッタン距離以内</strong> のセルやユニットを参照する処理があります。</li>
+          <li>同一行・同一列の取得処理もあり、スキル側で使用される前提です。</li>
+          <li>ノックバック / プルは、対象と発生源の位置関係から縦横 1 マスを決め、盤外や占有マスなら不発。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h2>未確定扱いにした項目</h2>
+        <ul>
+          <li><code>skills.js</code> が未提示のため、各スキルの射程・対象・個別 power は未記載です。</li>
+          <li>付与効果のクリティカル処理、および一部回復クリティカル処理は、共有コードだけではそのまま仕様化しにくい箇所があるため除外しています。</li>
+          <li>ログ UI には表示文の差異がありますが、このページでは基本的に戦闘ロジック側を優先しています。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
