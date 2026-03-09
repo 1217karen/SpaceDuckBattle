@@ -99,7 +99,7 @@ export function simulateBattle(snapshot) {
   const log = [];
   let battleFinished = false;
 
-  const board = snapshot.board ?? { width: 8, height: 6 };
+  const board = snapshot.board ?? { width: 7, height: 5 };
   const MAX_TURNS = snapshot.maxTurns ?? 50;
 
   // ======================================================
