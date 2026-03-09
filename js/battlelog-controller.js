@@ -62,7 +62,7 @@ function fitUnitName(el){
 
   let size = 13;
 
-  while (el.scrollWidth > el.clientWidth && size > 8){
+  while (el.scrollWidth > el.offsetWidth && size > 8){
     size--;
     el.style.fontSize = size + "px";
   }
