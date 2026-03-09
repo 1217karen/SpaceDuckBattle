@@ -18,6 +18,7 @@
 <script type="module">
 import { simulateBattle } from './js/battle-engine.js';
 import { createTestSnapshot } from "./js/test-data.js";
+import { buildUnitFromDuck } from "./js/unit-builder.js";
 
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
@@ -27,6 +28,28 @@ startBtn.addEventListener("click", () => {
   const stageType = stageSelect.value;
 
   const snapshot = createTestSnapshot(stageType);
+
+  const duckData = localStorage.getItem("duck");
+
+if (duckData) {
+
+  const duck = JSON.parse(duckData);
+
+  const pattern = duck.patterns[0];
+
+  const playerUnit =
+    buildUnitFromDuck(
+      duck,
+      pattern,
+      1,
+      1,
+      2,
+      "E"
+    );
+
+  snapshot.units.push(playerUnit);
+
+}
 
   const log = simulateBattle(snapshot);
 
