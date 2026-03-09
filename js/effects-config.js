@@ -53,13 +53,13 @@ export const EFFECTS = {
   meteor: {
     name: "流星",
     group: "buff",
-    stack: "overwrite"
+    stack: "stock"
   },
 
   satellite: {
     name: "衛星",
     group: "buff",
-    stack: "overwrite"
+    stack: "stock"
   }
 
 };
