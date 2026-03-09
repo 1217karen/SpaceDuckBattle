@@ -197,7 +197,7 @@ width: 100%;
 
 .effectList {
 display: grid;
-grid-template-columns: repeat(6, auto);
+grid-template-columns: repeat(5, auto);
 gap: 2px;
 
 color: #aee0ff;
@@ -366,9 +366,9 @@ pointer-events: none;
 .team1 .face-W { background: linear-gradient(to right, #00ff88 0px, transparent 6px); }
 
 .team2 .face-N { background: linear-gradient(to bottom, #bb55ff 0px, transparent 6px); }
-team2 .face-S { background: linear-gradient(to top, #bb55ff 0px, transparent 6px); }
-team2 .face-E { background: linear-gradient(to left, #bb55ff 0px, transparent 6px); }
-team2 .face-W { background: linear-gradient(to right, #bb55ff 0px, transparent 6px); }
+.team2 .face-S { background: linear-gradient(to top, #bb55ff 0px, transparent 6px); }
+.team2 .face-E { background: linear-gradient(to left, #bb55ff 0px, transparent 6px); }
+.team2 .face-W { background: linear-gradient(to right, #bb55ff 0px, transparent 6px); }
 
 /* =======================================================
 ハイライト / エフェクト
@@ -469,5 +469,3 @@ background-color: rgba(255,255,255,0.15);
 box-shadow: inset 0 0 0px rgba(255,255,255,0);
 }
 }
-
-（機能や値は一切変えていません。並び整理とコメント追加のみです。）
