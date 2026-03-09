@@ -191,6 +191,13 @@ const reflectDamage =
 
         source.hp -= reflectDamage;
 
+ctx.log.push({
+  type: "meteorReflect",
+  source: target.id,
+  target: source.id,
+  amount: reflectDamage
+});
+        
         ctx.log.push({
           type: "damage",
           source: target.id,
@@ -212,14 +219,11 @@ const reflectDamage =
       }
 
       else {
-
-        ctx.log.push({
-          type: "damage",
-          source: target.id,
-          target: null,
-          amount: reflectDamage,
-          damageType: "fixed"
-        });
+        
+ctx.log.push({
+  type: "meteorNoTarget",
+  source: target.id
+});
 
       }
 
