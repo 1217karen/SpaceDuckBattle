@@ -1,5 +1,73 @@
 import { skillHandlers } from "./skills.js";
 
+
+let currentSlot = 0;
+
+const patterns = [
+  { name:"", public:true, skills:["","","","","",""] },
+  { name:"", public:false, skills:["","","","","",""] },
+  { name:"", public:false, skills:["","","","","",""] }
+];
+
+const tabs = document.querySelectorAll(".patternTab");
+
+tabs.forEach(tab => {
+
+  tab.addEventListener("click", () => {
+
+    saveCurrentPattern();
+
+    currentSlot = Number(tab.dataset.slot);
+
+    loadPattern(currentSlot);
+
+  });
+
+});
+
+function loadPattern(slot){
+
+  const p = patterns[slot];
+
+  document.getElementById("patternName").value = p.name;
+
+  const publicCheck =
+    document.getElementById("patternPublic");
+
+  publicCheck.checked = p.public;
+
+  if(slot === 0){
+    publicCheck.disabled = true;
+  }else{
+    publicCheck.disabled = false;
+  }
+
+  const selects =
+    document.querySelectorAll(".skillSelect");
+
+  selects.forEach((s,i)=>{
+    s.value = p.skills[i] ?? "";
+  });
+
+}
+
+function saveCurrentPattern(){
+
+  const p = patterns[currentSlot];
+
+  p.name =
+    document.getElementById("patternName").value;
+
+  p.public =
+    document.getElementById("patternPublic").checked;
+
+  const selects =
+    document.querySelectorAll(".skillSelect");
+
+  p.skills = [...selects].map(s => s.value);
+
+}
+
 const skillList = Object.keys(skillHandlers);
 
 const selects =
@@ -158,6 +226,8 @@ saveBtn.addEventListener("click", () => {
     JSON.stringify(duck)
   );
 
-  alert("アヒルを保存しました");
+  alert("アヒル設定を保存しました");
 
 });
+
+loadPattern(0);
