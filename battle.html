@@ -48,6 +48,42 @@ import { simulateBattle } from './js/battle-engine.js';
 import { createTestSnapshot } from "./js/test-data.js";
 import { buildUnitFromDuck } from "./js/unit-builder.js";
 
+  const boardDiv =
+  document.getElementById("board");
+
+function createBoard(width, height){
+
+  boardDiv.innerHTML = "";
+
+  boardDiv.style.gridTemplateColumns =
+    `repeat(${width}, 50px)`;
+
+  for(let y=0; y<height; y++){
+
+    for(let x=0; x<width; x++){
+
+      const cell =
+        document.createElement("div");
+
+      cell.className = "cell";
+
+      cell.dataset.x = x;
+      cell.dataset.y = y;
+
+      cell.addEventListener("click", () => {
+
+        console.log("clicked", x, y);
+
+      });
+
+      boardDiv.appendChild(cell);
+
+    }
+
+  }
+
+}
+
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
 
@@ -55,6 +91,14 @@ startBtn.addEventListener("click", () => {
 
   const stageType = stageSelect.value;
 
+const stageSnapshot =
+  createTestSnapshot(stageType);
+
+createBoard(
+  stageSnapshot.board.width,
+  stageSnapshot.board.height
+);
+  
   const snapshot = createTestSnapshot(stageType);
 
   const duckData = localStorage.getItem("duck");
@@ -99,6 +143,14 @@ Object.keys(localStorage).forEach(k => {
 
   window.location.href = `battlelog.html?id=${battleID}`;
 });
+
+  const firstStage =
+  createTestSnapshot(stageSelect.value);
+
+createBoard(
+  firstStage.board.width,
+  firstStage.board.height
+);
 </script>
 
 </body>
