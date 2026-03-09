@@ -90,14 +90,6 @@ const stageSelect = document.getElementById("stageSelect");
 startBtn.addEventListener("click", () => {
 
   const stageType = stageSelect.value;
-
-const stageSnapshot =
-  createTestSnapshot(stageType);
-
-createBoard(
-  stageSnapshot.board.width,
-  stageSnapshot.board.height
-);
   
   const snapshot = createTestSnapshot(stageType);
 
