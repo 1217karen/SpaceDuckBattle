@@ -95,6 +95,20 @@ cell.addEventListener("click", () => {
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
 
+  stageSelect.addEventListener("change", () => {
+
+  const stageSnapshot =
+    createTestSnapshot(stageSelect.value);
+
+  createBoard(
+    stageSnapshot.board.width,
+    stageSnapshot.board.height
+  );
+
+  resetPlacement();
+
+});
+
   let selectedCell = null;
 
 function resetPlacement(){
