@@ -31,12 +31,27 @@ function getResonanceModifier(unit) {
     0
   );
 }
+
+//==========================================================
+// クリティカル判定
+//==========================================================
+
+function rollCritical(unit) {
+  const cri = unit.cri ?? 0;
+
+  const chance =
+    Math.min(Math.max(cri, 1), 90); // 1%保証 / 90%上限
+
+  return Math.random() * 100 < chance;
+}
+
 //========================================================== 
 // ダメージ処理 
 //==========================================================
 export function applyDamage(source, target, action, ctx) {
 
   let finalDamage = 0;
+  let isCritical = false;
 
   const power = action.power || 0;
   const type = action.damageType || "normal";
@@ -52,6 +67,7 @@ if (type === "normal") {
     Math.floor(base - reduced),
     0
   );
+  
 }
 
 else if (type === "pierce") {
@@ -64,6 +80,30 @@ else if (type === "pierce") {
   else if (type === "fixed" || type === "effect") {
     finalDamage = power;
   }
+
+  // ==========================================================
+// クリティカル
+// ==========================================================
+
+if (
+  finalDamage > 0 &&
+  (type === "normal" || type === "pierce")
+) {
+
+  if (rollCritical(source)) {
+
+    isCritical = true;
+
+    finalDamage =
+      Math.floor(finalDamage * 1.5);
+
+    ctx.log.push({
+      type: "critical"
+    });
+
+  }
+
+}
   
 //========================================================== 
 // 距離減衰
