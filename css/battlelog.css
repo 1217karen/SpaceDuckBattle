@@ -36,12 +36,7 @@
 #leftSide {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  background: black;
-}
-
-#rightSide{
-  background:black;
+  gap: 4px;
 }
 
 .unitStatus {
