@@ -144,6 +144,12 @@ export function playLogEvent(
     }
   }
 
+else if (event.type === "critical") {
+
+  div.textContent = "<i>CRITICAL!</i>";
+
+}
+    
   else if (event.type === "damage") {
 
     const unitState =
