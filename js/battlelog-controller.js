@@ -58,6 +58,17 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms / speed));
 }
 
+function fitUnitName(el){
+
+  let size = 13;
+
+  while (el.scrollWidth > el.clientWidth && size > 8){
+    size--;
+    el.style.fontSize = size + "px";
+  }
+
+}
+
 function clearEffectHighlights() {
   document.querySelectorAll(".cell")
     .forEach(cell => {
@@ -263,6 +274,9 @@ div.innerHTML = `
 `;
 
     leftSide.appendChild(div);
+
+    const nameEl = div.querySelector(".unitName");
+if(nameEl) fitUnitName(nameEl);
 
   });
 
