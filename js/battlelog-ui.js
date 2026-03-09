@@ -21,8 +21,6 @@ function updateUnitEffectUI(unitId, boardState) {
     float: 0,
     accel: 0,
     slow: 0,
-    diffuse: 0,
-    converge: 0,
     resonance: 0,
     interference: 0,
     repair: 0,
@@ -37,20 +35,18 @@ function updateUnitEffectUI(unitId, boardState) {
     }
   }
 
-  const mapping = [
-    ["float", 0],
-    ["accel", 1],
-    ["resonance", 2],
-    ["repair", 3],
-    ["diffuse", 4],
-    ["satellite", 5],
-    ["gravity", 6],
-    ["slow", 7],
-    ["interference", 8],
-    ["corrosion", 9],
-    ["converge", 10],
-    ["meteor", 11]
-  ];
+const mapping = [
+  ["float",0],
+  ["accel",1],
+  ["resonance",2],
+  ["repair",3],
+  ["satellite",4],
+  ["gravity",5],
+  ["slow",6],
+  ["interference",7],
+  ["corrosion",8],
+  ["meteor",9]
+];
 
   const items =
     container.querySelectorAll(".effectItem");
