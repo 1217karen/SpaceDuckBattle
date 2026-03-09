@@ -28,7 +28,7 @@ units: [
 
   {
     id:"Eno1",
-    name:"左軍アタック１２３４５",
+    name:"左軍アタック１２３４５６７８９０",
     team:1,
     role:"attack",
     hp:120,
