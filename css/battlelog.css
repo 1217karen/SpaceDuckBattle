@@ -2,17 +2,16 @@
    デバッグ用仮
 ======================================================= */
 
-
-#leftSide{
-  background: rgba(0,0,0,0.6);
+#leftSide {
+  outline: 2px solid red;
 }
 
-#centerArea{
-  background: rgba(0,0,0,0.3);
+#centerArea {
+  outline: 2px solid blue;
 }
 
-#rightSide{
-  background: rgba(0,0,0,0.6);
+#rightSide {
+  outline: 2px solid green;
 }
 
 /* =======================================================
