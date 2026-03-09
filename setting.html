@@ -50,7 +50,33 @@
 <label>INT <input type="number" id="statINT" value="0"></label>
 
 
-<h2>スキル</h2>
+<h2>スキル設定</h2>
+
+<div id="patternTabs">
+
+<button class="patternTab" data-slot="0">設定1</button>
+<button class="patternTab" data-slot="1">設定2</button>
+<button class="patternTab" data-slot="2">設定3</button>
+
+</div>
+
+<br>
+
+<label>
+パターン名
+<input id="patternName">
+</label>
+
+<br><br>
+
+<label>
+公開
+<input type="checkbox" id="patternPublic">
+</label>
+
+<br><br>
+
+<div id="skillArea">
 
 <select class="skillSelect">
 <option value="">なし</option>
@@ -76,7 +102,7 @@
 <option value="">なし</option>
 </select>
 
-
+</div>
 <br><br>
 
 <button id="saveDuck">アヒル保存</button>
