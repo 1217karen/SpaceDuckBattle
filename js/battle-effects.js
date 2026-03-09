@@ -41,6 +41,28 @@ export function applyEffect(source, target, action, ctx) {
   const effectData = action.effect;
   if (!effectData) return;
 
+// ==========================================================
+// クリティカル
+// ==========================================================
+
+if (rollCritical(source)) {
+
+  ctx.log.push({
+    type: "critical"
+  });
+
+  if (effectData.stock !== undefined) {
+    effectData.stock =
+      Math.ceil(effectData.stock * 1.5);
+  }
+
+  if (effectData.value !== undefined) {
+    effectData.value =
+      effectData.value * 1.5;
+  }
+
+}
+
   // ========================================
   // group自動設定
   // ========================================
