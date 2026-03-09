@@ -17,6 +17,7 @@ export function buildUnitFromDuck(duck, pattern, team, x, y, facing){
     df: duck.stats.df,
     heal: duck.stats.heal,
     speed: duck.stats.speed,
+    cri: duck.stats.cri,
 
     x: x,
     y: y,
