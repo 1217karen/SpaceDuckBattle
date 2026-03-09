@@ -96,7 +96,15 @@ cell.addEventListener("click", () => {
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
 
-  stageSelect.addEventListener("change", () => {
+stageSelect.addEventListener("change", () => {
+
+  if(!stageSelect.value){
+
+    boardDiv.innerHTML = "";
+    resetPlacement();
+    return;
+
+  }
 
   const stageSnapshot =
     createTestSnapshot(stageSelect.value);
