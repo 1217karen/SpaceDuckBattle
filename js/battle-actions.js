@@ -99,9 +99,151 @@ finalDamage =
   Math.floor(finalDamage * modifier);
 
 }
+
+  // ==========================================================
+// 衛星（satellite）ダメージ軽減
+// ==========================================================
+
+if (
+  finalDamage > 0 &&
+  (type === "normal" || type === "pierce")
+) {
+
+  const satellite =
+    target.effects?.find(e => e.type === "satellite");
+
+  if (satellite && satellite.stock > 0) {
+
+    const maxReduction =
+      satellite.stock * 0.05;
+
+    const reductionRate =
+      Math.min(maxReduction, 1);
+
+const reducedDamage =
+  Math.max(
+    Math.floor(finalDamage * reductionRate),
+    1
+  );
+
+    finalDamage =
+      Math.max(finalDamage - reducedDamage, 0);
+
+    const usedStock =
+      Math.min(
+        Math.ceil(reductionRate / 0.05),
+        satellite.stock
+      );
+
+    satellite.stock -= usedStock;
+
+    ctx.log.push({
+      type: "damageReduce",
+      unit: target.id,
+      amount: reducedDamage
+    });
+
+    if (satellite.stock <= 0) {
+
+      target.effects =
+        target.effects.filter(e => e !== satellite);
+
+      ctx.log.push({
+        type: "effectRemoved",
+        unit: target.id,
+        effect: { type: "satellite" }
+      });
+
+    }
+
+  }
+
+}
   
   target.hp -= finalDamage;
 
+// ==========================================================
+// 流星（meteor）反射
+// ==========================================================
+
+if (
+  finalDamage > 0 &&
+  (type === "normal" || type === "pierce")
+) {
+
+  const meteor = target.effects?.find(
+    e => e.type === "meteor"
+  );
+
+  if (meteor && meteor.stock > 0) {
+
+const reflectDamage =
+  Math.max(
+    Math.floor(finalDamage * 0.2),
+    1
+  );
+
+    meteor.stock--;
+
+    if (reflectDamage > 0) {
+
+      if (source && source.hp > 0) {
+
+        source.hp -= reflectDamage;
+
+        ctx.log.push({
+          type: "damage",
+          source: target.id,
+          target: source.id,
+          amount: reflectDamage,
+          damageType: "fixed"
+        });
+
+        ctx.log.push({
+          type: "hpChange",
+          target: source.id,
+          hp: Math.max(source.hp, 0)
+        });
+
+        if (source.hp <= 0) {
+          ctx.killUnit(source);
+        }
+
+      }
+
+      else {
+
+        ctx.log.push({
+          type: "damage",
+          source: target.id,
+          target: null,
+          amount: reflectDamage,
+          damageType: "fixed"
+        });
+
+      }
+
+    }
+
+    if (meteor.stock <= 0) {
+
+      target.effects =
+        target.effects.filter(
+          e => e !== meteor
+        );
+
+      ctx.log.push({
+        type: "effectRemoved",
+        unit: target.id,
+        effect: { type: "meteor" }
+      });
+
+    }
+
+  }
+
+}
+  
 ctx.log.push({
   type: "damage",
   source: source.id,
