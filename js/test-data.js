@@ -7,8 +7,8 @@ const STAGES = {
     maxTurns: 20
   },
   normal: {
-    width: 8,
-    height: 6,
+    width: 7,
+    height: 5,
     maxTurns: 50
   }
 };
