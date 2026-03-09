@@ -24,13 +24,12 @@ export function getEffectiveStat(unit, statName) {
     if (effect.mode === "rate") {
       rateBonus += effect.value;
     }
-
   }
 
   const afterFlat = base + flatBonus;
-const finalValue = afterFlat * (1 + rateBonus);
+  const finalValue = afterFlat * (1 + rateBonus);
 
-return Math.round(finalValue);
+  return Math.round(finalValue);
 }
 
 const CORROSION_RATE = 0.0025;
@@ -43,18 +42,17 @@ export function applyEffect(source, target, action, ctx) {
   if (!effectData) return;
 
   // ========================================
-// group自動設定
-// ========================================
+  // group自動設定
+  // ========================================
 
-if (!effectData.group) {
+  if (!effectData.group) {
 
-  const def = EFFECTS[effectData.type];
+    const def = EFFECTS[effectData.type];
 
-  if (def?.group) {
-    effectData.group = def.group;
+    if (def?.group) {
+      effectData.group = def.group;
+    }
   }
-
-}
 
   if (!target.effects) {
     target.effects = [];
@@ -62,31 +60,33 @@ if (!effectData.group) {
 
   // === stock型===
   // ・stockは加算（上限あり）
-if (EFFECTS[effectData.type]?.stack === "stock") {
+
+  if (EFFECTS[effectData.type]?.stack === "stock") {
 
     const existing =
       target.effects.find(e => e.type === effectData.type);
 
     if (existing) {
 
-const addAmount = effectData.stock ?? 1;
+      const addAmount = effectData.stock ?? 1;
 
-existing.stock = Math.min(
-  (existing.stock ?? 0) + addAmount,
-  MAX_STACK
-);
+      existing.stock = Math.min(
+        (existing.stock ?? 0) + addAmount,
+        MAX_STACK
+      );
 
-existing.group = effectData.group;
+      existing.group = effectData.group;
 
-ctx.log.push({
-  type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: {
-    ...existing,
-    delta: addAmount
-  }
-});
+      ctx.log.push({
+        type: "effectApplied",
+        source: source.id,
+        target: target.id,
+        effect: {
+          ...existing,
+          delta: addAmount
+        }
+      });
+
       return;
     }
 
@@ -98,22 +98,23 @@ ctx.log.push({
 
     target.effects.push(newEffect);
 
-ctx.log.push({
-  type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: {
-    ...newEffect,
-    delta: newEffect.stock
-  }
-});
+    ctx.log.push({
+      type: "effectApplied",
+      source: source.id,
+      target: target.id,
+      effect: {
+        ...newEffect,
+        delta: newEffect.stock
+      }
+    });
 
     return;
   }
 
   // === 上書き型===
   // ・stockは加算しない（強い方に上書き）
-if (EFFECTS[effectData.type]?.stack === "overwrite") {
+
+  if (EFFECTS[effectData.type]?.stack === "overwrite") {
 
     const incomingStock =
       Math.min(effectData.stock ?? 1, MAX_STACK);
@@ -132,15 +133,15 @@ if (EFFECTS[effectData.type]?.stack === "overwrite") {
 
       existing.group = effectData.group;
 
-ctx.log.push({
-  type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: {
-    ...existing,
-    delta: incomingStock
-  }
-});
+      ctx.log.push({
+        type: "effectApplied",
+        source: source.id,
+        target: target.id,
+        effect: {
+          ...existing,
+          delta: incomingStock
+        }
+      });
 
       return;
     }
@@ -153,20 +154,21 @@ ctx.log.push({
 
     target.effects.push(newEffect);
 
-ctx.log.push({
-  type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: {
-    ...newEffect,
-    delta: newEffect.stock
-  }
-});
+    ctx.log.push({
+      type: "effectApplied",
+      source: source.id,
+      target: target.id,
+      effect: {
+        ...newEffect,
+        delta: newEffect.stock
+      }
+    });
 
     return;
   }
 
   // 永続 flat
+
   if (effectData.duration === null) {
 
     const stackKey = effectData.stat + "_flat";
@@ -194,15 +196,16 @@ ctx.log.push({
 
     ctx.log.push({
       type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: { ...newEffect }
+      source: source.id,
+      target: target.id,
+      effect: { ...newEffect }
     });
 
     return;
   }
 
   // ターン制 rate
+
   const stat = effectData.stat;
   const newValue = effectData.value;
   const newDuration = effectData.duration;
@@ -228,9 +231,9 @@ ctx.log.push({
 
     ctx.log.push({
       type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: { ...newEffect }
+      source: source.id,
+      target: target.id,
+      effect: { ...newEffect }
     });
 
     return;
@@ -246,9 +249,9 @@ ctx.log.push({
 
     ctx.log.push({
       type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: { ...existing }
+      source: source.id,
+      target: target.id,
+      effect: { ...existing }
     });
 
     return;
@@ -260,9 +263,9 @@ ctx.log.push({
 
     ctx.log.push({
       type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: { ...existing }
+      source: source.id,
+      target: target.id,
+      effect: { ...existing }
     });
 
     return;
@@ -278,28 +281,36 @@ ctx.log.push({
 
     ctx.log.push({
       type: "effectApplied",
-  source: source.id,
-  target: target.id,
-  effect: { ...existing }
+      source: source.id,
+      target: target.id,
+      effect: { ...existing }
     });
-
   }
 }
 
 export function getEffectsByGroup(unit, group) {
+
   if (!unit.effects) return [];
-  return unit.effects.filter(e => e.group === group);
+
+  return unit.effects.filter(
+    e => e.group === group
+  );
 }
 
 export function removeRandomEffectByGroup(unit, group) {
 
-  const list = getEffectsByGroup(unit, group);
+  const list =
+    getEffectsByGroup(unit, group);
+
   if (list.length === 0) return null;
 
-  const index = Math.floor(Math.random() * list.length);
+  const index =
+    Math.floor(Math.random() * list.length);
+
   const target = list[index];
 
-  unit.effects = unit.effects.filter(e => e !== target);
+  unit.effects =
+    unit.effects.filter(e => e !== target);
 
   return target;
 }
@@ -311,20 +322,18 @@ export function processBeforeAction(unit, ctx) {
 
   // ========================================
   // gravity / float（行動開始時にCTをランダム増減）
-  // 仕様：
-  // ・net = gravity.stock - float.stock
-  // ・|net| 回、ランダムに対象スキルのCTを ±1
-  // ・CTは 0 ～ スキル固有max（handler.cooldown）に収める
-  // ・増やせない/減らせないスキルは抽選対象外
-  // ・処理後、gravity/float は全消費（削除）
   // ========================================
 
   let gravityStock = 0;
   let floatStock = 0;
 
   for (const e of unit.effects) {
-    if (e.type === "gravity") gravityStock = Math.max(gravityStock, e.stock ?? 0);
-    if (e.type === "float") floatStock = Math.max(floatStock, e.stock ?? 0);
+
+    if (e.type === "gravity")
+      gravityStock = Math.max(gravityStock, e.stock ?? 0);
+
+    if (e.type === "float")
+      floatStock = Math.max(floatStock, e.stock ?? 0);
   }
 
   const net = gravityStock - floatStock;
@@ -332,87 +341,98 @@ export function processBeforeAction(unit, ctx) {
   if (net !== 0 && unit.skills && unit.skills.length > 0) {
 
     const steps = Math.abs(net);
-    const dir = net > 0 ? +1 : -1; // +1: gravity, -1: float
+    const dir = net > 0 ? +1 : -1;
 
     for (let i = 0; i < steps; i++) {
 
-      // 抽選対象を毎回作る（同じスキルが連続で選ばれるのもOK）
       const eligible = [];
 
       for (const s of unit.skills) {
 
-        const maxCt = ctx.getSkillMaxCooldown?.(s.type) ?? 0;
-        const cur = s._currentCooldown ?? 0;
+        const maxCt =
+          ctx.getSkillMaxCooldown?.(s.type) ?? 0;
+
+        const cur =
+          s._currentCooldown ?? 0;
 
         if (dir > 0) {
-          // gravity: 増やせるものだけ（maxCtに達しているものは対象外）
-          if (maxCt > 0 && cur < maxCt) eligible.push({ s, maxCt, cur });
-        } else {
-          // float: 減らせるものだけ（0のものは対象外）
-          if (cur > 0) eligible.push({ s, maxCt, cur });
-        }
 
+          if (maxCt > 0 && cur < maxCt)
+            eligible.push({ s, maxCt, cur });
+
+        } else {
+
+          if (cur > 0)
+            eligible.push({ s, maxCt, cur });
+
+        }
       }
 
       if (eligible.length === 0) {
 
-  ctx.log.push({
-    type: "cooldownLimit",
-    unit: unit.id
-  });
+        ctx.log.push({
+          type: "cooldownLimit",
+          unit: unit.id
+        });
 
-  break;
-}
+        break;
+      }
 
-      const pick = eligible[Math.floor(Math.random() * eligible.length)];
+      const pick =
+        eligible[Math.floor(Math.random() * eligible.length)];
+
       const s = pick.s;
 
       const maxCt = pick.maxCt ?? 0;
       const cur = s._currentCooldown ?? 0;
 
-let newCt;
+      let newCt;
 
-if (dir > 0) {
-  newCt = Math.min(cur + 1, maxCt);
-} else {
-  newCt = Math.max(cur - 1, 0);
-}
+      if (dir > 0) {
+        newCt = Math.min(cur + 1, maxCt);
+      } else {
+        newCt = Math.max(cur - 1, 0);
+      }
 
-s._currentCooldown = newCt;
+      s._currentCooldown = newCt;
 
-ctx.log.push({
-  type: "cooldownChange",
-  unit: unit.id,
-  skill: s.type,
-  delta: dir
-});
-
+      ctx.log.push({
+        type: "cooldownChange",
+        unit: unit.id,
+        skill: s.type,
+        delta: dir
+      });
     }
-
   }
 
-  // 全消費（削除）
   if (gravityStock > 0 || floatStock > 0) {
-    unit.effects = unit.effects.filter(e => e.type !== "gravity" && e.type !== "float");
+
+    unit.effects =
+      unit.effects.filter(
+        e => e.type !== "gravity" && e.type !== "float"
+      );
   }
-  
+
   const mhp = unit.mhp ?? unit.hp;
 
   for (let e of unit.effects) {
 
-    if (e.type !== "corrosion" && e.type !== "repair") continue;
+    if (e.type !== "corrosion" && e.type !== "repair")
+      continue;
 
-    const stock = Math.min(e.stock ?? 0, MAX_STACK);
+    const stock =
+      Math.min(e.stock ?? 0, MAX_STACK);
+
     if (stock <= 0) continue;
 
-const effectiveStock =
-  Math.min(stock, EFFECT_CAP);
+    const effectiveStock =
+      Math.min(stock, EFFECT_CAP);
 
-const rawAmount =
-  Math.floor(mhp * CORROSION_RATE * effectiveStock);
+    const rawAmount =
+      Math.floor(mhp * CORROSION_RATE * effectiveStock);
 
-const amount =
-  Math.max(rawAmount, 1);
+    const amount =
+      Math.max(rawAmount, 1);
 
     if (e.type === "corrosion") {
 
@@ -426,16 +446,17 @@ const amount =
         damageType: "effect"
       });
 
-if (unit.hp <= 0) {
-  ctx.killUnit(unit);
-  break;
-}
+      if (unit.hp <= 0) {
 
+        ctx.killUnit(unit);
+        break;
+      }
     }
 
     else if (e.type === "repair") {
 
-      unit.hp = Math.min(unit.hp + amount, mhp);
+      unit.hp =
+        Math.min(unit.hp + amount, mhp);
 
       ctx.log.push({
         type: "heal",
@@ -444,7 +465,6 @@ if (unit.hp <= 0) {
         amount: amount,
         healType: "effect"
       });
-
     }
 
     ctx.log.push({
@@ -452,11 +472,8 @@ if (unit.hp <= 0) {
       target: unit.id,
       hp: unit.hp
     });
-
   }
-
 }
-
 
 export function processAfterAction(unit, ctx) {
 
@@ -466,35 +483,34 @@ export function processAfterAction(unit, ctx) {
 
     const e = unit.effects[i];
 
-    if (e.type !== "corrosion" && e.type !== "repair") continue;
+    if (e.type !== "corrosion" && e.type !== "repair")
+      continue;
 
     e.stock--;
 
-if (e.stock > 0) {
+    if (e.stock > 0) {
 
-  ctx.log.push({
-    type: "effectDecay",
-    unit: unit.id,
-    effect: {
-      type: e.type,
-      stock: e.stock
+      ctx.log.push({
+        type: "effectDecay",
+        unit: unit.id,
+        effect: {
+          type: e.type,
+          stock: e.stock
+        }
+      });
     }
-  });
 
-}
+    if (e.stock <= 0) {
 
-if (e.stock <= 0) {
+      ctx.log.push({
+        type: "effectRemoved",
+        unit: unit.id,
+        effect: {
+          type: e.type
+        }
+      });
 
-  ctx.log.push({
-    type: "effectRemoved",
-    unit: unit.id,
-    effect: {
-      type: e.type
+      unit.effects.splice(i, 1);
     }
-  });
-
-  unit.effects.splice(i, 1);
-}
   }
-
 }
