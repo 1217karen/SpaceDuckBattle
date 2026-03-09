@@ -10,7 +10,7 @@
 
 <select id="stageSelect">
   <option value="tutorial">チュートリアル (4×4)</option>
-  <option value="normal" selected>通常戦 (8×6)</option>
+  <option value="normal" selected>通常戦 (7×5)</option>
 </select>
 
 <button id="startBtn">戦闘開始</button>
@@ -70,11 +70,19 @@ function createBoard(width, height){
       cell.dataset.x = x;
       cell.dataset.y = y;
 
-      cell.addEventListener("click", () => {
+cell.addEventListener("click", () => {
 
-        console.log("clicked", x, y);
+  document.querySelectorAll(".cell").forEach(c => {
+    c.style.background = "";
+  });
 
-      });
+  cell.style.background = "#ffd966";
+
+  selectedCell = { x, y };
+
+  console.log("selected", x, y);
+
+});
 
       boardDiv.appendChild(cell);
 
@@ -86,6 +94,12 @@ function createBoard(width, height){
 
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
+
+  let selectedCell = null;
+
+function resetPlacement(){
+  selectedCell = null;
+}
 
 startBtn.addEventListener("click", () => {
 
