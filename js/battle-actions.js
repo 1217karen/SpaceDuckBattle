@@ -137,11 +137,10 @@ const reducedDamage =
 
     satellite.stock -= usedStock;
 
-    ctx.log.push({
-      type: "damageReduce",
-      unit: target.id,
-      amount: reducedDamage
-    });
+ctx.log.push({
+  type: "satelliteGuard",
+  unit: target.id
+});
 
     if (satellite.stock <= 0) {
 
