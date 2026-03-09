@@ -50,18 +50,6 @@ export const EFFECTS = {
     stack: "overwrite"
   },
 
-  diffuse: {
-    name: "拡散",
-    group: "buff",
-    stack: "overwrite"
-  },
-
-  converge: {
-    name: "収束",
-    group: "buff",
-    stack: "overwrite"
-  },
-
   meteor: {
     name: "流星",
     group: "buff",
