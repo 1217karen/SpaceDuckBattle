@@ -99,6 +99,18 @@ function loadDuck(){
   const duck =
     JSON.parse(data);
 
+  if (duck.patterns) {
+
+  for (let i = 0; i < 3; i++) {
+
+    if (duck.patterns[i]) {
+      patterns[i] = duck.patterns[i];
+    }
+
+  }
+
+}
+
   document.getElementById("duckName").value =
     duck.name ?? "";
 
@@ -137,22 +149,8 @@ function loadDuck(){
 
   document.getElementById("statINT").value =
     duck.stats?.int ?? 0;
-
-  const selects =
-    document.querySelectorAll(".skillSelect");
-
-  if (duck.skills){
-
-    duck.skills.forEach((skill, i) => {
-
-      if (selects[i]) {
-        selects[i].value = skill;
-      }
-
-    });
-
-  }
-
+  
+  loadPattern(currentSlot);
 }
 
 
@@ -161,7 +159,9 @@ const saveBtn =
   document.getElementById("saveDuck");
 
 saveBtn.addEventListener("click", () => {
-
+  
+saveCurrentPattern();
+  
   const name =
     document.getElementById("duckName").value;
 
@@ -191,43 +191,32 @@ saveBtn.addEventListener("click", () => {
     stats.df * 3 +
     stats.heal * 2;
 
-  const skillSelects =
-    document.querySelectorAll(".skillSelect");
 
-  const skills = [];
 
-  for (const s of skillSelects) {
+const duck = {
 
-    if (s.value !== "") {
-      skills.push(s.value);
-    }
+  id: "player_duck",
 
-  }
+  name,
+  type,
 
-  const duck = {
+  icon,
 
-    id: "player_duck",
+  stats,
 
-    name,
-    type,
+  mhp,
 
-    icon,
+  patterns
 
-    stats,
-
-    mhp,
-
-    skills
-
-  };
+};
 
   localStorage.setItem(
     "duck",
     JSON.stringify(duck)
   );
-
+  
   alert("アヒル設定を保存しました");
 
 });
 
-loadPattern(0);
+loadPattern(currentSlot);
