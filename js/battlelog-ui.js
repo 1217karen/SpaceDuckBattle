@@ -500,6 +500,27 @@ else if (event.type === "cooldownLimit") {
   div.textContent =
     `CT はこれ以上変化しない……`;
 }
+
+  else if (event.type === "meteorReflect") {
+
+  div.textContent =
+    `${displayName(event.source, nameMap)} の 流星 が ${displayName(event.target, nameMap)} に ${event.amount} ダメージを反射した`;
+
+}
+
+    else if (event.type === "meteorNoTarget") {
+
+  div.textContent =
+    `${displayName(event.source, nameMap)} の 流星 は反射する相手がいなかった`;
+
+}
+
+else if (event.type === "satelliteGuard") {
+
+  div.textContent =
+    `${displayName(event.unit, nameMap)} の 衛星 がダメージを軽減した`;
+
+}
     
 else if (event.type === "wait") {
 
