@@ -15,6 +15,34 @@
 
 <button id="startBtn">戦闘開始</button>
 
+  <h2>配置</h2>
+
+<div id="board"></div>
+
+<style>
+
+#board{
+  display:grid;
+  gap:2px;
+  margin-top:10px;
+}
+
+.cell{
+  width:50px;
+  height:50px;
+  border:1px solid #888;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.cell:hover{
+  background:#ddd;
+}
+
+</style>
+
 <script type="module">
 import { simulateBattle } from './js/battle-engine.js';
 import { createTestSnapshot } from "./js/test-data.js";
