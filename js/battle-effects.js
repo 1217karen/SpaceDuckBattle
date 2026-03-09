@@ -33,7 +33,7 @@ export function getEffectiveStat(unit, statName) {
 }
 
 const CORROSION_RATE = 0.0025;
-const MAX_STACK = 100;
+const MAX_STACK = 99;
 const EFFECT_CAP = 25;
 
 export function applyEffect(source, target, action, ctx) {
