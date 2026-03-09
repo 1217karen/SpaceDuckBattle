@@ -79,6 +79,11 @@
   border-top: none;
 }
 
+.unitMain{
+  flex:1;
+  min-width:0;
+}
+
 .unitHeader {
   display: flex;
   align-items: center;
@@ -104,6 +109,7 @@
 
   display:block;
   width:100%;
+  overflow:hidden;
 }
 
 .nameDivider {
@@ -161,6 +167,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  width:100%;
 }
 
 .hpText {
