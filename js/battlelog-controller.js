@@ -163,8 +163,8 @@ if (snapshot) {
 // 盤面作成
 // =====================
 
-const boardWidth = snapshot?.board?.width ?? 8;
-const boardHeight = snapshot?.board?.height ?? 6;
+const boardWidth = snapshot?.board?.width ?? 7;
+const boardHeight = snapshot?.board?.height ?? 5;
 
 createBoard("board", boardWidth, boardHeight);
 
