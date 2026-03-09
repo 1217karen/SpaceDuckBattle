@@ -40,6 +40,8 @@
 }
 
 .unitStatus {
+  width: 264px;
+  box-sizing: border-box;
   padding: 6px;
 
   background: rgba(10,15,30,0.85);
