@@ -311,6 +311,7 @@ ctx.log.push({
 export function applyHeal(source, target, action, ctx) {
 
   let finalHeal = 0;
+  let isCritical = false;
 
   const power = action.power || 0;
   const type = action.healType || "fixed";
@@ -323,6 +324,30 @@ else if (type === "scale") {
 
   const healStat =
     ctx.getEffectiveStat(source, "heal");
+
+// ==========================================================
+// クリティカル
+// ==========================================================
+
+if (
+  finalHeal > 0 &&
+  type === "scale"
+) {
+
+  if (rollCritical(source)) {
+
+    isCritical = true;
+
+    finalHeal =
+      Math.floor(finalHeal * 1.5);
+
+    ctx.log.push({
+      type: "critical"
+    });
+
+  }
+
+}
 
   finalHeal =
     Math.floor(healStat * power);
