@@ -275,8 +275,10 @@ div.innerHTML = `
 
     leftSide.appendChild(div);
 
-    const nameEl = div.querySelector(".unitName");
-if(nameEl) fitUnitName(nameEl);
+const nameEl = div.querySelector(".unitName");
+if (nameEl) {
+  setTimeout(() => fitUnitName(nameEl), 0);
+}
 
   });
 
