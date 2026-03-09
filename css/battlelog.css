@@ -14,6 +14,21 @@
   outline: 2px solid green;
 }
 
+#battleLayout{
+  background:
+    linear-gradient(
+      to right,
+      transparent 300px,
+      red 300px,
+      red 302px,
+      transparent 302px,
+      transparent calc(100% - 220px),
+      blue calc(100% - 220px),
+      blue calc(100% - 218px),
+      transparent calc(100% - 218px)
+    );
+}
+
 /* =======================================================
    レイアウト
 ======================================================= */
