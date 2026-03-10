@@ -343,8 +343,6 @@ ptSlots.forEach((slot) => {
 
 slot.addEventListener("click", () => {
 
-if(slot.dataset.slot == "0") return;
-
 ptSlots.forEach(s => s.classList.remove("selected"));
 
 slot.classList.add("selected");
