@@ -50,8 +50,8 @@
 }
 
 .pt-slot{
-  width:80px;
-  height:80px;
+  width:64px;
+  height:64px;
   border:2px solid #888;
   display:flex;
   align-items:center;
@@ -88,6 +88,26 @@
   box-shadow:0 0 6px #ff9900;
 }
 
+#duckList{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.duck-item{
+  border:1px solid #888;
+  padding:5px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.duck-item img{
+  width:40px;
+  height:40px;
+}
+  
 </style>
 
 <script type="module">
@@ -125,6 +145,33 @@ const testDucks = [
   }
 }
 ];
+
+  const duckListDiv = document.getElementById("duckList");
+
+testDucks.forEach((duck,i)=>{
+
+  const item = document.createElement("div");
+
+  item.className = "duck-item";
+
+  const img = document.createElement("img");
+  img.src = duck.icon.main;
+
+  const name = document.createElement("span");
+  name.textContent = duck.name;
+
+  item.appendChild(img);
+  item.appendChild(name);
+
+  item.addEventListener("click",()=>{
+
+    console.log("duck selected",i);
+
+  });
+
+  duckListDiv.appendChild(item);
+
+});
   
   const boardDiv =
   document.getElementById("board");
@@ -150,22 +197,6 @@ ptSlots.forEach((slot) => {
 
 });
 
-ptSlots.forEach((slot, i) => {
-
-  const duck = testDucks[i];
-
-  if(!duck) return;
-
-  const img = document.createElement("img");
-
-  img.src = duck.icon.main;
-  img.style.width = "64px";
-  img.style.height = "64px";
-
-  slot.innerHTML = "";
-  slot.appendChild(img);
-
-});
 
 function createBoard(width, height){
 
@@ -343,7 +374,9 @@ Object.keys(localStorage).forEach(k => {
   </main>
 
   <aside class="right-panel">
-  補助エリア
+<h2>アヒル一覧</h2>
+
+<div id="duckList"></div>
   </aside>
 
 </div>
