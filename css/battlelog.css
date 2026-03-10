@@ -45,8 +45,7 @@ display: grid;
 /* 左UI / 中央戦闘 / 右UI */
 grid-template-columns: 300px 1fr 300px;
 
-/* 上部 / ログ / メイン */
-grid-template-rows: auto auto 1fr;
+height: 100vh;
 
 gap: 20px;
 justify-items: center;
@@ -59,6 +58,9 @@ display: flex;
 flex-direction: column;
 align-items: center;
 gap: 16px;
+
+height: 100%;
+overflow-y: auto;
 }
 
 /* ターン表示 */
@@ -85,6 +87,16 @@ min-height: 120px;
 display: flex;
 flex-direction: column;
 gap: 4px;
+
+height: 100%;
+overflow-y: auto;
+}
+
+#rightSide {
+outline: 2px solid green;
+
+height: 100%;
+overflow-y: auto;
 }
 
 /* ユニットステータスカード */
