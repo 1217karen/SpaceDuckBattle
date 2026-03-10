@@ -118,43 +118,41 @@ import { buildUnitFromDuck } from "./js/unit-builder.js";
 const testDucks = [
 
 {
-name:"自分アヒル",
+name:"アヒル未設定",
 type:"attack",
 
 icon:{
-main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
-N:"https://dummyimage.com/64x64/ffd966/000000&text=N",
-E:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
-S:"https://dummyimage.com/64x64/ffd966/000000&text=S",
-W:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp"
+main:"",
+N:"",
+E:"",
+S:"",
+W:""
 },
 
-mhp:120,
+mhp:1,
 
 stats:{
-atk:8,
-df:3,
-heal:2,
-speed:10,
-cri:14,
-int:4
+atk:0,
+df:0,
+heal:0,
+speed:0,
+cri:0,
+int:0
 },
 
 patterns:[
 {
-name:"基本",
+name:"",
 public:true,
-skills:[
-{type:"attack_nearest"}
-]
+skills:[]
 }
 ]
 
 },
 
 {
-name:"テストアヒルA",
-type:"attack",
+name:"テストヒーラー",
+type:"heal",
 
 icon:{
 main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
@@ -176,7 +174,9 @@ patterns:[
 name:"基本",
 public:true,
 skills:[
-{type:"attack_nearest"}
+{type:"heal_cross2"},
+{type:"repair_wave"},
+{type:"buff_df50_self"}
 ]
 }
 ]
@@ -184,8 +184,8 @@ skills:[
 },
 
 {
-name:"テストアヒルB",
-type:"defense",
+name:"テストアタッカー",
+type:"attack",
 
 icon:{
 main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp"
@@ -207,7 +207,9 @@ patterns:[
 name:"基本",
 public:true,
 skills:[
-{type:"attack_front1"}
+{type:"attack_front1"},
+  {type:"attack_front_knockback"},
+  {type:"attack_around2_all"}
 ]
 }
 ]
@@ -215,8 +217,8 @@ skills:[
 },
 
 {
-name:"テストアヒルC",
-type:"heal",
+name:"テストサポーター",
+type:"support",
 
 icon:{
 main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp"
@@ -238,7 +240,9 @@ patterns:[
 name:"基本",
 public:true,
 skills:[
-{type:"heal_cross2"}
+{type:"debuff_wave"},
+  {type:"buff_wave"},
+  {type:"pull_farthest_enemy"}
 ]
 }
 ]
@@ -246,6 +250,18 @@ skills:[
 }
 
 ];
+
+/* settingで作成した自分アヒルを読み込む */
+
+const savedDuck = localStorage.getItem("duck");
+
+if (savedDuck) {
+
+const playerDuck = JSON.parse(savedDuck);
+
+testDucks[0] = playerDuck;
+
+}
 
 const duckListDiv = document.getElementById("duckList");
 
