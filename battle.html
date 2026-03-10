@@ -374,7 +374,8 @@ cell.addEventListener("click", () => {
 
 if(selectedSlot === null) return;
 
-const duck = testDucks[selectedSlot];
+const duckIndex = partySlots[selectedSlot];
+const duck = testDucks[duckIndex];
 if(!duck) return;
 
 /* ① 同じPTがすでに配置されていたら消す */
