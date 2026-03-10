@@ -275,6 +275,20 @@ if(existingSlot !== -1){
 
 if(existingSlot === 0) return;
 
+/* 盤面配置を削除 */
+
+if(placedSlots[existingSlot]){
+
+const p = placedSlots[existingSlot];
+
+const prevCell = document.querySelector(`.cell[data-x="${p.x}"][data-y="${p.y}"]`);
+
+if(prevCell) prevCell.innerHTML = "";
+
+delete placedSlots[existingSlot];
+
+}
+  
 partySlots[existingSlot] = null;
 
 renderParty();
