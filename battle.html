@@ -187,15 +187,21 @@ function createBoard(width, height){
 
 cell.addEventListener("click", () => {
 
-  document.querySelectorAll(".cell").forEach(c => {
-    c.style.background = "";
-  });
+  if(selectedSlot === null) return;
 
-  cell.style.background = "#ffd966";
+  const duck = testDucks[selectedSlot];
 
-  selectedCell = { x, y };
+  if(!duck) return;
 
-  console.log("selected", x, y);
+  cell.innerHTML = "";
+
+  const img = document.createElement("img");
+
+  img.src = duck.icon.main;
+  img.style.width = "40px";
+  img.style.height = "40px";
+
+  cell.appendChild(img);
 
 });
 
