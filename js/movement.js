@@ -85,6 +85,19 @@ const dirs =
     const nx = unit.x + d.dx;
     const ny = unit.y + d.dy;
 
+    // ヒーラー・サポートは敵チェビシェフ1を避ける
+if (unit.role === "heal" || unit.role === "support") {
+
+  const danger = units.some(u =>
+    u.hp > 0 &&
+    u.team !== unit.team &&
+    Math.max(Math.abs(u.x - nx), Math.abs(u.y - ny)) <= 1
+  );
+
+  if (danger) continue;
+
+}
+
     // 盤外
     if (nx < 0 || nx >= board.width ||
         ny < 0 || ny >= board.height) {
