@@ -124,6 +124,25 @@ const testDucks = [
   const boardDiv =
   document.getElementById("board");
 
+  const ptSlots = document.querySelectorAll(".pt-slot");
+
+ptSlots.forEach((slot, i) => {
+
+  const duck = testDucks[i];
+
+  if(!duck) return;
+
+  const img = document.createElement("img");
+
+  img.src = duck.icon.main;
+  img.style.width = "64px";
+  img.style.height = "64px";
+
+  slot.innerHTML = "";
+  slot.appendChild(img);
+
+});
+
 function createBoard(width, height){
 
   boardDiv.innerHTML = "";
