@@ -132,6 +132,7 @@ const testDucks = [
   const ptSlots = document.querySelectorAll(".pt-slot");
 
   let selectedSlot = null;
+  const placedSlots = {};
 
 ptSlots.forEach((slot) => {
 
@@ -190,8 +191,45 @@ cell.addEventListener("click", () => {
   if(selectedSlot === null) return;
 
   const duck = testDucks[selectedSlot];
-
   if(!duck) return;
+
+  /* ① 同じPTがすでに配置されていたら消す */
+
+  if(placedSlots[selectedSlot]){
+
+    const prev = placedSlots[selectedSlot];
+
+    const prevCell =
+      document.querySelector(
+        `.cell[data-x="${prev.x}"][data-y="${prev.y}"]`
+      );
+
+    if(prevCell) prevCell.innerHTML = "";
+
+  }
+
+  /* ② このセルに別PTがいたら消す */
+
+  Object.keys(placedSlots).forEach(slot => {
+
+    const p = placedSlots[slot];
+
+    if(p.x == x && p.y == y){
+
+      const prevCell =
+        document.querySelector(
+          `.cell[data-x="${p.x}"][data-y="${p.y}"]`
+        );
+
+      if(prevCell) prevCell.innerHTML = "";
+
+      delete placedSlots[slot];
+
+    }
+
+  });
+
+  /* ③ 新しく配置 */
 
   cell.innerHTML = "";
 
@@ -203,8 +241,14 @@ cell.addEventListener("click", () => {
 
   cell.appendChild(img);
 
-});
+  placedSlots[selectedSlot] = {x,y};
 
+  /* ④ 選択解除 */
+
+  selectedSlot = null;
+  ptSlots.forEach(s => s.classList.remove("selected"));
+
+});
       boardDiv.appendChild(cell);
 
     }
