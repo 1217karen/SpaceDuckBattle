@@ -90,6 +90,37 @@ import { simulateBattle } from './js/battle-engine.js';
 import { createTestSnapshot } from "./js/test-data.js";
 import { buildUnitFromDuck } from "./js/unit-builder.js";
 
+const testDucks = [
+{
+  name:"自分アヒル",
+  icon:{
+    main:"https://dummyimage.com/64x64/ffd966/000000&text=ME",
+    N:"https://dummyimage.com/64x64/ffd966/000000&text=N",
+    E:"https://dummyimage.com/64x64/ffd966/000000&text=E",
+    S:"https://dummyimage.com/64x64/ffd966/000000&text=S",
+    W:"https://dummyimage.com/64x64/ffd966/000000&text=W"
+  }
+},
+{
+  name:"テストアヒルA",
+  icon:{
+    main:"https://dummyimage.com/64x64/99ccff/000000&text=A"
+  }
+},
+{
+  name:"テストアヒルB",
+  icon:{
+    main:"https://dummyimage.com/64x64/ff9999/000000&text=B"
+  }
+},
+{
+  name:"テストアヒルC",
+  icon:{
+    main:"https://dummyimage.com/64x64/99ff99/000000&text=C"
+  }
+}
+];
+  
   const boardDiv =
   document.getElementById("board");
 
