@@ -69,12 +69,10 @@ const DIR4 = [
 
 export function chooseStep(unit, units, targetPos, board, moveMode) {
 
-  const dirs = [
-    { dx: 1, dy: 0 },
-    { dx: -1, dy: 0 },
-    { dx: 0, dy: 1 },
-    { dx: 0, dy: -1 }
-  ];
+const dirs =
+  moveMode === "toward"
+    ? getPreferredDirs(unit, targetPos)
+    : DIR4;
 
   const currentDist =
     Math.abs(unit.x - targetPos.x) +
