@@ -112,38 +112,139 @@ background:#ddd;
 
 <script type="module">
 import { simulateBattle } from './js/battle-engine.js';
-import { createTestSnapshot } from "./js/test-data.js";
+import { STAGES } from "./js/stages.js";
 import { buildUnitFromDuck } from "./js/unit-builder.js";
 
 const testDucks = [
+
 {
 name:"自分アヒル",
+type:"attack",
+
 icon:{
 main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
 N:"https://dummyimage.com/64x64/ffd966/000000&text=N",
 E:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
 S:"https://dummyimage.com/64x64/ffd966/000000&text=S",
 W:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp"
-}
 },
+
+mhp:120,
+
+stats:{
+atk:8,
+df:3,
+heal:2,
+speed:10,
+cri:14,
+int:4
+},
+
+patterns:[
+{
+name:"基本",
+public:true,
+skills:[
+{type:"attack_nearest"}
+]
+}
+]
+
+},
+
 {
 name:"テストアヒルA",
+type:"attack",
+
 icon:{
 main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
-}
 },
+
+mhp:100,
+
+stats:{
+atk:7,
+df:2,
+heal:1,
+speed:8,
+cri:8,
+int:4
+},
+
+patterns:[
+{
+name:"基本",
+public:true,
+skills:[
+{type:"attack_nearest"}
+]
+}
+]
+
+},
+
 {
 name:"テストアヒルB",
+type:"defense",
+
 icon:{
 main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp"
-}
 },
+
+mhp:120,
+
+stats:{
+atk:6,
+df:6,
+heal:1,
+speed:6,
+cri:5,
+int:5
+},
+
+patterns:[
+{
+name:"基本",
+public:true,
+skills:[
+{type:"attack_front1"}
+]
+}
+]
+
+},
+
 {
 name:"テストアヒルC",
+type:"heal",
+
 icon:{
 main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp"
+},
+
+mhp:90,
+
+stats:{
+atk:4,
+df:3,
+heal:8,
+speed:7,
+cri:4,
+int:10
+},
+
+patterns:[
+{
+name:"基本",
+public:true,
+skills:[
+{type:"heal_cross2"}
+]
 }
+]
+
 }
+
 ];
 
 const duckListDiv = document.getElementById("duckList");
@@ -367,7 +468,13 @@ startBtn.addEventListener("click", () => {
 
 const stageType = stageSelect.value;
 
-const snapshot = createTestSnapshot(stageType);
+const stage = STAGES[stageType];
+
+const snapshot = {
+board: stage.board,
+maxTurns: stage.maxTurns,
+units: [...stage.enemies]
+};
 
 const duckData = localStorage.getItem("duck");
 
