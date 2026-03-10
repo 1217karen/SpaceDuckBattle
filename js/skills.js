@@ -38,6 +38,68 @@ export const skillHandlers = {
       };
     }
   },
+
+// =========================
+// 衛星流星展開
+// =========================
+satellite_meteor_field: {
+
+  cooldown: 3,
+
+  generateActions(unit, ctx) {
+
+    const allies =
+      ctx.getAllies(ctx.units, unit.team, unit.id);
+
+    const targets =
+      allies.filter(a =>
+        ctx.getChebyshevDistance(unit, a) <= 1
+      );
+
+    if (targets.length === 0) return null;
+
+    const cells =
+      targets.map(t => ({ x: t.x, y: t.y }));
+
+    const actions = [];
+
+    for (const t of targets) {
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "satellite",
+          stock: 3
+        }
+      });
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "meteor",
+          stock: 3
+        }
+      });
+
+    }
+
+    return {
+      preview: {
+        cells,
+        style: "buff"
+      },
+      actions
+    };
+
+  }
+
+},
+
+  
 // =========================
 // 周囲デバフ波
 // =========================
