@@ -262,9 +262,24 @@ else if (role === "speed") {
 
   else {
 
-    enemies.sort(
-      (a, b) => getDistance(unit, a) - getDistance(unit, b)
-    );
+    const rolePriority = {
+      heal: 1,
+      support: 2,
+      technical: 3,
+      speed: 4,
+      attack: 5,
+      defense: 6
+    };
+
+    enemies.sort((a, b) => {
+
+      const pa = rolePriority[a.role] ?? 99;
+      const pb = rolePriority[b.role] ?? 99;
+
+      if (pa !== pb) return pa - pb;
+
+      return getDistance(unit, a) - getDistance(unit, b);
+    });
 
     targetUnit =
       enemies.find(e => canReduceDistanceOneStepToward(e))
