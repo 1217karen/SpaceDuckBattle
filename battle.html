@@ -464,10 +464,6 @@ function resetPlacement(){
 selectedCell = null;
 }
 
-startBtn.addEventListener("click", () => {
-
-const stageType = stageSelect.value;
-
 const stage = STAGES[stageType];
 
 const snapshot = {
@@ -476,23 +472,29 @@ maxTurns: stage.maxTurns,
 units: [...stage.enemies]
 };
 
-const duckData = localStorage.getItem("duck");
+/* プレイヤーユニット追加 */
 
-if (duckData) {
+for(let slot = 0; slot < 4; slot++){
 
-const duck = JSON.parse(duckData);
+const duckIndex = partySlots[slot];
+if(duckIndex === null) continue;
+
+const placement = placedSlots[slot];
+if(!placement) continue;
+
+const duck = testDucks[duckIndex];
 const pattern = duck.patterns[0];
 
-const playerUnit = buildUnitFromDuck(
+const unit = buildUnitFromDuck(
 duck,
 pattern,
 1,
-1,
-2,
+placement.x,
+placement.y,
 "E"
 );
 
-snapshot.units.push(playerUnit);
+snapshot.units.push(unit);
 
 }
 
