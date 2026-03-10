@@ -83,6 +83,11 @@
   background:#ddd;
 }
 
+  .pt-slot.selected{
+  border-color:#ff9900;
+  box-shadow:0 0 6px #ff9900;
+}
+
 </style>
 
 <script type="module">
@@ -125,6 +130,24 @@ const testDucks = [
   document.getElementById("board");
 
   const ptSlots = document.querySelectorAll(".pt-slot");
+
+  let selectedSlot = null;
+
+ptSlots.forEach((slot) => {
+
+  slot.addEventListener("click", () => {
+
+    ptSlots.forEach(s => s.classList.remove("selected"));
+
+    slot.classList.add("selected");
+
+    selectedSlot = parseInt(slot.dataset.slot);
+
+    console.log("selected slot", selectedSlot);
+
+  });
+
+});
 
 ptSlots.forEach((slot, i) => {
 
