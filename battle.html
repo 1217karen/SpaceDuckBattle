@@ -373,11 +373,17 @@ ptSlots.forEach((slot) => {
 
 slot.addEventListener("click", () => {
 
+const slotIndex = parseInt(slot.dataset.slot);
+
+/* アヒルがいないスロットは選択不可 */
+
+if(partySlots[slotIndex] === null) return;
+
 ptSlots.forEach(s => s.classList.remove("selected"));
 
 slot.classList.add("selected");
 
-selectedSlot = parseInt(slot.dataset.slot);
+selectedSlot = slotIndex;
 
 console.log("selected slot", selectedSlot);
 
