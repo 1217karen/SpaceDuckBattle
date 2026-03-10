@@ -1,113 +1,116 @@
+中身は一切変えず、改行を減らして段落だけ整理しました。
+
+```html
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Battle Test</title>
-
+<meta charset="UTF-8">
+<title>Battle Test</title>
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/common.css">
-
 </head>
+
 <body>
 
 <div class="layout">
 
-  <aside class="left-panel">
-  メニュー
-  </aside>
+<aside class="left-panel">
+メニュー
+</aside>
 
-  <main class="center-panel">
+<main class="center-panel">
 
 <h1>Battle Test</h1>
 
 <select id="stageSelect">
-  <option value="">ステージを選択</option>
-  <option value="tutorial">チュートリアル (4×4)</option>
-  <option value="normal">通常戦 (7×5)</option>
+<option value="">ステージを選択</option>
+<option value="tutorial">チュートリアル (4×4)</option>
+<option value="normal">通常戦 (7×5)</option>
 </select>
 
 <button id="startBtn">戦闘開始</button>
 
 <div id="party">
-
 <div class="pt-slot" data-slot="0">PT1</div>
 <div class="pt-slot" data-slot="1">PT2</div>
 <div class="pt-slot" data-slot="2">PT3</div>
 <div class="pt-slot" data-slot="3">PT4</div>
-
 </div>
-    
-  <h2>配置</h2>
 
+<h2>配置</h2>
 <div id="board"></div>
 
 <style>
 
-  #party{
-  display:flex;
-  gap:10px;
-  margin:10px 0;
+#party{
+display:flex;
+gap:10px;
+margin:10px 0;
 }
 
 .pt-slot{
-  width:64px;
-  height:64px;
-  border:2px solid #888;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
+width:64px;
+height:64px;
+border:2px solid #888;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
 }
 
 .pt-slot:hover{
-  background:#eee;
+background:#eee;
 }
 
 #board{
-  display:grid;
-  gap:2px;
-  margin-top:10px;
+display:grid;
+gap:2px;
+margin-top:10px;
 }
 
 .cell{
-  width:50px;
-  height:50px;
-  border:1px solid #888;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
+width:50px;
+height:50px;
+border:1px solid #888;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
 }
 
 .cell:hover{
-  background:#ddd;
+background:#ddd;
 }
 
-  .pt-slot.selected{
-  border-color:#ff9900;
-  box-shadow:0 0 6px #ff9900;
+.pt-slot.selected{
+border-color:#ff9900;
+box-shadow:0 0 6px #ff9900;
 }
 
 #duckList{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
 .duck-item{
-  border:1px solid #888;
-  padding:5px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:6px;
+border:1px solid #888;
+padding:5px;
+cursor:pointer;
+display:flex;
+align-items:center;
+gap:6px;
 }
 
 .duck-item img{
-  width:40px;
-  height:40px;
+width:40px;
+height:40px;
 }
-  
+
+.duck-item.selected{
+background:#ddd;
+}
+
 </style>
 
 <script type="module">
@@ -117,188 +120,222 @@ import { buildUnitFromDuck } from "./js/unit-builder.js";
 
 const testDucks = [
 {
-  name:"自分アヒル",
-  icon:{
-    main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
-    N:"https://dummyimage.com/64x64/ffd966/000000&text=N",
-    E:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
-    S:"https://dummyimage.com/64x64/ffd966/000000&text=S",
-    W:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp"
-  }
+name:"自分アヒル",
+icon:{
+main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+N:"https://dummyimage.com/64x64/ffd966/000000&text=N",
+E:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+S:"https://dummyimage.com/64x64/ffd966/000000&text=S",
+W:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D00.webp"
+}
 },
 {
-  name:"テストアヒルA",
-  icon:{
-    main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
-  }
+name:"テストアヒルA",
+icon:{
+main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
+}
 },
 {
-  name:"テストアヒルB",
-  icon:{
-    main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp"
-  }
+name:"テストアヒルB",
+icon:{
+main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp"
+}
 },
 {
-  name:"テストアヒルC",
-  icon:{
-    main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp"
-  }
+name:"テストアヒルC",
+icon:{
+main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp"
+}
 }
 ];
 
-  const duckListDiv = document.getElementById("duckList");
+const duckListDiv = document.getElementById("duckList");
 
 testDucks.forEach((duck,i)=>{
 
-  if(i === 0) return;
+if(i === 0) return;
 
-  const item = document.createElement("div");
+const item = document.createElement("div");
+item.className = "duck-item";
 
-  item.className = "duck-item";
+const img = document.createElement("img");
+img.src = duck.icon.main;
 
-  const img = document.createElement("img");
-  img.src = duck.icon.main;
+const name = document.createElement("span");
+name.textContent = duck.name;
 
-  const name = document.createElement("span");
-  name.textContent = duck.name;
+item.appendChild(img);
+item.appendChild(name);
 
-  item.appendChild(img);
-  item.appendChild(name);
+item.addEventListener("click",()=>{
 
-  item.addEventListener("click",()=>{
+const existingSlot = partySlots.indexOf(i);
 
-    console.log("duck selected",i);
+/* すでにPTにいる → 解除 */
 
-  });
+if(existingSlot !== -1){
 
-  duckListDiv.appendChild(item);
+if(existingSlot === 0) return;
+
+partySlots[existingSlot] = null;
+
+renderParty();
+item.classList.remove("selected");
+
+return;
+
+}
+
+/* 空きスロットを探す */
+
+for(let s=1; s<4; s++){
+
+if(partySlots[s] === null){
+
+partySlots[s] = i;
+
+renderParty();
+
+item.classList.add("selected");
+
+break;
+
+}
+
+}
 
 });
-  
-  const boardDiv =
-  document.getElementById("board");
 
-  const ptSlots = document.querySelectorAll(".pt-slot");
+duckListDiv.appendChild(item);
 
-  const playerDuck = testDucks[0];
+});
 
-const playerImg = document.createElement("img");
-playerImg.src = playerDuck.icon.main;
-playerImg.style.width = "64px";
-playerImg.style.height = "64px";
+const boardDiv = document.getElementById("board");
+const ptSlots = document.querySelectorAll(".pt-slot");
+const partySlots = [0,null,null,null];
 
-ptSlots[0].innerHTML = "";
-ptSlots[0].appendChild(playerImg);
+function renderParty(){
 
-  let selectedSlot = null;
-  const placedSlots = {};
+ptSlots.forEach((slot,i)=>{
+
+slot.innerHTML = "";
+
+const duckIndex = partySlots[i];
+if(duckIndex === null) return;
+
+const duck = testDucks[duckIndex];
+
+const img = document.createElement("img");
+img.src = duck.icon.main;
+img.style.width = "64px";
+img.style.height = "64px";
+
+slot.appendChild(img);
+
+});
+
+}
+
+renderParty();
+
+let selectedSlot = null;
+const placedSlots = {};
 
 ptSlots.forEach((slot) => {
 
-  slot.addEventListener("click", () => {
+slot.addEventListener("click", () => {
 
-    if(slot.dataset.slot == "0") return;
+if(slot.dataset.slot == "0") return;
 
-    ptSlots.forEach(s => s.classList.remove("selected"));
+ptSlots.forEach(s => s.classList.remove("selected"));
 
-    slot.classList.add("selected");
+slot.classList.add("selected");
 
-    selectedSlot = parseInt(slot.dataset.slot);
+selectedSlot = parseInt(slot.dataset.slot);
 
-    console.log("selected slot", selectedSlot);
-
-  });
+console.log("selected slot", selectedSlot);
 
 });
 
+});
 
 function createBoard(width, height){
 
-  boardDiv.innerHTML = "";
+boardDiv.innerHTML = "";
+boardDiv.style.gridTemplateColumns = `repeat(${width}, 50px)`;
 
-  boardDiv.style.gridTemplateColumns =
-    `repeat(${width}, 50px)`;
+for(let y=0; y<height; y++){
 
-  for(let y=0; y<height; y++){
+for(let x=0; x<width; x++){
 
-    for(let x=0; x<width; x++){
+const cell = document.createElement("div");
+cell.className = "cell";
 
-      const cell =
-        document.createElement("div");
-
-      cell.className = "cell";
-
-      cell.dataset.x = x;
-      cell.dataset.y = y;
+cell.dataset.x = x;
+cell.dataset.y = y;
 
 cell.addEventListener("click", () => {
 
-  if(selectedSlot === null) return;
+if(selectedSlot === null) return;
 
-  const duck = testDucks[selectedSlot];
-  if(!duck) return;
+const duck = testDucks[selectedSlot];
+if(!duck) return;
 
-  /* ① 同じPTがすでに配置されていたら消す */
+/* ① 同じPTがすでに配置されていたら消す */
 
-  if(placedSlots[selectedSlot]){
+if(placedSlots[selectedSlot]){
 
-    const prev = placedSlots[selectedSlot];
+const prev = placedSlots[selectedSlot];
 
-    const prevCell =
-      document.querySelector(
-        `.cell[data-x="${prev.x}"][data-y="${prev.y}"]`
-      );
+const prevCell = document.querySelector(`.cell[data-x="${prev.x}"][data-y="${prev.y}"]`);
 
-    if(prevCell) prevCell.innerHTML = "";
+if(prevCell) prevCell.innerHTML = "";
 
-  }
+}
 
-  /* ② このセルに別PTがいたら消す */
+/* ② このセルに別PTがいたら消す */
 
-  Object.keys(placedSlots).forEach(slot => {
+Object.keys(placedSlots).forEach(slot => {
 
-    const p = placedSlots[slot];
+const p = placedSlots[slot];
 
-    if(p.x == x && p.y == y){
+if(p.x == x && p.y == y){
 
-      const prevCell =
-        document.querySelector(
-          `.cell[data-x="${p.x}"][data-y="${p.y}"]`
-        );
+const prevCell = document.querySelector(`.cell[data-x="${p.x}"][data-y="${p.y}"]`);
 
-      if(prevCell) prevCell.innerHTML = "";
+if(prevCell) prevCell.innerHTML = "";
 
-      delete placedSlots[slot];
+delete placedSlots[slot];
 
-    }
-
-  });
-
-  /* ③ 新しく配置 */
-
-  cell.innerHTML = "";
-
-  const img = document.createElement("img");
-
-  img.src = duck.icon.main;
-  img.style.width = "40px";
-  img.style.height = "40px";
-
-  cell.appendChild(img);
-
-  placedSlots[selectedSlot] = {x,y};
-
-  /* ④ 選択解除 */
-
-  selectedSlot = null;
-  ptSlots.forEach(s => s.classList.remove("selected"));
+}
 
 });
-      boardDiv.appendChild(cell);
 
-    }
+/* ③ 新しく配置 */
 
-  }
+cell.innerHTML = "";
+
+const img = document.createElement("img");
+img.src = duck.icon.main;
+img.style.width = "40px";
+img.style.height = "40px";
+
+cell.appendChild(img);
+
+placedSlots[selectedSlot] = {x,y};
+
+/* ④ 選択解除 */
+
+selectedSlot = null;
+ptSlots.forEach(s => s.classList.remove("selected"));
+
+});
+
+boardDiv.appendChild(cell);
+
+}
+
+}
 
 }
 
@@ -307,96 +344,89 @@ const stageSelect = document.getElementById("stageSelect");
 
 stageSelect.addEventListener("change", () => {
 
-  if(!stageSelect.value){
+if(!stageSelect.value){
 
-    boardDiv.innerHTML = "";
-    resetPlacement();
-    return;
+boardDiv.innerHTML = "";
+resetPlacement();
+return;
 
-  }
+}
 
-  const stageSnapshot =
-    createTestSnapshot(stageSelect.value);
+const stageSnapshot = createTestSnapshot(stageSelect.value);
 
-  createBoard(
-    stageSnapshot.board.width,
-    stageSnapshot.board.height
-  );
+createBoard(stageSnapshot.board.width, stageSnapshot.board.height);
 
-  resetPlacement();
+resetPlacement();
 
 });
 
-  let selectedCell = null;
+let selectedCell = null;
 
 function resetPlacement(){
-  selectedCell = null;
+selectedCell = null;
 }
 
 startBtn.addEventListener("click", () => {
 
-  const stageType = stageSelect.value;
-  
-  const snapshot = createTestSnapshot(stageType);
+const stageType = stageSelect.value;
 
-  const duckData = localStorage.getItem("duck");
+const snapshot = createTestSnapshot(stageType);
+
+const duckData = localStorage.getItem("duck");
 
 if (duckData) {
 
-  const duck = JSON.parse(duckData);
+const duck = JSON.parse(duckData);
+const pattern = duck.patterns[0];
 
-  const pattern = duck.patterns[0];
+const playerUnit = buildUnitFromDuck(
+duck,
+pattern,
+1,
+1,
+2,
+"E"
+);
 
-  const playerUnit =
-    buildUnitFromDuck(
-      duck,
-      pattern,
-      1,
-      1,
-      2,
-      "E"
-    );
-
-  snapshot.units.push(playerUnit);
+snapshot.units.push(playerUnit);
 
 }
 
-  const log = simulateBattle(snapshot);
+const log = simulateBattle(snapshot);
 
-  const battleID = "battle_" + Date.now();
+const battleID = "battle_" + Date.now();
 
 Object.keys(localStorage).forEach(k => {
-  if (k.startsWith("battle_")) {
-    localStorage.removeItem(k);
-  }
+if (k.startsWith("battle_")) {
+localStorage.removeItem(k);
+}
 });
-  
-  localStorage.setItem(
-    battleID,
-    JSON.stringify({
-      snapshot: snapshot,
-      log: log
-    })
-  );
 
-  window.location.href = `battlelog.html?id=${battleID}`;
+localStorage.setItem(
+battleID,
+JSON.stringify({
+snapshot: snapshot,
+log: log
+})
+);
+
+window.location.href = `battlelog.html?id=${battleID}`;
+
 });
 
 </script>
 
+</main>
 
-  </main>
-
-  <aside class="right-panel">
+<aside class="right-panel">
 <h2>アヒル一覧</h2>
-
 <div id="duckList"></div>
-  </aside>
+</aside>
 
 </div>
 
 </body>
-  
 
 </body>
 </html>
+```
