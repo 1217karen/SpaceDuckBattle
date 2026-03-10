@@ -310,171 +310,157 @@ else if (role === "heal") {
     getLowestHpAlly(unit, units, getDistance, getAllies);
 
   if (!ally) {
-    // ヒール対象がいない → 敵へ距離2で接近
     targetUnit = enemy;
     moveMode = "toward";
     stopDistance = 2;
   }
 
-  else if (enemy) {
-
-    const enemyDist =
-      getDistance(unit, enemy);
+  else {
 
     const allyDist =
       getDistance(unit, ally);
 
-    // 敵が近い → 逃げる
-    if (enemyDist <= 2) {
+    const enemyDist =
+      enemy ? getDistance(unit, enemy) : Infinity;
+
+    const enemyCheb =
+      enemy
+        ? Math.max(
+            Math.abs(enemy.x - unit.x),
+            Math.abs(enemy.y - unit.y)
+          )
+        : Infinity;
+
+    // 両方満たす → 停止
+    if (allyDist <= 2 && enemyCheb > 1) {
+      targetUnit = null;
+    }
+
+    // 敵がチェビシェフ1 → 逃げる
+    else if (enemyCheb <= 1) {
       targetUnit = enemy;
       moveMode = "away";
       stopDistance = -1;
-    }
-
-    // 理想位置 → 動かない
-    else if (enemyDist >= 3 && allyDist <= 1) {
-      targetUnit = null;
     }
 
     // 味方へ接近
     else {
       targetUnit = ally;
       moveMode = "toward";
-      stopDistance = 1;
-    }
-  }
-}
-
-  else if (role === "defense") {
-
-// すでに隣接している敵がいる場合は固定
-const adjacentEnemy =
-  getEnemies(units, unit.team)
-    .find(e => getDistance(unit, e) === 1);
-
-if (adjacentEnemy) {
-  targetUnit = adjacentEnemy;
-  moveMode = "toward";
-  stopDistance = 1;
-  return { targetUnit, moveMode, stopDistance, moveCount };
-}
-    
-  const enemy =
-    getNearestEnemy(unit, units, getDistance, getEnemies);
-
-  if (!enemy) {
-    targetUnit = null;
-  }
-
-  else {
-
-    // 敵に最も近い味方を取得
-    const allies = units.filter(u =>
-  u.team === unit.team &&
-  u.id !== unit.id &&
-  u.hp > 0
-);
-
-    let frontAlly = null;
-    let bestDist = Infinity;
-
-    for (const a of allies) {
-      const dist =
-        getDistance(a, enemy);
-
-      if (dist < bestDist) {
-        bestDist = dist;
-        frontAlly = a;
-      }
-    }
-
-    if (!frontAlly) {
-      // 単騎 → 敵へ
-      targetUnit = enemy;
-      moveMode = "toward";
-      stopDistance = 1;
-    }
-
-    else {
-
-      const allyDist =
-        getDistance(unit, frontAlly);
-
-      // 味方から離れすぎている場合
-      if (allyDist > 2) {
-        targetUnit = frontAlly;
-        moveMode = "toward";
-        stopDistance = 2;
-      }
-
-      else {
-        // 条件を満たしているなら敵へ
-        targetUnit = enemy;
-        moveMode = "toward";
-        stopDistance = 1;
-      }
-
-    }
-
-  }
-}
-  else if (role === "support") {
-
-  const enemy =
-    getNearestEnemy(unit, units, getDistance, getEnemies);
-
-  if (!enemy) {
-    targetUnit = null;
-  }
-
-  else {
-
-    // 敵に最も近い味方を取得
-    const allies =
-      units.filter(u =>
-        u.team === unit.team &&
-        u.id !== unit.id &&
-        u.hp > 0
-      );
-
-    let frontAlly = null;
-    let bestDist = Infinity;
-
-    for (const a of allies) {
-      const dist =
-        getDistance(a, enemy);
-
-      if (dist < bestDist) {
-        bestDist = dist;
-        frontAlly = a;
-      }
-    }
-
-    if (!frontAlly) {
-      targetUnit = enemy;
-      moveMode = "toward";
       stopDistance = 2;
     }
+  }
+}
+
+else if (role === "defense") {
+
+  const enemy =
+    getNearestEnemy(unit, units, getDistance, getEnemies);
+
+  if (!enemy) {
+    targetUnit = null;
+  }
+
+  else {
+
+    const allies =
+      getAllies(units, unit.team, unit.id);
+
+    let frontAlly = null;
+    let bestDist = Infinity;
+
+    for (const a of allies) {
+
+      const dist =
+        getDistance(a, enemy);
+
+      if (dist < bestDist) {
+        bestDist = dist;
+        frontAlly = a;
+      }
+    }
+
+    if (!frontAlly) {
+      targetUnit = enemy;
+      moveMode = "toward";
+      stopDistance = 1;
+    }
 
     else {
+
+      const allyCheb =
+        Math.max(
+          Math.abs(frontAlly.x - unit.x),
+          Math.abs(frontAlly.y - unit.y)
+        );
 
       const enemyDist =
         getDistance(unit, enemy);
 
-      if (enemyDist <= 2) {
-        targetUnit = enemy;
-        moveMode = "away";
-        stopDistance = -1;
+      if (allyCheb <= 1 && enemyDist <= 1) {
+        targetUnit = null;
       }
 
-      else {
+      else if (allyCheb > 1) {
         targetUnit = frontAlly;
         moveMode = "toward";
         stopDistance = 1;
       }
 
+      else {
+        targetUnit = enemy;
+        moveMode = "toward";
+        stopDistance = 1;
+      }
+    }
+  }
+}
+  
+else if (role === "support") {
+
+  const enemy =
+    getNearestEnemy(unit, units, getDistance, getEnemies);
+
+  const allies =
+    getAllies(units, unit.team, unit.id);
+
+  if (!allies || allies.length === 0) {
+    targetUnit = enemy;
+    moveMode = "toward";
+    stopDistance = 2;
+  }
+
+  else {
+
+    const ally =
+      allies.reduce((a, b) =>
+        getDistance(unit, a) <= getDistance(unit, b) ? a : b
+      );
+
+    const allyCheb =
+      Math.max(
+        Math.abs(ally.x - unit.x),
+        Math.abs(ally.y - unit.y)
+      );
+
+    const enemyDist =
+      enemy ? getDistance(unit, enemy) : Infinity;
+
+    if (allyCheb <= 1 && enemyDist > 1) {
+      targetUnit = null;
     }
 
+    else if (enemyDist <= 1) {
+      targetUnit = enemy;
+      moveMode = "away";
+      stopDistance = -1;
+    }
+
+    else {
+      targetUnit = ally;
+      moveMode = "toward";
+      stopDistance = 1;
+    }
   }
 }
   return {
