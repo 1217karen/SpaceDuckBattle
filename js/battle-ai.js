@@ -352,11 +352,21 @@ else if (role === "heal") {
     }
 
     // 敵がチェビシェフ1 → 逃げる
-    else if (enemyCheb <= 1) {
-      targetUnit = enemy;
-      moveMode = "away";
-      stopDistance = -1;
-    }
+else if (enemyCheb <= 1) {
+
+  if (ally) {
+    targetUnit = ally;
+    moveMode = "toward";
+    stopDistance = 2;
+  }
+
+  else {
+    targetUnit = enemy;
+    moveMode = "away";
+    stopDistance = -1;
+  }
+
+}
 
     // 味方へ接近
     else {
@@ -465,11 +475,21 @@ else if (role === "support") {
       targetUnit = null;
     }
 
-    else if (enemyDist <= 1) {
-      targetUnit = enemy;
-      moveMode = "away";
-      stopDistance = -1;
-    }
+else if (enemyDist <= 1) {
+
+  if (ally) {
+    targetUnit = ally;
+    moveMode = "toward";
+    stopDistance = 1;
+  }
+
+  else {
+    targetUnit = enemy;
+    moveMode = "away";
+    stopDistance = -1;
+  }
+
+}
 
     else {
       targetUnit = ally;
