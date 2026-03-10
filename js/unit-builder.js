@@ -1,8 +1,10 @@
-export function buildUnitFromDuck(duck, pattern, team, x, y, facing){
+//unit-builder.js
+
+export function buildUnitFromDuck(duck, pattern, team, x, y, facing, duckIndex){
 
   const unit = {
 
-    id: "duck_" + Date.now(),
+    id: "duck_" + duckIndex,
 
     name: duck.name,
 
