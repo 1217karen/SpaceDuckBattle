@@ -477,6 +477,7 @@ snapshot.units.push(unit);
 
 }
 
+    console.log("SNAPSHOT", JSON.stringify(snapshot,null,2));
 const log = simulateBattle(snapshot);
 
 const battleID = "battle_" + Date.now();
