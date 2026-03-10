@@ -150,6 +150,8 @@ const testDucks = [
 
 testDucks.forEach((duck,i)=>{
 
+  if(i === 0) return;
+
   const item = document.createElement("div");
 
   item.className = "duck-item";
@@ -178,12 +180,24 @@ testDucks.forEach((duck,i)=>{
 
   const ptSlots = document.querySelectorAll(".pt-slot");
 
+  const playerDuck = testDucks[0];
+
+const playerImg = document.createElement("img");
+playerImg.src = playerDuck.icon.main;
+playerImg.style.width = "64px";
+playerImg.style.height = "64px";
+
+ptSlots[0].innerHTML = "";
+ptSlots[0].appendChild(playerImg);
+
   let selectedSlot = null;
   const placedSlots = {};
 
 ptSlots.forEach((slot) => {
 
   slot.addEventListener("click", () => {
+
+    if(slot.dataset.slot == "0") return;
 
     ptSlots.forEach(s => s.classList.remove("selected"));
 
