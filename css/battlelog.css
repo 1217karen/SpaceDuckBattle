@@ -76,7 +76,18 @@ margin-bottom: 10px;
 
 #logArea {
 width: 500px;
-min-height: 120px;
+height: 140px;
+overflow-y: auto;
+background: rgba(10,15,30,0.9);
+
+border: 2px solid rgba(120,180,255,0.8);
+border-radius: 6px;
+
+box-shadow:
+0 0 8px rgba(80,140,255,0.6),
+inset 0 0 6px rgba(80,140,255,0.3);
+
+padding: 8px;
 }
 
 /* =======================================================
@@ -298,6 +309,32 @@ height:20px;
 border:1px solid #666;
 background:#111;
 }
+
+/* =======================================================
+盤面フレーム（仮）
+======================================================= */
+
+#boardFrame {
+
+width: 460px;
+height: 360px;
+
+display: flex;
+justify-content: center;
+align-items: center;
+
+background: rgba(10,15,30,0.9);
+
+border: 2px solid rgba(120,180,255,0.8);
+border-radius: 8px;
+
+box-shadow:
+0 0 10px rgba(80,140,255,0.6),
+inset 0 0 10px rgba(80,140,255,0.3);
+
+padding: 10px;
+}
+
 
 /* =======================================================
 盤面
