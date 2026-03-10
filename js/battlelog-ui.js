@@ -146,7 +146,7 @@ export function playLogEvent(
 
 else if (event.type === "critical") {
 
-  div.textContent = "<i>CRITICAL!</i>";
+  div.textContent = "CRITICAL!";
 
 }
     
