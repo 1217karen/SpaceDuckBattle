@@ -357,7 +357,7 @@ else if (enemyCheb <= 1) {
   if (ally) {
     targetUnit = ally;
     moveMode = "toward";
-    stopDistance = 2;
+    stopDistance = -1;
   }
 
   else {
