@@ -438,31 +438,12 @@ boardDiv.appendChild(cell);
 }
 
 const startBtn = document.getElementById("startBtn");
-const stageSelect = document.getElementById("stageSelect");
+const stageSelect = document.getElementById("stageSelect"); 
 
-stageSelect.addEventListener("change", () => {
+  startBtn.addEventListener("click", () => {
 
-if(!stageSelect.value){
-
-boardDiv.innerHTML = "";
-resetPlacement();
-return;
-
-}
-
-const stageSnapshot = createTestSnapshot(stageSelect.value);
-
-createBoard(stageSnapshot.board.width, stageSnapshot.board.height);
-
-resetPlacement();
-
-});
-
-let selectedCell = null;
-
-function resetPlacement(){
-selectedCell = null;
-}
+const stageType = stageSelect.value;
+if(!stageType) return;
 
 const stage = STAGES[stageType];
 
@@ -519,6 +500,31 @@ log: log
 window.location.href = `battlelog.html?id=${battleID}`;
 
 });
+  
+
+stageSelect.addEventListener("change", () => {
+
+if(!stageSelect.value){
+
+boardDiv.innerHTML = "";
+resetPlacement();
+return;
+
+}
+  
+const stage = STAGES[stageSelect.value];
+
+createBoard(stage.board.width, stage.board.height);
+
+resetPlacement();
+
+});
+
+let selectedCell = null;
+
+function resetPlacement(){
+selectedCell = null;
+}
 
 </script>
 
