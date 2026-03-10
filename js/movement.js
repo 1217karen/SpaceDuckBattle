@@ -85,8 +85,8 @@ const dirs =
     const nx = unit.x + d.dx;
     const ny = unit.y + d.dy;
 
-    // ヒーラー・サポートは敵チェビシェフ1を避ける
-if (unit.role === "heal" || unit.role === "support") {
+// ヒールは敵チェビシェフ1を避ける
+if (unit.role === "heal") {
 
   const danger = units.some(u =>
     u.hp > 0 &&
@@ -95,7 +95,18 @@ if (unit.role === "heal" || unit.role === "support") {
   );
 
   if (danger) continue;
+}
 
+// サポートは敵マンハッタン1を避ける
+if (unit.role === "support") {
+
+  const danger = units.some(u =>
+    u.hp > 0 &&
+    u.team !== unit.team &&
+    Math.abs(u.x - nx) + Math.abs(u.y - ny) <= 1
+  );
+
+  if (danger) continue;
 }
 
     // 盤外
