@@ -455,6 +455,23 @@ const stageSelect = document.getElementById("stageSelect");
 
   startBtn.addEventListener("click", () => {
 
+    /* 未配置PTチェック */
+
+for(let slot = 0; slot < 4; slot++){
+
+const duckIndex = partySlots[slot];
+if(duckIndex === null) continue;
+
+if(!placedSlots[slot]){
+
+alert("PTに編成されているアヒルがまだ配置されていません");
+
+return;
+
+}
+
+}
+
 const stageType = stageSelect.value;
 if(!stageType) return;
 
