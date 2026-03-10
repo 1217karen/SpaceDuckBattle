@@ -28,11 +28,40 @@
 
 <button id="startBtn">戦闘開始</button>
 
+<div id="party">
+
+<div class="pt-slot" data-slot="0">PT1</div>
+<div class="pt-slot" data-slot="1">PT2</div>
+<div class="pt-slot" data-slot="2">PT3</div>
+<div class="pt-slot" data-slot="3">PT4</div>
+
+</div>
+    
   <h2>配置</h2>
 
 <div id="board"></div>
 
 <style>
+
+  #party{
+  display:flex;
+  gap:10px;
+  margin:10px 0;
+}
+
+.pt-slot{
+  width:80px;
+  height:80px;
+  border:2px solid #888;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.pt-slot:hover{
+  background:#eee;
+}
 
 #board{
   display:grid;
