@@ -141,6 +141,10 @@ function pushLog(event){
     event.subLevel = 0;
   }
 
+  if(event.block === undefined){
+  event.block = "system";
+}
+
   log.push(event);
 }
   
@@ -422,12 +426,13 @@ if (mobilityDelta !== 0) {
   const effectName =
     mobilityDelta > 0 ? "accel" : "slow";
 
-  context.pushLog({
-    type: "skillUse",
-    groupLevel: context.groupLevel,
-    subLevel: 0,
-    unit: unit.id,
-    skill: skill.type,
+context.pushLog({
+  type: "skillUse",
+  groupLevel: context.groupLevel,
+  subLevel: 0,
+  block: "skill",
+  unit: unit.id,
+  skill: skill.type,
   });
 
 }
