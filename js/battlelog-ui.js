@@ -109,8 +109,6 @@ export function playLogEvent(
   nameMap
 ) {
 
-  let indent = 0;
-
   const div = document.createElement("div");
 
   let indent = 0;
