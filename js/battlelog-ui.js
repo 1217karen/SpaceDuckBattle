@@ -111,9 +111,17 @@ export function playLogEvent(
 
   const div = document.createElement("div");
 
-  if (event.level > 0) {
-  div.style.paddingLeft = "16px";
+let indent = event.level ?? 0;
+
+if (event.type === "effectTrigger") {
+  indent = 1;
 }
+
+if (event.type !== "effectTrigger" && indent > 0) {
+  indent = 2;
+}
+
+div.style.paddingLeft = (indent * 16) + "px";
 
   if (event.type === "turnStart") {
     return;
