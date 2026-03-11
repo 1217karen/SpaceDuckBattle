@@ -361,6 +361,30 @@ export function processBeforeAction(unit, ctx) {
 
   const net = gravityStock - floatStock;
 
+  if (gravityStock > 0) {
+
+  ctx.currentGroup = ctx.currentGroup ?? Symbol();
+
+  ctx.pushLog({
+    type: "effectTrigger",
+    unit: unit.id,
+    effect: "gravity"
+  });
+
+}
+
+if (floatStock > 0) {
+
+  ctx.currentGroup = ctx.currentGroup ?? Symbol();
+
+  ctx.pushLog({
+    type: "effectTrigger",
+    unit: unit.id,
+    effect: "float"
+  });
+
+}
+
   if (net !== 0 && unit.skills && unit.skills.length > 0) {
 
     const steps = Math.abs(net);
@@ -442,6 +466,12 @@ export function processBeforeAction(unit, ctx) {
 
     if (e.type !== "corrosion" && e.type !== "repair")
       continue;
+
+    ctx.pushLog({
+  type: "effectTrigger",
+  unit: unit.id,
+  effect: e.type
+});
 
     const stock =
       Math.min(e.stock ?? 0, MAX_STACK);
