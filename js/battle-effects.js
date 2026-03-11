@@ -48,7 +48,7 @@ export function applyEffect(source, target, action, ctx) {
 
 if (rollCritical(source)) {
 
-  ctx.log.push({
+  ctx.pushLog({
     type: "critical"
   });
 
@@ -100,7 +100,7 @@ if (rollCritical(source)) {
 
       existing.group = effectData.group;
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "effectApplied",
         source: source.id,
         target: target.id,
@@ -121,7 +121,7 @@ if (rollCritical(source)) {
 
     target.effects.push(newEffect);
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "effectApplied",
       source: source.id,
       target: target.id,
@@ -156,7 +156,7 @@ if (rollCritical(source)) {
 
       existing.group = effectData.group;
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "effectApplied",
         source: source.id,
         target: target.id,
@@ -177,7 +177,7 @@ if (rollCritical(source)) {
 
     target.effects.push(newEffect);
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "effectApplied",
       source: source.id,
       target: target.id,
@@ -217,7 +217,7 @@ if (rollCritical(source)) {
 
     target.effects.push(newEffect);
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "effectApplied",
       source: source.id,
       target: target.id,
@@ -252,7 +252,7 @@ if (rollCritical(source)) {
 
     target.effects.push(newEffect);
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "effectApplied",
       source: source.id,
       target: target.id,
@@ -270,7 +270,7 @@ if (rollCritical(source)) {
     existing.value = newValue;
     existing.duration = newDuration;
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "effectApplied",
       source: source.id,
       target: target.id,
@@ -284,7 +284,7 @@ if (rollCritical(source)) {
 
     existing.duration += newDuration;
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "effectApplied",
       source: source.id,
       target: target.id,
@@ -302,7 +302,7 @@ if (rollCritical(source)) {
 
     existing.duration += convertTurn;
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "effectApplied",
       source: source.id,
       target: target.id,
@@ -393,7 +393,7 @@ export function processBeforeAction(unit, ctx) {
 
       if (eligible.length === 0) {
 
-        ctx.log.push({
+        ctx.pushLog({
           type: "cooldownLimit",
           unit: unit.id
         });
@@ -419,7 +419,7 @@ export function processBeforeAction(unit, ctx) {
 
       s._currentCooldown = newCt;
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "cooldownChange",
         unit: unit.id,
         skill: s.type,
@@ -461,7 +461,7 @@ export function processBeforeAction(unit, ctx) {
 
       unit.hp -= amount;
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "damage",
         from: null,
         target: unit.id,
@@ -481,7 +481,7 @@ export function processBeforeAction(unit, ctx) {
       unit.hp =
         Math.min(unit.hp + amount, mhp);
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "heal",
         from: null,
         target: unit.id,
@@ -490,7 +490,7 @@ export function processBeforeAction(unit, ctx) {
       });
     }
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "hpChange",
       target: unit.id,
       hp: unit.hp
@@ -513,7 +513,7 @@ export function processAfterAction(unit, ctx) {
 
     if (e.stock > 0) {
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "effectDecay",
         unit: unit.id,
         effect: {
@@ -525,7 +525,7 @@ export function processAfterAction(unit, ctx) {
 
     if (e.stock <= 0) {
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "effectRemoved",
         unit: unit.id,
         effect: {
