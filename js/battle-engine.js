@@ -427,13 +427,22 @@ if (mobilityDelta !== 0) {
     mobilityDelta > 0 ? "accel" : "slow";
 
 context.pushLog({
-  type: "skillUse",
-  groupLevel: context.groupLevel,
+  type: "effectTrigger",
+  groupLevel: context.groupLevel + 1,
   subLevel: 0,
-  block: "skill",
+  block: "effect",
   unit: unit.id,
-  skill: skill.type,
-  });
+  effect: effectName
+});
+
+context.pushLog({
+  type: "mobilityChange",
+  groupLevel: context.groupLevel + 1,
+  subLevel: 1,
+  block: "effect",
+  unit: unit.id,
+  delta: mobilityDelta
+});
 
 }
 
