@@ -5,7 +5,7 @@ export const skillHandlers = {
   // 前方1マス攻撃
   // =========================
   attack_front1: {
-    cooldown: 2,
+    cooldown: 3,
     
     generateActions(unit, ctx) {
 
@@ -104,7 +104,7 @@ satellite_meteor_field: {
 // 周囲デバフ波
 // =========================
 debuff_wave: {
-  cooldown: 1,
+  cooldown: 3,
 
   generateActions(unit, ctx) {
 
@@ -170,7 +170,7 @@ debuff_wave: {
 // 周囲バフ波
 // =========================
 buff_wave: {
-  cooldown: 1,
+  cooldown: 3,
 
   generateActions(unit, ctx) {
 
@@ -235,7 +235,7 @@ buff_wave: {
   // 最寄り敵攻撃
   // =========================
   attack_nearest: {
-    cooldown: 2,
+    cooldown: 3,
 
     generateActions(unit, ctx) {
 
@@ -271,7 +271,7 @@ buff_wave: {
   // 縦横2マス回復
   // =========================
   heal_cross2: {
-    cooldown: 2,
+    cooldown: 3,
 
     generateActions(unit, ctx) {
 
@@ -404,7 +404,7 @@ buff_wave: {
   // =========================
 
   attack_random_falloff: {
-    cooldown: 4,
+    cooldown: 3,
     
 generateActions(unit, ctx) {
 
@@ -496,7 +496,7 @@ attack_front_knockback: {
 // 最遠敵引き寄せ
 // =========================
 pull_farthest_enemy: {
-  cooldown: 2,
+  cooldown: 3,
 
   generateActions(unit, ctx) {
 
@@ -629,7 +629,7 @@ repair_wave: {
   // 自分DF50%バフ（3T）
   // =========================
   buff_df50_self: {
-    cooldown: 4,
+    cooldown: 3,
 
     generateActions(unit, ctx) {
 
