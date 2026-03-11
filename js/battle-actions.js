@@ -178,6 +178,13 @@ const reducedDamage =
     satellite.stock -= usedStock;
 
 ctx.pushLog({
+  type: "effectTrigger",
+  level: 0,
+  unit: target.id,
+  effect: "satellite"
+});
+
+ctx.pushLog({
   type: "satelliteGuard",
   unit: target.id
 });
@@ -231,6 +238,13 @@ const reflectDamage =
         source.hp -= reflectDamage;
 
 ctx.pushLog({
+  type: "effectTrigger",
+  level: 0,
+  unit: target.id,
+  effect: "meteor"
+});
+        
+ctx.pushLog({
   type: "meteorReflect",
   source: target.id,
   target: source.id,
@@ -258,6 +272,13 @@ ctx.pushLog({
       }
 
       else {
+
+        ctx.pushLog({
+  type: "effectTrigger",
+  level: 0,
+  unit: target.id,
+  effect: "meteor"
+});
         
 ctx.pushLog({
   type: "meteorNoTarget",
