@@ -10,6 +10,43 @@ import { applyDamage, applyHeal, applyMove } from "./battle-actions.js";
 // 共通ユーティリティ
 // ==========================================================
 
+function getSkillChainCount(unit) {
+
+  const speed = unit.speed ?? 0;
+
+  const rate = speed * 2; // %
+
+  let count = 1;
+
+  if (rate < 100) {
+
+    if (Math.random() * 100 < rate) {
+      count = 2;
+    }
+
+  }
+
+  else if (rate < 200) {
+
+    count = 2;
+
+    const extra = rate - 100;
+
+    if (Math.random() * 100 < extra) {
+      count = 3;
+    }
+
+  }
+
+  else {
+
+    count = 3;
+
+  }
+
+  return count;
+}
+
 function getManhattanCells(center, range) {
   const cells = [];
 
@@ -373,10 +410,26 @@ context.currentGroup = ++logGroup;
         return log;
       }
 
-      if (tryUseSkill(unit)) {
-        endAction(unit);
-        continue;
-      }
+const skillChain = getSkillChainCount(unit);
+
+let usedSkill = false;
+
+for (let i = 0; i < skillChain; i++) {
+
+  const result = tryUseSkill(unit);
+
+  if (!result) break;
+
+  usedSkill = true;
+
+}
+
+if (usedSkill) {
+
+  endAction(unit);
+  continue;
+
+}
 
       const {
         targetUnit,
