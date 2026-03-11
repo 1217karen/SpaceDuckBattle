@@ -512,13 +512,13 @@ const displayName =
       actionEvents[i + 1].type === "faceChange"
     ) {
 
-      playLogEvent(
-        ev,
-        boardState,
-        logArea,
-        nameMap
-      );
-
+playLogEvent(
+  ev,
+  actionEvents[i + 1],
+  boardState,
+  logArea,
+  nameMap
+);
       playLogEvent(
         actionEvents[i + 1],
         boardState,
@@ -532,12 +532,13 @@ const displayName =
 
     else {
 
-      playLogEvent(
-        ev,
-        boardState,
-        logArea,
-        nameMap
-      );
+playLogEvent(
+  ev,
+  actionEvents[i + 1],
+  boardState,
+  logArea,
+  nameMap
+);
 
     }
 
