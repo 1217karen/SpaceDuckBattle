@@ -355,9 +355,7 @@ spawnFloatingNumber(
 
       const n = e.stock ?? 1;
 
-      isBuff =
-        e.type === "repair" ||
-        e.type === "resonance";
+      isBuff = EFFECTS[e.type]?.group === "buff";
 
       text =
         `${displayName(event.target, nameMap)} に ${name} を ${event.effect.delta ?? n} 付与 (${n})`;
@@ -377,11 +375,7 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
         "statUp"
       );
 
-      isBuff =
-        e.type === "accel" ||
-        e.type === "float" ||
-        e.type === "converge" ||
-        e.type === "satellite";
+      isBuff = EFFECTS[e.type]?.group === "buff";
 
       text =
         `${displayName(event.target, nameMap)} の ${name} が ${n} に変化`;
