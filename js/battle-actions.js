@@ -259,13 +259,15 @@ ctx.pushLog({
   amount: reflectDamage
 });
         
-        ctx.pushLog({
-          type: "damage",
-          source: target.id,
-          target: source.id,
-          amount: reflectDamage,
-          damageType: "fixed"
-        });
+ctx.pushLog({
+  type: "damage",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: target.id,
+  target: source.id,
+  amount: reflectDamage,
+  damageType: "fixed"
+});
 
         ctx.pushLog({
           type: "hpChange",
