@@ -99,6 +99,8 @@ export function simulateBattle(snapshot) {
   const log = [];
   let battleFinished = false;
 
+  let logGroup = 0;
+
   const board = snapshot.board ?? { width: 7, height: 5 };
   const MAX_TURNS = snapshot.maxTurns ?? 50;
 
@@ -125,9 +127,22 @@ export function simulateBattle(snapshot) {
   // context
   // ======================================================
 
+function pushLog(event){
+
+  if(context.currentGroup !== null){
+    event.group = context.currentGroup;
+  }
+
+  log.push(event);
+}
+  
   const context = {
+    currentGroup: null,
+    
     units,
     log,
+
+    pushLog,
 
     getDistance,
     getChebyshevDistance,
@@ -190,6 +205,9 @@ export function simulateBattle(snapshot) {
       type: "actionEnd",
       unit: unit.id
     });
+
+context.currentGroup = null;
+    
   }
 
   function waitAction(unit) {
@@ -225,7 +243,9 @@ export function simulateBattle(snapshot) {
 
       if (!hasEffect) continue;
 
-      log.push({
+context.currentGroup = ++logGroup;
+      
+      context.pushLog({
         type: "skillUse",
         unit: unit.id,
         skill: skill.type,
