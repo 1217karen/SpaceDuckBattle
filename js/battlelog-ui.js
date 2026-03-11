@@ -111,6 +111,10 @@ export function playLogEvent(
 
   const div = document.createElement("div");
 
+  if (event.level > 0) {
+  div.style.paddingLeft = "16px";
+}
+
   if (event.type === "turnStart") {
     return;
   }
