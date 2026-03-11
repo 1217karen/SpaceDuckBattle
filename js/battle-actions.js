@@ -100,9 +100,9 @@ if (
 ctx.pushLog({
   type: "critical",
   groupLevel: ctx.groupLevel,
-  subLevel: 1
+  subLevel: 1,
+  block: "skill"
 });
-
   }
 
 }
@@ -183,6 +183,7 @@ ctx.pushLog({
   type: "effectTrigger",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 0,
+  block: "effect",
   unit: target.id,
   effect: "satellite"
 });
@@ -191,6 +192,7 @@ ctx.pushLog({
   type: "satelliteGuard",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   unit: target.id
 });
 
@@ -199,11 +201,14 @@ ctx.pushLog({
       target.effects =
         target.effects.filter(e => e !== satellite);
 
-      ctx.pushLog({
-        type: "effectRemoved",
-        unit: target.id,
-        effect: { type: "satellite" }
-      });
+ctx.pushLog({
+  type: "effectRemoved",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  block: "effect",
+  unit: target.id,
+  effect: { type: "satellite" }
+});
 
     }
 
@@ -246,6 +251,7 @@ ctx.pushLog({
   type: "effectTrigger",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 0,
+  block: "effect",
   unit: target.id,
   effect: "meteor"
 });
@@ -254,6 +260,7 @@ ctx.pushLog({
   type: "meteorReflect",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: target.id,
   target: source.id,
   amount: reflectDamage
@@ -263,6 +270,7 @@ ctx.pushLog({
   type: "damage",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: target.id,
   target: source.id,
   amount: reflectDamage,
@@ -287,6 +295,7 @@ ctx.pushLog({
   type: "effectTrigger",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 0,
+  block: "effect",
   unit: target.id,
   effect: "meteor"
 });
@@ -295,6 +304,7 @@ ctx.pushLog({
   type: "meteorNoTarget",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: target.id
 });
 
@@ -325,6 +335,7 @@ ctx.pushLog({
   type: "damage",
   groupLevel: ctx.groupLevel,
   subLevel: 1,
+  block: "skill",
   source: source.id,
   target: target.id,
   amount: finalDamage,
@@ -382,7 +393,8 @@ if (
 ctx.pushLog({
   type: "critical",
   groupLevel: ctx.groupLevel,
-  subLevel: 1
+  subLevel: 1,
+  block: "skill"
 });
 
   }
@@ -406,6 +418,7 @@ ctx.pushLog({
   type: "heal",
   groupLevel: ctx.groupLevel,
   subLevel: 1,
+  block: "skill",
   source: source.id,
   target: target.id,
   amount: finalHeal,
