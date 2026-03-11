@@ -97,7 +97,7 @@ if (
     finalDamage =
       Math.floor(finalDamage * 1.5);
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "critical"
     });
 
@@ -177,7 +177,7 @@ const reducedDamage =
 
     satellite.stock -= usedStock;
 
-ctx.log.push({
+ctx.pushLog({
   type: "satelliteGuard",
   unit: target.id
 });
@@ -187,7 +187,7 @@ ctx.log.push({
       target.effects =
         target.effects.filter(e => e !== satellite);
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "effectRemoved",
         unit: target.id,
         effect: { type: "satellite" }
@@ -230,14 +230,14 @@ const reflectDamage =
 
         source.hp -= reflectDamage;
 
-ctx.log.push({
+ctx.pushLog({
   type: "meteorReflect",
   source: target.id,
   target: source.id,
   amount: reflectDamage
 });
         
-        ctx.log.push({
+        ctx.pushLog({
           type: "damage",
           source: target.id,
           target: source.id,
@@ -245,7 +245,7 @@ ctx.log.push({
           damageType: "fixed"
         });
 
-        ctx.log.push({
+        ctx.pushLog({
           type: "hpChange",
           target: source.id,
           hp: Math.max(source.hp, 0)
@@ -259,7 +259,7 @@ ctx.log.push({
 
       else {
         
-ctx.log.push({
+ctx.pushLog({
   type: "meteorNoTarget",
   source: target.id
 });
@@ -275,7 +275,7 @@ ctx.log.push({
           e => e !== meteor
         );
 
-      ctx.log.push({
+      ctx.pushLog({
         type: "effectRemoved",
         unit: target.id,
         effect: { type: "meteor" }
@@ -287,7 +287,7 @@ ctx.log.push({
 
 }
   
-ctx.log.push({
+ctx.pushLog({
   type: "damage",
   source: source.id,
   target: target.id,
@@ -295,7 +295,7 @@ ctx.log.push({
   damageType: type
 });
 
-  ctx.log.push({
+  ctx.pushLog({
     type: "hpChange",
     target: target.id,
     hp: Math.max(target.hp, 0)
@@ -343,7 +343,7 @@ if (
     finalHeal =
       Math.floor(finalHeal * 1.5);
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "critical"
     });
 
@@ -364,7 +364,7 @@ if (
     target.mhp ?? target.hp
   );
 
-ctx.log.push({
+ctx.pushLog({
   type: "heal",
   source: source.id,
   target: target.id,
@@ -372,7 +372,7 @@ ctx.log.push({
   healType: type
 });
 
-  ctx.log.push({
+  ctx.pushLog({
     type: "hpChange",
     target: target.id,
     hp: target.hp
@@ -395,7 +395,7 @@ export function applyMove(action, ctx) {
   unit.x = action.x;
   unit.y = action.y;
 
-  ctx.log.push({
+  ctx.pushLog({
     type: "move",
     unit: unit.id,
     x: action.x,
@@ -412,7 +412,7 @@ export function applyMove(action, ctx) {
 
     unit.facing = newFacing;
 
-    ctx.log.push({
+    ctx.pushLog({
       type: "faceChange",
       unit: unit.id,
       facing: newFacing
