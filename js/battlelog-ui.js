@@ -109,15 +109,19 @@ export function playLogEvent(
   nameMap
 ) {
 
+  let indent = 0;
+
   const div = document.createElement("div");
 
-let indent = event.level ?? 0;
+  let indent = 0;
 
-if (event.type === "effectTrigger") {
+if (event.type === "skillUse") {
+  indent = 0;
+}
+else if (event.type === "effectTrigger") {
   indent = 1;
 }
-
-if (event.type !== "effectTrigger" && indent > 0) {
+else {
   indent = 2;
 }
 
