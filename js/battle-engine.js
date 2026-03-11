@@ -100,6 +100,7 @@ export function simulateBattle(snapshot) {
   let battleFinished = false;
 
   let logGroup = 0;
+  let groupLevel = 0;
 
   const board = snapshot.board ?? { width: 7, height: 5 };
   const MAX_TURNS = snapshot.maxTurns ?? 50;
@@ -126,15 +127,18 @@ export function simulateBattle(snapshot) {
   // ======================================================
   // context
   // ======================================================
-
 function pushLog(event){
 
   if(context.currentGroup !== null){
     event.group = context.currentGroup;
   }
 
-  if(event.level === undefined){
-    event.level = 1;
+  if(event.groupLevel === undefined){
+    event.groupLevel = context.groupLevel;
+  }
+
+  if(event.subLevel === undefined){
+    event.subLevel = 0;
   }
 
   log.push(event);
@@ -142,6 +146,7 @@ function pushLog(event){
   
   const context = {
     currentGroup: null,
+    groupLevel: 0,
     
     units,
     log,
@@ -211,6 +216,7 @@ function pushLog(event){
     });
 
 context.currentGroup = null;
+    context.groupLevel = 0;
     
   }
 
@@ -248,6 +254,7 @@ context.currentGroup = null;
       if (!hasEffect) continue;
 
 context.currentGroup = ++logGroup;
+      context.groupLevel = 1;
       
       context.pushLog({
   type: "skillUse",
