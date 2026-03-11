@@ -2,6 +2,10 @@
 
 import { EFFECTS } from "./effects-config.js";
 
+function rollCritical(rate) {
+  return Math.random() < rate;
+}
+
 export function getEffectiveStat(unit, statName) {
 
   const base = unit[statName] || 0;
