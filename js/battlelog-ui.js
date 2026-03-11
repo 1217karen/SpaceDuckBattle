@@ -25,6 +25,14 @@ if(type === "heal"){
 num.classList.add("healNumber");
 }
 
+  if(type === "statUp"){
+num.classList.add("statUpNumber");
+}
+
+if(type === "statDown"){
+num.classList.add("statDownNumber");
+}
+
 num.textContent = value;
 
 wrapper.appendChild(num);
@@ -381,6 +389,15 @@ else if (event.type === "critical") {
       text =
         `${displayName(event.target, nameMap)} の ${e.stat} が ${amount} ${word}`;
     }
+
+    const sign = e.value >= 0 ? "+" : "-";
+const statText = `${e.stat.toUpperCase()}${sign}${amount}`;
+
+spawnFloatingNumber(
+  event.target,
+  statText,
+  e.value >= 0 ? "statUp" : "statDown"
+);
 
     div.textContent = text;
 
