@@ -443,6 +443,7 @@ const displayName =
   header.classList.add("actionHeader");
 
   logArea.innerHTML = "";
+  prevBlock = null;
   logArea.appendChild(header);
 
 
@@ -466,6 +467,7 @@ const displayName =
   }
 
   logArea.innerHTML = "";
+      prevBlock = null;
 
   const div = document.createElement("div");
   div.classList.add("battleEndBlock");
