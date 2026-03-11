@@ -74,7 +74,7 @@ margin-bottom: 10px;
 /* イベントログ */
 
 #logArea {
-width: 500px;
+width: var(--log-width);
 height: 140px;
 overflow-y: auto;
 color: #e6f4ff;
@@ -363,6 +363,8 @@ padding: 6px;
 --debuff-color: 180,0,255;
 
 --ui-speed: 1;
+
+--log-width: 500px;
 }
 
 /* 盤面セル */
@@ -528,6 +530,8 @@ display:flex;
 gap:10px;
 justify-content:flex-end;
 align-items:center;
+
+  width: var(--log-width);
 }
 
 #battleControls button{
