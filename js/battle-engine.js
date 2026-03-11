@@ -422,18 +422,12 @@ if (mobilityDelta !== 0) {
   const effectName =
     mobilityDelta > 0 ? "accel" : "slow";
 
-  context.pushLog({
-    type: "effectTrigger",
-    level: 0,
-    unit: unit.id,
-    effect: effectName
-  });
-
-  context.pushLog({
-    type: "mobilityChange",
-    unit: unit.id,
-    delta: mobilityDelta
-  });
+context.pushLog({
+  type: "skillUse",
+  groupLevel: context.groupLevel,
+  subLevel: 0,
+  unit: unit.id,
+  skill: skill.type,
 
 }
 
