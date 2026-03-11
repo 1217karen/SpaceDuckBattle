@@ -367,15 +367,15 @@ spawnFloatingNumber(
     // 上書き型
     // ==========================
 
-    else if (EFFECTS[e.type]?.stack === "overwrite") {
-
-      spawnFloatingNumber(
-  event.target,
-  `${name}=${n}`,
-  "statUp"
-);
+else if (EFFECTS[e.type]?.stack === "overwrite") {
 
       const n = e.stock ?? 1;
+
+      spawnFloatingNumber(
+        event.target,
+        `${name}=${n}`,
+        "statUp"
+      );
 
       isBuff =
         e.type === "accel" ||
