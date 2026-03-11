@@ -48,9 +48,11 @@ export function applyEffect(source, target, action, ctx) {
 
 if (rollCritical(source)) {
 
-  ctx.pushLog({
-    type: "critical"
-  });
+ctx.pushLog({
+  type: "critical",
+  groupLevel: ctx.groupLevel,
+  subLevel: 1
+});
 
   if (effectData.stock !== undefined) {
     effectData.stock =
@@ -100,11 +102,13 @@ if (rollCritical(source)) {
 
       existing.group = effectData.group;
 
-      ctx.pushLog({
-        type: "effectApplied",
-        source: source.id,
-        target: target.id,
-        effect: {
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: {
           ...existing,
           delta: addAmount
         }
@@ -121,11 +125,13 @@ if (rollCritical(source)) {
 
     target.effects.push(newEffect);
 
-    ctx.pushLog({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: {
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: {
         ...newEffect,
         delta: newEffect.stock
       }
@@ -156,11 +162,13 @@ if (rollCritical(source)) {
 
       existing.group = effectData.group;
 
-      ctx.pushLog({
-        type: "effectApplied",
-        source: source.id,
-        target: target.id,
-        effect: {
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: {
           ...existing,
           delta: incomingStock
         }
@@ -177,11 +185,13 @@ if (rollCritical(source)) {
 
     target.effects.push(newEffect);
 
-    ctx.pushLog({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: {
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: {
         ...newEffect,
         delta: newEffect.stock
       }
@@ -217,11 +227,13 @@ if (rollCritical(source)) {
 
     target.effects.push(newEffect);
 
-    ctx.pushLog({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: { ...newEffect }
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: { ...newEffect }
     });
 
     return;
@@ -252,11 +264,13 @@ if (rollCritical(source)) {
 
     target.effects.push(newEffect);
 
-    ctx.pushLog({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: { ...newEffect }
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: { ...newEffect }
     });
 
     return;
@@ -270,11 +284,13 @@ if (rollCritical(source)) {
     existing.value = newValue;
     existing.duration = newDuration;
 
-    ctx.pushLog({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: { ...existing }
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: { ...existing }
     });
 
     return;
@@ -284,11 +300,13 @@ if (rollCritical(source)) {
 
     existing.duration += newDuration;
 
-    ctx.pushLog({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: { ...existing }
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: { ...existing }
     });
 
     return;
@@ -302,11 +320,13 @@ if (rollCritical(source)) {
 
     existing.duration += convertTurn;
 
-    ctx.pushLog({
-      type: "effectApplied",
-      source: source.id,
-      target: target.id,
-      effect: { ...existing }
+ctx.pushLog({
+  type: "effectApplied",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  source: source.id,
+  target: target.id,
+  effect: { ...existing }
     });
   }
 }
@@ -363,23 +383,25 @@ export function processBeforeAction(unit, ctx) {
 
 if (net > 0) {
 
-  ctx.pushLog({
-    type: "effectTrigger",
-    level: 0,
-    unit: unit.id,
-    effect: "gravity"
-  });
+ctx.pushLog({
+  type: "effectTrigger",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 0,
+  unit: unit.id,
+  effect: "gravity"
+});
 
 }
 
 else if (net < 0) {
 
-  ctx.pushLog({
-    type: "effectTrigger",
-    level: 0,
-    unit: unit.id,
-    effect: "float"
-  });
+ctx.pushLog({
+  type: "effectTrigger",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 0,
+  unit: unit.id,
+  effect: "float"
+});
 
 }
 
@@ -415,10 +437,12 @@ else if (net < 0) {
 
       if (eligible.length === 0) {
 
-        ctx.pushLog({
-          type: "cooldownLimit",
-          unit: unit.id
-        });
+ctx.pushLog({
+  type: "cooldownLimit",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  unit: unit.id
+});
 
         break;
       }
@@ -441,12 +465,14 @@ else if (net < 0) {
 
       s._currentCooldown = newCt;
 
-      ctx.pushLog({
-        type: "cooldownChange",
-        unit: unit.id,
-        skill: s.type,
-        delta: dir
-      });
+ctx.pushLog({
+  type: "cooldownChange",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  unit: unit.id,
+  skill: s.type,
+  delta: dir
+});
     }
   }
 
@@ -467,7 +493,8 @@ if (e.type !== "corrosion" && e.type !== "repair")
 
 ctx.pushLog({
   type: "effectTrigger",
-  level: 0,
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 0,
   unit: unit.id,
   effect: e.type
 });
@@ -490,13 +517,15 @@ const stock =
 
       unit.hp -= amount;
 
-      ctx.pushLog({
-        type: "damage",
-        from: null,
-        target: unit.id,
-        amount: amount,
-        damageType: "effect"
-      });
+ctx.pushLog({
+  type: "damage",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  from: null,
+  target: unit.id,
+  amount: amount,
+  damageType: "effect"
+});
 
       if (unit.hp <= 0) {
 
@@ -510,13 +539,15 @@ const stock =
       unit.hp =
         Math.min(unit.hp + amount, mhp);
 
-      ctx.pushLog({
-        type: "heal",
-        from: null,
-        target: unit.id,
-        amount: amount,
-        healType: "effect"
-      });
+ctx.pushLog({
+  type: "heal",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  from: null,
+  target: unit.id,
+  amount: amount,
+  healType: "effect"
+});
     }
 
     ctx.pushLog({
