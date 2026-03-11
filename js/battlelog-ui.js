@@ -102,6 +102,8 @@ const mapping = [
   }
 }
 
+let prevBlock = null;
+
 export function playLogEvent(
   event,
   boardState,
@@ -110,6 +112,27 @@ export function playLogEvent(
 ) {
 
   const div = document.createElement("div");
+
+  const block = event.block ?? "system";
+
+if (prevBlock !== null) {
+
+  if (block !== prevBlock) {
+
+    const spacer = document.createElement("div");
+
+    if (block === "skill") {
+      spacer.style.height = "6px";   // 大余白
+    } else {
+      spacer.style.height = "3px";    // 小余白
+    }
+
+    logArea.appendChild(spacer);
+  }
+
+}
+
+prevBlock = block;
 
 const GROUP_INDENT = 14;
 const SUB_INDENT = 6;
