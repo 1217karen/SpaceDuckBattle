@@ -6,6 +6,35 @@ function displayName(id, nameMap) {
   return nameMap?.[id] || id;
 }
 
+function spawnFloatingNumber(unitId, value, type){
+
+const wrapper =
+document.querySelector(`[data-unit-id="${unitId}"]`);
+
+if(!wrapper) return;
+
+const num = document.createElement("div");
+
+num.classList.add("floatingNumber");
+
+if(type === "damage"){
+num.classList.add("damageNumber");
+}
+
+if(type === "heal"){
+num.classList.add("healNumber");
+}
+
+num.textContent = value;
+
+wrapper.appendChild(num);
+
+num.addEventListener("animationend",()=>{
+num.remove();
+});
+
+}
+
 function updateUnitEffectUI(unitId, boardState) {
 
   const unit = boardState.units[unitId];
@@ -117,13 +146,13 @@ export function playLogEvent(
     );
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} は ${event.facing} を向いた`;
+      `${(event.unit, nameMap)} は ${event.facing} を向いた`;
   }
 
   else if (event.type === "skillUse") {
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} の ${event.skill}`;
+      `${(event.unit, nameMap)} の ${event.skill}`;
 
     if (event.rangeCells) {
 
@@ -190,9 +219,11 @@ else if (event.type === "critical") {
     else {
 
       div.textContent =
-        `${displayName(event.target, nameMap)} に ${event.amount} ダメージ`;
+        `${(event.target, nameMap)} に ${event.amount} ダメージ`;
 
     }
+
+    spawnFloatingNumber(event.target, event.amount, "damage");
   }
 
   else if (event.type === "heal") {
@@ -235,9 +266,11 @@ else if (event.type === "critical") {
     else {
 
       div.textContent =
-        `${displayName(event.target, nameMap)} のHPが ${event.amount} 回復`;
+        `${(event.target, nameMap)} のHPが ${event.amount} 回復`;
 
     }
+    
+    spawnFloatingNumber(event.target, event.amount, "heal");
   }
 
   else if (event.type === "effectDecay") {
@@ -283,7 +316,7 @@ else if (event.type === "critical") {
       EFFECTS[e.type]?.name || e.type;
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} の ${name} が全て解除された`;
+      `${(event.unit, nameMap)} の ${name} が全て解除された`;
   }
 
   else if (event.type === "effectApplied") {
@@ -311,7 +344,7 @@ else if (event.type === "critical") {
         e.type === "resonance";
 
       text =
-        `${displayName(event.target, nameMap)} に ${name} を ${event.effect.delta ?? n} 付与 (${n})`;
+        `${(event.target, nameMap)} に ${name} を ${event.effect.delta ?? n} 付与 (${n})`;
     }
 
     // ==========================
@@ -329,7 +362,7 @@ else if (event.type === "critical") {
         e.type === "satellite";
 
       text =
-        `${displayName(event.target, nameMap)} の ${name} が ${n} に変化`;
+        `${(event.target, nameMap)} の ${name} が ${n} に変化`;
     }
 
     // ==========================
@@ -346,7 +379,7 @@ else if (event.type === "critical") {
       isBuff = e.value >= 0;
 
       text =
-        `${displayName(event.target, nameMap)} の ${e.stat} が ${amount} ${word}`;
+        `${(event.target, nameMap)} の ${e.stat} が ${amount} ${word}`;
     }
 
     div.textContent = text;
@@ -418,7 +451,7 @@ else if (event.type === "critical") {
     delete boardState.units[event.unit];
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} は戦線を離脱した`;
+      `${(event.unit, nameMap)} は戦線を離脱した`;
   }
 
   else if (event.type === "move") {
@@ -441,7 +474,7 @@ else if (event.type === "critical") {
     unitState.y = event.y;
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
+      `${(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
   }
 
   else if (event.type === "mobilityChange") {
@@ -486,25 +519,25 @@ else if (event.type === "critical") {
   else if (event.type === "meteorReflect") {
 
     div.textContent =
-      `${displayName(event.source, nameMap)} の 流星 が ${displayName(event.target, nameMap)} に ${event.amount} ダメージを反射した`;
+      `${(event.source, nameMap)} の 流星 が ${(event.target, nameMap)} に ${event.amount} ダメージを反射した`;
   }
 
   else if (event.type === "meteorNoTarget") {
 
     div.textContent =
-      `${displayName(event.source, nameMap)} の 流星 は反射する相手がいなかった`;
+      `${(event.source, nameMap)} の 流星 は反射する相手がいなかった`;
   }
 
   else if (event.type === "satelliteGuard") {
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} の 衛星 がダメージを軽減した`;
+      `${(event.unit, nameMap)} の 衛星 がダメージを軽減した`;
   }
 
   else if (event.type === "wait") {
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
+      `${(event.unit, nameMap)} は様子をうかがっている……`;
   }
 
   logArea.appendChild(div);
