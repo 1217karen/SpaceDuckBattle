@@ -157,6 +157,16 @@ export function playLogEvent(
       `${displayName(event.unit, nameMap)} は ${event.facing} を向いた`;
   }
 
+else if (event.type === "effectTrigger") {
+
+  const name =
+    EFFECTS[event.effect]?.name || event.effect;
+
+  div.textContent =
+    `${displayName(event.unit, nameMap)} の ${name}`;
+
+}
+    
   else if (event.type === "skillUse") {
 
     div.textContent =
