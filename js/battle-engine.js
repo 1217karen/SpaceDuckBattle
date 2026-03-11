@@ -133,6 +133,10 @@ function pushLog(event){
     event.group = context.currentGroup;
   }
 
+  if(event.level === undefined){
+    event.level = 1;
+  }
+
   log.push(event);
 }
   
@@ -246,7 +250,8 @@ context.currentGroup = null;
 context.currentGroup = ++logGroup;
       
       context.pushLog({
-        type: "skillUse",
+  type: "skillUse",
+  level: 0,
         unit: unit.id,
         skill: skill.type,
         rangeCells: result.preview?.cells ?? null,
