@@ -422,13 +422,15 @@ if (mobilityDelta !== 0) {
   const effectName =
     mobilityDelta > 0 ? "accel" : "slow";
 
-context.pushLog({
-  type: "skillUse",
-  groupLevel: context.groupLevel,
-  subLevel: 0,
-  unit: unit.id,
-  skill: skill.type,
-})
+  context.pushLog({
+    type: "skillUse",
+    groupLevel: context.groupLevel,
+    subLevel: 0,
+    unit: unit.id,
+    skill: skill.type,
+  });
+
+}
 
       if (!targetUnit) {
         waitAction(unit);
