@@ -36,7 +36,7 @@ function getResonanceModifier(unit) {
 // クリティカル判定
 //==========================================================
 
-function rollCritical(unit) {
+export function rollCritical(unit) {
   const cri = unit.cri ?? 0;
 
   const chance =
