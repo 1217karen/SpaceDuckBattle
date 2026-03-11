@@ -410,13 +410,25 @@ context.currentGroup = ++logGroup;
       // 加速 / 減速ログ
       // ==================================================
 
-      if (mobilityDelta !== 0) {
-        log.push({
-          type: "mobilityChange",
-          unit: unit.id,
-          delta: mobilityDelta
-        });
-      }
+if (mobilityDelta !== 0) {
+
+  const effectName =
+    mobilityDelta > 0 ? "accel" : "slow";
+
+  context.pushLog({
+    type: "effectTrigger",
+    level: 0,
+    unit: unit.id,
+    effect: effectName
+  });
+
+  context.pushLog({
+    type: "mobilityChange",
+    unit: unit.id,
+    delta: mobilityDelta
+  });
+
+}
 
       if (!targetUnit) {
         waitAction(unit);
