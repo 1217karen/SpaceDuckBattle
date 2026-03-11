@@ -51,7 +51,8 @@ if (rollCritical(source)) {
 ctx.pushLog({
   type: "critical",
   groupLevel: ctx.groupLevel,
-  subLevel: 1
+  subLevel: 1,
+  block: "skill"
 });
 
   if (effectData.stock !== undefined) {
@@ -106,6 +107,7 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: {
@@ -129,6 +131,7 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: {
@@ -166,6 +169,7 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: {
@@ -189,6 +193,7 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: {
@@ -231,6 +236,7 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: { ...newEffect }
@@ -268,6 +274,7 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: { ...newEffect }
@@ -288,6 +295,7 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: { ...existing }
@@ -304,6 +312,7 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: { ...existing }
@@ -324,10 +333,11 @@ ctx.pushLog({
   type: "effectApplied",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   source: source.id,
   target: target.id,
   effect: { ...existing }
-    });
+});
   }
 }
 
@@ -387,6 +397,7 @@ ctx.pushLog({
   type: "effectTrigger",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 0,
+  block: "effect",
   unit: unit.id,
   effect: "gravity"
 });
@@ -399,6 +410,7 @@ ctx.pushLog({
   type: "effectTrigger",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 0,
+  block: "effect",
   unit: unit.id,
   effect: "float"
 });
@@ -441,6 +453,7 @@ ctx.pushLog({
   type: "cooldownLimit",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   unit: unit.id
 });
 
@@ -469,6 +482,7 @@ ctx.pushLog({
   type: "cooldownChange",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
+  block: "effect",
   unit: unit.id,
   skill: s.type,
   delta: dir
@@ -495,6 +509,7 @@ ctx.pushLog({
   type: "effectTrigger",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 0,
+  block: "effect",
   unit: unit.id,
   effect: e.type
 });
@@ -573,8 +588,11 @@ export function processAfterAction(unit, ctx) {
 
     if (e.stock > 0) {
 
-      ctx.pushLog({
-        type: "effectDecay",
+ctx.pushLog({
+  type: "effectDecay",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  block: "effect",
         unit: unit.id,
         effect: {
           type: e.type,
@@ -585,8 +603,11 @@ export function processAfterAction(unit, ctx) {
 
     if (e.stock <= 0) {
 
-      ctx.pushLog({
-        type: "effectRemoved",
+ctx.pushLog({
+  type: "effectRemoved",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  block: "effect",
         unit: unit.id,
         effect: {
           type: e.type
