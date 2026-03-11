@@ -424,33 +424,23 @@ const adjacentEnemy =
     Math.abs(u.x - unit.x) + Math.abs(u.y - unit.y) === 1
   );
 
+let newFacing;
+
 if (adjacentEnemy) {
 
   const dx = adjacentEnemy.x - unit.x;
   const dy = adjacentEnemy.y - unit.y;
 
-  const newFacing =
+  newFacing =
     facingFromDelta(dx, dy, unit.facing);
-
-  if (newFacing !== unit.facing) {
-
-    unit.facing = newFacing;
-
-    log.push({
-      type: "faceChange",
-      unit: unit.id,
-      facing: newFacing
-    });
-
-  }
 
 }
 else {
-        
-        const newFacing =
-          facingFromDelta(dxToTarget, dyToTarget, unit.facing);
-}
 
+  newFacing =
+    facingFromDelta(dxToTarget, dyToTarget, unit.facing);
+
+}
         const facedChanged =
           newFacing !== unit.facing;
 
