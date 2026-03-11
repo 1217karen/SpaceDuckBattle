@@ -12,9 +12,9 @@ import { applyDamage, applyHeal, applyMove } from "./battle-actions.js";
 
 function getSkillChainCount(unit) {
 
-  const speed = unit.speed ?? 0;
+const speed = unit.speed ?? 0;
 
-  const rate = speed * 2; // %
+const rate = Math.max(speed - 10, 0) * 2; // %
 
   let count = 1;
 
