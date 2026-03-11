@@ -97,9 +97,11 @@ if (
     finalDamage =
       Math.floor(finalDamage * 1.5);
 
-    ctx.pushLog({
-      type: "critical"
-    });
+ctx.pushLog({
+  type: "critical",
+  groupLevel: ctx.groupLevel,
+  subLevel: 1
+});
 
   }
 
@@ -179,13 +181,16 @@ const reducedDamage =
 
 ctx.pushLog({
   type: "effectTrigger",
-  level: 0,
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 0,
   unit: target.id,
   effect: "satellite"
 });
 
 ctx.pushLog({
   type: "satelliteGuard",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
   unit: target.id
 });
 
@@ -239,13 +244,16 @@ const reflectDamage =
 
 ctx.pushLog({
   type: "effectTrigger",
-  level: 0,
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 0,
   unit: target.id,
   effect: "meteor"
 });
         
 ctx.pushLog({
   type: "meteorReflect",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
   source: target.id,
   target: source.id,
   amount: reflectDamage
@@ -273,15 +281,18 @@ ctx.pushLog({
 
       else {
 
-        ctx.pushLog({
+ctx.pushLog({
   type: "effectTrigger",
-  level: 0,
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 0,
   unit: target.id,
   effect: "meteor"
 });
         
 ctx.pushLog({
   type: "meteorNoTarget",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
   source: target.id
 });
 
@@ -310,6 +321,8 @@ ctx.pushLog({
   
 ctx.pushLog({
   type: "damage",
+  groupLevel: ctx.groupLevel,
+  subLevel: 1,
   source: source.id,
   target: target.id,
   amount: finalDamage,
@@ -364,9 +377,11 @@ if (
     finalHeal =
       Math.floor(finalHeal * 1.5);
 
-    ctx.pushLog({
-      type: "critical"
-    });
+ctx.pushLog({
+  type: "critical",
+  groupLevel: ctx.groupLevel,
+  subLevel: 1
+});
 
   }
 
@@ -387,6 +402,8 @@ if (
 
 ctx.pushLog({
   type: "heal",
+  groupLevel: ctx.groupLevel,
+  subLevel: 1,
   source: source.id,
   target: target.id,
   amount: finalHeal,
