@@ -521,6 +521,57 @@ box-shadow: inset 0 0 0px rgba(255,255,255,0);
 }
 }
 
+
+/* =======================================================
+ダメージ / 回復 数字ポップ
+======================================================= */
+
+.floatingNumber{
+
+position:absolute;
+
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+font-size:18px;
+font-weight:bold;
+
+pointer-events:none;
+
+animation:floatNumber 0.8s ease-out forwards;
+
+text-shadow:
+0 0 4px rgba(0,0,0,0.9);
+}
+
+.damageNumber{
+color:#ff5555;
+}
+
+.healNumber{
+color:#66ff99;
+}
+
+@keyframes floatNumber{
+
+0%{
+opacity:1;
+transform:translate(-50%,-50%) translateY(0);
+}
+
+80%{
+opacity:1;
+}
+
+100%{
+opacity:0;
+transform:translate(-50%,-50%) translateY(-26px);
+}
+
+}
+
 /* =======================================================
 操作ボタン
 ======================================================= */
