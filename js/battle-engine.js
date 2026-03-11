@@ -428,8 +428,7 @@ context.pushLog({
   subLevel: 0,
   unit: unit.id,
   skill: skill.type,
-
-}
+})
 
       if (!targetUnit) {
         waitAction(unit);
