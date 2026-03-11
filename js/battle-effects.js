@@ -1,10 +1,7 @@
 // battle-effects.js
 
 import { EFFECTS } from "./effects-config.js";
-
-function rollCritical(rate) {
-  return Math.random() < rate;
-}
+import { rollCritical } from "./battle-actions.js";
 
 export function getEffectiveStat(unit, statName) {
 
