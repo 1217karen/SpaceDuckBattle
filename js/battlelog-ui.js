@@ -119,15 +119,23 @@ if (prevBlock !== null) {
 
   if (block !== prevBlock) {
 
-    const spacer = document.createElement("div");
+const spacer = document.createElement("div");
 
-    if (block === "skill") {
-      spacer.style.height = "6px";   // 大余白
-    } else {
-      spacer.style.height = "3px";    // 小余白
-    }
+if (block === "skill") {
 
-    logArea.appendChild(spacer);
+  spacer.style.height = "10px";
+
+  spacer.style.borderTop = "2px solid #ff4444";   // 大余白（赤実線）
+
+} else {
+
+  spacer.style.height = "6px";
+
+  spacer.style.borderTop = "1px dashed #44aaff";  // 小余白（青点線）
+
+}
+
+logArea.appendChild(spacer);
   }
 
 }
