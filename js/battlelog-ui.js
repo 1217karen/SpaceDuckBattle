@@ -345,6 +345,14 @@ else if (event.type === "critical") {
 
     if (EFFECTS[e.type]?.stack === "stock") {
 
+      const delta = event.effect.delta ?? 1;
+
+spawnFloatingNumber(
+  event.target,
+  `${name}+${delta}`,
+  "statUp"
+);
+
       const n = e.stock ?? 1;
 
       isBuff =
@@ -360,6 +368,12 @@ else if (event.type === "critical") {
     // ==========================
 
     else if (EFFECTS[e.type]?.stack === "overwrite") {
+
+      spawnFloatingNumber(
+  event.target,
+  `${name}=${n}`,
+  "statUp"
+);
 
       const n = e.stock ?? 1;
 
@@ -381,6 +395,14 @@ else if (event.type === "critical") {
 
       const amount = Math.round(Math.abs(e.value));
 
+      const sign = e.value >= 0 ? "+" : "-";
+
+spawnFloatingNumber(
+  event.target,
+  `${e.stat.toUpperCase()}${sign}${amount}`,
+  e.value >= 0 ? "statUp" : "statDown"
+);
+
       const word =
         e.value >= 0 ? "増加" : "減少";
 
@@ -389,16 +411,6 @@ else if (event.type === "critical") {
       text =
         `${displayName(event.target, nameMap)} の ${e.stat} が ${amount} ${word}`;
     }
-
-    const sign = e.value >= 0 ? "+" : "-";
-const statName = e.stat ? e.stat.toUpperCase() : "";
-const statText = `${statName}${sign}${amount}`;
-
-spawnFloatingNumber(
-  event.target,
-  statText,
-  e.value >= 0 ? "statUp" : "statDown"
-);
 
     div.textContent = text;
 
@@ -537,7 +549,7 @@ spawnFloatingNumber(
   else if (event.type === "meteorReflect") {
 
     div.textContent =
-      `${displayName(event.source, nameMap)} の 流星 が ${(event.target, nameMap)} に ${event.amount} ダメージを反射した`;
+      `${displayName(event.source, nameMap)} の 流星 が ${displayName(event.target, nameMap)} に ${event.amount} ダメージを反射した`;
   }
 
   else if (event.type === "meteorNoTarget") {
