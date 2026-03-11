@@ -328,6 +328,8 @@ else if (type === "scale") {
 // ==========================================================
 // クリティカル
 // ==========================================================
+  finalHeal =
+    Math.floor(healStat * power);
 
 if (
   finalHeal > 0 &&
@@ -348,10 +350,7 @@ if (
   }
 
 }
-
-  finalHeal =
-    Math.floor(healStat * power);
-
+  
   const modifier =
     getResonanceModifier(source);
 
