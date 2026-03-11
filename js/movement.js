@@ -74,10 +74,6 @@ const dirs =
     ? getPreferredDirs(unit, targetPos)
     : DIR4;
 
-  const currentDist =
-    Math.abs(unit.x - targetPos.x) +
-    Math.abs(unit.y - targetPos.y);
-
   let candidates = [];
 
   for (const d of dirs) {
@@ -85,6 +81,18 @@ const dirs =
     const nx = unit.x + d.dx;
     const ny = unit.y + d.dy;
 
+
+    // 盤外
+    if (nx < 0 || nx >= board.width ||
+        ny < 0 || ny >= board.height) {
+      continue;
+    }
+
+    // 占有
+    if (isOccupiedCell(units, nx, ny, unit.id)) {
+      continue;
+    }
+    
 // ヒールは敵チェビシェフ1を避ける
 if (unit.role === "heal") {
 
@@ -109,33 +117,89 @@ if (unit.role === "support") {
   if (danger) continue;
 }
 
-    // 盤外
-    if (nx < 0 || nx >= board.width ||
-        ny < 0 || ny >= board.height) {
-      continue;
-    }
-
-    // 占有
-    if (isOccupiedCell(units, nx, ny, unit.id)) {
-      continue;
-    }
-
     const newDist =
       Math.abs(nx - targetPos.x) +
       Math.abs(ny - targetPos.y);
 
-    candidates.push({ x: nx, y: ny, dist: newDist });
+    let score = 0;
+
+// toward / away の基本評価
+if (moveMode === "toward") {
+  score -= newDist;
+}
+else if (moveMode === "away") {
+  score += newDist;
+}
+
+// サポートの追加評価
+if (unit.role === "support") {
+
+  for (const u of units) {
+
+    if (u.hp <= 0) continue;
+
+    const distM =
+      Math.abs(u.x - nx) + Math.abs(u.y - ny);
+
+    const distC =
+      Math.max(Math.abs(u.x - nx), Math.abs(u.y - ny));
+
+    if (u.team === unit.team && u.id !== unit.id) {
+
+      // 味方チェビ1
+      if (distC <= 1) score += 5;
+
+    }
+
+    else if (u.team !== unit.team) {
+
+      // 敵チェビ1
+      if (distC <= 1) score -= 3;
+
+    }
+  }
+}
+
+    if (unit.role === "defense") {
+
+  for (const u of units) {
+
+    if (u.hp <= 0) continue;
+
+    const distM =
+      Math.abs(u.x - nx) + Math.abs(u.y - ny);
+
+    const distC =
+      Math.max(Math.abs(u.x - nx), Math.abs(u.y - ny));
+
+    if (u.team !== unit.team) {
+
+      if (distM === 1) score += 10;
+      else if (distM === 2) score += 1;
+      else if (distC === 1) score += 2;
+
+    }
+
+    else if (u.team === unit.team && u.id !== unit.id) {
+
+      if (distC <= 1) score += 5;
+      else if (distM === 1) score += 1;
+
+    }
+  }
+}
+
+candidates.push({
+  x: nx,
+  y: ny,
+  dist: newDist,
+  score
+});
   }
 
   if (candidates.length === 0) return null;
 
-  if (moveMode === "toward") {
-    candidates.sort((a, b) => a.dist - b.dist);
-  }
-
-  else if (moveMode === "away") {
-    candidates.sort((a, b) => b.dist - a.dist);
-  }
+candidates.sort((a, b) => b.score - a.score);
 
   return {
     x: candidates[0].x,
