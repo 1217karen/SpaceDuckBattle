@@ -111,19 +111,19 @@ export function playLogEvent(
 
   const div = document.createElement("div");
 
-  let indent = 0;
+let indent = 2;
 
 if (event.type === "skillUse") {
-  indent = 0;
-}
-else if (event.type === "effectTrigger") {
   indent = 1;
 }
-else {
-  indent = 2;
+else if (event.type === "effectTrigger") {
+  indent = 3;
+}
+else if (event.damageType === "effect" || event.healType === "effect") {
+  indent = 4;
 }
 
-div.style.paddingLeft = (indent * 16) + "px";
+div.style.paddingLeft = (indent * 8) + "px";
 
   if (event.type === "turnStart") {
     return;
