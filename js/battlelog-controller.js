@@ -487,6 +487,36 @@ const displayName =
 
     const ev = actionEvents[i];
 
+    if (ev.type === "battleEnd") {
+
+  if (turnDisplay) {
+    turnDisplay.textContent = "BATTLE FINISHED";
+  }
+
+  logArea.innerHTML = "";
+
+  const div = document.createElement("div");
+  div.classList.add("battleEndBlock");
+
+  const text =
+    ev.winner === 1
+      ? "LEFT TEAM WIN"
+      : ev.winner === 2
+      ? "RIGHT TEAM WIN"
+      : "DRAW";
+
+  div.innerHTML = `
+    <div style="font-size:20px;font-weight:bold;">
+      ${text}
+    </div>
+  `;
+
+  logArea.appendChild(div);
+
+  logIndex = battleLog.length;
+  return;
+}
+
     if (ev.type === "death") {
       requiredSet.delete(ev.unit);
     }
