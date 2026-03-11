@@ -361,24 +361,22 @@ export function processBeforeAction(unit, ctx) {
 
   const net = gravityStock - floatStock;
 
-  if (gravityStock > 0) {
-
-  ctx.currentGroup = ctx.currentGroup ?? Symbol();
+if (net > 0) {
 
   ctx.pushLog({
     type: "effectTrigger",
+    level: 0,
     unit: unit.id,
     effect: "gravity"
   });
 
 }
 
-if (floatStock > 0) {
-
-  ctx.currentGroup = ctx.currentGroup ?? Symbol();
+else if (net < 0) {
 
   ctx.pushLog({
     type: "effectTrigger",
+    level: 0,
     unit: unit.id,
     effect: "float"
   });
@@ -464,17 +462,18 @@ if (floatStock > 0) {
 
   for (let e of unit.effects) {
 
-    if (e.type !== "corrosion" && e.type !== "repair")
-      continue;
+if (e.type !== "corrosion" && e.type !== "repair")
+  continue;
 
-    ctx.pushLog({
+ctx.pushLog({
   type: "effectTrigger",
+  level: 0,
   unit: unit.id,
   effect: e.type
 });
 
-    const stock =
-      Math.min(e.stock ?? 0, MAX_STACK);
+const stock =
+  Math.min(e.stock ?? 0, MAX_STACK);
 
     if (stock <= 0) continue;
 
