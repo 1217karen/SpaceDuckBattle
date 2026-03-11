@@ -391,7 +391,8 @@ else if (event.type === "critical") {
     }
 
     const sign = e.value >= 0 ? "+" : "-";
-const statText = `${e.stat.toUpperCase()}${sign}${amount}`;
+const statName = e.stat ? e.stat.toUpperCase() : "";
+const statText = `${statName}${sign}${amount}`;
 
 spawnFloatingNumber(
   event.target,
