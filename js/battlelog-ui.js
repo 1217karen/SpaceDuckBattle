@@ -336,6 +336,23 @@ div.innerHTML =
       `${name} が 1 減衰 (${e.stock})`;
   }
 
+      else if (event.type === "effectExpired") {
+
+    const e = event.effect;
+
+    if (boardState.units[event.unit]) {
+
+      const unit = boardState.units[event.unit];
+
+      unit.effects =
+        unit.effects.filter(x => x.type !== e.type);
+
+      updateUnitEffectUI(event.unit, boardState);
+    }
+
+    return;
+  }
+
   else if (event.type === "effectRemoved") {
 
     const e = event.effect;
@@ -353,7 +370,8 @@ div.innerHTML =
     const name =
       EFFECTS[e.type]?.name || e.type;
 
-    return;
+    div.textContent =
+      `${displayName(event.unit, nameMap)} の ${name} は解除された`;
   }
 
   else if (event.type === "effectApplied") {
