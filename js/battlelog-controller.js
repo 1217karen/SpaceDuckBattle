@@ -517,12 +517,13 @@ playLogEvent(
   logArea,
   nameMap
 );
-      playLogEvent(
-        actionEvents[i + 1],
-        boardState,
-        logArea,
-        nameMap
-      );
+playLogEvent(
+  actionEvents[i + 1],
+  actionEvents[i + 2],
+  boardState,
+  logArea,
+  nameMap
+);
 
       i++;
 
