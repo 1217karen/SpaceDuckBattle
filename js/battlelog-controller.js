@@ -217,12 +217,14 @@ div.innerHTML = `
 <div class="unitMain">
 
 <div class="unitHeader">
-  <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
+<div class="unitName">${u.name || u.id}</div>
+<div class="nameDivider"></div>
 
-  <div class="nameBlock">
-    <div class="unitName">${u.name || u.id}</div>
-    <div class="nameDivider"></div>
-    <div class="effectList">
+<div class="unitTopRow">
+
+<img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
+
+<div class="effectList">
 
 <div class="effectItem"><span class="effectIcon">浮</span><span class="effectCount">00</span></div>
 <div class="effectItem"><span class="effectIcon">加</span><span class="effectCount">00</span></div>
