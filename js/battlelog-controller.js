@@ -222,35 +222,39 @@ div.innerHTML = `
 
 <div class="unitTopRow">
 
-<img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
+  <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
 
-<div class="effectList">
+  <div class="statusInfoBlock">
 
-<div class="effectItem"><span class="effectIcon">浮</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">加</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">共</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">修</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">衛</span><span class="effectCount">00</span></div>
+    <div class="effectList">
 
-<div class="effectItem"><span class="effectIcon">重</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">減</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">妨</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">侵</span><span class="effectCount">00</span></div>
-<div class="effectItem"><span class="effectIcon">流</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">浮</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">加</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">共</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">修</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">衛</span><span class="effectCount">00</span></div>
+
+      <div class="effectItem"><span class="effectIcon">重</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">減</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">妨</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">侵</span><span class="effectCount">00</span></div>
+      <div class="effectItem"><span class="effectIcon">流</span><span class="effectCount">00</span></div>
+
+    </div>
+
+    <div class="statDivider"></div>
+
+    <div class="statRow">
+      <div class="statItem">AT -</div>
+      <div class="statItem">DF -</div>
+      <div class="statItem">HEAL -</div>
+      <div class="statItem">SPEED -</div>
+      <div class="statItem">CRI -</div>
+    </div>
+
+  </div>
 
 </div>
-
-</div>
-<div class="statDivider"></div>
-
-<div class="statRow">
-  <div class="statItem">AT -</div>
-  <div class="statItem">DF -</div>
-  <div class="statItem">HEAL -</div>
-  <div class="statItem">SPEED -</div>
-  <div class="statItem">CRI -</div>
-</div>
-
 </div>
 
 <div class="hpRow">
