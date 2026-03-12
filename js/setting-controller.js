@@ -184,7 +184,7 @@ saveCurrentPattern();
     heal: Number(document.getElementById("statHEAL").value),
     speed: Number(document.getElementById("statSPEED").value),
     cri: Number(document.getElementById("statCRI").value),
-    int: Number(document.getElementById("statINT").value)
+    tec: Number(document.getElementById("statTEC").value)
   };
 
   const mhp =
