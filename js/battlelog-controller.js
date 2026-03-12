@@ -256,13 +256,35 @@ div.innerHTML = `
 
 <div class="statRow">
 
-  <div class="statItem" data-stat="atk">AT -</div>
-  <div class="statItem" data-stat="df">DF -</div>
-  <div class="statItem" data-stat="heal">HEAL -</div>
+  <div class="statItem" data-stat="atk">
+    <span class="statLabel">AT</span>
+    <span class="statValue">-</span>
+  </div>
 
-  <div class="statItem" data-stat="speed">SPD -</div>
-  <div class="statItem" data-stat="cri">CRI -</div>
-  <div class="statItem" data-stat="int">INT -</div>
+  <div class="statItem" data-stat="df">
+    <span class="statLabel">DF</span>
+    <span class="statValue">-</span>
+  </div>
+
+  <div class="statItem" data-stat="heal">
+    <span class="statLabel">HEAL</span>
+    <span class="statValue">-</span>
+  </div>
+
+  <div class="statItem" data-stat="speed">
+    <span class="statLabel">SPD</span>
+    <span class="statValue">-</span>
+  </div>
+
+  <div class="statItem" data-stat="cri">
+    <span class="statLabel">CRI</span>
+    <span class="statValue">-</span>
+  </div>
+
+  <div class="statItem" data-stat="int">
+    <span class="statLabel">INT</span>
+    <span class="statValue">-</span>
+  </div>
 
 </div>
 
