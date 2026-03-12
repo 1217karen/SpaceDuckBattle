@@ -405,9 +405,9 @@ div.innerHTML =
       const existing =
         unit.effects.find(x => x.type === e.type);
 
-      if (existing) {
-        existing.stock = e.stock;
-      }
+if (existing) {
+  existing.duration = e.duration;
+}
 
       updateUnitEffectUI(event.unit, boardState);
     }
