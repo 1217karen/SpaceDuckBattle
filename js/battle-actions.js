@@ -32,6 +32,69 @@ function getResonanceModifier(unit) {
   );
 }
 
+function getResonanceLog(unit, ctx){
+
+  let resonanceStock = 0;
+  let interferenceStock = 0;
+
+  if (unit.effects) {
+
+    for (const e of unit.effects) {
+
+      if (e.type === "resonance") {
+        resonanceStock += (e.stock ?? 0);
+      }
+
+      if (e.type === "interference") {
+        interferenceStock += (e.stock ?? 0);
+      }
+
+    }
+
+  }
+
+  if (resonanceStock > interferenceStock) {
+
+    ctx.pushLog({
+      type: "effectTrigger",
+      groupLevel: ctx.groupLevel + 1,
+      subLevel: 0,
+      block: "effect",
+      unit: unit.id,
+      effect: "resonance"
+    });
+
+    ctx.pushLog({
+      type: "resonanceEffect",
+      groupLevel: ctx.groupLevel + 1,
+      subLevel: 1,
+      block: "effect"
+    });
+
+  }
+
+  else if (interferenceStock > resonanceStock) {
+
+    ctx.pushLog({
+      type: "effectTrigger",
+      groupLevel: ctx.groupLevel + 1,
+      subLevel: 0,
+      block: "effect",
+      unit: unit.id,
+      effect: "interference"
+    });
+
+    ctx.pushLog({
+      type: "interferenceEffect",
+      groupLevel: ctx.groupLevel + 1,
+      subLevel: 1,
+      block: "effect"
+    });
+
+  }
+
+}
+
 //==========================================================
 // クリティカル判定
 //==========================================================
@@ -133,6 +196,8 @@ ctx.pushLog({
 // ================================
 
 if (type === "normal" || type === "pierce") {
+
+getResonanceLog(source, ctx);
 
 const modifier =
   getResonanceModifier(source);
@@ -393,11 +458,13 @@ ctx.pushLog({
 
 }
   
-  const modifier =
-    getResonanceModifier(source);
+getResonanceLog(source, ctx);
 
-  finalHeal =
-    Math.floor(finalHeal * modifier);
+const modifier =
+  getResonanceModifier(source);
+
+finalHeal =
+  Math.floor(finalHeal * modifier);
 
 }
   
