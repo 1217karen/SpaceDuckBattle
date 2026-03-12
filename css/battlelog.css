@@ -295,8 +295,9 @@ width:100%;
 
 .statItem{
 display:grid;
-grid-template-columns: 32px 28px 60px;
+grid-template-columns: 20px 20px auto;
 white-space:nowrap;
+gap:4px;
 }
 
 .statRate{
