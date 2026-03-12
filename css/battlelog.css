@@ -195,8 +195,24 @@ gap: 4px;
 
 .unitTopRow{
 display:flex;
-align-items:center;
+align-items:flex-start;
 gap:6px;
+}
+
+.statusInfoBlock{
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+flex:1;
+min-width:0;
+}
+
+.statRow{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+font-size:9px;
+color:#aee0ff;
 }
 
 /* 名前＋状態表示ブロック */
@@ -264,7 +280,8 @@ STAT表示
 
 .statDivider{
 border-top:1px dashed rgba(120,180,255,0.6);
-margin:3px 0;
+margin:2px 0;
+width:100%;
 }
 
 .statRow{
