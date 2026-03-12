@@ -614,24 +614,59 @@ else {
     // ターン制effect減少
     // ==================================================
 
-    for (let u of units) {
+for (let u of units) {
 
-      if (!u.effects) continue;
+  if (!u.effects) continue;
 
-      for (let i = u.effects.length - 1; i >= 0; i--) {
+  for (let i = u.effects.length - 1; i >= 0; i--) {
 
-        const e = u.effects[i];
+    const e = u.effects[i];
 
-        if (e.category === "timed" && e.duration !== null) {
+    if (e.category === "timed" && e.duration !== null) {
 
-          e.duration--;
+      e.duration--;
 
-          if (e.duration <= 0) {
-            u.effects.splice(i, 1);
+      if (e.duration > 0) {
+
+        context.pushLog({
+          type: "effectDecay",
+          groupLevel: context.groupLevel,
+          subLevel: 0,
+          block: "system",
+          unit: u.id,
+          effect: {
+            type: e.type,
+            stat: e.stat,
+            mode: e.mode,
+            value: e.value,
+            duration: e.duration
           }
-        }
+        });
+
       }
+
+      if (e.duration <= 0) {
+
+        context.pushLog({
+          type: "effectExpired",
+          groupLevel: context.groupLevel,
+          subLevel: 0,
+          block: "system",
+          unit: u.id,
+          effect: {
+            type: e.type,
+            stat: e.stat
+          }
+        });
+
+        u.effects.splice(i, 1);
+      }
+
     }
+
+  }
+
+}
 
     // ==================================================
     // クールタイム減少
