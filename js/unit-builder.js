@@ -16,7 +16,7 @@ export function buildUnitFromDuck(duck, pattern, team, x, y, facing, duckIndex){
     mhp: duck.mhp,
 
     atk: duck.stats.atk,
-    df: duck.stats.df,
+    def: duck.stats.def,
     heal: duck.stats.heal,
     speed: duck.stats.speed,
     cri: duck.stats.cri,
