@@ -246,13 +246,17 @@ div.innerHTML = `
 
     <div class="statDivider"></div>
 
-    <div class="statRow">
-      <div class="statItem">AT -</div>
-      <div class="statItem">DF -</div>
-      <div class="statItem">HEAL -</div>
-      <div class="statItem">SPEED -</div>
-      <div class="statItem">CRI -</div>
-    </div>
+<div class="statRow">
+
+  <div class="statItem">AT -</div>
+  <div class="statItem">DF -</div>
+  <div class="statItem">HEAL -</div>
+
+  <div class="statItem">SPD -</div>
+  <div class="statItem">CRI -</div>
+  <div class="statItem">INT -</div>
+
+</div>
 
   </div>
 
