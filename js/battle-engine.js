@@ -634,13 +634,14 @@ for (let u of units) {
           subLevel: 0,
           block: "system",
           unit: u.id,
-          effect: {
-            type: e.type,
-            stat: e.stat,
-            mode: e.mode,
-            value: e.value,
-            duration: e.duration
-          }
+effect: {
+  type: e.type,
+  stat: e.stat,
+  mode: e.mode,
+  value: e.value,
+  duration: e.duration,
+  stock: e.duration
+}
         });
 
       }
