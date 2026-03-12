@@ -353,8 +353,7 @@ div.innerHTML =
     const name =
       EFFECTS[e.type]?.name || e.type;
 
-    div.textContent =
-      `${displayName(event.unit, nameMap)} の ${name} が全て解除された`;
+    return;
   }
 
   else if (event.type === "effectApplied") {
