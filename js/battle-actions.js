@@ -70,13 +70,14 @@ function getResonanceLog(unit, ctx){
       effect: "resonance"
     });
 
-    ctx.pushLog({
-      type: "resonanceEffect",
-      groupLevel: ctx.groupLevel + 1,
-      subLevel: 1,
-      block: "effect",
-      percent: percent
-    });
+ctx.pushLog({
+  type: "resonanceEffect",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  block: "effect",
+  unit: unit.id,
+  percent: percent
+});
 
   }
 
@@ -91,13 +92,14 @@ function getResonanceLog(unit, ctx){
       effect: "interference"
     });
 
-    ctx.pushLog({
-      type: "interferenceEffect",
-      groupLevel: ctx.groupLevel + 1,
-      subLevel: 1,
-      block: "effect",
-      percent: percent
-    });
+ctx.pushLog({
+  type: "interferenceEffect",
+  groupLevel: ctx.groupLevel + 1,
+  subLevel: 1,
+  block: "effect",
+  unit: unit.id,
+  percent: percent
+});
 
   }
 
