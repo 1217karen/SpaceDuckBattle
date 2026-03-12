@@ -604,7 +604,7 @@ ctx.pushLog({
     if (e.stock <= 0) {
 
 ctx.pushLog({
-  type: "effectRemoved",
+  type: "effectExpired",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
   block: "effect",
