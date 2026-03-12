@@ -41,6 +41,10 @@ num.classList.add("criticalNumber");
 num.classList.add("effectTriggerNumber");
 }
 
+  if(type === "effectApply"){
+  num.classList.add("effectApplyNumber");
+}
+
 num.textContent = value;
 
 wrapper.appendChild(num);
@@ -419,7 +423,7 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
       spawnFloatingNumber(
         event.target,
         `${name}=${n}`,
-        "statUp"
+        "effectApply"
       );
 
       isBuff = EFFECTS[e.type]?.group === "buff";
