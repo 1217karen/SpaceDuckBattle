@@ -135,14 +135,20 @@ export function updateUnitStatUI(unitId, boardState) {
 
   for (const [key, label] of Object.entries(statMap)) {
 
-    const el = container.querySelector(
-      `.statItem[data-stat="${key}"]`
-    );
+const item = container.querySelector(
+  `.statItem[data-stat="${key}"]`
+);
 
-    if (!el) continue;
+if (!item) continue;
 
-    const value = unit[key] ?? 0;
-    el.textContent = `${label} ${value}`;
+const valueEl =
+  item.querySelector(".statValue");
+
+if (!valueEl) continue;
+
+const value = unit[key] ?? 0;
+
+valueEl.textContent = value;
   }
 }
 
