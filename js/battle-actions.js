@@ -53,7 +53,13 @@ function getResonanceLog(unit, ctx){
 
   }
 
-  if (resonanceStock > interferenceStock) {
+  const diff = resonanceStock - interferenceStock;
+
+  if (diff === 0) return;
+
+  const percent = Math.abs(diff) * 0.25;
+
+  if (diff > 0) {
 
     ctx.pushLog({
       type: "effectTrigger",
@@ -68,12 +74,13 @@ function getResonanceLog(unit, ctx){
       type: "resonanceEffect",
       groupLevel: ctx.groupLevel + 1,
       subLevel: 1,
-      block: "effect"
+      block: "effect",
+      percent: percent
     });
 
   }
 
-  else if (interferenceStock > resonanceStock) {
+  else {
 
     ctx.pushLog({
       type: "effectTrigger",
@@ -88,7 +95,8 @@ function getResonanceLog(unit, ctx){
       type: "interferenceEffect",
       groupLevel: ctx.groupLevel + 1,
       subLevel: 1,
-      block: "effect"
+      block: "effect",
+      percent: percent
     });
 
   }
