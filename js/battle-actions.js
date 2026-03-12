@@ -291,6 +291,27 @@ ctx.pushLog({
   
   target.hp -= finalDamage;
 
+  
+ctx.pushLog({
+  type: "damage",
+  groupLevel: ctx.groupLevel,
+  subLevel: 1,
+  block: "skill",
+  source: source.id,
+  target: target.id,
+  amount: finalDamage,
+  damageType: type
+});
+
+  ctx.pushLog({
+    type: "hpChange",
+    target: target.id,
+    hp: Math.max(target.hp, 0)
+  });
+  if (target.hp <= 0) {
+  ctx.killUnit(target);
+}
+
 // ==========================================================
 // 流星（meteor）反射
 // ==========================================================
@@ -306,11 +327,11 @@ if (
 
   if (meteor && meteor.stock > 0) {
 
-const reflectDamage =
-  Math.max(
-    Math.floor(finalDamage * 0.2),
-    1
-  );
+    const reflectDamage =
+      Math.max(
+        Math.floor(finalDamage * 0.2),
+        1
+      );
 
     meteor.stock--;
 
@@ -394,26 +415,6 @@ ctx.pushLog({
 
   }
 
-}
-  
-ctx.pushLog({
-  type: "damage",
-  groupLevel: ctx.groupLevel,
-  subLevel: 1,
-  block: "skill",
-  source: source.id,
-  target: target.id,
-  amount: finalDamage,
-  damageType: type
-});
-
-  ctx.pushLog({
-    type: "hpChange",
-    target: target.id,
-    hp: Math.max(target.hp, 0)
-  });
-  if (target.hp <= 0) {
-  ctx.killUnit(target);
 }
 }
 
