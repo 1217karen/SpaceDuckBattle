@@ -301,7 +301,7 @@ buff_wave: {
           source: unit.id,
           target: t.id,
           power: 2,
-          healType: "fixed"
+          healType: "scale"
         });
       }
 
