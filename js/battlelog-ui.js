@@ -397,7 +397,7 @@ div.innerHTML =
 spawnFloatingNumber(
   event.target,
   `${name}+${delta}`,
-  "statUp"
+  "effectApply"
 );
 
       const n = e.stock ?? 1;
