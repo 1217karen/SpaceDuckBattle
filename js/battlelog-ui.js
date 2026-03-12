@@ -555,6 +555,7 @@ else {
 }
 
       updateUnitEffectUI(event.target, boardState);
+      updateUnitStatUI(event.target, boardState);
     }
   }
 
