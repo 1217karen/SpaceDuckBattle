@@ -653,7 +653,7 @@ else if (event.type === "satelliteGuard") {
 spawnFloatingNumber(
   event.unit,
   `-${event.percent}%`,
-  "statDown"
+  "statUp"
 );
 
 }
