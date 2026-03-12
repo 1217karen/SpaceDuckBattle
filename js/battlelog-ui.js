@@ -617,21 +617,34 @@ else {
 
       unit.effects = unit.effects || [];
 
-const existing =
-  unit.effects.find(e =>
-    e.type === event.effect.type &&
-    e.stat === event.effect.stat
-  );
+// flat は累積（戦闘エンジンと同じ仕様）
+if (event.effect.mode === "flat") {
 
-if (existing) {
-
-  Object.assign(existing, event.effect);
+  unit.effects.push({ ...event.effect });
 
 }
 
+// rate は従来通り上書き
 else {
 
-  unit.effects.push({ ...event.effect });
+  const existing =
+    unit.effects.find(e =>
+      e.category === event.effect.category &&
+      e.stat === event.effect.stat &&
+      e.mode === event.effect.mode
+    );
+
+  if (existing) {
+
+    Object.assign(existing, event.effect);
+
+  }
+
+  else {
+
+    unit.effects.push({ ...event.effect });
+
+  }
 
 }
 
