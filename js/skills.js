@@ -369,40 +369,28 @@ const allies =
   buff_self_if_alone: {
     cooldown: 3,
 
-    generateActions(unit, ctx) {
+   generateActions(unit, ctx) {
 
-      // 周囲1マス以内の他ユニット取得
-      const nearby =
-        ctx.getUnitsInManhattanRange(
-          unit,
-          ctx.units,
-          1
-        ).filter(u => u.id !== unit.id);
-
-      // 誰もいなければ発動
-      if (nearby.length !== 0) return null;
-
-      return {
-        preview: {
-          cells: [{ x: unit.x, y: unit.y }],
-          style: "buff"
-        },
-        actions: [
-          {
-            type: "applyEffect",
-            source: unit.id,
-            target: unit.id,
-            effect: {
-              stat: "atk",
-              value: 5,
-              duration: null
-            }
-          }
-        ]
-      };
-    }
-  },
-  
+  return {
+    preview: {
+      cells: [{ x: unit.x, y: unit.y }],
+      style: "buff"
+    },
+    actions: [
+      {
+        type: "applyEffect",
+        source: unit.id,
+        target: unit.id,
+        effect: {
+          stat: "atk",
+          value: 5,
+          duration: null
+        }
+      }
+    ]
+  };
+},
+    
   // =========================
   // ランダム敵単体攻撃（減衰あり）
   // =========================
