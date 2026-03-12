@@ -570,6 +570,10 @@ else if (ev.type === "effectApplied") {
 
 }
 
+    else if (ev.type === "critical") {
+  wait = EFFECT_DELAY;
+}
+
 if (
   ev.type !== "hpChange" &&
   ev.type !== "effectExpired"
