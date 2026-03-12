@@ -548,38 +548,54 @@ spawnFloatingNumber(
       `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
   }
 
-  else if (event.type === "mobilityChange") {
+else if (event.type === "mobilityChange") {
 
-    const amount = Math.abs(event.delta);
+  const amount = Math.abs(event.delta);
 
-    if (event.delta < 0) {
-
-      div.textContent =
-        `減速 で 機動力 が ${amount} 減少`;
-
-    }
-
-    else if (event.delta > 0) {
-
-      div.textContent =
-        `加速 で 機動力 が ${amount} 増加`;
-
-    }
-  }
-
-  else if (event.type === "cooldownChange") {
-
-    const text =
-      event.delta > 0
-        ? "CT が 1 増加"
-        : "CT が 1 減少";
-
-    const cause =
-      event.delta > 0 ? "重力" : "浮力";
+  if (event.delta < 0) {
 
     div.textContent =
-      `${cause} で ${event.skill} の ${text}`;
+      `移動可能数 が ${amount} 減少`;
+
+spawnFloatingNumber(
+  event.unit,
+  `MOVE-${amount}`,
+  "statDown"
+);
+
   }
+
+  else if (event.delta > 0) {
+
+    div.textContent =
+      `移動可能数 が ${amount} 増加`;
+
+spawnFloatingNumber(
+  event.unit,
+  `MOVE+${amount}`,
+  "statUp"
+);
+
+  }
+}
+
+else if (event.type === "cooldownChange") {
+
+  const text =
+    event.delta > 0
+      ? "CT が 1 増加"
+      : "CT が 1 減少";
+
+  div.textContent =
+    `${event.skill} の ${text}`;
+
+spawnFloatingNumber(
+  event.unit,
+  event.delta > 0 ? "CT+1" : "CT-1",
+  event.delta > 0 ? "statDown" : "statUp"
+);
+
+}
 
   else if (event.type === "cooldownLimit") {
 
