@@ -133,7 +133,6 @@ const statMap = {
   cri: "CRI",
   tec: "TEC"
 };
-こうすべきか？
 
   for (const [key, label] of Object.entries(statMap)) {
 
