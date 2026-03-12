@@ -632,7 +632,7 @@ repair_wave: {
   // =========================
   // 自分DF50%バフ（3T）
   // =========================
-  buff_df50_self: {
+  buff_def50_self: {
     cooldown: 3,
 
     generateActions(unit, ctx) {
@@ -648,7 +648,7 @@ repair_wave: {
             source: unit.id,
             target: unit.id,
             effect: {
-              stat: "df",
+              stat: "def",
               value: 0.5, // 50%
               duration: 3
             }
