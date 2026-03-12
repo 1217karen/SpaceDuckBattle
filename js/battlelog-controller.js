@@ -212,14 +212,17 @@ if (snapshot) {
     div.dataset.unit = u.id;
 
 div.innerHTML = `
-<div class="unitRow">
-
-<div class="unitMain">
 
 <div class="unitHeader">
-<div class="unitName">${u.name || u.id}</div>
-<div class="nameDivider"></div>
+  <div class="unitName">${u.name || u.id}</div>
+  <div class="nameDivider"></div>
+</div>
 
+<div class="unitRow">
+
+  <div class="unitMain">
+
+```
 <div class="unitTopRow">
 
   <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
@@ -255,7 +258,6 @@ div.innerHTML = `
   </div>
 
 </div>
-</div>
 
 <div class="hpRow">
 
@@ -268,11 +270,13 @@ div.innerHTML = `
   </div>
 
 </div>
+```
 
-</div>
+  </div>
 
-<div class="skillSlots">
+  <div class="skillSlots">
 
+```
 <div class="skillSlot"></div>
 <div class="skillSlot"></div>
 
@@ -281,8 +285,9 @@ div.innerHTML = `
 
 <div class="skillSlot"></div>
 <div class="skillSlot"></div>
+```
 
-</div>
+  </div>
 
 </div>
 `;
