@@ -10,8 +10,10 @@ import {
   updateFacing
 } from "./board.js";
 
-import { playLogEvent }
-  from "./battlelog-ui.js";
+import {
+  playLogEvent,
+  updateUnitStatUI
+} from "./battlelog-ui.js";
 
 
 // =====================
@@ -182,6 +184,12 @@ boardState.units[u.id] = {
   y: u.y,
   hp: u.hp,
   mhp: u.mhp ?? u.hp,
+  atk: u.atk ?? 0,
+  df: u.df ?? 0,
+  heal: u.heal ?? 0,
+  speed: u.speed ?? 0,
+  cri: u.cri ?? 0,
+  int: u.int ?? 0,
   effects: []
 };
 
@@ -248,13 +256,13 @@ div.innerHTML = `
 
 <div class="statRow">
 
-  <div class="statItem">AT -</div>
-  <div class="statItem">DF -</div>
-  <div class="statItem">HEAL -</div>
+  <div class="statItem" data-stat="atk">AT -</div>
+  <div class="statItem" data-stat="df">DF -</div>
+  <div class="statItem" data-stat="heal">HEAL -</div>
 
-  <div class="statItem">SPD -</div>
-  <div class="statItem">CRI -</div>
-  <div class="statItem">INT -</div>
+  <div class="statItem" data-stat="speed">SPD -</div>
+  <div class="statItem" data-stat="cri">CRI -</div>
+  <div class="statItem" data-stat="int">INT -</div>
 
 </div>
 
@@ -293,6 +301,7 @@ div.innerHTML = `
 `;
 
     leftSide.appendChild(div);
+    updateUnitStatUI(u.id, boardState);
 
 const nameEl = div.querySelector(".unitName");
 if (nameEl) {
