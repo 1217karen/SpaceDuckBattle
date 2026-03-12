@@ -131,7 +131,7 @@ export function applyDamage(source, target, action, ctx) {
 
 if (type === "normal") {
   const atk = ctx.getEffectiveStat(source, "atk");
-  const df = ctx.getEffectiveStat(target, "df");
+  const df = ctx.getEffectiveStat(target, "def");
 
   const base = atk * power;
   const reduced = df * 0.5;
