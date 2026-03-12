@@ -295,7 +295,7 @@ width:100%;
 
 .statItem{
 display:grid;
-grid-template-columns: 20px 20px auto;
+grid-template-columns: 20px 16px auto;
 white-space:nowrap;
 gap:4px;
 }
