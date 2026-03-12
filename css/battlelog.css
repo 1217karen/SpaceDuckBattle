@@ -258,6 +258,27 @@ text-align: right;
 font-size: 10px;
 }
 
+/* =======================================================
+STAT表示
+======================================================= */
+
+.statDivider{
+border-top:1px dashed rgba(120,180,255,0.6);
+margin:3px 0;
+}
+
+.statRow{
+display:flex;
+gap:6px;
+font-size:9px;
+color:#aee0ff;
+flex-wrap:wrap;
+}
+
+.statItem{
+white-space:nowrap;
+}
+
 /* ユニットアイコン */
 
 .statusIcon {
