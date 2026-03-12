@@ -108,12 +108,14 @@ debuff_wave: {
 
   generateActions(unit, ctx) {
 
-    const enemies =
-      ctx.units.filter(u =>
-        u.hp > 0 &&
-        u.team !== unit.team &&
-        ctx.getChebyshevDistance(unit, u) <= 1
-      );
+const enemies =
+  ctx.getUnitsInManhattanRange(
+    unit,
+    ctx.units,
+    1
+  ).filter(u =>
+    u.team !== unit.team
+  );
 
     if (enemies.length === 0) return null;
 
@@ -174,12 +176,14 @@ buff_wave: {
 
   generateActions(unit, ctx) {
 
-    const allies =
-      ctx.units.filter(u =>
-        u.hp > 0 &&
-        u.team === unit.team &&
-        ctx.getChebyshevDistance(unit, u) <= 1
-      );
+const allies =
+  ctx.getUnitsInManhattanRange(
+    unit,
+    ctx.units,
+    1
+  ).filter(u =>
+    u.team === unit.team
+  );
 
     if (allies.length === 0) return null;
 
