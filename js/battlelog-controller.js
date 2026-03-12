@@ -185,7 +185,7 @@ boardState.units[u.id] = {
   hp: u.hp,
   mhp: u.mhp ?? u.hp,
   atk: u.atk ?? 0,
-  df: u.df ?? 0,
+  def: u.def ?? 0,
   heal: u.heal ?? 0,
   speed: u.speed ?? 0,
   cri: u.cri ?? 0,
@@ -262,7 +262,7 @@ div.innerHTML = `
     <span class="statRate"> </span>
   </div>
 
-  <div class="statItem" data-stat="df">
+  <div class="statItem" data-stat="def">
     <span class="statLabel">DF</span>
     <span class="statValue">-</span>
     <span class="statRate"> </span>
