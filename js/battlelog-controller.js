@@ -259,37 +259,37 @@ div.innerHTML = `
   <div class="statItem" data-stat="atk">
     <span class="statLabel">AT</span>
     <span class="statValue">-</span>
-    <span class="statRate">+100%(10)</span>
+    <span class="statRate"> </span>
   </div>
 
   <div class="statItem" data-stat="df">
     <span class="statLabel">DF</span>
     <span class="statValue">-</span>
-    <span class="statRate">+100%(10)</span>
+    <span class="statRate"> </span>
   </div>
 
   <div class="statItem" data-stat="heal">
     <span class="statLabel">HL</span>
     <span class="statValue">-</span>
-    <span class="statRate">+100%(10)</span>
+    <span class="statRate"> </span>
   </div>
 
   <div class="statItem" data-stat="speed">
     <span class="statLabel">SP</span>
     <span class="statValue">-</span>
-    <span class="statRate">+100%(10)</span>
+    <span class="statRate"> </span>
   </div>
 
   <div class="statItem" data-stat="cri">
     <span class="statLabel">CR</span>
     <span class="statValue">-</span>
-    <span class="statRate">+100%(10)</span>
+    <span class="statRate"> </span>
   </div>
 
   <div class="statItem" data-stat="tec">
     <span class="statLabel">TC</span>
     <span class="statValue">-</span>
-    <span class="statRate">+100%(10)</span>
+    <span class="statRate"> </span>
   </div>
 
 </div>
