@@ -587,10 +587,16 @@ spawnFloatingNumber(
       `CT はこれ以上変化しない`;
   }
 
-    else if (event.type === "resonanceEffect") {
+else if (event.type === "resonanceEffect") {
 
   div.textContent =
     `スキルの威力が +${event.percent}% 増加`;
+
+spawnFloatingNumber(
+  nextEvent?.target ?? nextEvent?.unit,
+  `+${event.percent}%`,
+  "statUp"
+);
 
 }
 
@@ -598,6 +604,12 @@ else if (event.type === "interferenceEffect") {
 
   div.textContent =
     `スキルの威力が -${event.percent}% 低下`;
+
+spawnFloatingNumber(
+  nextEvent?.target ?? nextEvent?.unit,
+  `-${event.percent}%`,
+  "statDown"
+);
 
 }
 
