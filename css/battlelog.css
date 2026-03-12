@@ -285,11 +285,12 @@ width:100%;
 }
 
 .statRow{
-display:flex;
-gap:6px;
+display:grid;
+grid-template-columns: repeat(3, minmax(0,1fr));
+gap:2px 8px;
 font-size:9px;
 color:#aee0ff;
-flex-wrap:wrap;
+width:100%;
 }
 
 .statItem{
