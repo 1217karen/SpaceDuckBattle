@@ -115,15 +115,6 @@ const div = document.createElement("div");
 const block = event.block ?? "system";
 const nextBlock = nextEvent?.block ?? null;
 
-const GROUP_INDENT = 14;
-const SUB_INDENT = 6;
-
-const g = event.groupLevel ?? 0;
-const s = event.subLevel ?? 0;
-
-div.style.paddingLeft =
-  (g * GROUP_INDENT + s * SUB_INDENT) + "px";
-
   if (event.type === "turnStart") {
     return;
   }
