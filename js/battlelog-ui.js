@@ -125,14 +125,15 @@ export function updateUnitStatUI(unitId, boardState) {
 
   if (!container) return;
 
-  const statMap = {
-    atk: "AT",
-    df: "DF",
-    heal: "HEAL",
-    speed: "SPD",
-    cri: "CRI",
-    tec: "TEC"
-  };
+const statMap = {
+  atk: "ATK",
+  def: "DEF",
+  heal: "HEAL",
+  speed: "SPD",
+  cri: "CRI",
+  tec: "TEC"
+};
+こうすべきか？
 
   for (const [key, label] of Object.entries(statMap)) {
 
