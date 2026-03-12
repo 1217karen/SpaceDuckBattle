@@ -240,8 +240,8 @@ else if (event.type === "critical") {
 
     else {
 
-      div.textContent =
-        `${displayName(event.target, nameMap)} に ${event.amount} ダメージ`;
+div.innerHTML =
+`${displayName(event.target, nameMap)} に <span class="logNumber">${event.amount}</span> ダメージ`;
 
     }
 
@@ -287,8 +287,8 @@ else if (event.type === "critical") {
 
     else {
 
-      div.textContent =
-        `${displayName(event.target, nameMap)} のHPが ${event.amount} 回復`;
+div.innerHTML =
+`${displayName(event.target, nameMap)} のHPが <span class="logNumber">${event.amount}</span> 回復`;
 
     }
     
@@ -372,7 +372,7 @@ spawnFloatingNumber(
       isBuff = EFFECTS[e.type]?.group === "buff";
 
       text =
-        `${displayName(event.target, nameMap)} に ${name} を ${event.effect.delta ?? n} 付与 (${n})`;
+        `${displayName(event.target, nameMap)} に ${name} を <span class="logNumber">${event.effect.delta ?? n}</span> 付与 (${n})`;
     }
 
     // ==========================
@@ -392,7 +392,7 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
       isBuff = EFFECTS[e.type]?.group === "buff";
 
       text =
-        `${displayName(event.target, nameMap)} の ${name} が ${n} に変化`;
+        `${displayName(event.target, nameMap)} の ${name} が <span class="logNumber">${n}</span> に変化`;
     }
 
     // ==========================
@@ -417,7 +417,7 @@ spawnFloatingNumber(
       isBuff = e.value >= 0;
 
       text =
-        `${displayName(event.target, nameMap)} の ${e.stat} が ${amount} ${word}`;
+        `${displayName(event.target, nameMap)} の ${e.stat} が <span class="logNumber">${amount}</span> ${word}`;
     }
 
     div.textContent = text;
