@@ -131,7 +131,7 @@ export function updateUnitStatUI(unitId, boardState) {
     heal: "HEAL",
     speed: "SPD",
     cri: "CRI",
-    int: "INT"
+    tec: "TEC"
   };
 
   for (const [key, label] of Object.entries(statMap)) {
