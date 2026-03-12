@@ -208,9 +208,9 @@ min-width:0;
 }
 
 .statRow{
-display:flex;
-flex-wrap:wrap;
-gap:6px;
+display:grid;
+grid-template-columns:repeat(3, 1fr);
+gap:2px 8px;
 font-size:9px;
 color:#aee0ff;
 }
