@@ -151,32 +151,6 @@ else if (type === "pierce") {
   else if (type === "fixed" || type === "effect") {
     finalDamage = power;
   }
-
-  // ==========================================================
-// クリティカル
-// ==========================================================
-
-if (
-  finalDamage > 0 &&
-  (type === "normal" || type === "pierce")
-) {
-
-  if (rollCritical(source)) {
-
-    isCritical = true;
-
-    finalDamage =
-      Math.floor(finalDamage * 1.5);
-
-ctx.pushLog({
-  type: "critical",
-  groupLevel: ctx.groupLevel,
-  subLevel: 1,
-  block: "skill"
-});
-  }
-
-}
   
 //========================================================== 
 // 距離減衰
@@ -215,7 +189,34 @@ finalDamage =
 
 }
 
-  // ==========================================================
+  
+// ==========================================================
+// クリティカル
+// ==========================================================
+
+if (
+  finalDamage > 0 &&
+  (type === "normal" || type === "pierce")
+) {
+
+  if (rollCritical(source)) {
+
+    isCritical = true;
+
+    finalDamage =
+      Math.floor(finalDamage * 1.5);
+
+ctx.pushLog({
+  type: "critical",
+  groupLevel: ctx.groupLevel,
+  subLevel: 1,
+  block: "skill"
+});
+  }
+
+}
+
+// ==========================================================
 // 衛星（satellite）ダメージ軽減
 // ==========================================================
 
@@ -438,12 +439,23 @@ else if (type === "scale") {
   const healStat =
     ctx.getEffectiveStat(source, "heal");
 
-// ==========================================================
-// クリティカル
-// ==========================================================
   finalHeal =
     Math.floor(healStat * power);
 
+  
+getResonanceLog(source, ctx);
+
+const modifier =
+  getResonanceModifier(source);
+
+finalHeal =
+  Math.floor(finalHeal * modifier);
+
+  
+// ==========================================================
+// クリティカル
+// ==========================================================
+  
 if (
   finalHeal > 0 &&
   type === "scale"
@@ -466,14 +478,6 @@ ctx.pushLog({
   }
 
 }
-  
-getResonanceLog(source, ctx);
-
-const modifier =
-  getResonanceModifier(source);
-
-finalHeal =
-  Math.floor(finalHeal * modifier);
 
 }
   
