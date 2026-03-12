@@ -239,6 +239,17 @@ div.innerHTML = `
 <div class="effectItem"><span class="effectIcon">流</span><span class="effectCount">00</span></div>
 
 </div>
+
+<div class="statDivider"></div>
+
+<div class="statRow">
+  <div class="statItem">AT -</div>
+  <div class="statItem">DF -</div>
+  <div class="statItem">HEAL -</div>
+  <div class="statItem">SPEED -</div>
+  <div class="statItem">CRI -</div>
+</div>
+
   </div>
 
 </div>
