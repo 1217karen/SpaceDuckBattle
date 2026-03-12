@@ -295,8 +295,13 @@ width:100%;
 
 .statItem{
 display:grid;
-grid-template-columns: 32px 1fr;
+grid-template-columns: 32px 28px 60px;
 white-space:nowrap;
+}
+
+.statRate{
+text-align:right;
+color:#ffd966;
 }
 
 .statLabel{
