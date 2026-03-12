@@ -149,8 +149,8 @@ function loadDuck(){
   document.getElementById("statCRI").value =
     duck.stats?.cri ?? 0;
 
-  document.getElementById("statINT").value =
-    duck.stats?.int ?? 0;
+  document.getElementById("statTEC").value =
+    duck.stats?.tec ?? 0;
   
   loadPattern(currentSlot);
 }
