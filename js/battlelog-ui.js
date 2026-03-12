@@ -515,26 +515,68 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
     // stat系
     // ==========================
 
-    else {
+else {
 
-      const amount = Math.round(Math.abs(e.value));
+// ==========================
+// rate系（％バフ）
+// ==========================
 
-      const sign = e.value >= 0 ? "+" : "-";
+if (e.mode === "rate") {
 
-spawnFloatingNumber(
-  event.target,
-  `${e.stat.toUpperCase()}${sign}${amount}`,
-  e.value >= 0 ? "statUp" : "statDown"
-);
+  const percent =
+    Math.round(Math.abs(e.value) * 100);
 
-      const word =
-        e.value >= 0 ? "増加" : "減少";
+  const turn =
+    e.duration ?? 0;
 
-      isBuff = e.value >= 0;
+  const stat =
+    e.stat.toUpperCase();
 
-      text =
-        `${displayName(event.target, nameMap)} の ${e.stat} が <span class="logNumber">${amount}</span> ${word}`;
-    }
+  const word =
+    e.value >= 0 ? "強化" : "弱化";
+
+  spawnFloatingNumber(
+    event.target,
+    `${stat}${e.value >= 0 ? "+" : "-"}${percent}%`,
+    e.value >= 0 ? "statUp" : "statDown"
+  );
+
+  isBuff = e.value >= 0;
+
+  text =
+`${displayName(event.target, nameMap)} の ${stat} が ${turn} ターンの間 ${percent}% ${word}`;
+
+}
+
+// ==========================
+// flat系（数値バフ）
+// ==========================
+
+else {
+
+  const amount =
+    Math.round(Math.abs(e.value));
+
+  const stat =
+    e.stat.toUpperCase();
+
+  const word =
+    e.value >= 0 ? "増加" : "減少";
+
+  spawnFloatingNumber(
+    event.target,
+    `${stat}${e.value >= 0 ? "+" : "-"}${amount}`,
+    e.value >= 0 ? "statUp" : "statDown"
+  );
+
+  isBuff = e.value >= 0;
+
+  text =
+`${displayName(event.target, nameMap)} の ${stat} が ${amount} ${word}`;
+
+}
+
+}
 
    div.innerHTML = text;
 
