@@ -267,7 +267,8 @@ ctx.pushLog({
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
   block: "effect",
-  unit: target.id
+  unit: target.id,
+  percent: Math.round(reductionRate * 100)
 });
 
     if (satellite.stock <= 0) {
