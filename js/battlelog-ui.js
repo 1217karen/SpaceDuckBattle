@@ -420,7 +420,7 @@ spawnFloatingNumber(
         `${displayName(event.target, nameMap)} の ${e.stat} が <span class="logNumber">${amount}</span> ${word}`;
     }
 
-    div.textContent = text;
+   div.innerHTML = text;
 
     if (unitState) {
 
