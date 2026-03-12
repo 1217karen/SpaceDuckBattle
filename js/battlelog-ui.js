@@ -37,6 +37,10 @@ num.classList.add("statDownNumber");
 num.classList.add("criticalNumber");
 }
 
+  if(type === "effectTrigger"){
+num.classList.add("effectTriggerNumber");
+}
+
 num.textContent = value;
 
 wrapper.appendChild(num);
@@ -170,8 +174,10 @@ else if (event.type === "effectTrigger") {
   const name =
     EFFECTS[event.effect]?.name || event.effect;
 
-  div.textContent =
-    `${displayName(event.unit, nameMap)} の ${name}`;
+div.textContent =
+`${displayName(event.unit, nameMap)} の ${name}`;
+
+spawnFloatingNumber(event.unit, name, "effectTrigger");
 
 }
     
