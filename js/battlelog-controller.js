@@ -570,7 +570,10 @@ else if (ev.type === "effectApplied") {
 
 }
 
-if (ev.type !== "hpChange") {
+if (
+  ev.type !== "hpChange" &&
+  ev.type !== "effectExpired"
+) {
   await sleep(wait);
 }
 
