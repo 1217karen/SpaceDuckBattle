@@ -138,7 +138,7 @@ function loadDuck(){
     duck.stats?.atk ?? 0;
 
   document.getElementById("statDF").value =
-    duck.stats?.df ?? 0;
+    duck.stats?.def ?? 0;
 
   document.getElementById("statHEAL").value =
     duck.stats?.heal ?? 0;
@@ -180,7 +180,7 @@ saveCurrentPattern();
 
   const stats = {
     atk: Number(document.getElementById("statAT").value),
-    df: Number(document.getElementById("statDF").value),
+    def: Number(document.getElementById("statDF").value),
     heal: Number(document.getElementById("statHEAL").value),
     speed: Number(document.getElementById("statSPEED").value),
     cri: Number(document.getElementById("statCRI").value),
