@@ -402,8 +402,12 @@ div.innerHTML =
 
       const unit = boardState.units[event.unit];
 
-      const existing =
-        unit.effects.find(x => x.type === e.type);
+const existing =
+  unit.effects.find(x =>
+    x.category === "timed" &&
+    x.mode === "rate" &&
+    x.stat === e.stat
+  );
 
 if (existing) {
   existing.duration = e.duration;
