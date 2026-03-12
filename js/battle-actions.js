@@ -57,7 +57,7 @@ function getResonanceLog(unit, ctx){
 
   if (diff === 0) return;
 
-  const percent = Math.abs(diff) * 0.25;
+  const percent = Math.abs(diff) * 1;
 
   if (diff > 0) {
 
