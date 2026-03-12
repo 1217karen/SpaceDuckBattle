@@ -1,6 +1,7 @@
 //battlelog-ui.js
 import { moveUnit, updateFacing, highlightCell, highlightCells, removeUnit } from "./board.js";
 import { EFFECTS } from "./effects-config.js";
+import { getEffectiveStat } from "./battle-effects.js";
 
 function displayName(id, nameMap) {
   return nameMap?.[id] || id;
@@ -146,7 +147,7 @@ const valueEl =
 
 if (!valueEl) continue;
 
-const value = unit[key] ?? 0;
+const value = getEffectiveStat(unit, key);
 
 valueEl.textContent = value;
   }
