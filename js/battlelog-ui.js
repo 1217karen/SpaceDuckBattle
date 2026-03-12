@@ -114,6 +114,39 @@ const mapping = [
   }
 }
 
+export function updateUnitStatUI(unitId, boardState) {
+
+  const unit = boardState.units[unitId];
+  if (!unit) return;
+
+  const container =
+    document.querySelector(`.unitStatus[data-unit="${unitId}"]`);
+
+  if (!container) return;
+
+  const statMap = {
+    atk: "AT",
+    df: "DF",
+    heal: "HEAL",
+    speed: "SPD",
+    cri: "CRI",
+    int: "INT"
+  };
+
+  for (const [key, label] of Object.entries(statMap)) {
+
+    const el = container.querySelector(
+      `.statItem[data-stat="${key}"]`
+    );
+
+    if (!el) continue;
+
+    const value = unit[key] ?? 0;
+    el.textContent = `${label} ${value}`;
+  }
+}
+
+
 export function playLogEvent(
   event,
   nextEvent,
