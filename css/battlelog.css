@@ -188,8 +188,15 @@ min-width:0;
 
 .unitHeader {
 display: flex;
-align-items: center;
-gap: 6px;
+flex-direction: column;
+align-items: stretch;
+gap: 4px;
+}
+
+.unitTopRow{
+display:flex;
+align-items:center;
+gap:6px;
 }
 
 /* 名前＋状態表示ブロック */
@@ -198,8 +205,6 @@ gap: 6px;
 display: flex;
 flex-direction: column;
 justify-content: center;
-
-height: 60px;
 
 flex: 1;
 min-width: 0;
