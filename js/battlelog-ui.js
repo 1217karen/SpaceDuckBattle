@@ -536,24 +536,23 @@ spawnFloatingNumber(
 
       unit.effects = unit.effects || [];
 
-      const existing =
-        unit.effects.find(e => e.type === event.effect.type);
+const existing =
+  unit.effects.find(e =>
+    e.type === event.effect.type &&
+    e.stat === event.effect.stat
+  );
 
-      if (existing) {
+if (existing) {
 
-        existing.stock =
-          event.effect.stock ?? existing.stock ?? 1;
+  Object.assign(existing, event.effect);
 
-      }
+}
 
-      else {
+else {
 
-        unit.effects.push({
-          type: event.effect.type,
-          stock: event.effect.stock ?? 1
-        });
+  unit.effects.push({ ...event.effect });
 
-      }
+}
 
       updateUnitEffectUI(event.target, boardState);
     }
