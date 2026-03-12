@@ -613,7 +613,7 @@ else if (event.type === "resonanceEffect") {
     `スキルの威力が +${event.percent}% 増加`;
 
 spawnFloatingNumber(
-  nextEvent?.target ?? nextEvent?.unit,
+  event.unit,
   `+${event.percent}%`,
   "statUp"
 );
@@ -626,7 +626,7 @@ else if (event.type === "interferenceEffect") {
     `スキルの威力が -${event.percent}% 低下`;
 
 spawnFloatingNumber(
-  nextEvent?.target ?? nextEvent?.unit,
+  event.unit,
   `-${event.percent}%`,
   "statDown"
 );
