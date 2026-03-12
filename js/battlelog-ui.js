@@ -33,6 +33,10 @@ if(type === "statDown"){
 num.classList.add("statDownNumber");
 }
 
+  if(type === "critical"){
+num.classList.add("criticalNumber");
+}
+
 num.textContent = value;
 
 wrapper.appendChild(num);
@@ -198,6 +202,8 @@ else if (event.type === "effectTrigger") {
 else if (event.type === "critical") {
 
   div.textContent = "CRITICAL!";
+
+  spawnFloatingNumber(event.target, "CRITICAL!", "critical");
 
 }
     
