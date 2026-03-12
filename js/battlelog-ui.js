@@ -371,7 +371,7 @@ div.innerHTML =
       EFFECTS[e.type]?.name || e.type;
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} の ${name} は解除された`;
+      `${displayName(event.unit, nameMap)} の ${name} が解除`;
   }
 
   else if (event.type === "effectApplied") {
@@ -522,7 +522,7 @@ spawnFloatingNumber(
     delete boardState.units[event.unit];
 
     div.textContent =
-      `${displayName(event.unit, nameMap)} は戦線を離脱した`;
+      `${displayName(event.unit, nameMap)} は戦線を離脱`;
   }
 
   else if (event.type === "move") {
@@ -587,10 +587,24 @@ spawnFloatingNumber(
       `CT はこれ以上変化しない`;
   }
 
+    else if (event.type === "resonanceEffect") {
+
+  div.textContent =
+    `スキルの威力が +${event.percent}% 増加`;
+
+}
+
+else if (event.type === "interferenceEffect") {
+
+  div.textContent =
+    `スキルの威力が -${event.percent}% 低下`;
+
+}
+
   else if (event.type === "meteorReflect") {
 
     div.textContent =
-      `${displayName(event.target, nameMap)} に ${event.amount} ダメージを反射した`;
+      `${displayName(event.target, nameMap)} に ${event.amount} ダメージを反射`;
   }
 
   else if (event.type === "meteorNoTarget") {
@@ -602,7 +616,7 @@ spawnFloatingNumber(
   else if (event.type === "satelliteGuard") {
 
     div.textContent =
-      `衛星 がダメージを軽減した`;
+      `衛星 がダメージを軽減`;
   }
 
   else if (event.type === "wait") {
