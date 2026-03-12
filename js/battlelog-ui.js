@@ -115,27 +115,6 @@ const div = document.createElement("div");
 const block = event.block ?? "system";
 const nextBlock = nextEvent?.block ?? null;
 
-// skillブロックの前に大余白
-if (block === "skill") {
-
-  const spacer = document.createElement("div");
-  spacer.style.height = "10px";
-  spacer.style.borderTop = "2px solid #ff4444";
-
-  logArea.appendChild(spacer);
-}
-
-// effectブロックの前に小余白
-if (block === "effect") {
-
-  const spacer = document.createElement("div");
-  spacer.style.height = "6px";
-  spacer.style.borderTop = "1px dashed #44aaff";
-
-  logArea.appendChild(spacer);
-}
-
-
 const GROUP_INDENT = 14;
 const SUB_INDENT = 6;
 
@@ -609,15 +588,4 @@ spawnFloatingNumber(
   }
 
 logArea.appendChild(div);
-
-if (block === "effect" && nextBlock !== "effect") {
-
-  const spacer = document.createElement("div");
-  spacer.style.height = "6px";
-  spacer.style.borderTop = "1px dashed #44aaff";
-
-  logArea.appendChild(spacer);
-}
-  
-  logArea.appendChild(div);
 }
