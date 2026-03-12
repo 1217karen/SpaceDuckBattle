@@ -26,8 +26,8 @@ function getResonanceModifier(unit) {
   }
 
   return Math.max(
-    1 + (resonanceStock * 0.0025)
-      - (interferenceStock * 0.0025),
+    1 + (resonanceStock * 0.01)
+      - (interferenceStock * 0.01),
     0
   );
 }
