@@ -625,11 +625,18 @@ spawnFloatingNumber(
       `流星 を反射する相手がいなかった`;
   }
 
-  else if (event.type === "satelliteGuard") {
+else if (event.type === "satelliteGuard") {
 
-    div.textContent =
-      `衛星 がダメージを軽減`;
-  }
+  div.textContent =
+    `衛星 がダメージを ${event.percent}% 軽減した`;
+
+spawnFloatingNumber(
+  event.unit,
+  `-${event.percent}%`,
+  "statDown"
+);
+
+}
 
   else if (event.type === "wait") {
 
