@@ -582,6 +582,13 @@ color:#ff9966;
 font-size:12px;
 }
 
+.criticalNumber{
+color:#ffcc33;
+font-size:16px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
 @keyframes floatNumber{
 
 0%{
