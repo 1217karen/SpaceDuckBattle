@@ -240,6 +240,7 @@ div.innerHTML = `
 
 </div>
 
+</div>
 <div class="statDivider"></div>
 
 <div class="statRow">
@@ -249,8 +250,6 @@ div.innerHTML = `
   <div class="statItem">SPEED -</div>
   <div class="statItem">CRI -</div>
 </div>
-
-  </div>
 
 </div>
 
