@@ -541,6 +541,8 @@ box-shadow: inset 0 0 0px rgba(255,255,255,0);
 
 .floatingNumber{
 
+font-family: 'DotGothic16', monospace;
+
 position:absolute;
 
 left:50%;
