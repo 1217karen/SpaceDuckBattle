@@ -294,7 +294,17 @@ width:100%;
 }
 
 .statItem{
+display:grid;
+grid-template-columns: 32px 1fr;
 white-space:nowrap;
+}
+
+.statLabel{
+text-align:left;
+}
+
+.statValue{
+text-align:right;
 }
 
 /* ユニットアイコン */
