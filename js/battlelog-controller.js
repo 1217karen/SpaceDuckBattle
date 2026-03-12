@@ -222,7 +222,6 @@ div.innerHTML = `
 
   <div class="unitMain">
 
-```
 <div class="unitTopRow">
 
   <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
@@ -270,13 +269,11 @@ div.innerHTML = `
   </div>
 
 </div>
-```
 
   </div>
 
   <div class="skillSlots">
 
-```
 <div class="skillSlot"></div>
 <div class="skillSlot"></div>
 
@@ -285,7 +282,6 @@ div.innerHTML = `
 
 <div class="skillSlot"></div>
 <div class="skillSlot"></div>
-```
 
   </div>
 
