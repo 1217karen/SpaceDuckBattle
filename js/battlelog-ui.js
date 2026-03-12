@@ -203,7 +203,7 @@ else if (event.type === "critical") {
 
   div.textContent = "CRITICAL!";
 
-  spawnFloatingNumber(event.target, "CRITICAL!", "critical");
+  spawnFloatingNumber(nextEvent?.target, "CRITICAL!", "critical");
 
 }
     
