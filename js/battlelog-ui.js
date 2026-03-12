@@ -394,34 +394,34 @@ div.innerHTML =
     spawnFloatingNumber(event.target, event.amount, "heal");
   }
 
-  else if (event.type === "effectDecay") {
+else if (event.type === "effectDecay") {
 
-    const e = event.effect;
+  const e = event.effect;
 
-    if (boardState.units[event.unit]) {
+  if (boardState.units[event.unit]) {
 
-      const unit = boardState.units[event.unit];
+    const unit = boardState.units[event.unit];
 
-const existing =
-  unit.effects.find(x =>
-    x.category === "timed" &&
-    x.mode === "rate" &&
-    x.stat === e.stat
-  );
+    const existing =
+      unit.effects.find(x =>
+        x.category === "timed" &&
+        x.mode === "rate" &&
+        x.stat === e.stat
+      );
 
-if (existing) {
-  existing.duration = e.duration;
-}
-
-      updateUnitEffectUI(event.unit, boardState);
+    if (existing) {
+      existing.duration = e.duration;
     }
 
-    const name =
-      EFFECTS[e.type]?.name || e.type;
-
-    div.textContent =
-      `${name} が 1 減衰 (${e.stock})`;
+    updateUnitEffectUI(event.unit, boardState);
+    updateUnitStatUI(event.unit, boardState);
   }
+
+  const stat = e.stat?.toUpperCase() ?? "";
+
+  div.textContent =
+    `${stat} 効果の残りターン ${e.duration}`;
+}
 
       else if (event.type === "effectExpired") {
 
