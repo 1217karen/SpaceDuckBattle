@@ -202,7 +202,7 @@ ctx.pushLog({
         target.effects.filter(e => e !== satellite);
 
 ctx.pushLog({
-  type: "effectRemoved",
+  type: "effectExpired",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
   block: "effect",
@@ -309,7 +309,10 @@ ctx.pushLog({
         );
 
       ctx.pushLog({
-        type: "effectRemoved",
+        type: "effectExpired",
+        groupLevel: ctx.groupLevel + 1,
+        subLevel: 1,
+        block: "effect",
         unit: target.id,
         effect: { type: "meteor" }
       });
