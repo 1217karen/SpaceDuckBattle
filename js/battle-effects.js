@@ -260,23 +260,95 @@ if (effectData.duration !== undefined) {
       e.stat === stat
     );
 
-  if (existing) {
+if (existing) {
 
-    existing.value = value;
-    existing.duration = duration;
+  const A = existing.value;
+  const T = existing.duration;
 
-    ctx.pushLog({
-      type: "effectApplied",
-      groupLevel: ctx.groupLevel + 1,
-      subLevel: 1,
-      block: "effect",
-      source: source.id,
-      target: target.id,
-      effect: { ...existing }
-    });
+  const B = value;
+  const U = duration;
 
-    return;
+  const absA = Math.abs(A);
+  const absB = Math.abs(B);
+
+  // =====================
+  // 強い効果 → 上書き
+  // =====================
+
+  if (absB > absA) {
+
+    existing.value = B;
+    existing.duration = U;
+
   }
+
+  // =====================
+  // 同じ効果 → 延長
+  // =====================
+
+  else if (B === A) {
+
+    existing.duration += U;
+
+  }
+
+  // =====================
+  // 弱い効果 → ターン変換
+  // =====================
+
+  else {
+
+    const added =
+      Math.floor(absB * U / absA);
+
+    // 同符号 → 延長
+    if (Math.sign(A) === Math.sign(B)) {
+
+      existing.duration += added;
+
+    }
+
+    // 逆符号 → 打消し
+    else {
+
+      existing.duration -= added;
+
+    }
+
+    if (existing.duration <= 0) {
+
+      target.effects =
+        target.effects.filter(e => e !== existing);
+
+      ctx.pushLog({
+        type: "effectExpired",
+        groupLevel: ctx.groupLevel + 1,
+        subLevel: 1,
+        block: "effect",
+        unit: target.id,
+        effect: {
+          stat: stat,
+          mode: "rate"
+        }
+      });
+
+      return;
+    }
+
+  }
+
+  ctx.pushLog({
+    type: "effectApplied",
+    groupLevel: ctx.groupLevel + 1,
+    subLevel: 1,
+    block: "effect",
+    source: source.id,
+    target: target.id,
+    effect: { ...existing }
+  });
+
+  return;
+}
 
   const newEffect = {
     category: "timed",
