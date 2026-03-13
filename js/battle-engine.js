@@ -622,10 +622,61 @@ for (let u of units) {
 
     const e = u.effects[i];
 
+    // rateのみ対象
+    if (
+      e.category !== "timed" ||
+      e.mode !== "rate"
+    ) continue;
+
+    e.duration--;
+
+    // ======================
+    // 減衰ログ
+    // ======================
+
+    if (e.duration > 0) {
+
+      context.pushLog({
+        type: "effectDecay",
+        groupLevel: context.groupLevel,
+        subLevel: 0,
+        block: "system",
+        unit: u.id,
+        effect: {
+          stat: e.stat,
+          mode: "rate",
+          value: e.value,
+          duration: e.duration
+        }
+      });
+
+    }
+
+    // ======================
+    // 期限切れ
+    // ======================
+
+    if (e.duration <= 0) {
+
+      context.pushLog({
+        type: "effectExpired",
+        groupLevel: context.groupLevel,
+        subLevel: 0,
+        block: "system",
+        unit: u.id,
+        effect: {
+          stat: e.stat,
+          mode: "rate"
+        }
+      });
+
+      u.effects.splice(i, 1);
+
+    }
+
   }
 
 }
-
     // ==================================================
     // クールタイム減少
     // ==================================================
