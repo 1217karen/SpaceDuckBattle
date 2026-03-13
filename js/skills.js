@@ -5,7 +5,7 @@ export const skillHandlers = {
   // 前方1マス攻撃
   // =========================
   attack_front1: {
-    cooldown: 1,
+    cooldown: 2,
     
     generateActions(unit, ctx) {
 
