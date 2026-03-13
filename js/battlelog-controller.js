@@ -474,19 +474,43 @@ const actionEvents = battleLog
 
   }
 
-  else if (
-    [...requiredSet].every(id => actedSet.has(id))
-  ) {
+else if (
+  [...requiredSet].every(id => actedSet.has(id))
+) {
 
-    uiTurn++;
+  uiTurn++;
 
-    if (turnDisplay) {
-      turnDisplay.textContent = `TURN ${uiTurn}`;
+  if (turnDisplay) {
+    turnDisplay.textContent = `TURN ${uiTurn}`;
+  }
+
+  actedSet.clear();
+
+  // ======================
+  // rate effect 減衰（UI側）
+  // ======================
+
+  for (const unit of Object.values(boardState.units)) {
+
+    if (!unit.rateEffects) continue;
+
+    for (let i = unit.rateEffects.length - 1; i >= 0; i--) {
+
+      const e = unit.rateEffects[i];
+
+      e.duration--;
+
+      if (e.duration <= 0) {
+        unit.rateEffects.splice(i,1);
+      }
+
     }
 
-    actedSet.clear();
+    updateUnitStatUI(unit.id, boardState);
 
   }
+
+}
 
 
   // ======================
