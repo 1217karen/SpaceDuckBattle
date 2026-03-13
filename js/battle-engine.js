@@ -610,42 +610,67 @@ else {
       endAction(unit);
     }
 
-// ==================================================
-// rate effect ターン処理
-// ==================================================
+    // ==================================================
+    // ターン制effect減少　いったん消した
+    // ==================================================
 
-for (const unit of units) {
+for (let u of units) {
 
-  const list = unit.effects?.filter(
-    e => e.category === "timed" && e.mode === "rate"
-  ) ?? [];
+  if (!u.effects) continue;
 
-  for (const effect of list) {
+  for (let i = u.effects.length - 1; i >= 0; i--) {
 
-    effect.duration--;
+    const e = u.effects[i];
 
-    if (effect.duration > 0) {
+    // rateのみ対象
+    if (
+      e.category !== "timed" ||
+      e.mode !== "rate"
+    ) continue;
+
+    e.duration--;
+
+    // ======================
+    // 減衰ログ
+    // ======================
+
+    if (e.duration > 0) {
 
       context.pushLog({
-        type: "rateEffectTick",
-        unit: unit.id,
-        stat: effect.stat,
-        value: effect.value,
-        duration: effect.duration
+        type: "effectDecay",
+        groupLevel: context.groupLevel,
+        subLevel: 0,
+        block: "system",
+        unit: u.id,
+        effect: {
+          stat: e.stat,
+          mode: "rate",
+          value: e.value,
+          duration: e.duration
+        }
       });
 
     }
 
-    else {
+    // ======================
+    // 期限切れ
+    // ======================
+
+    if (e.duration <= 0) {
 
       context.pushLog({
-        type: "rateEffectEnd",
-        unit: unit.id,
-        stat: effect.stat
+        type: "effectExpired",
+        groupLevel: context.groupLevel,
+        subLevel: 0,
+        block: "system",
+        unit: u.id,
+        effect: {
+          stat: e.stat,
+          mode: "rate"
+        }
       });
 
-      unit.effects =
-        unit.effects.filter(e => e !== effect);
+      u.effects.splice(i, 1);
 
     }
 
