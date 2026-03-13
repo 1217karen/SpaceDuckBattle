@@ -146,14 +146,15 @@ export function simulateBattle(snapshot) {
   // snapshotコピー
   // ======================================================
 
-  const units = snapshot.units.map(u => ({
-    ...u,
-    effects: [],
-    skills: (u.skills || []).map(s => ({
-      ...s,
-      _currentCooldown: 0
-    }))
-  }));
+const units = snapshot.units.map(u => ({
+  ...u,
+  effects: [],        // stack系
+  rateEffects: [],    // rate専用
+  skills: (u.skills || []).map(s => ({
+    ...s,
+    _currentCooldown: 0
+  }))
+}));
 
   // ======================================================
   // 行動順固定
@@ -191,6 +192,7 @@ function pushLog(event){
     
     units,
     log,
+    getRateEffects: (unit) => unit.rateEffects || [],
 
     pushLog,
 
@@ -610,68 +612,22 @@ else {
       endAction(unit);
     }
 
-    // ==================================================
-    // ターン制effect減少　いったん消した
-    // ==================================================
+// ==================================================
+// rate effect 減衰（専用システム）
+// ==================================================
 
 for (let u of units) {
 
-  if (!u.effects) continue;
+  if (!u.rateEffects) continue;
 
-  for (let i = u.effects.length - 1; i >= 0; i--) {
+  for (let i = u.rateEffects.length - 1; i >= 0; i--) {
 
-    const e = u.effects[i];
-
-    // rateのみ対象
-    if (
-      e.category !== "timed" ||
-      e.mode !== "rate"
-    ) continue;
+    const e = u.rateEffects[i];
 
     e.duration--;
 
-    // ======================
-    // 減衰ログ
-    // ======================
-
-    if (e.duration > 0) {
-
-      context.pushLog({
-        type: "effectDecay",
-        groupLevel: context.groupLevel,
-        subLevel: 0,
-        block: "system",
-        unit: u.id,
-        effect: {
-          stat: e.stat,
-          mode: "rate",
-          value: e.value,
-          duration: e.duration
-        }
-      });
-
-    }
-
-    // ======================
-    // 期限切れ
-    // ======================
-
     if (e.duration <= 0) {
-
-      context.pushLog({
-        type: "effectExpired",
-        groupLevel: context.groupLevel,
-        subLevel: 0,
-        block: "system",
-        unit: u.id,
-        effect: {
-          stat: e.stat,
-          mode: "rate"
-        }
-      });
-
-      u.effects.splice(i, 1);
-
+      u.rateEffects.splice(i, 1);
     }
 
   }
