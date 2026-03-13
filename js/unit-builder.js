@@ -2,15 +2,23 @@
 
 export function buildUnitFromDuck(duck, pattern, team, x, y, facing, duckIndex){
 
-const stats = duck.stats || {};
+  const stats = duck.stats || {};
 
-const mhp =
-  (stats.def ?? 0) * 6 +
-  (stats.atk ?? 0) * 4 +
-  (stats.heal ?? 0) * 3 +
-  (stats.tec ?? 0) * 2 +
-  (stats.cri ?? 0) * 1 +
-  (stats.speed ?? 0) * 0;
+  const atk = stats.atk ?? 0;
+  const def = stats.def ?? 0;
+  const heal = stats.heal ?? 0;
+  const tec = stats.tec ?? 0;
+  const cri = stats.cri ?? 0;
+  const speed = stats.speed ?? 0;
+
+  const mhp =
+    100 +
+    def * 6 +
+    atk * 4 +
+    heal * 3 +
+    tec * 2 +
+    cri * 1 +
+  　speed * 0;
 
   
   const unit = {
