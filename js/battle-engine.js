@@ -618,20 +618,13 @@ for (let u of units) {
 
   if (!u.effects) continue;
 
-  console.log("UNIT EFFECTS", u.id, u.effects);
-
   for (let i = u.effects.length - 1; i >= 0; i--) {
 
 const e = u.effects[i];
 
-console.log("CHECK EFFECT", e);
-
 if (e.category === "timed" && e.duration !== null) {
-      console.log("DECAY CHECK", e);
 
       e.duration--;
-  console.log("DECAY", e.stat, e.duration);
-      console.log("DECAY AFTER", e.duration);
 
       if (e.duration > 0) {
 
