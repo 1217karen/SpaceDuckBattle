@@ -591,8 +591,6 @@ else if (e.mode === "rate") {
 `${displayName(event.target,nameMap)} の ${stat} への効果は変化しなかった`;
 
   }
-
-  isBuff = isUp;
 }
 
 // ==========================
