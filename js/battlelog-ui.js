@@ -210,17 +210,6 @@ const nextBlock = nextEvent?.block ?? null;
     return;
   }
 
-    else if (event.type === "effectDurationDecay") {
-
-  console.log("durationDecay", event);
-
-  const e = event.effect;
-
-  div.textContent =
-    `durationDecay ${event.unit} ${e.stat} ${e.duration}`;
-
-}
-
   else if (event.type === "hpChange") {
 
     const unit = boardState.units[event.target];
@@ -428,6 +417,18 @@ else if (event.type === "effectStockDecay") {
 
   div.textContent =
     `${name} が 1 減衰 (${e.stock})`;
+}
+
+  else if (event.type === "effectDecay") {
+
+  const e = event.effect;
+
+  const stat =
+    e.stat?.toUpperCase() || "";
+
+  div.textContent =
+    `${stat} 効果ターン減少 → 残り ${e.duration}`;
+
 }
 
   else if (event.type === "effectDurationDecay") {
