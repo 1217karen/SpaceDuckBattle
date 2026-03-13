@@ -155,8 +155,12 @@ const value = getEffectiveStat(unit, key);
 valueEl.textContent = value;
 
 // ======================
-// rate表示計算（いったん削除）
+// rate表示計算（いったん消した）
 // ======================
+
+    if (rateEl) {
+  rateEl.textContent = "";
+}
   }
 }
 
