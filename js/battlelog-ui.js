@@ -176,13 +176,9 @@ valueEl.textContent = value;
 let rate = 0;
 let turn = 0;
 
-for (const e of (unit.effects || [])) {
+for (const e of (unit.rateEffects || [])) {
 
-  if (
-    e.category === "timed" &&
-    e.mode === "rate" &&
-    e.stat === key
-  ) {
+  if (e.stat === key) {
     rate = e.value;
     turn = e.duration ?? 0;
     break;
@@ -652,12 +648,13 @@ if (event.effect.mode === "flat") {
 }
 
 // rate は従来通り上書き
-else {
+else if (event.effect.mode === "rate") {
+
+  unit.rateEffects = unit.rateEffects || [];
+
   const existing =
-    unit.effects.find(e =>
-      e.category === event.effect.category &&
-      e.stat === event.effect.stat &&
-      e.mode === event.effect.mode
+    unit.rateEffects.find(e =>
+      e.stat === event.effect.stat
     );
 
   if (existing) {
@@ -668,7 +665,7 @@ else {
 
   else {
 
-    unit.effects.push({ ...event.effect });
+    unit.rateEffects.push({ ...event.effect });
 
   }
 
