@@ -640,7 +640,6 @@ effect: {
   mode: e.mode,
   value: e.value,
   duration: e.duration,
-  stock: e.duration
 }
         });
 
