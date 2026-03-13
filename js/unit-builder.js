@@ -2,16 +2,17 @@
 
 export function buildUnitFromDuck(duck, pattern, team, x, y, facing, duckIndex){
 
-  const stats = duck.stats || {};
+const stats = duck.stats || {};
 
-  const MHP =
-  100 +
-  DEF × 6 +
-  ATK × 4 +
-  HEAL × 3 +
-  TEC × 2 +
-  CRI × 1 +
-  SPEED × 0
+const mhp =
+  (stats.def ?? 0) * 6 +
+  (stats.atk ?? 0) * 4 +
+  (stats.heal ?? 0) * 3 +
+  (stats.tec ?? 0) * 2 +
+  (stats.cri ?? 0) * 1 +
+  (stats.speed ?? 0) * 0;
+
+  
   const unit = {
 
     id: "duck_" + duckIndex,
