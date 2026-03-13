@@ -385,8 +385,6 @@ slot.classList.add("selected");
 
 selectedSlot = slotIndex;
 
-console.log("selected slot", selectedSlot);
-
 });
 
 });
@@ -532,11 +530,8 @@ snapshot.units.push(unit);
 
 }
 
-    console.log("SNAPSHOT", JSON.stringify(snapshot,null,2));
 const log = simulateBattle(snapshot);
-
-console.log("BATTLE LOG", log);
-
+  
 const battleID = "battle_" + Date.now();
 
 Object.keys(localStorage).forEach(k => {
