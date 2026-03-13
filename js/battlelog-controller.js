@@ -147,6 +147,8 @@ const battleData = stored ? JSON.parse(stored) : null;
 const snapshot = battleData ? battleData.snapshot : null;
 const battleLog = battleData ? battleData.log : [];
 
+console.log("battleLog", battleLog);
+
 
 // =====================
 // 名前マップ作成
