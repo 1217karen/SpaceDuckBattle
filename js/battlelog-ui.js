@@ -605,8 +605,6 @@ else {
 
 }
 
-}
-
    div.innerHTML = text;
 
     if (unitState) {
