@@ -48,7 +48,10 @@ buff_def20: {
   generateActions(unit, ctx) {
 
     return {
-      preview: null,
+      preview: {
+  cells: [{ x: unit.x, y: unit.y }],
+  style: "buff"
+},
 
       actions: [
         {
@@ -79,7 +82,10 @@ buff_def20: {
   generateActions(unit, ctx) {
 
     return {
-      preview: null,
+      preview: {
+  cells: [{ x: unit.x, y: unit.y }],
+  style: "buff"
+},
 
       actions: [
         {
