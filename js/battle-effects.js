@@ -244,6 +244,9 @@ ctx.pushLog({
 
     return;
   }
+
+  // ターン制 rate（いったん消した）
+
 }
 
 export function getEffectsByGroup(unit, group) {
