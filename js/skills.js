@@ -39,6 +39,75 @@ export const skillHandlers = {
     }
   },
 
+    // =========================
+  // 前方1マス攻撃
+  // =========================
+  attack_front1: {
+    cooldown: 1,
+    
+    generateActions(unit, ctx) {
+
+      const target = getFrontTarget(unit, ctx);
+      if (!target) return null;
+      if (target.team === unit.team) return null;
+
+      let x = unit.x;
+      let y = unit.y;
+
+      if (unit.facing === "N") y -= 1;
+      if (unit.facing === "S") y += 1;
+      if (unit.facing === "E") x += 1;
+      if (unit.facing === "W") x -= 1;
+
+      return {
+        preview: {
+          cells: [{ x, y }],
+          style: "attack"
+        },
+        actions: [
+          {
+            type: "damage",
+            source: unit.id,
+            target: target.id,
+            power: 2,
+            damageType: "normal"
+          }
+        ]
+      };
+    }
+  },
+
+    // =========================
+  // DF
+  // =========================
+  
+  buff_def10: {
+  cooldown: 2,
+
+  generateActions(unit, ctx) {
+
+    return {
+      preview: null,
+
+      actions: [
+        {
+          type: "applyEffect",
+          source: unit.id,
+          target: unit.id,
+
+          effect: {
+            stat: "def",
+            mode: "rate",
+            value: 0.1,
+            duration: 4
+          }
+        }
+      ]
+    };
+
+  }
+},
+
 // =========================
 // 衛星流星展開
 // =========================
