@@ -647,30 +647,59 @@ if (event.effect.mode === "flat") {
 
 }
 
-// rate は上書き
+// rate はログ結果に応じて更新
 else if (event.effect.mode === "rate") {
 
   unit.rateEffects = unit.rateEffects || [];
 
-  const existing =
-    unit.rateEffects.find(e =>
-      e.stat === event.effect.stat
-    );
+  const stat = event.effect.stat;
 
-  if (existing) {
+  let existing =
+    unit.rateEffects.find(e => e.stat === stat);
 
-    existing.value = event.effect.value;
-    existing.duration = event.effect.duration;
-
-  }
-
-  else {
+  if (event.effect.result === "apply") {
 
     unit.rateEffects.push({
-      stat: event.effect.stat,
+      stat: stat,
       value: event.effect.value,
       duration: event.effect.duration
     });
+
+  }
+
+  else if (event.effect.result === "overwrite") {
+
+    if (existing) {
+
+      existing.value = event.effect.value;
+      existing.duration = event.effect.duration;
+
+    }
+
+  }
+
+  else if (event.effect.result === "extend") {
+
+    if (existing) {
+      existing.duration = event.effect.duration;
+    }
+
+  }
+
+  else if (event.effect.result === "cancel") {
+
+    if (existing) {
+
+      existing.duration = event.effect.duration;
+
+      if (existing.duration <= 0) {
+
+        unit.rateEffects =
+          unit.rateEffects.filter(e => e !== existing);
+
+      }
+
+    }
 
   }
 
