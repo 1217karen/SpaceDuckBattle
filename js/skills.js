@@ -132,25 +132,25 @@ satellite_meteor_field: {
 
     for (const t of targets) {
 
-      actions.push({
-        type: "applyEffect",
-        source: unit.id,
-        target: t.id,
-        effect: {
-          type: "satellite",
-          stock: 3
-        }
-      });
+actions.push({
+  type: "applyEffect",
+  source: unit.id,
+  target: t.id,
+  effect: {
+    type: "satellite",
+    power: 3
+  }
+});
 
-      actions.push({
-        type: "applyEffect",
-        source: unit.id,
-        target: t.id,
-        effect: {
-          type: "meteor",
-          stock: 3
-        }
-      });
+actions.push({
+  type: "applyEffect",
+  source: unit.id,
+  target: t.id,
+  effect: {
+    type: "meteor",
+    power: 3
+  }
+});
 
     }
 
