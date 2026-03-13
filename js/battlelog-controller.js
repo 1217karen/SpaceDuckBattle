@@ -192,7 +192,8 @@ boardState.units[u.id] = {
   speed: u.speed ?? 0,
   cri: u.cri ?? 0,
   tec: u.tec ?? 0,
-  effects: []
+  effects: [],
+  rateEffects: []
 };
 
     placeUnit("board", {
