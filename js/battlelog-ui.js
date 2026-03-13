@@ -640,14 +640,14 @@ else {
 
       unit.effects = unit.effects || [];
 
-// flat は累積（戦闘エンジンと同じ仕様）
+// flat は累積
 if (event.effect.mode === "flat") {
 
   unit.effects.push({ ...event.effect });
 
 }
 
-// rate は従来通り上書き
+// rate は上書き
 else if (event.effect.mode === "rate") {
 
   unit.rateEffects = unit.rateEffects || [];
@@ -659,13 +659,18 @@ else if (event.effect.mode === "rate") {
 
   if (existing) {
 
-    Object.assign(existing, event.effect);
+    existing.value = event.effect.value;
+    existing.duration = event.effect.duration;
 
   }
 
   else {
 
-    unit.rateEffects.push({ ...event.effect });
+    unit.rateEffects.push({
+      stat: event.effect.stat,
+      value: event.effect.value,
+      duration: event.effect.duration
+    });
 
   }
 
