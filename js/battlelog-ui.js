@@ -56,7 +56,7 @@ num.remove();
 
 }
 
-function updateUnitEffectUI(unitId, boardState) {
+export function updateUnitEffectUI(unitId, boardState) {
 
   const unit = boardState.units[unitId];
   if (!unit) return;
@@ -678,13 +678,13 @@ else if (event.effect.mode === "rate") {
 
   }
 
-  else if (event.effect.result === "extend") {
+ else if (event.effect.result === "extend") {
 
     if (existing) {
       existing.duration = event.effect.duration;
     }
 
-  }
+ }
 
   else if (event.effect.result === "cancel") {
 
