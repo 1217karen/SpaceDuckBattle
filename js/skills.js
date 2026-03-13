@@ -39,43 +39,35 @@ export const skillHandlers = {
     }
   },
 
-    // =========================
-  // 前方1マス攻撃
+   // =========================
+  // DF3
   // =========================
-  attack_front1: {
-    cooldown: 1,
-    
-    generateActions(unit, ctx) {
+buff_def20: {
+  cooldown: 3,
 
-      const target = getFrontTarget(unit, ctx);
-      if (!target) return null;
-      if (target.team === unit.team) return null;
+  generateActions(unit, ctx) {
 
-      let x = unit.x;
-      let y = unit.y;
+    return {
+      preview: null,
 
-      if (unit.facing === "N") y -= 1;
-      if (unit.facing === "S") y += 1;
-      if (unit.facing === "E") x += 1;
-      if (unit.facing === "W") x -= 1;
+      actions: [
+        {
+          type: "applyEffect",
+          source: unit.id,
+          target: unit.id,
 
-      return {
-        preview: {
-          cells: [{ x, y }],
-          style: "attack"
-        },
-        actions: [
-          {
-            type: "damage",
-            source: unit.id,
-            target: target.id,
-            power: 2,
-            damageType: "normal"
+          effect: {
+            stat: "def",
+            mode: "rate",
+            value: 0.2,
+            duration: 2
           }
-        ]
-      };
-    }
-  },
+        }
+      ]
+    };
+
+  }
+}
 
     // =========================
   // DF
