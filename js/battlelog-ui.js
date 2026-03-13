@@ -655,7 +655,6 @@ if (event.effect.mode === "flat") {
 
 // rate は従来通り上書き
 else {
-
   const existing =
     unit.effects.find(e =>
       e.category === event.effect.category &&
@@ -680,7 +679,6 @@ else {
       updateUnitEffectUI(event.target, boardState);
       updateUnitStatUI(event.target, boardState);
     }
-  }
 
   else if (event.type === "death") {
 
