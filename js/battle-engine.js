@@ -620,9 +620,9 @@ for (let u of units) {
 
   for (let i = u.effects.length - 1; i >= 0; i--) {
 
-const e = u.effects[i];
+    const e = u.effects[i];
 
-if (e.category === "timed" && e.duration !== null) {
+    if (e.category === "timed" && e.duration !== null) {
 
       e.duration--;
 
@@ -640,6 +640,7 @@ effect: {
   mode: e.mode,
   value: e.value,
   duration: e.duration,
+  stock: e.duration
 }
         });
 
