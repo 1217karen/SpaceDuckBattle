@@ -31,7 +31,7 @@ y:1,
 facing:"W",
 icon:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
 skills:[
-{type:"attack_nearest"}
+{type:"attack_front1"}
 ]
 },
 
