@@ -394,60 +394,31 @@ div.innerHTML =
     spawnFloatingNumber(event.target, event.amount, "heal");
   }
 
-else if (event.type === "effectStockDecay") {
+  else if (event.type === "effectDecay") {
 
-  const e = event.effect;
+    const e = event.effect;
 
-  if (boardState.units[event.unit]) {
+    if (boardState.units[event.unit]) {
 
-    const unit = boardState.units[event.unit];
+      const unit = boardState.units[event.unit];
 
-    const existing =
-      unit.effects.find(x => x.type === e.type);
+      const existing =
+        unit.effects.find(x => x.type === e.type);
 
-    if (existing) {
-      existing.stock = e.stock;
+      if (existing) {
+        existing.stock = e.stock;
+      }
+
+      updateUnitEffectUI(event.unit, boardState);
     }
 
-    updateUnitEffectUI(event.unit, boardState);
+    const name =
+      EFFECTS[e.type]?.name || e.type;
+
+    div.textContent =
+      `${name} が 1 減衰 (${e.stock})`;
   }
 
-  const name =
-    EFFECTS[e.type]?.name || e.type;
-
-  div.textContent =
-    `${name} が 1 減衰 (${e.stock})`;
-}
-
-  else if (event.type === "effectDurationDecay") {
-
-  const e = event.effect;
-
-  if (boardState.units[event.unit]) {
-
-    const unit = boardState.units[event.unit];
-
-    const existing =
-      unit.effects.find(x =>
-        x.category === "timed" &&
-        x.stat === e.stat &&
-        x.mode === e.mode
-      );
-
-    if (existing) {
-      existing.duration = e.duration;
-    }
-
-    updateUnitStatUI(event.unit, boardState);
-  }
-
-  const stat =
-    e.stat?.toUpperCase() || "";
-
-  div.textContent =
-    `${stat} 効果 残り ${e.duration} ターン`;
-}
-    
       else if (event.type === "effectExpired") {
 
     const e = event.effect;
