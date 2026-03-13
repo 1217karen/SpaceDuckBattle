@@ -210,6 +210,17 @@ const nextBlock = nextEvent?.block ?? null;
     return;
   }
 
+    else if (event.type === "effectDurationDecay") {
+
+  console.log("durationDecay", event);
+
+  const e = event.effect;
+
+  div.textContent =
+    `durationDecay ${event.unit} ${e.stat} ${e.duration}`;
+
+}
+
   else if (event.type === "hpChange") {
 
     const unit = boardState.units[event.target];
