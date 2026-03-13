@@ -490,35 +490,10 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
 else {
 
 // ==========================
-// rate系（％バフ）
+// rate系（％バフ）　いったん消した
 // ==========================
 
-if (e.mode === "rate") {
 
-  const percent =
-    Math.round(Math.abs(e.value) * 100);
-
-  const turn =
-    e.duration ?? 0;
-
-  const stat =
-    e.stat.toUpperCase();
-
-  const word =
-    e.value >= 0 ? "強化" : "弱化";
-
-  spawnFloatingNumber(
-    event.target,
-    `${stat}${e.value >= 0 ? "+" : "-"}${percent}%`,
-    e.value >= 0 ? "statUp" : "statDown"
-  );
-
-  isBuff = e.value >= 0;
-
-  text =
-`${displayName(event.target, nameMap)} の ${stat} が ${turn} ターンの間 ${percent}% ${word}`;
-
-}
 
 // ==========================
 // flat系（数値バフ）
