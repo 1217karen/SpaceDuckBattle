@@ -623,8 +623,10 @@ for (let u of units) {
     const e = u.effects[i];
 
     if (e.category === "timed" && e.duration !== null) {
+      console.log("DECAY CHECK", e);
 
       e.duration--;
+      console.log("DECAY AFTER", e.duration);
 
       if (e.duration > 0) {
 
