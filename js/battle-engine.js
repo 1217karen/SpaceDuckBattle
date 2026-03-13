@@ -611,7 +611,7 @@ else {
     }
 
     // ==================================================
-    // ターン制effect減少
+    // ターン制effect減少　いったん消した
     // ==================================================
 
 for (let u of units) {
@@ -621,49 +621,6 @@ for (let u of units) {
   for (let i = u.effects.length - 1; i >= 0; i--) {
 
     const e = u.effects[i];
-
-    if (e.category === "timed" && e.duration !== null) {
-
-      e.duration--;
-
-      if (e.duration > 0) {
-
-        context.pushLog({
-          type: "effectDecay",
-          groupLevel: context.groupLevel,
-          subLevel: 0,
-          block: "system",
-          unit: u.id,
-effect: {
-  type: e.type,
-  stat: e.stat,
-  mode: e.mode,
-  value: e.value,
-  duration: e.duration,
-  stock: e.duration
-}
-        });
-
-      }
-
-      if (e.duration <= 0) {
-
-        context.pushLog({
-          type: "effectExpired",
-          groupLevel: context.groupLevel,
-          subLevel: 0,
-          block: "system",
-          unit: u.id,
-          effect: {
-            type: e.type,
-            stat: e.stat
-          }
-        });
-
-        u.effects.splice(i, 1);
-      }
-
-    }
 
   }
 
