@@ -187,13 +187,6 @@ saveCurrentPattern();
     tec: Number(document.getElementById("statTEC").value)
   };
 
-  const mhp =
-    100 +
-    stats.atk * 2 +
-    stats.def * 3 +
-    stats.heal * 2;
-
-
 
 const duck = {
 
@@ -205,8 +198,6 @@ const duck = {
   icon,
 
   stats,
-
-  mhp,
 
   patterns
 
