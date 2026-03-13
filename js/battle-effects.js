@@ -589,16 +589,16 @@ export function processAfterAction(unit, ctx) {
     if (e.stock > 0) {
 
 ctx.pushLog({
-  type: "effectDecay",
+  type: "effectStockDecay",
   groupLevel: ctx.groupLevel + 1,
   subLevel: 1,
   block: "effect",
-        unit: unit.id,
-        effect: {
-          type: e.type,
-          stock: e.stock
-        }
-      });
+  unit: unit.id,
+  effect: {
+    type: e.type,
+    stock: e.stock
+  }
+});
     }
 
     if (e.stock <= 0) {
