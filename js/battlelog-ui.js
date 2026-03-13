@@ -403,24 +403,20 @@ else if (event.type === "effectDecay") {
     const unit = boardState.units[event.unit];
 
     const existing =
-      unit.effects.find(x =>
-        x.category === "timed" &&
-        x.mode === "rate" &&
-        x.stat === e.stat
-      );
+      unit.effects.find(x => x.type === e.type);
 
     if (existing) {
-      existing.duration = e.duration;
+      existing.stock = e.stock;
     }
 
     updateUnitEffectUI(event.unit, boardState);
-    updateUnitStatUI(event.unit, boardState);
   }
 
-  const stat = e.stat?.toUpperCase() ?? "";
+  const name =
+    EFFECTS[e.type]?.name || e.type;
 
   div.textContent =
-    `${stat} 効果の残りターン ${e.duration}`;
+    `${name} が 1 減衰 (${e.stock})`;
 }
 
       else if (event.type === "effectExpired") {
