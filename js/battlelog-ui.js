@@ -155,40 +155,8 @@ const value = getEffectiveStat(unit, key);
 valueEl.textContent = value;
 
 // ======================
-// rate表示計算
+// rate表示計算（いったん削除）
 // ======================
-
-let rate = 0;
-let turn = 0;
-
-for (const e of (unit.effects || [])) {
-
-  if (
-    e.category === "timed" &&
-    e.mode === "rate" &&
-    e.stat === key
-  ) {
-
-    rate = e.value;
-    turn = e.duration ?? 0;
-    break;
-
-  }
-
-}
-
-if (rateEl) {
-
-  const percent =
-    Math.round(rate * 100);
-
-  const sign =
-    percent > 0 ? "+" : "";
-
-  rateEl.textContent =
-    `${sign}${percent}%(${turn})`;
-
-}
   }
 }
 
