@@ -190,7 +190,7 @@ saveCurrentPattern();
   const mhp =
     100 +
     stats.atk * 2 +
-    stats.df * 3 +
+    stats.def * 3 +
     stats.heal * 2;
 
 
