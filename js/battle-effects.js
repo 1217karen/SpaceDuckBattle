@@ -268,6 +268,8 @@ if (existing) {
   const B = value;
   const U = duration;
 
+  let result = "apply";
+
   const absA = Math.abs(A);
   const absB = Math.abs(B);
 
@@ -275,22 +277,26 @@ if (existing) {
   // 強い効果 → 上書き
   // =====================
 
-  if (absB > absA) {
+if (absB > absA) {
 
-    existing.value = B;
-    existing.duration = U;
+  existing.value = B;
+  existing.duration = U;
 
-  }
+  result = "overwrite";
+
+}
 
   // =====================
   // 同じ効果 → 延長
   // =====================
 
-  else if (B === A) {
+else if (B === A) {
 
-    existing.duration += U;
+  existing.duration += U;
 
-  }
+  result = "extend";
+
+}
 
   // =====================
   // 弱い効果 → ターン変換
@@ -298,20 +304,45 @@ if (existing) {
 
   else {
 
-    const added =
-      Math.floor(absB * U / absA);
+const added =
+  Math.floor(absB * U / absA);
+
+if (added === 0) {
+
+  ctx.pushLog({
+    type: "effectApplied",
+    groupLevel: ctx.groupLevel + 1,
+    subLevel: 1,
+    block: "effect",
+    source: source.id,
+    target: target.id,
+    effect: {
+      stat: stat,
+      mode: "rate",
+      value: B,
+      duration: existing.duration,
+      result: "none"
+    }
+  });
+
+  return;
+}
 
     // 同符号 → 延長
-    if (Math.sign(A) === Math.sign(B)) {
+if (Math.sign(A) === Math.sign(B)) {
 
-      existing.duration += added;
+  existing.duration += added;
 
-    }
+  if (added > 0) result = "extend";
+
+}
 
     // 逆符号 → 打消し
     else {
 
       existing.duration -= added;
+
+      if (added > 0) result = "cancel";
 
     }
 
@@ -344,7 +375,7 @@ if (existing) {
     block: "effect",
     source: source.id,
     target: target.id,
-    effect: { ...existing }
+    effect: { ...existing, result }
   });
 
   return;
@@ -367,7 +398,7 @@ if (existing) {
     block: "effect",
     source: source.id,
     target: target.id,
-    effect: { ...newEffect }
+    effect: { ...newEffect, result: "apply" }
   });
 
   return;
