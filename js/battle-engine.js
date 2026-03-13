@@ -14,7 +14,7 @@ function getSkillChainCount(unit) {
 
 const speed = unit.speed ?? 0;
 
-const rate = Math.max(speed - 10, 0) * 2; // %
+const rate = Math.max(speed, 0) * 2; // %
 
   let count = 1;
 
