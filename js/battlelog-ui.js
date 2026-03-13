@@ -483,17 +483,36 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
         `${displayName(event.target, nameMap)} の ${name} が <span class="logNumber">${n}</span> に変化`;
     }
 
-    // ==========================
-    // stat系
-    // ==========================
-
-else {
-
 // ==========================
-// rate系（％バフ）　いったん消した
+// rate系（％バフ）
 // ==========================
 
+else if (e.mode === "rate") {
 
+  const percent =
+    Math.round(Math.abs(e.value) * 100);
+
+  const stat =
+    e.stat.toUpperCase();
+
+  const turn =
+    e.duration ?? 0;
+
+  const word =
+    e.value >= 0 ? "強化" : "弱化";
+
+  spawnFloatingNumber(
+    event.target,
+    `${stat}${e.value >= 0 ? "+" : "-"}${percent}%`,
+    e.value >= 0 ? "statUp" : "statDown"
+  );
+
+  isBuff = e.value >= 0;
+
+  text =
+`${displayName(event.target, nameMap)} の ${stat} が ${turn}ターン の間 ${percent}% ${word}`;
+
+}
 
 // ==========================
 // flat系（数値バフ）
