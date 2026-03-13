@@ -245,7 +245,61 @@ ctx.pushLog({
     return;
   }
 
-  // ターン制 rate（いったん消した）
+// ターン制 rate　作り直し
+
+if (effectData.duration !== undefined) {
+
+  const stat = effectData.stat;
+  const value = effectData.value;
+  const duration = effectData.duration;
+
+  const existing =
+    target.effects.find(e =>
+      e.category === "timed" &&
+      e.mode === "rate" &&
+      e.stat === stat
+    );
+
+  if (existing) {
+
+    existing.value = value;
+    existing.duration = duration;
+
+    ctx.pushLog({
+      type: "effectApplied",
+      groupLevel: ctx.groupLevel + 1,
+      subLevel: 1,
+      block: "effect",
+      source: source.id,
+      target: target.id,
+      effect: { ...existing }
+    });
+
+    return;
+  }
+
+  const newEffect = {
+    category: "timed",
+    stat: stat,
+    mode: "rate",
+    value: value,
+    duration: duration
+  };
+
+  target.effects.push(newEffect);
+
+  ctx.pushLog({
+    type: "effectApplied",
+    groupLevel: ctx.groupLevel + 1,
+    subLevel: 1,
+    block: "effect",
+    source: source.id,
+    target: target.id,
+    effect: { ...newEffect }
+  });
+
+  return;
+}
 
 }
 
