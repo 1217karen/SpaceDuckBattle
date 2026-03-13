@@ -54,6 +54,27 @@ export function applyEffect(source, target, action, ctx) {
   if (!effectData) return;
 
 // ==========================================================
+// TECスケール計算
+// ==========================================================
+
+if (effectData.power !== undefined) {
+
+  const tec = ctx.getEffectiveStat(source, "tec");
+
+  const amount =
+    Math.floor(tec * 0.2 * effectData.power);
+
+  if (effectData.stock !== undefined) {
+    effectData.stock = amount;
+  }
+
+  if (effectData.value !== undefined) {
+    effectData.value = amount;
+  }
+
+}
+
+// ==========================================================
 // クリティカル
 // ==========================================================
 
