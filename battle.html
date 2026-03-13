@@ -535,6 +535,8 @@ snapshot.units.push(unit);
     console.log("SNAPSHOT", JSON.stringify(snapshot,null,2));
 const log = simulateBattle(snapshot);
 
+console.log("BATTLE LOG", log);
+
 const battleID = "battle_" + Date.now();
 
 Object.keys(localStorage).forEach(k => {
@@ -551,7 +553,7 @@ log: log
 })
 );
 
-window.location.href = `battlelog.html?id=${battleID}`;
+// window.location.href = `battlelog.html?id=${battleID}`;
 
 });
   
@@ -594,4 +596,3 @@ selectedCell = null;
 </body>
 
 </html>
-```
