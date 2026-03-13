@@ -678,6 +678,7 @@ else {
       updateUnitStatUI(event.target, boardState);
     }
 
+  }
   else if (event.type === "death") {
 
     removeUnit("board", event.unit);
