@@ -7,24 +7,35 @@ export function getEffectiveStat(unit, statName) {
 
   const base = unit[statName] || 0;
 
-  if (!unit.effects || unit.effects.length === 0) {
-    return base;
-  }
-
   let flatBonus = 0;
   let rateBonus = 0;
 
-  for (let effect of unit.effects) {
+  // flat は effects から取得
+  if (unit.effects) {
 
-    if (effect.stat !== statName) continue;
+    for (let effect of unit.effects) {
 
-    if (effect.mode === "flat") {
-      flatBonus += effect.value;
+      if (effect.stat !== statName) continue;
+
+      if (effect.mode === "flat") {
+        flatBonus += effect.value;
+      }
+
     }
 
-    if (effect.mode === "rate") {
+  }
+
+  // rate は rateEffects から取得
+  if (unit.rateEffects) {
+
+    for (let effect of unit.rateEffects) {
+
+      if (effect.stat !== statName) continue;
+
       rateBonus += effect.value;
+
     }
+
   }
 
   const afterFlat = base + flatBonus;
@@ -245,151 +256,126 @@ ctx.pushLog({
     return;
   }
 
-// ターン制 rate　作り直し
+// ==========================================================
+// rate effect（専用システム）
+// ==========================================================
 
 if (effectData.duration !== undefined) {
+
+  if (!target.rateEffects) {
+    target.rateEffects = [];
+  }
 
   const stat = effectData.stat;
   const value = effectData.value;
   const duration = effectData.duration;
 
   const existing =
-    target.effects.find(e =>
-      e.category === "timed" &&
-      e.mode === "rate" &&
-      e.stat === stat
-    );
+    target.rateEffects.find(e => e.stat === stat);
 
-if (existing) {
+  if (existing) {
 
-  const A = existing.value;
-  const T = existing.duration;
+    const A = existing.value;
+    const T = existing.duration;
 
-  const B = value;
-  const U = duration;
+    const B = value;
+    const U = duration;
 
-  let result = "apply";
+    let result = "apply";
 
-  const absA = Math.abs(A);
-  const absB = Math.abs(B);
+    const absA = Math.abs(A);
+    const absB = Math.abs(B);
 
-  // =====================
-  // 強い効果 → 上書き
-  // =====================
+    if (absB > absA) {
 
-if (absB > absA) {
+      existing.value = B;
+      existing.duration = U;
 
-  existing.value = B;
-  existing.duration = U;
+      result = "overwrite";
 
-  result = "overwrite";
-
-}
-
-  // =====================
-  // 同じ効果 → 延長
-  // =====================
-
-else if (B === A) {
-
-  existing.duration += U;
-
-  result = "extend";
-
-}
-
-  // =====================
-  // 弱い効果 → ターン変換
-  // =====================
-
-  else {
-
-const added =
-  Math.floor(absB * U / absA);
-
-if (added === 0) {
-
-  ctx.pushLog({
-    type: "effectApplied",
-    groupLevel: ctx.groupLevel + 1,
-    subLevel: 1,
-    block: "effect",
-    source: source.id,
-    target: target.id,
-    effect: {
-      stat: stat,
-      mode: "rate",
-      value: B,
-      duration: existing.duration,
-      result: "none"
     }
-  });
 
-  return;
-}
+    else if (B === A) {
 
-    // 同符号 → 延長
-if (Math.sign(A) === Math.sign(B)) {
+      existing.duration += U;
 
-  existing.duration += added;
+      result = "extend";
 
-  if (added > 0) result = "extend";
+    }
 
-}
-
-    // 逆符号 → 打消し
     else {
 
-      existing.duration -= added;
+      const added =
+        Math.floor(absB * U / absA);
 
-      if (added > 0) result = "cancel";
+      if (added === 0) {
+
+        ctx.pushLog({
+          type: "effectApplied",
+          groupLevel: ctx.groupLevel + 1,
+          subLevel: 1,
+          block: "effect",
+          source: source.id,
+          target: target.id,
+          effect: {
+            stat: stat,
+            mode: "rate",
+            value: B,
+            duration: existing.duration,
+            result: "none"
+          }
+        });
+
+        return;
+      }
+
+      if (Math.sign(A) === Math.sign(B)) {
+
+        existing.duration += added;
+
+        if (added > 0) result = "extend";
+
+      }
+
+      else {
+
+        existing.duration -= added;
+
+        if (added > 0) result = "cancel";
+
+      }
+
+      if (existing.duration <= 0) {
+
+        target.rateEffects =
+          target.rateEffects.filter(e => e !== existing);
+
+        return;
+      }
 
     }
 
-    if (existing.duration <= 0) {
+    ctx.pushLog({
+      type: "effectApplied",
+      groupLevel: ctx.groupLevel + 1,
+      subLevel: 1,
+      block: "effect",
+      source: source.id,
+      target: target.id,
+      effect: { ...existing, result }
+    });
 
-      target.effects =
-        target.effects.filter(e => e !== existing);
-
-      ctx.pushLog({
-        type: "effectExpired",
-        groupLevel: ctx.groupLevel + 1,
-        subLevel: 1,
-        block: "effect",
-        unit: target.id,
-        effect: {
-          stat: stat,
-          mode: "rate"
-        }
-      });
-
-      return;
-    }
-
+    return;
   }
 
-  ctx.pushLog({
-    type: "effectApplied",
-    groupLevel: ctx.groupLevel + 1,
-    subLevel: 1,
-    block: "effect",
-    source: source.id,
-    target: target.id,
-    effect: { ...existing, result }
-  });
-
-  return;
-}
-
   const newEffect = {
-    category: "timed",
     stat: stat,
     mode: "rate",
     value: value,
     duration: duration
   };
 
-  target.effects.push(newEffect);
+  target.rateEffects.push(newEffect);
 
   ctx.pushLog({
     type: "effectApplied",
@@ -403,7 +389,6 @@ if (Math.sign(A) === Math.sign(B)) {
 
   return;
 }
-
 }
 
 export function getEffectsByGroup(unit, group) {
