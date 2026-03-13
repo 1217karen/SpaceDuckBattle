@@ -536,41 +536,63 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
 
 else if (e.mode === "rate") {
 
- const percent = Math.round(Math.abs(e.value)*100);
- const stat = e.stat.toUpperCase();
- const turn = e.duration ?? 0;
- const result = e.result;
+  const percent = Math.round(Math.abs(e.value) * 100);
+  const stat = e.stat.toUpperCase();
+  const turn = e.duration ?? 0;
+  const result = e.result;
 
- const word = e.value >= 0 ? "強化" : "弱化";
+  const isUp = e.value >= 0;
+  const word = isUp ? "強化" : "弱化";
+  const floatType = isUp ? "statUp" : "statDown";
+  const floatText = `${stat}${isUp ? "+" : "-"}${percent}%`;
 
- if(result === "apply" || result === "overwrite") {
+  if (result === "apply" || result === "overwrite") {
 
-  text =
+    text =
 `${displayName(event.target,nameMap)} の ${stat} が ${turn}ターンの間 ${percent}% ${word}`;
 
- }
+    spawnFloatingNumber(
+      event.target,
+      floatText,
+      floatType
+    );
 
- else if(result === "extend") {
+  }
 
-  text =
+  else if (result === "extend") {
+
+    text =
 `${displayName(event.target,nameMap)} の ${stat} ${percent}% ${word}が ${turn}ターンに延長`;
 
- }
+    spawnFloatingNumber(
+      event.target,
+      `${stat}+T${turn}`,
+      "effectApply"
+    );
 
- else if(result === "cancel") {
+  }
 
-  text =
+  else if (result === "cancel") {
+
+    text =
 `${displayName(event.target,nameMap)} の ${stat} ${percent}% ${word}が ${turn}ターンに短縮`;
 
- }
+    spawnFloatingNumber(
+      event.target,
+      `${stat}-T`,
+      "effectApply"
+    );
 
- else if(result === "none") {
+  }
 
-  text =
+  else if (result === "none") {
+
+    text =
 `${displayName(event.target,nameMap)} の ${stat} への効果は変化しなかった`;
 
- }
+  }
 
+  isBuff = isUp;
 }
 
 // ==========================
