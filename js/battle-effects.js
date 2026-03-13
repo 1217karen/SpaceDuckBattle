@@ -5,7 +5,7 @@ import { rollCritical } from "./battle-actions.js";
 
 export function getEffectiveStat(unit, statName) {
 
-  const base = unit[statName] || 0;
+  const base = (unit[statName] ?? 0) + 5;
 
   let flatBonus = 0;
   let rateBonus = 0;
