@@ -419,18 +419,6 @@ else if (event.type === "effectStockDecay") {
     `${name} が 1 減衰 (${e.stock})`;
 }
 
-  else if (event.type === "effectDecay") {
-
-  const e = event.effect;
-
-  const stat =
-    e.stat?.toUpperCase() || "";
-
-  div.textContent =
-    `${stat} 効果ターン減少 → 残り ${e.duration}`;
-
-}
-
   else if (event.type === "effectDurationDecay") {
 
   const e = event.effect;
