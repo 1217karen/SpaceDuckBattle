@@ -150,16 +150,67 @@ const rateEl =
 
 if (!valueEl) continue;
 
-const value = getEffectiveStat(unit, key);
+let base = unit[key] ?? 0;
+
+let flat = 0;
+
+for (const e of (unit.effects || [])) {
+
+  if (
+    e.mode === "flat" &&
+    e.stat === key
+  ) {
+    flat += e.value;
+  }
+
+}
+
+const value = Math.round(base + flat);
 
 valueEl.textContent = value;
 
 // ======================
-// rate表示計算（いったん消した）
+// rate表示計算
 // ======================
 
-    if (rateEl) {
-  rateEl.textContent = "";
+let rate = 0;
+let turn = 0;
+
+for (const e of (unit.effects || [])) {
+
+  if (
+    e.category === "timed" &&
+    e.mode === "rate" &&
+    e.stat === key
+  ) {
+    rate = e.value;
+    turn = e.duration ?? 0;
+    break;
+  }
+
+}
+
+if (rateEl) {
+
+  if (rate !== 0) {
+
+    const percent =
+      Math.round(rate * 100);
+
+    const sign =
+      percent > 0 ? "+" : "";
+
+    rateEl.textContent =
+      `${sign}${percent}%(${turn})`;
+
+  }
+
+  else {
+
+    rateEl.textContent = "";
+
+  }
+
 }
   }
 }
@@ -489,28 +540,40 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
 
 else if (e.mode === "rate") {
 
-  const percent =
-    Math.round(Math.abs(e.value) * 100);
+ const percent = Math.round(Math.abs(e.value)*100);
+ const stat = e.stat.toUpperCase();
+ const turn = e.duration ?? 0;
+ const result = e.result;
 
-  const stat =
-    e.stat.toUpperCase();
+ const word = e.value >= 0 ? "強化" : "弱化";
 
-  const turn =
-    e.duration ?? 0;
-
-  const word =
-    e.value >= 0 ? "強化" : "弱化";
-
-  spawnFloatingNumber(
-    event.target,
-    `${stat}${e.value >= 0 ? "+" : "-"}${percent}%`,
-    e.value >= 0 ? "statUp" : "statDown"
-  );
-
-  isBuff = e.value >= 0;
+ if(result === "apply" || result === "overwrite") {
 
   text =
-`${displayName(event.target, nameMap)} の ${stat} が ${turn}ターン の間 ${percent}% ${word}`;
+`${displayName(event.target,nameMap)} の ${stat} が ${turn}ターンの間 ${percent}% ${word}`;
+
+ }
+
+ else if(result === "extend") {
+
+  text =
+`${displayName(event.target,nameMap)} の ${stat} ${percent}% ${word}が ${turn}ターンに延長`;
+
+ }
+
+ else if(result === "cancel") {
+
+  text =
+`${displayName(event.target,nameMap)} の ${stat} ${percent}% ${word}が ${turn}ターンに短縮`;
+
+ }
+
+ else if(result === "none") {
+
+  text =
+`${displayName(event.target,nameMap)} の ${stat} への効果は変化しなかった`;
+
+ }
 
 }
 
