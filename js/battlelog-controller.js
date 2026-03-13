@@ -12,7 +12,8 @@ import {
 
 import {
   playLogEvent,
-  updateUnitStatUI
+  updateUnitStatUI,
+  updateUnitEffectUI
 } from "./battlelog-ui.js";
 
 
@@ -490,25 +491,26 @@ else if (
   // rate effect 減衰（UI側）
   // ======================
 
-  for (const unit of Object.values(boardState.units)) {
+for (const [unitId, unit] of Object.entries(boardState.units)) {
 
-    if (!unit.rateEffects) continue;
+  if (!unit.rateEffects) continue;
 
-    for (let i = unit.rateEffects.length - 1; i >= 0; i--) {
+  for (let i = unit.rateEffects.length - 1; i >= 0; i--) {
 
-      const e = unit.rateEffects[i];
+    const e = unit.rateEffects[i];
 
-      e.duration--;
+    e.duration--;
 
-      if (e.duration <= 0) {
-        unit.rateEffects.splice(i,1);
-      }
-
+    if (e.duration <= 0) {
+      unit.rateEffects.splice(i,1);
     }
 
-    updateUnitStatUI(unit.id, boardState);
-
   }
+
+  updateUnitEffectUI(unitId, boardState);
+updateUnitStatUI(unitId, boardState);
+
+}
 
 }
 
