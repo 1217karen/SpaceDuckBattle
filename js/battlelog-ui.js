@@ -212,13 +212,6 @@ const div = document.createElement("div");
   // ログ階層クラス
 let level = event.groupLevel ?? 0;
 
-if (
-  event.type === "skillUse" ||
-  event.type === "effectTrigger"
-) {
-  level = Math.max(level - 1, 0);
-}
-
 div.classList.add(`logLevel${level}`);
 
 const block = event.block ?? "system";
