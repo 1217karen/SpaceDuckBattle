@@ -564,9 +564,7 @@ ctx.pushLog({
 
 if (
   e.type !== "corrosion" &&
-  e.type !== "repair" &&
-  e.type !== "resonance" &&
-  e.type !== "interference"
+  e.type !== "repair"
 )
   continue;
 
@@ -646,8 +644,13 @@ export function processAfterAction(unit, ctx) {
 
     const e = unit.effects[i];
 
-    if (e.type !== "corrosion" && e.type !== "repair")
-      continue;
+if (
+  e.type !== "corrosion" &&
+  e.type !== "repair" &&
+  e.type !== "resonance" &&
+  e.type !== "interference"
+)
+  continue;
 
     e.stock--;
 
