@@ -103,15 +103,22 @@ const mapping = [
 
   for (const [type, index] of mapping) {
 
-    const el =
-      items[index]?.querySelector(".effectCount");
+const item = items[index];
+const el =
+  item?.querySelector(".effectCount");
 
-    if (!el) continue;
+if (!el) continue;
 
-    const v = counts[type] ?? 0;
+const v = counts[type] ?? 0;
 
-    el.textContent =
-      String(v).padStart(2, "0");
+el.textContent =
+  String(v).padStart(2, "0");
+
+if(v > 0){
+  item.classList.add("active");
+}else{
+  item.classList.remove("active");
+}
   }
 }
 
