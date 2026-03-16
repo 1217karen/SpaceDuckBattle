@@ -827,15 +827,11 @@ else if (event.type === "mobilityChange") {
     div.textContent =
       `移動可能数 が ${amount} 減少`;
 
-if (nextEvent?.type !== "move") {
-
 spawnFloatingNumber(
   event.unit,
   `MOVE-${amount}`,
   "statDown"
 );
-
-}
 
   }
 
@@ -844,15 +840,11 @@ spawnFloatingNumber(
     div.textContent =
       `移動可能数 が ${amount} 増加`;
 
-if (nextEvent?.type !== "move") {
-
 spawnFloatingNumber(
   event.unit,
   `MOVE+${amount}`,
   "statUp"
 );
-
-}
 
   }
 }
