@@ -491,12 +491,13 @@ export function applyMove(action, ctx) {
   unit.x = action.x;
   unit.y = action.y;
 
-  ctx.pushLog({
-    type: "move",
-    unit: unit.id,
-    x: action.x,
-    y: action.y
-  });
+ctx.pushLog({
+  type: "move",
+  source: action.source ?? null,
+  unit: unit.id,
+  x: action.x,
+  y: action.y
+});
 
   const dx = action.x - fromX;
   const dy = action.y - fromY;
