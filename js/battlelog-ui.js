@@ -498,32 +498,79 @@ const name =
   return;
 }
 
-  else if (event.type === "effectRemoved") {
+else if (event.type === "effectRemoved") {
 
-    const e = event.effect;
+  const e = event.effect;
 
-    if (boardState.units[event.unit]) {
+  const unit = boardState.units[event.unit];
 
-      const unit = boardState.units[event.unit];
+  const name =
+    EFFECTS[e.type]?.name || e.type;
 
-      unit.effects =
-        unit.effects.filter(x => x.type !== e.type);
+  let oldStock = 0;
 
-      updateUnitEffectUI(event.unit, boardState);
+  if (unit) {
+
+    const existing =
+      unit.effects.find(x => x.type === e.type);
+
+    if (existing) {
+      oldStock = existing.stock ?? 1;
     }
 
-    const name =
-      EFFECTS[e.type]?.name || e.type;
+  }
+
+  const stackType =
+    EFFECTS[e.type]?.stack;
+
+  // ==========================
+  // stack型
+  // ==========================
+
+  if (stackType === "stock") {
 
     spawnFloatingNumber(
-  event.unit,
-  `${name}×`,
-  "effectEnd"
-);
+      event.unit,
+      `${name}-${oldStock}`,
+      "effectEnd"
+    );
 
-    div.textContent =
-      `${displayName(event.unit, nameMap)} の ${name} が解除`;
+    div.innerHTML =
+      `${displayName(event.unit, nameMap)} の ${name} が <span class="logNumber">${oldStock}</span> 解除 (0)`;
+
   }
+
+  // ==========================
+  // overwrite型
+  // ==========================
+
+  else if (stackType === "overwrite") {
+
+    spawnFloatingNumber(
+      event.unit,
+      `${name}=0`,
+      "effectEnd"
+    );
+
+    div.innerHTML =
+      `${displayName(event.unit, nameMap)} の ${name} が <span class="logNumber">0</span> に変化`;
+
+  }
+
+  // ==========================
+  // 状態削除
+  // ==========================
+
+  if (unit) {
+
+    unit.effects =
+      unit.effects.filter(x => x.type !== e.type);
+
+    updateUnitEffectUI(event.unit, boardState);
+
+  }
+
+}
 
   else if (event.type === "effectApplied") {
 
