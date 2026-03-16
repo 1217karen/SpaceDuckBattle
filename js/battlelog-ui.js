@@ -657,16 +657,46 @@ else {
 
       const unit = boardState.units[event.target];
 
-      unit.effects = unit.effects || [];
+unit.effects = unit.effects || [];
 
-// flat は累積
-if (event.effect.mode === "flat") {
+// ==========================
+// stock / overwrite
+// ==========================
+
+if (event.effect.type && event.effect.stock !== undefined) {
+
+  let existing =
+    unit.effects.find(e => e.type === event.effect.type);
+
+  if (existing) {
+
+    existing.stock = event.effect.stock;
+
+  } else {
+
+    unit.effects.push({
+      type: event.effect.type,
+      stock: event.effect.stock
+    });
+
+  }
+
+}
+
+// ==========================
+// flat
+// ==========================
+
+else if (event.effect.mode === "flat") {
 
   unit.effects.push({ ...event.effect });
 
 }
 
-// rate はログ結果に応じて更新
+// ==========================
+// rate
+// ==========================
+
 else if (event.effect.mode === "rate") {
 
   unit.rateEffects = unit.rateEffects || [];
