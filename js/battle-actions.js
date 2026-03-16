@@ -63,8 +63,6 @@ function getResonanceLog(unit, ctx){
 
     ctx.pushLog({
       type: "effectTrigger",
-      groupLevel: ctx.groupLevel + 1,
-      subLevel: 0,
       block: "effect",
       unit: unit.id,
       effect: "resonance"
@@ -72,8 +70,6 @@ function getResonanceLog(unit, ctx){
 
 ctx.pushLog({
   type: "resonanceEffect",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   unit: unit.id,
   percent: percent
@@ -85,8 +81,6 @@ ctx.pushLog({
 
     ctx.pushLog({
       type: "effectTrigger",
-      groupLevel: ctx.groupLevel + 1,
-      subLevel: 0,
       block: "effect",
       unit: unit.id,
       effect: "interference"
@@ -94,8 +88,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "interferenceEffect",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   unit: unit.id,
   percent: percent
@@ -210,8 +202,6 @@ if (
 
 ctx.pushLog({
   type: "critical",
-  groupLevel: ctx.groupLevel,
-  subLevel: 1,
   block: "skill"
 });
   }
@@ -257,8 +247,6 @@ const reducedDamage =
 
 ctx.pushLog({
   type: "effectTrigger",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 0,
   block: "effect",
   unit: target.id,
   effect: "satellite"
@@ -266,8 +254,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "satelliteGuard",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   unit: target.id,
   percent: Math.round(reductionRate * 100)
@@ -280,8 +266,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "effectExpired",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   unit: target.id,
   effect: { type: "satellite" }
@@ -298,8 +282,6 @@ ctx.pushLog({
   
 ctx.pushLog({
   type: "damage",
-  groupLevel: ctx.groupLevel,
-  subLevel: 1,
   block: "skill",
   source: source.id,
   target: target.id,
@@ -347,8 +329,6 @@ if (
 
 ctx.pushLog({
   type: "effectTrigger",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 0,
   block: "effect",
   unit: target.id,
   effect: "meteor"
@@ -356,8 +336,6 @@ ctx.pushLog({
         
 ctx.pushLog({
   type: "meteorReflect",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   source: target.id,
   target: source.id,
@@ -380,8 +358,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "effectTrigger",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 0,
   block: "effect",
   unit: target.id,
   effect: "meteor"
@@ -389,8 +365,6 @@ ctx.pushLog({
         
 ctx.pushLog({
   type: "meteorNoTarget",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   source: target.id
 });
@@ -408,8 +382,6 @@ ctx.pushLog({
 
       ctx.pushLog({
         type: "effectExpired",
-        groupLevel: ctx.groupLevel + 1,
-        subLevel: 1,
         block: "effect",
         unit: target.id,
         effect: { type: "meteor" }
@@ -473,8 +445,6 @@ if (
 
 ctx.pushLog({
   type: "critical",
-  groupLevel: ctx.groupLevel,
-  subLevel: 1,
   block: "skill"
 });
 
@@ -491,8 +461,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "heal",
-  groupLevel: ctx.groupLevel,
-  subLevel: 1,
   block: "skill",
   source: source.id,
   target: target.id,
