@@ -437,9 +437,6 @@ else if (event.type === "effectDecay") {
     `${name} が 1 減少 (${e.stock})`;
 }
 
-
-}
-
       else if (event.type === "effectExpired") {
 
     const e = event.effect;
