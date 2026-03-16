@@ -266,11 +266,28 @@ const context = {
     // 加速 / 減速 消費
     // ==================================================
 
-    if (unit.effects) {
-      unit.effects = unit.effects.filter(
-        e => e.type !== "accel" && e.type !== "slow"
-      );
+if (unit.effects) {
+
+  for (let i = unit.effects.length - 1; i >= 0; i--) {
+
+    const e = unit.effects[i];
+
+    if (e.type === "accel" || e.type === "slow") {
+
+      context.pushLog({
+        type: "effectExpired",
+        block: "effect",
+        unit: unit.id,
+        effect: { type: e.type }
+      });
+
+      unit.effects.splice(i,1);
+
     }
+
+  }
+
+}
 
     processAfterAction(unit, context);
 
