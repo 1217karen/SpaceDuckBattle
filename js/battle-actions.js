@@ -314,13 +314,17 @@ if (
     e => e.type === "meteor"
   );
 
+  const atk = ctx.getEffectiveStat(target, "atk");
+const reflectRate =
+  Math.min(Math.max(atk, 1), 50) / 100;
+
   if (meteor && meteor.stock > 0) {
 
     const reflectDamage =
-      Math.max(
-        Math.floor(finalDamage * 0.2),
-        1
-      );
+  Math.max(
+    Math.floor(finalDamage * reflectRate),
+    1
+  );
 
     meteor.stock--;
 
