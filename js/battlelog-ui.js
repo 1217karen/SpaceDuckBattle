@@ -355,6 +355,13 @@ if (event.damageType === "effect") {
 
 }
 
+else if (event.damageType === "meteor") {
+
+  div.innerHTML =
+    `${displayName(event.target, nameMap)} に <span class="logNumber">${event.amount}</span> ダメージを反射`;
+
+}
+
     else {
 
 div.innerHTML =
@@ -883,18 +890,6 @@ spawnFloatingNumber(
   "statDown"
 );
 
-}
-
-else if (event.type === "meteorReflect") {
-
-  div.innerHTML =
-    `${displayName(event.target, nameMap)} に <span class="logNumber">${event.amount}</span> ダメージを反射`;
-
-  spawnFloatingNumber(
-    event.target,
-    event.amount,
-    "damage"
-  );
 }
 
   else if (event.type === "meteorNoTarget") {
