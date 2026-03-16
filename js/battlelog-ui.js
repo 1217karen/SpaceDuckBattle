@@ -209,6 +209,10 @@ export function playLogEvent(
 
 const div = document.createElement("div");
 
+  // ログ階層クラス
+const level = event.groupLevel ?? 0;
+div.classList.add(`logLevel${level}`);
+
 const block = event.block ?? "system";
 const nextBlock = nextEvent?.block ?? null;
 
@@ -862,16 +866,6 @@ spawnFloatingNumber(
       `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
   }
 
-// ======================================
-// スキル効果ログのインデント
-// ======================================
-
-if (
-  event.block === "effect" &&
-  event.groupLevel >= 2
-) {
-  div.style.paddingLeft = "1em";
-}
   
 logArea.appendChild(div);
 }
