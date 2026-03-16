@@ -264,14 +264,18 @@ margin: 3px 0;
 width: 100%;
 }
 
-/* 状態アイコン一覧 */
+/* 状態変化一覧 */
 
 .effectList {
 display: grid;
 grid-template-columns: repeat(5, auto);
 gap: 2px;
 
-color: #aee0ff;
+color: #445566;   /* 非アクティブ色 */
+}
+
+.effectItem.active{
+color:#aee0ff;    /* アクティブ色 */
 }
 
 .effectItem {
