@@ -431,6 +431,10 @@ padding: 10px;
 盤面
 ======================================================= */
 
+#board {
+  position: relative;
+}
+
 #boardArea {
 display: flex;
 justify-content: center;
