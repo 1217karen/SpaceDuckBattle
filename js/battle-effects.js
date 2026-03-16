@@ -654,7 +654,7 @@ if (
 
     e.stock--;
 
-    if (e.stock > 0) {
+    if (e.stock >= 0) {
 
 ctx.pushLog({
   type: "effectDecay",
