@@ -406,7 +406,7 @@ export function getEffectsByGroup(unit, group) {
   );
 }
 
-export function removeRandomEffectByGroup(unit, group) {
+export function removeRandomEffectByGroup(unit, group, ctx) {
 
   const list =
     getEffectsByGroup(unit, group);
@@ -420,6 +420,17 @@ export function removeRandomEffectByGroup(unit, group) {
 
   unit.effects =
     unit.effects.filter(e => e !== target);
+
+  if (ctx) {
+    ctx.pushLog({
+      type: "effectRemoved",
+      block: "effect",
+      unit: unit.id,
+      effect: {
+        type: target.type
+      }
+    });
+  }
 
   return target;
 }
