@@ -600,7 +600,7 @@ spawnFloatingNumber(
 
       const n = e.stock ?? 1;
 
-      isBuff = EFFECTS[e.type]?.group === "buff";
+      isBuff = EFFECTS[e.type]?.group?.startsWith("buff");
 
       text =
         `${displayName(event.target, nameMap)} に ${name} を <span class="logNumber">${event.effect.delta ?? n}</span> 付与 (${n})`;
@@ -620,7 +620,7 @@ else if (EFFECTS[e.type]?.stack === "overwrite") {
         "effectApply"
       );
 
-      isBuff = EFFECTS[e.type]?.group === "buff";
+      isBuff = EFFECTS[e.type]?.group?.startsWith("buff");
 
       text =
         `${displayName(event.target, nameMap)} の ${name} が <span class="logNumber">${n}</span> に変化`;
