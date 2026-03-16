@@ -14,6 +14,15 @@ document.querySelector(`[data-unit-id="${unitId}"]`);
 
 if(!wrapper) return;
 
+const board =
+document.getElementById("board");
+
+const rect =
+wrapper.getBoundingClientRect();
+
+const boardRect =
+board.getBoundingClientRect();
+
 const num = document.createElement("div");
 
 num.classList.add("floatingNumber");
@@ -26,7 +35,7 @@ if(type === "heal"){
 num.classList.add("healNumber");
 }
 
-  if(type === "statUp"){
+if(type === "statUp"){
 num.classList.add("statUpNumber");
 }
 
@@ -34,21 +43,29 @@ if(type === "statDown"){
 num.classList.add("statDownNumber");
 }
 
-  if(type === "critical"){
+if(type === "critical"){
 num.classList.add("criticalNumber");
 }
 
-  if(type === "effectTrigger"){
+if(type === "effectTrigger"){
 num.classList.add("effectTriggerNumber");
 }
 
-  if(type === "effectApply"){
-  num.classList.add("effectApplyNumber");
+if(type === "effectApply"){
+num.classList.add("effectApplyNumber");
 }
 
 num.textContent = value;
 
-wrapper.appendChild(num);
+num.style.position = "absolute";
+
+num.style.left =
+(rect.left - boardRect.left + rect.width/2) + "px";
+
+num.style.top =
+(rect.top - boardRect.top) + "px";
+
+board.appendChild(num);
 
 num.addEventListener("animationend",()=>{
 num.remove();
