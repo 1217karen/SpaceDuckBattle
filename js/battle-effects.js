@@ -562,7 +562,12 @@ ctx.pushLog({
   
   for (let e of unit.effects) {
 
-if (e.type !== "corrosion" && e.type !== "repair")
+if (
+  e.type !== "corrosion" &&
+  e.type !== "repair" &&
+  e.type !== "resonance" &&
+  e.type !== "interference"
+)
   continue;
 
 const stock =
