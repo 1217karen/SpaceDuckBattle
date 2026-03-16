@@ -593,11 +593,12 @@ ctx.pushLog({
       unit.hp -= amount;
 
 ctx.pushLog({
-  type: "damage",
-  from: null,
-  target: unit.id,
-  amount: amount,
-  damageType: "effect"
+type: "damage",
+block: "effect",
+from: null,
+target: unit.id,
+amount: amount,
+damageType: "effect"
 });
 
       if (unit.hp <= 0) {
@@ -613,11 +614,12 @@ ctx.pushLog({
         Math.min(unit.hp + amount, mhp);
 
 ctx.pushLog({
-  type: "heal",
-  from: null,
-  target: unit.id,
-  amount: amount,
-  healType: "effect"
+type: "heal",
+block: "effect",
+from: null,
+target: unit.id,
+amount: amount,
+healType: "effect"
 });
     }
 
