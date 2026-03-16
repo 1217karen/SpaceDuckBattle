@@ -465,10 +465,10 @@ export function processBeforeAction(unit, ctx) {
 
 if (net > 0) {
 
+ctx.beginGroup();
+
 ctx.pushLog({
   type: "effectTrigger",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 0,
   block: "effect",
   unit: unit.id,
   effect: "gravity"
@@ -478,10 +478,10 @@ ctx.pushLog({
 
 else if (net < 0) {
 
+ctx.beginGroup();
+
 ctx.pushLog({
   type: "effectTrigger",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 0,
   block: "effect",
   unit: unit.id,
   effect: "float"
@@ -560,6 +560,10 @@ ctx.pushLog({
   delta: dir
 });
     }
+
+    if (net !== 0) {
+  ctx.endGroup();
+}
   }
 
   if (gravityStock > 0 || floatStock > 0) {
@@ -570,26 +574,30 @@ ctx.pushLog({
       );
   }
 
+  // ========================================
+  // corrosion / repair
+  // ========================================
+  
   const mhp = unit.mhp ?? unit.hp;
-
+  
   for (let e of unit.effects) {
 
 if (e.type !== "corrosion" && e.type !== "repair")
   continue;
 
+const stock =
+  Math.min(e.stock ?? 0, MAX_STACK);
+
+if (stock <= 0) continue;
+
+ctx.beginGroup();
+
 ctx.pushLog({
   type: "effectTrigger",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 0,
   block: "effect",
   unit: unit.id,
   effect: e.type
 });
-
-const stock =
-  Math.min(e.stock ?? 0, MAX_STACK);
-
-    if (stock <= 0) continue;
 
     const effectiveStock =
       Math.min(stock, EFFECT_CAP);
@@ -642,6 +650,8 @@ ctx.pushLog({
       target: unit.id,
       hp: unit.hp
     });
+
+    ctx.endGroup();
   }
 }
 
