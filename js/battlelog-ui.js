@@ -862,5 +862,16 @@ spawnFloatingNumber(
       `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
   }
 
+// ======================================
+// スキル効果ログのインデント
+// ======================================
+
+if (
+  event.block === "effect" &&
+  event.groupLevel >= 2
+) {
+  div.style.paddingLeft = "1em";
+}
+  
 logArea.appendChild(div);
 }
