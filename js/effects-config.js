@@ -4,61 +4,61 @@ export const EFFECTS = {
 
   corrosion: {
     name: "侵食",
-    group: "debuff",
+    group: "debuff_stock",
     stack: "stock"
   },
 
   repair: {
     name: "修復",
-    group: "buff",
+    group: "buff_stock",
     stack: "stock"
   },
 
   interference: {
     name: "妨害",
-    group: "debuff",
+    group: "debuff_stock",
     stack: "stock"
   },
   
   resonance: {
     name: "共振",
-    group: "buff",
+    group: "buff_stock",
     stack: "stock"
   },
 
   gravity: {
     name: "重力",
-    group: "debuff",
+    group: "debuff_overwrite",
     stack: "overwrite"
   },
 
   float: {
     name: "浮力",
-    group: "buff",
+    group: "buff_overwrite",
     stack: "overwrite"
   },
 
   slow: {
     name: "減速",
-    group: "debuff",
+    group: "debuff_overwrite",
     stack: "overwrite"
   },
 
   accel: {
     name: "加速",
-    group: "buff",
+    group: "buff_overwrite",
     stack: "overwrite"
   },
 
   meteor: {
     name: "流星",
-    group: "buff",
+    group: "buff_stock",
     stack: "stock"
   },
 
   satellite: {
     name: "衛星",
-    group: "buff",
+    group: "buff_stock",
     stack: "stock"
   }
 
