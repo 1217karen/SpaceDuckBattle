@@ -348,12 +348,12 @@ spawnFloatingNumber(
       }
     }
 
-    if (event.damageType === "effect") {
+if (event.damageType === "effect") {
 
-      div.textContent =
-        `侵食 で ${event.amount} ダメージ`;
+  div.innerHTML =
+    `侵食 で <span class="logNumber">${event.amount}</span> ダメージ`;
 
-    }
+}
 
     else {
 
@@ -395,12 +395,12 @@ div.innerHTML =
 
     }
 
-    if (event.healType === "effect") {
+if (event.healType === "effect") {
 
-      div.textContent =
-        `修復 の効果でHPが ${event.amount} 回復`;
+  div.innerHTML =
+    `修復 の効果でHPが <span class="logNumber">${event.amount}</span> 回復`;
 
-    }
+}
 
     else {
 
@@ -412,30 +412,42 @@ div.innerHTML =
     spawnFloatingNumber(event.target, event.amount, "heal");
   }
 
-  else if (event.type === "effectDecay") {
+else if (event.type === "effectDecay") {
 
-    const e = event.effect;
+  const e = event.effect;
 
-    if (boardState.units[event.unit]) {
+  if (boardState.units[event.unit]) {
 
-      const unit = boardState.units[event.unit];
+    const unit = boardState.units[event.unit];
 
-      const existing =
-        unit.effects.find(x => x.type === e.type);
+    const existing =
+      unit.effects.find(x => x.type === e.type);
 
-      if (existing) {
-        existing.stock = e.stock;
-      }
-
-      updateUnitEffectUI(event.unit, boardState);
+    if (existing) {
+      existing.stock = e.stock;
     }
 
-    const name =
-      EFFECTS[e.type]?.name || e.type;
+    updateUnitEffectUI(event.unit, boardState);
+  }
+
+  const name =
+    EFFECTS[e.type]?.name || e.type;
+
+  div.textContent =
+    `${name} が 1 減少 (${e.stock})`;
+}
+
+  else if (
+    e.type === "resonance" ||
+    e.type === "interference"
+  ) {
 
     div.textContent =
-      `${name} が 1 減衰 (${e.stock})`;
+      `${name} が 1 減少 (${e.stock})`;
+
   }
+
+}
 
       else if (event.type === "effectExpired") {
 
@@ -885,11 +897,17 @@ spawnFloatingNumber(
 
 }
 
-  else if (event.type === "meteorReflect") {
+else if (event.type === "meteorReflect") {
 
-    div.textContent =
-      `${displayName(event.target, nameMap)} に ${event.amount} ダメージを反射`;
-  }
+  div.innerHTML =
+    `${displayName(event.target, nameMap)} に <span class="logNumber">${event.amount}</span> ダメージを反射`;
+
+  spawnFloatingNumber(
+    event.target,
+    event.amount,
+    "damage"
+  );
+}
 
   else if (event.type === "meteorNoTarget") {
 
