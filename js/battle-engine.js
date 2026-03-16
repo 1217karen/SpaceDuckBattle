@@ -169,11 +169,14 @@ function pushLog(event){
 
   if(event.groupLevel === undefined){
 
-    if(event.block === "skill" || event.block === "effect"){
-      event.groupLevel = depth;
-    }else{
-      event.groupLevel = Math.max(depth - 1, 0);
-    }
+if(
+  event.type === "skillUse" ||
+  event.type === "effectTrigger"
+){
+  event.groupLevel = Math.max(depth - 1, 0);
+}else{
+  event.groupLevel = depth;
+}
 
   }
 
