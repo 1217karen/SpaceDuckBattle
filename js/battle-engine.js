@@ -314,17 +314,17 @@ context.currentGroup = null;
 
       if (!hasEffect) continue;
 
-context.currentGroup = ++logGroup;
-      context.groupLevel = 1;
       
-      context.pushLog({
+beginGroup();
+
+context.pushLog({
   type: "skillUse",
-  level: 0,
-        unit: unit.id,
-        skill: skill.type,
-        rangeCells: result.preview?.cells ?? null,
-        rangeStyle: result.preview?.style ?? null
-      });
+  block: "skill",
+  unit: unit.id,
+  skill: skill.type,
+  rangeCells: result.preview?.cells ?? null,
+  rangeStyle: result.preview?.style ?? null
+});
 
       for (let action of actions) {
 
@@ -355,6 +355,12 @@ context.currentGroup = ++logGroup;
         skill._currentCooldown = handler.cooldown;
       }
 
+if (handler.cooldown && handler.cooldown > 0) {
+  skill._currentCooldown = handler.cooldown;
+}
+
+return true;
+      
       return true;
     }
 
