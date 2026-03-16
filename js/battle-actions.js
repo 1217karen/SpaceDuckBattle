@@ -493,6 +493,7 @@ export function applyMove(action, ctx) {
 
 ctx.pushLog({
   type: "move",
+  block: action.source ? "skill" : "system",
   source: action.source ?? null,
   unit: unit.id,
   x: action.x,
