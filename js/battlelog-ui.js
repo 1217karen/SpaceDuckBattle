@@ -437,15 +437,6 @@ else if (event.type === "effectDecay") {
     `${name} が 1 減少 (${e.stock})`;
 }
 
-  else if (
-    e.type === "resonance" ||
-    e.type === "interference"
-  ) {
-
-    div.textContent =
-      `${name} が 1 減少 (${e.stock})`;
-
-  }
 
 }
 
