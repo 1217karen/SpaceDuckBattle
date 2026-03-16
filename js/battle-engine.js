@@ -619,13 +619,14 @@ else {
 
         if (!step) break;
 
-        applyMove({
-          type: "move",
-          target: unit.id,
-          x: step.x,
-          y: step.y,
-          forced: false
-        }, context);
+applyMove({
+  type: "move",
+  source: null,
+  target: unit.id,
+  x: step.x,
+  y: step.y,
+  forced: false
+}, context);
       }
 
       endAction(unit);
