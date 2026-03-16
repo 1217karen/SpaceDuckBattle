@@ -525,13 +525,14 @@ attack_front_knockback: {
     });
 
     if (cell) {
-      actions.push({
-        type:"move",
-        target:target.id,
-        x:cell.x,
-        y:cell.y,
-        forced:true
-      });
+actions.push({
+  type:"move",
+  source:unit.id,
+  target:target.id,
+  x:cell.x,
+  y:cell.y,
+  forced:true
+});
     }
 
     let x = unit.x;
@@ -591,13 +592,14 @@ pull_farthest_enemy: {
         style:"attack"
       },
       actions:[
-        {
-          type:"move",
-          target:farthest.id,
-          x:cell.x,
-          y:cell.y,
-          forced:true
-        }
+{
+  type:"move",
+  source:unit.id,
+  target:farthest.id,
+  x:cell.x,
+  y:cell.y,
+  forced:true
+}
       ]
     };
   }
