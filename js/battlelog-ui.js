@@ -63,7 +63,7 @@ num.style.left =
 (rect.left - boardRect.left + rect.width/2) + "px";
 
 num.style.top =
-(rect.top - boardRect.top) + "px";
+(rect.top - boardRect.top + 5) + "px";
 
 board.appendChild(num);
 
