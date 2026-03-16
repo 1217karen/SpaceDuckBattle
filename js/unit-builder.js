@@ -34,11 +34,12 @@ export function buildUnitFromDuck(duck, pattern, team, x, y, facing, duckIndex){
     hp: mhp,
     mhp: mhp,
 
-    atk: duck.stats.atk,
-    def: duck.stats.def,
-    heal: duck.stats.heal,
-    speed: duck.stats.speed,
-    cri: duck.stats.cri,
+atk: atk,
+def: def,
+heal: heal,
+tec: tec,
+speed: speed,
+cri: cri,
 
     x: x,
     y: y,
