@@ -275,10 +275,6 @@ const context = {
       type: "actionEnd",
       unit: unit.id
     });
-
-context.currentGroup = null;
-    context.groupLevel = 0;
-    
   }
 
   function waitAction(unit) {
@@ -351,17 +347,13 @@ context.pushLog({
         }
       }
 
-      if (handler.cooldown && handler.cooldown > 0) {
-        skill._currentCooldown = handler.cooldown;
-      }
-
 if (handler.cooldown && handler.cooldown > 0) {
   skill._currentCooldown = handler.cooldown;
 }
 
+endGroup();
+
 return true;
-      
-      return true;
     }
 
     return false;
@@ -505,10 +497,10 @@ if (mobilityDelta !== 0) {
   const effectName =
     mobilityDelta > 0 ? "accel" : "slow";
 
+beginGroup();
+
 context.pushLog({
   type: "effectTrigger",
-  groupLevel: context.groupLevel + 1,
-  subLevel: 0,
   block: "effect",
   unit: unit.id,
   effect: effectName
@@ -516,12 +508,12 @@ context.pushLog({
 
 context.pushLog({
   type: "mobilityChange",
-  groupLevel: context.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   unit: unit.id,
   delta: mobilityDelta
 });
+
+endGroup();
 
 }
 
