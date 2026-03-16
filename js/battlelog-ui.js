@@ -495,12 +495,6 @@ else if (event.type === "effectExpired") {
 const name =
   EFFECTS[e.type]?.name || e.type;
 
-spawnFloatingNumber(
-  event.unit,
-  `${name}×`,
-  "effectEnd"
-);
-
   return;
 }
 
@@ -520,6 +514,12 @@ spawnFloatingNumber(
 
     const name =
       EFFECTS[e.type]?.name || e.type;
+
+    spawnFloatingNumber(
+  event.unit,
+  `${name}×`,
+  "effectEnd"
+);
 
     div.textContent =
       `${displayName(event.unit, nameMap)} の ${name} が解除`;
