@@ -739,28 +739,40 @@ else if (event.effect.mode === "rate") {
       `${displayName(event.unit, nameMap)} は戦線を離脱`;
   }
 
-  else if (event.type === "move") {
+else if (event.type === "move") {
 
-    const unitState =
-      boardState.units[event.unit];
+  const unitState =
+    boardState.units[event.unit];
 
-    if (!unitState) {
-      return;
-    }
+  if (!unitState) {
+    return;
+  }
 
-    moveUnit(
-      "board",
-      event.unit,
-      event.x,
-      event.y
-    );
+  moveUnit(
+    "board",
+    event.unit,
+    event.x,
+    event.y
+  );
 
-    unitState.x = event.x;
-    unitState.y = event.y;
+  unitState.x = event.x;
+  unitState.y = event.y;
+
+  if (event.source) {
 
     div.textContent =
       `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
+
   }
+
+  else {
+
+    div.textContent =
+      `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
+
+  }
+
+}
 
 else if (event.type === "mobilityChange") {
 
