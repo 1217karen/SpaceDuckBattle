@@ -136,8 +136,6 @@ export function simulateBattle(snapshot) {
   const log = [];
   let battleFinished = false;
 
-  let logGroup = 0;
-  let groupLevel = 0;
 
   const board = snapshot.board ?? { width: 7, height: 5 };
   const MAX_TURNS = snapshot.maxTurns ?? 50;
@@ -167,12 +165,16 @@ const units = snapshot.units.map(u => ({
   // ======================================================
 function pushLog(event){
 
-  if(context.currentGroup !== null){
-    event.group = context.currentGroup;
-  }
+  const depth = context.depth;
 
   if(event.groupLevel === undefined){
-    event.groupLevel = context.groupLevel;
+
+    if(event.block === "skill" || event.block === "effect"){
+      event.groupLevel = depth;
+    }else{
+      event.groupLevel = Math.max(depth - 1, 0);
+    }
+
   }
 
   if(event.subLevel === undefined){
@@ -180,15 +182,31 @@ function pushLog(event){
   }
 
   if(event.block === undefined){
-  event.block = "system";
-}
+    event.block = "system";
+  }
 
   log.push(event);
 }
+
+  function beginGroup(){
+
+  context.groupStack.push(true);
+
+}
+
+function endGroup(){
+
+  context.groupStack.pop();
+
+}
   
-  const context = {
-    currentGroup: null,
-    groupLevel: 0,
+const context = {
+
+    groupStack: [],
+
+    get depth(){
+        return this.groupStack.length;
+    },
     
     units,
     log,
