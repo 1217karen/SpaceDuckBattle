@@ -342,11 +342,12 @@ ctx.pushLog({
 });
         
 ctx.pushLog({
-  type: "meteorReflect",
+  type: "damage",
   block: "effect",
   source: target.id,
   target: source.id,
-  amount: reflectDamage
+  amount: reflectDamage,
+  damageType: "meteor"
 });
 
         ctx.pushLog({
