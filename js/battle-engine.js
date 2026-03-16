@@ -207,7 +207,10 @@ const context = {
     get depth(){
         return this.groupStack.length;
     },
-    
+
+    beginGroup,
+    endGroup,
+  
     units,
     log,
     getRateEffects: (unit) => unit.rateEffects || [],
