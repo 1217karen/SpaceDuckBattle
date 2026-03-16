@@ -557,13 +557,28 @@ ctx.pushLog({
 }
   }
 
-  if (gravityStock > 0 || floatStock > 0) {
+if (gravityStock > 0 || floatStock > 0) {
 
-    unit.effects =
-      unit.effects.filter(
-        e => e.type !== "gravity" && e.type !== "float"
-      );
+  for (let i = unit.effects.length - 1; i >= 0; i--) {
+
+    const e = unit.effects[i];
+
+    if (e.type === "gravity" || e.type === "float") {
+
+      ctx.pushLog({
+        type: "effectExpired",
+        block: "effect",
+        unit: unit.id,
+        effect: { type: e.type }
+      });
+
+      unit.effects.splice(i,1);
+
+    }
+
   }
+
+}
 
   // ========================================
   // corrosion / repair
