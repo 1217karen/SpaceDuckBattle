@@ -152,20 +152,7 @@ if (!valueEl) continue;
 
 let base = unit[key] ?? 0;
 
-let flat = 0;
-
-for (const e of (unit.effects || [])) {
-
-  if (
-    e.mode === "flat" &&
-    e.stat === key
-  ) {
-    flat += e.value;
-  }
-
-}
-
-const value = Math.round(base + flat);
+const value = getEffectiveStat(unit, key);
 
 valueEl.textContent = value;
 
