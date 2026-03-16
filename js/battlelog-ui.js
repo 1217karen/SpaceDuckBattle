@@ -55,6 +55,10 @@ if(type === "effectApply"){
 num.classList.add("effectApplyNumber");
 }
 
+if(type === "effectEnd"){
+num.classList.add("effectEndNumber");
+}
+
 num.textContent = value;
 
 num.style.position = "absolute";
@@ -464,26 +468,41 @@ else if (event.type === "effectDecay") {
   const name =
     EFFECTS[e.type]?.name || e.type;
 
+  spawnFloatingNumber(
+  event.unit,
+  `${name}-1`,
+  "effectEnd"
+);
+
   div.textContent =
     `${name} が 1 減少 (${e.stock})`;
 }
 
-      else if (event.type === "effectExpired") {
+else if (event.type === "effectExpired") {
 
-    const e = event.effect;
+  const e = event.effect;
 
-    if (boardState.units[event.unit]) {
+  if (boardState.units[event.unit]) {
 
-      const unit = boardState.units[event.unit];
+    const unit = boardState.units[event.unit];
 
-      unit.effects =
-        unit.effects.filter(x => x.type !== e.type);
+    unit.effects =
+      unit.effects.filter(x => x.type !== e.type);
 
-      updateUnitEffectUI(event.unit, boardState);
-    }
-
-    return;
+    updateUnitEffectUI(event.unit, boardState);
   }
+
+const name =
+  EFFECTS[e.type]?.name || e.type;
+
+spawnFloatingNumber(
+  event.unit,
+  `${name}×`,
+  "effectEnd"
+);
+
+  return;
+}
 
   else if (event.type === "effectRemoved") {
 
