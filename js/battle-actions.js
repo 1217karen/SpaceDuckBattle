@@ -220,10 +220,13 @@ if (
   const satellite =
     target.effects?.find(e => e.type === "satellite");
 
+const df = ctx.getEffectiveStat(target, "def");
+const perStockRate = 0.01 + Math.floor(df / 10) * 0.01;
+  
   if (satellite && satellite.stock > 0) {
 
     const maxReduction =
-      satellite.stock * 0.05;
+  satellite.stock * perStockRate;
 
     const reductionRate =
       Math.min(maxReduction, 1);
@@ -237,11 +240,11 @@ const reducedDamage =
     finalDamage =
       Math.max(finalDamage - reducedDamage, 0);
 
-    const usedStock =
-      Math.min(
-        Math.ceil(reductionRate / 0.05),
-        satellite.stock
-      );
+const usedStock =
+  Math.min(
+    Math.ceil(reductionRate / perStockRate),
+    satellite.stock
+  );
 
     satellite.stock -= usedStock;
 
