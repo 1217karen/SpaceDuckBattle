@@ -138,8 +138,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "effectApplied",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   source: source.id,
   target: target.id,
@@ -162,8 +160,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "effectApplied",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   source: source.id,
   target: target.id,
@@ -200,8 +196,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "effectApplied",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   source: source.id,
   target: target.id,
@@ -224,8 +218,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "effectApplied",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   source: source.id,
   target: target.id,
@@ -267,8 +259,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "effectApplied",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   source: source.id,
   target: target.id,
@@ -334,8 +324,6 @@ if (effectData.duration !== undefined) {
 
         ctx.pushLog({
           type: "effectApplied",
-          groupLevel: ctx.groupLevel + 1,
-          subLevel: 1,
           block: "effect",
           source: source.id,
           target: target.id,
@@ -379,8 +367,6 @@ if (effectData.duration !== undefined) {
 
     ctx.pushLog({
       type: "effectApplied",
-      groupLevel: ctx.groupLevel + 1,
-      subLevel: 1,
       block: "effect",
       source: source.id,
       target: target.id,
@@ -401,8 +387,6 @@ if (effectData.duration !== undefined) {
 
   ctx.pushLog({
     type: "effectApplied",
-    groupLevel: ctx.groupLevel + 1,
-    subLevel: 1,
     block: "effect",
     source: source.id,
     target: target.id,
@@ -523,8 +507,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "cooldownLimit",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   unit: unit.id
 });
@@ -552,8 +534,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "cooldownChange",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
   unit: unit.id,
   skill: s.type,
@@ -614,8 +594,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "damage",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   from: null,
   target: unit.id,
   amount: amount,
@@ -636,8 +614,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "heal",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   from: null,
   target: unit.id,
   amount: amount,
@@ -672,8 +648,6 @@ export function processAfterAction(unit, ctx) {
 
 ctx.pushLog({
   type: "effectDecay",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
         unit: unit.id,
         effect: {
@@ -687,8 +661,6 @@ ctx.pushLog({
 
 ctx.pushLog({
   type: "effectExpired",
-  groupLevel: ctx.groupLevel + 1,
-  subLevel: 1,
   block: "effect",
         unit: unit.id,
         effect: {
