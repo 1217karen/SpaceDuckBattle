@@ -181,10 +181,11 @@ function pushLog(event){
 
 }
 
-function beginGroup(){
+function beginGroup(labelEvent = null){
 
   const group = {
     type: "group",
+    label: labelEvent,
     children: []
   };
 
@@ -332,10 +333,7 @@ if (e.type === "accel" || e.type === "slow") {
 
       if (!hasEffect) continue;
 
-      
-beginGroup();
-
-context.pushLog({
+      beginGroup({
   type: "skillUse",
   block: "skill",
   unit: unit.id,
