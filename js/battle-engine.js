@@ -195,6 +195,10 @@ function beginGroup(){
 
   context.groupStack.push(group);
 }
+
+  function endGroup(){
+  context.groupStack.pop();
+}
   
 const context = {
 
