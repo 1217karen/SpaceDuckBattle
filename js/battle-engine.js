@@ -3,6 +3,7 @@
 import { skillHandlers } from "./skills.js";
 import { chooseStep, facingFromDelta, isOccupiedCell, getKnockbackCell, getPullCell } from "./movement.js";
 import { getEffectiveStat, applyEffect, processBeforeAction, processAfterAction } from "./battle-effects.js";
+import { EFFECTS } from "./effects-config.js";
 import { getNearestEnemy, getLowestHpAlly, getIdleFacing, decideFallbackMove } from "./battle-ai.js";
 import { applyDamage, applyHeal, applyMove } from "./battle-actions.js";
 
@@ -361,6 +362,60 @@ context.pushLog({
           if (source && target)
             context.applyEffect(source, target, action, context);
         }
+
+          else if (action.type === "removeEffect") {
+
+  if (!target) return;
+
+  const effectType = action.effect?.type;
+  const amount = action.effect?.amount ?? 1;
+
+  const def = EFFECTS[effectType];
+
+  if (!def) {
+    throw new Error(`Unknown effect type: ${effectType}`);
+  }
+
+  if (def.stack !== "stock") {
+    throw new Error(`removeEffect only supports stock effects: ${effectType}`);
+  }
+
+  const existing =
+    target.effects?.find(e => e.type === effectType);
+
+  if (!existing) return;
+
+  existing.stock -= amount;
+
+  if (existing.stock > 0) {
+
+    context.pushLog({
+      type: "effectDecay",
+      block: "effect",
+      unit: target.id,
+      effect: {
+        type: effectType,
+        stock: existing.stock
+      }
+    });
+
+  }
+
+  else {
+
+    target.effects =
+      target.effects.filter(e => e !== existing);
+
+    context.pushLog({
+      type: "effectRemoved",
+      block: "effect",
+      unit: target.id,
+      effect: { type: effectType }
+    });
+
+  }
+
+}
 
         else if (action.type === "move") {
           applyMove(action, context);
