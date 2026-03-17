@@ -232,25 +232,13 @@ export function playLogEvent(
   nextEvent,
   boardState,
   logArea,
-  nameMap
+  nameMap,
+  depth
 ) {
 
 const div = document.createElement("div");
 
-  // ログ階層クラス
-let level = event.groupLevel ?? 0;
-
-if (
-  event.type === "skillUse" ||
-  event.type === "effectTrigger"
-) {
-  level = Math.max(level - 1, 0);
-}
-
-div.classList.add(`logLevel${level}`);
-
-const block = event.block ?? "system";
-const nextBlock = nextEvent?.block ?? null;
+  div.style.marginLeft = (depth * 12) + "px";
 
   if (event.type === "turnStart") {
     return;
