@@ -26,29 +26,29 @@ export const EFFECTS = {
     stack: "stock"
   },
 
-  gravity: {
-    name: "重力",
-    group: "debuff_overwrite",
-    stack: "overwrite"
-  },
+gravity: {
+  name: "重力",
+  group: "debuff_level",
+  stack: "level"
+},
 
-  float: {
-    name: "浮力",
-    group: "buff_overwrite",
-    stack: "overwrite"
-  },
+float: {
+  name: "浮力",
+  group: "buff_level",
+  stack: "level"
+},
 
-  slow: {
-    name: "減速",
-    group: "debuff_overwrite",
-    stack: "overwrite"
-  },
+slow: {
+  name: "減速",
+  group: "debuff_level",
+  stack: "level"
+},
 
-  accel: {
-    name: "加速",
-    group: "buff_overwrite",
-    stack: "overwrite"
-  },
+accel: {
+  name: "加速",
+  group: "buff_level",
+  stack: "level"
+},
 
   meteor: {
     name: "流星",
