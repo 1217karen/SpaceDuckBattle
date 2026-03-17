@@ -378,44 +378,67 @@ context.pushLog({
     throw new Error(`Unknown effect type: ${effectType}`);
   }
 
-  if (def.stack !== "stock") {
-    throw new Error(`removeEffect only supports stock effects: ${effectType}`);
-  }
+  const existing =
+    target.effects?.find(e => e.type === effectType);
+
+  if (!existing) return;
+
+existing.stock -= amount;
+
+if (existing.stock > 0) {
+
+  context.pushLog({
+    type: "effectDecay",
+    block: "effect",
+    unit: target.id,
+    effect: {
+      type: effectType,
+      stock: existing.stock
+    }
+  });
+
+}
+
+else {
+
+  existing.stock = 0;
+
+  target.effects =
+    target.effects.filter(e => e !== existing);
+
+  context.pushLog({
+    type: "effectRemoved",
+    block: "effect",
+    unit: target.id,
+    effect: { type: effectType }
+  });
+
+}
+
+}
+
+            else if (action.type === "clearEffect") {
+
+  if (!target) return;
+
+  const effectType = action.effect?.type;
+
+  if (!effectType) return;
 
   const existing =
     target.effects?.find(e => e.type === effectType);
 
   if (!existing) return;
 
-  existing.stock -= amount;
+  target.effects =
+    target.effects.filter(e => e !== existing);
 
-  if (existing.stock > 0) {
-
-    context.pushLog({
-      type: "effectDecay",
-      block: "effect",
-      unit: target.id,
-      effect: {
-        type: effectType,
-        stock: existing.stock
-      }
-    });
-
-  }
-
-  else {
-
-    target.effects =
-      target.effects.filter(e => e !== existing);
-
-    context.pushLog({
-      type: "effectRemoved",
-      block: "effect",
-      unit: target.id,
-      effect: { type: effectType }
-    });
-
-  }
+  context.pushLog({
+    type: "effectRemoved",
+    block: "effect",
+    unit: target.id,
+    effect: { type: effectType }
+  });
 
 }
 
