@@ -134,7 +134,12 @@ function getUnitsInSameColumn(unit, units) {
 
 export function simulateBattle(snapshot) {
 
-  const log = [];
+  const rootGroup = {
+  type: "group",
+  children: []
+};
+
+const log = rootGroup;
   let battleFinished = false;
 
 
@@ -166,44 +171,34 @@ const units = snapshot.units.map(u => ({
   // ======================================================
 function pushLog(event){
 
-  const depth = context.depth;
+  const current =
+    context.groupStack[context.groupStack.length - 1];
 
-  if(event.groupLevel === undefined){
-
-    if(event.block === "skill" || event.block === "effect"){
-      event.groupLevel = depth;
-    }else{
-      event.groupLevel = Math.max(depth - 1, 0);
-    }
-
-  }
-
-  if(event.subLevel === undefined){
-    event.subLevel = 0;
-  }
-
-  if(event.block === undefined){
-    event.block = "system";
-  }
-
-  log.push(event);
-}
-
-  function beginGroup(){
-
-  context.groupStack.push(true);
+  current.children.push({
+    type: "event",
+    data: event
+  });
 
 }
 
-function endGroup(){
+function beginGroup(){
 
-  context.groupStack.pop();
+  const group = {
+    type: "group",
+    children: []
+  };
 
+  const parent =
+    context.groupStack[context.groupStack.length - 1];
+
+  parent.children.push(group);
+
+  context.groupStack.push(group);
 }
   
 const context = {
 
-    groupStack: [],
+    groupStack: [rootGroup],
 
     get depth(){
         return this.groupStack.length;
@@ -294,14 +289,14 @@ if (e.type === "accel" || e.type === "slow") {
 
     processAfterAction(unit, context);
 
-    log.push({
+    context.pushLog({
       type: "actionEnd",
       unit: unit.id
     });
   }
 
   function waitAction(unit) {
-    log.push({
+    context.pushLog({
       type: "wait",
       unit: unit.id
     });
@@ -469,7 +464,7 @@ return true;
     unit.hp = 0;
     unit._isDead = true;
 
-    log.push({
+    context.pushLog({
       type: "death",
       unit: unit.id
     });
@@ -482,7 +477,7 @@ return true;
 
     if (aliveTeams.size === 1) {
 
-      log.push({
+      context.pushLog({
         type: "battleEnd",
         winner: [...aliveTeams][0]
       });
@@ -501,7 +496,7 @@ return true;
 
     if (battleFinished) return log;
 
-    log.push({ type: "turnStart", turn });
+    context.pushLog({ type: "turnStart", turn });
 
     // ==================================================
     // ユニット行動
@@ -512,7 +507,7 @@ return true;
       if (battleFinished) return log;
       if (unit.hp <= 0) continue;
 
-      log.push({
+      context.pushLog({
         type: "actionStart",
         unit: unit.id
       });
@@ -675,7 +670,7 @@ else {
 
           unit.facing = newFacing;
 
-          log.push({
+          context.pushLog({
             type: "faceChange",
             unit: unit.id,
             facing: newFacing
@@ -773,7 +768,7 @@ for (let u of units) {
   // 引き分け
   // ======================================================
 
-  log.push({
+  context.pushLog({
     type: "battleEnd",
     winner: null
   });
