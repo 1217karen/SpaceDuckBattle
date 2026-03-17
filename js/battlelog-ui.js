@@ -519,11 +519,11 @@ else if (event.type === "effectRemoved") {
 
 if (event.effect?.clear === true) {
 
-  spawnFloatingNumber(
-    event.unit,
-    `${name}=0`,
-    "effectEnd"
-  );
+spawnFloatingNumber(
+  event.unit,
+  `${name}=0`,
+  "effectRemove"
+);
 
   div.innerHTML =
     `${displayName(event.unit, nameMap)} の ${name} を全解除`;
@@ -565,11 +565,11 @@ if (stackType === "stock") {
   const amount = oldStock - (existing?.stock ?? 0);
   const current = existing?.stock ?? 0;
 
-  spawnFloatingNumber(
-    event.unit,
-    `${name}-${amount}`,
-    "effectEnd"
-  );
+spawnFloatingNumber(
+  event.unit,
+  `${name}-${amount}`,
+  "effectRemove"
+);
 
   div.innerHTML =
     `${displayName(event.unit, nameMap)} の ${name} を <span class="logNumber">${amount}</span> 解除 (${current})`;
@@ -585,11 +585,11 @@ else if (stackType === "level") {
   const current = existing?.stock ?? 0;
   const amount = oldStock - current;
 
-  spawnFloatingNumber(
-    event.unit,
-    `${name}-${amount}`,
-    "effectEnd"
-  );
+spawnFloatingNumber(
+  event.unit,
+  `${name}-${amount}`,
+  "effectRemove"
+);
 
   div.innerHTML =
     `${displayName(event.unit, nameMap)} の ${name} が <span class="logNumber">${amount}</span> 段階下降 (${current})`;
