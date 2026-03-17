@@ -172,58 +172,68 @@ ctx.pushLog({
     return;
   }
 
-  // === 上書き型===
-  // ・stockは加算しない（強い方に上書き）
+  // === level型 ===
+  // ・stockを段階として加算 / 減算
 
-  if (EFFECTS[effectData.type]?.stack === "overwrite") {
+  if (EFFECTS[effectData.type]?.stack === "level") {
 
-    const incomingStock =
-      Math.min(effectData.stock ?? 1, MAX_STACK);
+    const delta = effectData.stock ?? 1;
+    const MAX_LEVEL = 3;
 
     const existing =
       target.effects.find(e => e.type === effectData.type);
 
     if (existing) {
 
-      const currentStock = existing.stock ?? 0;
+      const before = existing.stock ?? 0;
 
-      // 強い方に上書き（同値以下は変更なし）
-      if (incomingStock > currentStock) {
-        existing.stock = incomingStock;
-      }
+      const after =
+        Math.max(
+          0,
+          Math.min(before + delta, MAX_LEVEL)
+        );
 
+      existing.stock = after;
       existing.group = effectData.group;
 
-ctx.pushLog({
-  type: "effectApplied",
-  block: "effect",
-  source: source.id,
-  target: target.id,
-  effect: {
+      ctx.pushLog({
+        type: "effectApplied",
+        block: "effect",
+        source: source.id,
+        target: target.id,
+        effect: {
           ...existing,
-          delta: incomingStock
+          delta: delta
         }
       });
 
       return;
     }
 
+    const level =
+      Math.max(
+        0,
+        Math.min(delta, MAX_LEVEL)
+      );
+
+    if (level <= 0) return;
+
     const newEffect = {
       type: effectData.type,
-      stock: incomingStock,
+      stock: level,
       group: effectData.group
     };
 
     target.effects.push(newEffect);
 
-ctx.pushLog({
-  type: "effectApplied",
-  block: "effect",
-  source: source.id,
-  target: target.id,
-  effect: {
+    ctx.pushLog({
+      type: "effectApplied",
+      block: "effect",
+      source: source.id,
+      target: target.id,
+      effect: {
         ...newEffect,
-        delta: newEffect.stock
+        delta: level
       }
     });
 
@@ -564,6 +574,8 @@ if (gravityStock > 0 || floatStock > 0) {
     const e = unit.effects[i];
 
     if (e.type === "gravity" || e.type === "float") {
+
+      e.stock = 0;
 
       ctx.pushLog({
         type: "effectExpired",
