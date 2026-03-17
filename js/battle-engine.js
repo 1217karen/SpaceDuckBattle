@@ -601,7 +601,7 @@ context.beginGroup({
   type: "effectTrigger",
   block: "effect",
   unit: unit.id,
-  effect: e.type
+  effect: effectName
 });
 
 context.pushLog({
