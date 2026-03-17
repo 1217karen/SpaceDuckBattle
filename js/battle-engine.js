@@ -552,13 +552,13 @@ if (usedSkill) {
       if (unit.effects) {
         for (const e of unit.effects) {
 
-          if (e.type === "accel") {
-            accel = Math.max(accel, e.value ?? 1);
-          }
+if (e.type === "accel") {
+  accel = Math.max(accel, e.stock ?? 0);
+}
 
-          if (e.type === "slow") {
-            slow = Math.max(slow, e.value ?? 1);
-          }
+if (e.type === "slow") {
+  slow = Math.max(slow, e.stock ?? 0);
+}
         }
       }
 
