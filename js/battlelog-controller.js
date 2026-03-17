@@ -629,38 +629,16 @@ playLogEvent(
     }
 
 
-let wait = EVENT_DELAY;
+let wait = EFFECT_DELAY;
 
-if (ev.type === "attack") {
-
-  if (ev.damageType === "effect") {
-    wait = EVENT_DELAY;
-  } else {
-    wait = EFFECT_DELAY;
-  }
-
+if (
+  ev.type === "skillUse" ||
+  ev.type === "move" ||
+  ev.type === "wait"
+) {
+  wait = EVENT_DELAY;
 }
-
-else if (ev.type === "heal") {
-
-  if (ev.healType === "effect") {
-    wait = EVENT_DELAY;
-  } else {
-    wait = EFFECT_DELAY;
-  }
-
-}
-
-else if (ev.type === "effectApplied") {
-
-  wait = EFFECT_DELAY;
-
-}
-
-    else if (ev.type === "critical") {
-  wait = EFFECT_DELAY;
-}
-
+    
 if (
   ev.type !== "hpChange" &&
   ev.type !== "effectExpired"
