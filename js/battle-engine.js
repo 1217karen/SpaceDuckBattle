@@ -597,13 +597,11 @@ if (mobilityDelta !== 0) {
   const effectName =
     mobilityDelta > 0 ? "accel" : "slow";
 
-beginGroup();
-
-context.pushLog({
+ctx.beginGroup({
   type: "effectTrigger",
   block: "effect",
   unit: unit.id,
-  effect: effectName
+  effect: e.type
 });
 
 context.pushLog({
