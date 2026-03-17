@@ -61,7 +61,7 @@ function getResonanceLog(unit, ctx){
 
   if (diff > 0) {
 
-    ctx.pushLog({
+    ctx.beginGroup({
       type: "effectTrigger",
       block: "effect",
       unit: unit.id,
@@ -75,11 +75,13 @@ ctx.pushLog({
   percent: percent
 });
 
+    ctx.endGroup();
+    
   }
 
   else {
 
-    ctx.pushLog({
+    ctx.beginGroup({
       type: "effectTrigger",
       block: "effect",
       unit: unit.id,
@@ -92,6 +94,8 @@ ctx.pushLog({
   unit: unit.id,
   percent: percent
 });
+
+    ctx.endGroup();
 
   }
 
@@ -248,7 +252,7 @@ const usedStock =
 
     satellite.stock -= usedStock;
 
-ctx.pushLog({
+ctx.beginGroup({
   type: "effectTrigger",
   block: "effect",
   unit: target.id,
@@ -261,6 +265,8 @@ ctx.pushLog({
   unit: target.id,
   percent: Math.round(reductionRate * 100)
 });
+
+    ctx.endGroup();
 
     if (satellite.stock <= 0) {
 
@@ -334,7 +340,7 @@ const reflectRate =
 
         source.hp -= reflectDamage;
 
-ctx.pushLog({
+ctx.beginGroup({
   type: "effectTrigger",
   block: "effect",
   unit: target.id,
@@ -356,6 +362,8 @@ ctx.pushLog({
           hp: Math.max(source.hp, 0)
         });
 
+        ctx.endGroup();
+
         if (source.hp <= 0) {
           ctx.killUnit(source);
         }
@@ -364,7 +372,7 @@ ctx.pushLog({
 
       else {
 
-ctx.pushLog({
+ctx.beginGroup({
   type: "effectTrigger",
   block: "effect",
   unit: target.id,
@@ -376,6 +384,8 @@ ctx.pushLog({
   block: "effect",
   source: target.id
 });
+
+        ctx.endGroup();
 
       }
 
