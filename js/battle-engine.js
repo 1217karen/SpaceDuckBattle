@@ -433,12 +433,15 @@ else {
   target.effects =
     target.effects.filter(e => e !== existing);
 
-  context.pushLog({
-    type: "effectRemoved",
-    block: "effect",
-    unit: target.id,
-    effect: { type: effectType }
-  });
+context.pushLog({
+  type: "effectRemoved",
+  block: "effect",
+  unit: target.id,
+  effect: {
+    type: effectType,
+    clear: true
+  }
+});
 
 }
 
