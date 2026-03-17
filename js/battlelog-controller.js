@@ -644,6 +644,15 @@ if (
   ev.type !== "effectExpired"
 ) {
   await sleep(wait);
+
+  const next = actionEvents[i + 1];
+
+  if (
+    next &&
+    (next.groupLevel ?? 0) < (ev.groupLevel ?? 0)
+  ) {
+    await sleep(EFFECT_DELAY);
+  }
 }
 
     clearEffectHighlights();
