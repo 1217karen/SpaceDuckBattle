@@ -61,6 +61,37 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms / speed));
 }
 
+function flattenLogTree(root){
+
+  const result = [];
+
+  function walk(node){
+
+    if (node.type === "group") {
+
+      result.push({ type: "__groupStart" });
+
+      for (const child of node.children) {
+        walk(child);
+      }
+
+      result.push({ type: "__groupEnd" });
+
+    }
+
+    else if (node.type === "event") {
+
+      result.push(node.data);
+
+    }
+
+  }
+
+  walk(root);
+
+  return result;
+}
+
 function fitUnitName(el){
 
   let size = 13;
@@ -146,7 +177,11 @@ if (!stored) {
 
 const battleData = stored ? JSON.parse(stored) : null;
 const snapshot = battleData ? battleData.snapshot : null;
-const battleLog = battleData ? battleData.log : [];
+const rawLog = battleData ? battleData.log : null;
+
+const battleLog = rawLog
+  ? flattenLogTree(rawLog)
+  : [];
 
 console.log("battleLog", battleLog);
 
