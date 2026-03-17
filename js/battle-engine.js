@@ -273,18 +273,20 @@ if (unit.effects) {
 
     const e = unit.effects[i];
 
-    if (e.type === "accel" || e.type === "slow") {
+if (e.type === "accel" || e.type === "slow") {
 
-      context.pushLog({
-        type: "effectExpired",
-        block: "effect",
-        unit: unit.id,
-        effect: { type: e.type }
-      });
+  e.stock = 0;
 
-      unit.effects.splice(i,1);
+  context.pushLog({
+    type: "effectExpired",
+    block: "effect",
+    unit: unit.id,
+    effect: { type: e.type }
+  });
 
-    }
+  unit.effects.splice(i,1);
+
+}
 
   }
 
