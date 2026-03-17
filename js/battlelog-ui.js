@@ -310,10 +310,16 @@ spawnFloatingNumber(event.unit, name, "effectTrigger");
 
 }
     
-  else if (event.type === "skillUse") {
+else if (event.type === "skillUse") {
 
     div.textContent =
       `${displayName(event.unit, nameMap)} の ${event.skill}`;
+
+spawnFloatingNumber(
+  event.unit,
+  "SKILL",
+  "skill"
+);
 
     if (event.rangeCells) {
 
