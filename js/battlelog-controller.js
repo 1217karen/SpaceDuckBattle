@@ -69,7 +69,10 @@ function flattenLogTree(root){
 
     if (node.type === "group") {
 
-      result.push({ type: "__groupStart" });
+result.push({
+  type: "__groupStart",
+  label: node.label ?? null
+});
 
       for (const child of node.children) {
         walk(child);
@@ -583,7 +586,22 @@ const displayName =
 
     const ev = actionEvents[i];
 
-    if (ev.type === "__groupStart") {
+if (ev.type === "__groupStart") {
+
+  if (ev.label) {
+
+    playLogEvent(
+      ev.label,
+      null,
+      boardState,
+      logArea,
+      nameMap,
+      depth
+    );
+
+    await sleep(EVENT_DELAY);
+  }
+
   depth++;
   continue;
 }
