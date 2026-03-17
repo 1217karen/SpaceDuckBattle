@@ -507,6 +507,34 @@ else if (event.type === "effectRemoved") {
   const name =
     EFFECTS[e.type]?.name || e.type;
 
+    // ==========================
+// clearEffect（全解除）
+// ==========================
+
+if (event.effect?.clear === true) {
+
+  spawnFloatingNumber(
+    event.unit,
+    `${name}×`,
+    "effectEnd"
+  );
+
+  div.innerHTML =
+    `${displayName(event.unit, nameMap)} の ${name} を全解除`;
+
+  if (unit) {
+
+    unit.effects =
+      unit.effects.filter(x => x.type !== e.type);
+
+    updateUnitEffectUI(event.unit, boardState);
+
+  }
+
+  logArea.appendChild(div);
+  return;
+}
+
   let oldStock = 0;
 
   if (unit) {
@@ -526,36 +554,41 @@ else if (event.type === "effectRemoved") {
   // ==========================
   // stack型
   // ==========================
+if (stackType === "stock") {
 
-  if (stackType === "stock") {
+  const amount = oldStock - (existing?.stock ?? 0);
+  const current = existing?.stock ?? 0;
 
-    spawnFloatingNumber(
-      event.unit,
-      `${name}-${oldStock}`,
-      "effectEnd"
-    );
+  spawnFloatingNumber(
+    event.unit,
+    `${name}-${amount}`,
+    "effectEnd"
+  );
 
-    div.innerHTML =
-      `${displayName(event.unit, nameMap)} の ${name} が <span class="logNumber">${oldStock}</span> 解除 (0)`;
+  div.innerHTML =
+    `${displayName(event.unit, nameMap)} の ${name} を <span class="logNumber">${amount}</span> 解除 (${current})`;
 
-  }
+}
 
-  // ==========================
-  // overwrite型
-  // ==========================
+// ==========================
+// level型
+// ==========================
 
-  else if (stackType === "overwrite") {
+else if (stackType === "level") {
 
-    spawnFloatingNumber(
-      event.unit,
-      `${name}=0`,
-      "effectEnd"
-    );
+  const current = existing?.stock ?? 0;
+  const amount = oldStock - current;
 
-    div.innerHTML =
-      `${displayName(event.unit, nameMap)} の ${name} が <span class="logNumber">0</span> に変化`;
+  spawnFloatingNumber(
+    event.unit,
+    `${name}-${amount}`,
+    "effectEnd"
+  );
 
-  }
+  div.innerHTML =
+    `${displayName(event.unit, nameMap)} の ${name} が <span class="logNumber">${amount}</span> 段階下降 (${current})`;
+
+}
 
   // ==========================
   // 状態削除
@@ -584,47 +617,47 @@ else if (event.type === "effectRemoved") {
     let text = "";
     let isBuff = true;
 
-    // ==========================
-    // stock型
-    // ==========================
+// ==========================
+// stock型
+// ==========================
 
-    if (EFFECTS[e.type]?.stack === "stock") {
+if (EFFECTS[e.type]?.stack === "stock") {
 
-      const delta = event.effect.delta ?? 1;
+  const delta = event.effect.delta ?? 1;
+  const n = e.stock ?? delta;
 
-spawnFloatingNumber(
-  event.target,
-  `${name}+${delta}`,
-  "effectApply"
-);
+  spawnFloatingNumber(
+    event.target,
+    `${name}+${delta}`,
+    "effectApply"
+  );
 
-      const n = e.stock ?? 1;
+  isBuff = EFFECTS[e.type]?.group?.startsWith("buff");
 
-      isBuff = EFFECTS[e.type]?.group?.startsWith("buff");
+  text =
+    `${displayName(event.target, nameMap)} に ${name} を <span class="logNumber">${delta}</span> 付与 (${n})`;
+}
 
-      text =
-        `${displayName(event.target, nameMap)} に ${name} を <span class="logNumber">${event.effect.delta ?? n}</span> 付与 (${n})`;
-    }
+// ==========================
+// level型
+// ==========================
 
-    // ==========================
-    // 上書き型
-    // ==========================
+else if (EFFECTS[e.type]?.stack === "level") {
 
-else if (EFFECTS[e.type]?.stack === "overwrite") {
+  const delta = event.effect.delta ?? 1;
+  const n = e.stock ?? delta;
 
-      const n = e.stock ?? 1;
+  spawnFloatingNumber(
+    event.target,
+    `${name}+${delta}`,
+    "effectApply"
+  );
 
-      spawnFloatingNumber(
-        event.target,
-        `${name}=${n}`,
-        "effectApply"
-      );
+  isBuff = EFFECTS[e.type]?.group?.startsWith("buff");
 
-      isBuff = EFFECTS[e.type]?.group?.startsWith("buff");
-
-      text =
-        `${displayName(event.target, nameMap)} の ${name} が <span class="logNumber">${n}</span> に変化`;
-    }
+  text =
+    `${displayName(event.target, nameMap)} の ${name} が <span class="logNumber">${delta}</span> 段階上昇 (${n})`;
+}
 
 // ==========================
 // rate系（％バフ）
