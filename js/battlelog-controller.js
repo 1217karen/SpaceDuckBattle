@@ -521,6 +521,7 @@ else if (
   }
 
   actedSet.clear();
+  
 
   // ======================
   // rate effect 減衰（UI側）
@@ -577,9 +578,21 @@ const displayName =
   // イベント再生
   // ======================
 
+  let depth = 0;
   for (let i = 0; i < actionEvents.length; i++) {
 
     const ev = actionEvents[i];
+
+    if (ev.type === "__groupStart") {
+  depth++;
+  continue;
+}
+
+if (ev.type === "__groupEnd") {
+  depth--;
+  await sleep(EFFECT_DELAY);
+  continue;
+}
 
     if (ev.type === "battleEnd") {
 
@@ -637,16 +650,17 @@ playLogEvent(
   actionEvents[i + 1],
   boardState,
   logArea,
-  nameMap
+  nameMap,
+  depth
 );
 playLogEvent(
   actionEvents[i + 1],
   actionEvents[i + 2],
   boardState,
   logArea,
-  nameMap
+  nameMap,
+  depth
 );
-
       i++;
 
     }
@@ -658,7 +672,8 @@ playLogEvent(
   actionEvents[i + 1],
   boardState,
   logArea,
-  nameMap
+  nameMap,
+  depth
 );
 
     }
@@ -682,12 +697,6 @@ if (
 
   const next = actionEvents[i + 1];
 
-  if (
-    next &&
-    (next.groupLevel ?? 0) < (ev.groupLevel ?? 0)
-  ) {
-    await sleep(EFFECT_DELAY);
-  }
 }
 
     clearEffectHighlights();
