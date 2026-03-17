@@ -507,7 +507,7 @@ else if (event.type === "effectRemoved") {
   const name =
     EFFECTS[e.type]?.name || e.type;
 
-    // ==========================
+// ==========================
 // clearEffect（全解除）
 // ==========================
 
@@ -515,7 +515,7 @@ if (event.effect?.clear === true) {
 
   spawnFloatingNumber(
     event.unit,
-    `${name}×`,
+    `${name}=0`,
     "effectEnd"
   );
 
