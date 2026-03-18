@@ -653,10 +653,12 @@ letter-spacing:1px;
 
 .damageNumber{
 color:#ff5555;
+font-size:1.3em;
 }
 
 .healNumber{
 color:#66ff99;
+font-size:1.3em;
 }
 
 .effectApplyNumber{
@@ -669,7 +671,7 @@ color:#bbbbbb;
 
 .effectEndNumber{
 color:#888;
-font-size:0.9em;
+font-size:0.85em;
 }
 
 .statUpNumber{
