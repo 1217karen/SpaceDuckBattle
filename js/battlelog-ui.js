@@ -274,6 +274,15 @@ export function playLogEvent(
     return;
   }
 
+    else if (event.type === "turnUnit") {
+
+  const name =
+    displayName(event.unit, nameMap);
+
+  div.textContent = name;
+
+}
+
   else if (event.type === "hpChange") {
     const unit =
       boardState.units[event.target];
@@ -814,6 +823,30 @@ else if (event.type === "cooldownChange") {
           "effectApply"
         );
       }
+
+        else if (result === "turnDecay") {
+
+  text =
+    `${stat}${isUp ? "+" : "-"}${percent}% が 残り${turn}ターンに短縮`;
+
+  spawnFloatingNumber(
+    event.target,
+    `${stat}-T`,
+    "effectEnd"
+  );
+}
+
+else if (result === "turnEnd") {
+
+  text =
+    `${stat}${isUp ? "+" : "-"}${percent}% が 終了`;
+
+  spawnFloatingNumber(
+    event.target,
+    `${stat} END`,
+    "effectEnd"
+  );
+}
 
       else if (result === "none") {
         text =
