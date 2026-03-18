@@ -734,15 +734,6 @@ applyMove({
     }
 
 // ==================================================
-// ターン終了処理
-// ==================================================
-
-context.pushLog({
-  type: "turnEnd",
-  turn
-});
-
-// ==================================================
 // rate effect 減衰（専用システム）
 // ==================================================
 
@@ -756,23 +747,9 @@ for (let u of units) {
 
     e.duration--;
 
-context.pushLog({
-  type: "rateEffectTick",
-  unit: u.id,
-  stat: e.stat,
-  duration: e.duration
-});
-
-if (e.duration <= 0) {
-
-  context.pushLog({
-    type: "rateEffectExpired",
-    unit: u.id,
-    stat: e.stat
-  });
-
-  u.rateEffects.splice(i, 1);
-}
+    if (e.duration <= 0) {
+      u.rateEffects.splice(i, 1);
+    }
 
   }
 
@@ -789,10 +766,10 @@ if (e.duration <= 0) {
           s._currentCooldown--;
 
           context.pushLog({
-            type: "cooldownTick",
+            type: "cooldownChange",
             unit: u.id,
             skill: s.type,
-            value: s._currentCooldown
+            delta: -1
           });
 
           if (s._currentCooldown === 0) {
