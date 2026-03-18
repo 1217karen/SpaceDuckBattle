@@ -225,6 +225,38 @@ export function updateUnitStatUI(unitId, boardState) {
   }
 }
 
+function updateSkillCooldownUI(unitId, boardState) {
+
+  const unit = boardState.units[unitId];
+  if (!unit) return;
+
+  const container =
+    document.querySelector(
+      `.unitStatus[data-unit="${unitId}"]`
+    );
+
+  if (!container) return;
+
+  const slots =
+    container.querySelectorAll(".skillSlot");
+
+  slots.forEach(slot => {
+
+    const skill = slot.dataset.skill;
+    if (!skill) return;
+
+    const ct =
+      unit.cooldowns?.[skill] ?? 0;
+
+    if (ct > 0) {
+      slot.classList.add("cooldown");
+    } else {
+      slot.classList.remove("cooldown");
+    }
+
+  });
+}
+
 export function playLogEvent(
   event,
   nextEvent,
@@ -345,6 +377,8 @@ export function playLogEvent(
 
     unit.cooldowns[event.skill] = event.value;
 
+    updateSkillCooldownUI(event.unit, boardState);
+
     return;
   }
 
@@ -360,6 +394,8 @@ else if (event.type === "cooldownChange") {
 
   unit.cooldowns[event.skill] =
     Math.max(current + event.delta, 0);
+
+ updateSkillCooldownUI(event.unit, boardState);
 
   const text =
     event.delta > 0
