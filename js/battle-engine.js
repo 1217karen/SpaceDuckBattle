@@ -734,106 +734,117 @@ applyMove({
     }
 
 // ==================================================
-// turn change　開始
+// turn change
 // ==================================================
   context.pushLog({
   type: "actionStart",
   unit: "__turn__",
   turn: turn + 1
 });
-// ==================================================
-// rate effect 減衰（専用システム）
-// ==================================================
 
 for (let u of units) {
 
-  if (!u.rateEffects) continue;
+  let hasLog = false;
 
-  for (let i = u.rateEffects.length - 1; i >= 0; i--) {
+  context.beginGroup({
+    type: "turnUnit",
+    unit: u.id
+  });
 
-    const e = u.rateEffects[i];
+  // ======================
+  // rate effect 減衰
+  // ======================
 
-    const before = e.duration;
+  if (u.rateEffects) {
 
-    e.duration--;
+    for (let i = u.rateEffects.length - 1; i >= 0; i--) {
 
-    const after = e.duration;
+      const e = u.rateEffects[i];
 
-    if (after > 0) {
+      const before = e.duration;
 
-      context.pushLog({
-        type: "effectApplied",
-        block: "effect",
-        source: null,
-        target: u.id,
-        effect: {
-          stat: e.stat,
-          mode: "rate",
-          value: e.value,
-          duration: after,
-          result: "turnDecay"
-        }
-      });
+      e.duration--;
 
-    } else {
+      const after = e.duration;
 
-      context.pushLog({
-        type: "effectApplied",
-        block: "effect",
-        source: null,
-        target: u.id,
-        effect: {
-          stat: e.stat,
-          mode: "rate",
-          value: e.value,
-          duration: 0,
-          result: "turnEnd"
-        }
-      });
+      if (after > 0) {
 
-    }
+        context.pushLog({
+          type: "effectApplied",
+          block: "effect",
+          source: null,
+          target: u.id,
+          effect: {
+            stat: e.stat,
+            mode: "rate",
+            value: e.value,
+            duration: after,
+            result: "turnDecay"
+          }
+        });
 
-    if (e.duration <= 0) {
-      u.rateEffects.splice(i, 1);
+      } else {
+
+        context.pushLog({
+          type: "effectApplied",
+          block: "effect",
+          source: null,
+          target: u.id,
+          effect: {
+            stat: e.stat,
+            mode: "rate",
+            value: e.value,
+            duration: 0,
+            result: "turnEnd"
+          }
+        });
+
+      }
+
+      hasLog = true;
+
+      if (e.duration <= 0) {
+        u.rateEffects.splice(i, 1);
+      }
+
     }
 
   }
 
-}
-    // ==================================================
-    // クールタイム減少
-    // ==================================================
+  // ======================
+  // クールタイム減少
+  // ======================
 
-    for (let u of units) {
-      for (let s of (u.skills || [])) {
+  for (let s of (u.skills || [])) {
 
-        if (s._currentCooldown > 0) {
+    if (s._currentCooldown > 0) {
 
-          s._currentCooldown--;
+      s._currentCooldown--;
 
-          context.pushLog({
-            type: "cooldownChange",
-            unit: u.id,
-            skill: s.type,
-            delta: -1
-          });
+      context.pushLog({
+        type: "cooldownChange",
+        unit: u.id,
+        skill: s.type,
+        delta: -1
+      });
 
-          if (s._currentCooldown === 0) {
-            context.pushLog({
-              type: "cooldownSet",
-              unit: u.id,
-              skill: s.type,
-              value: 0
-            });
-          }
-        }
+      if (s._currentCooldown === 0) {
+        context.pushLog({
+          type: "cooldownSet",
+          unit: u.id,
+          skill: s.type,
+          value: 0
+        });
       }
-    }
 
-// ==================================================
-// turn change　終了
-// ==================================================
-  
+      hasLog = true;
+    }
+  }
+
+  context.endGroup();
+
+}
+
   context.pushLog({
   type: "actionEnd",
   unit: "__turn__"
