@@ -347,6 +347,8 @@ if (snapshot) {
       img.style.width = "100%";
       img.style.height = "100%";
 
+      slot.dataset.skill = s.type;
+
       slot.appendChild(img);
     });
     updateUnitStatUI(u.id, boardState);
