@@ -330,6 +330,8 @@ if (snapshot) {
 <div class="skillSlot"></div>
 <div class="skillSlot"></div>
 
+<div class="skillSlot"></div>
+<div class="skillSlot"></div>
   </div>
 
 </div>
