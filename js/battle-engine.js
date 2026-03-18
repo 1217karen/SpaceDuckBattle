@@ -504,10 +504,7 @@ return true;
 
     if (battleFinished) return log;
 
-    beginGroup({
-      type: "turn",
-      turn
-    });
+    context.pushLog({ type: "turnStart", turn });
 
     // ==================================================
     // ユニット行動
@@ -787,7 +784,6 @@ for (let u of units) {
       }
     }
 
-    endGroup();
     turn++;
   }
 
