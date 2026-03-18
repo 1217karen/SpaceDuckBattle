@@ -734,6 +734,14 @@ applyMove({
     }
 
 // ==================================================
+// turn change　開始
+// ==================================================
+  context.pushLog({
+  type: "actionStart",
+  unit: "__turn__",
+  turn: turn + 1
+});
+// ==================================================
 // rate effect 減衰（専用システム）
 // ==================================================
 
@@ -745,7 +753,45 @@ for (let u of units) {
 
     const e = u.rateEffects[i];
 
+    const before = e.duration;
+
     e.duration--;
+
+    const after = e.duration;
+
+    if (after > 0) {
+
+      context.pushLog({
+        type: "effectApplied",
+        block: "effect",
+        source: null,
+        target: u.id,
+        effect: {
+          stat: e.stat,
+          mode: "rate",
+          value: e.value,
+          duration: after,
+          result: "turnDecay"
+        }
+      });
+
+    } else {
+
+      context.pushLog({
+        type: "effectApplied",
+        block: "effect",
+        source: null,
+        target: u.id,
+        effect: {
+          stat: e.stat,
+          mode: "rate",
+          value: e.value,
+          duration: 0,
+          result: "turnEnd"
+        }
+      });
+
+    }
 
     if (e.duration <= 0) {
       u.rateEffects.splice(i, 1);
@@ -784,8 +830,18 @@ for (let u of units) {
       }
     }
 
+// ==================================================
+// turn change　終了
+// ==================================================
+  
+  context.pushLog({
+  type: "actionEnd",
+  unit: "__turn__"
+});
+    
     turn++;
   }
+
 
   // ======================================================
   // 引き分け
