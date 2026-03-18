@@ -491,10 +491,27 @@ const actionEvents = battleLog.slice(start + 1, end);
 
   const header = document.createElement("div");
 
+if (actingUnit === "__turn__") {
+
+  const turnEvent = battleLog[start];
+  const nextTurn = turnEvent.turn ?? "?";
+
+  const prevTurn =
+    typeof nextTurn === "number"
+      ? nextTurn - 1
+      : "?";
+
+  header.textContent =
+    `TURN ${prevTurn} → TURN ${nextTurn}`;
+
+} else {
+
   const displayName =
     nameMap?.[actingUnit] || actingUnit;
 
   header.textContent = `▶ ${displayName} の行動`;
+
+}
   header.classList.add("actionHeader");
 
   logArea.innerHTML = "";
