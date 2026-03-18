@@ -688,7 +688,7 @@ async function playNextAction() {
 
   actedSet.add(actingUnit);
 
-  logIndex = end + 1;
+  logIndex = nextStart;
 
   nextBtn.disabled = false;
 
