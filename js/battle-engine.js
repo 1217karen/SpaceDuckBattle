@@ -763,6 +763,13 @@ for (let u of units) {
 
         if (s._currentCooldown > 0) {
           s._currentCooldown--;
+
+          context.pushLog({
+            type: "cooldownChange",
+            unit: u.id,
+            skill: s.type,
+            delta: -1
+          });
         }
       }
     }
