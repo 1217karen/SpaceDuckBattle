@@ -827,7 +827,7 @@ else if (event.type === "cooldownChange") {
         else if (result === "turnDecay") {
 
   text =
-    `${stat}${isUp ? "+" : "-"}${percent}% が 残り${turn}ターンに短縮`;
+    `${stat}${isUp ? "+" : "-"}${percent}% が 残り${turn}ターンに減少`;
 
   spawnFloatingNumber(
     event.target,
