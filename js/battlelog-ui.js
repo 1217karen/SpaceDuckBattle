@@ -336,6 +336,46 @@ export function playLogEvent(
     }
   }
 
+  else if (event.type === "cooldownSet") {
+
+    const unit = boardState.units[event.unit];
+    if (!unit) return;
+
+    unit.cooldowns = unit.cooldowns || {};
+
+    unit.cooldowns[event.skill] = event.value;
+
+    return;
+  }
+
+else if (event.type === "cooldownChange") {
+
+  const unit = boardState.units[event.unit];
+  if (!unit) return;
+
+  unit.cooldowns = unit.cooldowns || {};
+
+  const current =
+    unit.cooldowns[event.skill] ?? 0;
+
+  unit.cooldowns[event.skill] =
+    Math.max(current + event.delta, 0);
+
+  const text =
+    event.delta > 0
+      ? "CT が 1 増加"
+      : "CT が 1 減少";
+
+  div.textContent =
+    `${event.skill} の ${text}`;
+
+  spawnFloatingNumber(
+    event.unit,
+    event.delta > 0 ? "CT+1" : "CT-1",
+    event.delta > 0 ? "statDown" : "statUp"
+  );
+}
+
   else if (event.type === "critical") {
     div.textContent = "CRITICAL!";
 
@@ -966,22 +1006,6 @@ export function playLogEvent(
         "statUp"
       );
     }
-  }
-
-  else if (event.type === "cooldownChange") {
-    const text =
-      event.delta > 0
-        ? "CT が 1 増加"
-        : "CT が 1 減少";
-
-    div.textContent =
-      `${event.skill} の ${text}`;
-
-    spawnFloatingNumber(
-      event.unit,
-      event.delta > 0 ? "CT+1" : "CT-1",
-      event.delta > 0 ? "statDown" : "statUp"
-    );
   }
 
   else if (event.type === "cooldownLimit") {
