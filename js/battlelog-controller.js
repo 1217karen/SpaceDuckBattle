@@ -546,7 +546,14 @@ async function playNextAction() {
   }
 
     if (ev.type === "__groupEnd") {
+
       depth--;
+
+      // ▼ 余白追加
+      const spacer = document.createElement("div");
+      spacer.style.height = "6px"; // ←ここで調整
+      logArea.appendChild(spacer);
+
       await sleep(EFFECT_DELAY);
       continue;
     }
