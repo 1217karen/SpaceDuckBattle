@@ -483,27 +483,6 @@ const actionEvents = battleLog.slice(start + 1, end);
     }
 
     actedSet.clear();
-
-    // ======================
-    // rate effect 減衰（UI側）
-    // ======================
-
-    for (const [unitId, unit] of Object.entries(boardState.units)) {
-      if (!unit.rateEffects) continue;
-
-      for (let i = unit.rateEffects.length - 1; i >= 0; i--) {
-        const e = unit.rateEffects[i];
-
-        e.duration--;
-
-        if (e.duration <= 0) {
-          unit.rateEffects.splice(i, 1);
-        }
-      }
-
-      updateUnitEffectUI(unitId, boardState);
-      updateUnitStatUI(unitId, boardState);
-    }
   }
 
   // ======================
