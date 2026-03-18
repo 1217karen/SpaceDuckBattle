@@ -522,23 +522,28 @@ async function playNextAction() {
   for (let i = 0; i < actionEvents.length; i++) {
     const ev = actionEvents[i];
 
-    if (ev.type === "__groupStart") {
-      if (ev.label) {
-        playLogEvent(
-          ev.label,
-          null,
-          boardState,
-          logArea,
-          nameMap,
-          depth
-        );
+  if (ev.type === "__groupStart") {
+    if (ev.label) {
+      playLogEvent(
+        ev.label,
+        null,
+        boardState,
+        logArea,
+        nameMap,
+        depth
+      );
 
-        await sleep(EVENT_DELAY);
-      }
+      const delay =
+        ev.label.type === "effectTrigger"
+          ? EFFECT_DELAY
+          : EVENT_DELAY;
 
-      depth++;
-      continue;
+      await sleep(delay);
     }
+
+    depth++;
+    continue;
+  }
 
     if (ev.type === "__groupEnd") {
       depth--;
