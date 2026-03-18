@@ -762,6 +762,7 @@ for (let u of units) {
       for (let s of (u.skills || [])) {
 
         if (s._currentCooldown > 0) {
+
           s._currentCooldown--;
 
           context.pushLog({
@@ -770,6 +771,15 @@ for (let u of units) {
             skill: s.type,
             delta: -1
           });
+
+          if (s._currentCooldown === 0) {
+            context.pushLog({
+              type: "cooldownSet",
+              unit: u.id,
+              skill: s.type,
+              value: 0
+            });
+          }
         }
       }
     }
