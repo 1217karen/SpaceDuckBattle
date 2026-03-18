@@ -32,8 +32,8 @@ export function applyDamage(source, target, action, ctx) {
   const type = action.damageType || "normal";
 
 if (type === "normal") {
-  const atk = ctx.getEffectiveStat(source, "atk");
-  const df = ctx.getEffectiveStat(target, "def");
+  const atk = getEffectiveStat(source, "atk");
+const df = getEffectiveStat(target, "def");
 
   const base = atk * power;
   const reduced = df * 0.5;
@@ -46,7 +46,7 @@ if (type === "normal") {
 }
 
 else if (type === "pierce") {
-  const atk = ctx.getEffectiveStat(source, "atk");
+  const atk = getEffectiveStat(source, "atk");
 
   finalDamage =
     Math.floor(atk * power);
