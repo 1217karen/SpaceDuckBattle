@@ -1,6 +1,7 @@
 //new-battle-heal.js
 
 import {runBeforeDamage} from "./new-battle-effects.js";
+import { getEffectiveStat } from "./new-battle-stats.js";
 
 //========================================================== 
 // 回復処理
@@ -19,8 +20,8 @@ if (type === "fixed") {
 
 else if (type === "scale") {
 
-  const healStat =
-    ctx.getEffectiveStat(source, "heal");
+const healStat =
+  getEffectiveStat(source, "heal");
 
   finalHeal =
     Math.floor(healStat * power);
