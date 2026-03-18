@@ -414,12 +414,11 @@ background:#111;
 position: relative;
 }
 
-.skillSlot.cooldown {
+.skillSlot.cooldown img {
   filter: grayscale(100%) brightness(0.5);
 }
 
 .cooldownLabel {
-  background: red;
   position: absolute;
   inset: 0;
   display: flex;
