@@ -410,6 +410,8 @@ height:20px;
 
 border:1px solid #666;
 background:#111;
+  
+position: relative;
 }
 
 .skillSlot.cooldown {
