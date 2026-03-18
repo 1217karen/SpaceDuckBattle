@@ -1021,10 +1021,16 @@ export function playLogEvent(
     );
   }
 
-  else if (event.type === "wait") {
-    div.textContent =
-      `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
-  }
+　else if (event.type === "wait") {
+　  div.textContent =
+　    `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
+
+　  spawnFloatingNumber(
+　    event.unit,
+　    "STAY",
+　    "skill"
+　  );
+　}
 
   logArea.appendChild(div);
 }
