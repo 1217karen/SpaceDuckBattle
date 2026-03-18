@@ -288,6 +288,9 @@ export function playLogEvent(
   }
 
   else if (event.type === "effectTrigger") {
+
+    div.classList.add("logEffect");
+
     const name =
       EFFECTS[event.effect]?.name ||
       event.effect;
@@ -295,22 +298,25 @@ export function playLogEvent(
     div.textContent =
       `${displayName(event.unit, nameMap)} の ${name}`;
 
-    spawnFloatingNumber(
-      event.unit,
-      name,
-      "effectTrigger"
-    );
-  }
+      spawnFloatingNumber(
+        event.unit,
+        name,
+        "effectTrigger"
+      );
+    }
 
   else if (event.type === "skillUse") {
+
+    div.classList.add("logSkill");
+
     div.textContent =
       `${displayName(event.unit, nameMap)} の ${event.skill}`;
 
-    spawnFloatingNumber(
-      event.unit,
-      "SKILL",
-      "skill"
-    );
+      spawnFloatingNumber(
+        event.unit,
+        "SKILL",
+        "skill"
+      );
 
     if (event.rangeCells) {
       let cls = null;
