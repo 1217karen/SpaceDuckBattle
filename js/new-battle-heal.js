@@ -2,6 +2,7 @@
 
 import {runBeforeDamage} from "./new-battle-effects.js";
 import { getEffectiveStat } from "./new-battle-stats.js";
+import { rollCritical } from "./new-battle-utils.js";
 
 //========================================================== 
 // 回復処理
