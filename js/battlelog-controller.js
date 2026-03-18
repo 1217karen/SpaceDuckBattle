@@ -1,11 +1,11 @@
-//battlelog-controller.js
+// battlelog-controller.js
 
 // =====================
 // import
 // =====================
 
-import { 
-  createBoard, 
+import {
+  createBoard,
   placeUnit,
   updateFacing
 } from "./board.js";
@@ -16,7 +16,6 @@ import {
   updateUnitEffectUI
 } from "./battlelog-ui.js";
 
-
 // =====================
 // 設定値
 // =====================
@@ -26,7 +25,6 @@ const EVENT_DELAY = 500;
 const EFFECT_DELAY = 250;
 const UNIT_DELAY = 1000;
 
-
 // =====================
 // 状態変数
 // =====================
@@ -35,12 +33,11 @@ let speed = 1;
 let autoPlay = false;
 let logIndex = 0;
 
-let boardState = { units:{} };
+let boardState = { units: {} };
 
 let uiTurn = 0;
 let requiredSet = new Set();
 let actedSet = new Set();
-
 
 // =====================
 // DOM取得
@@ -52,7 +49,6 @@ const nextBtn = document.getElementById("nextBtn");
 const autoBtn = document.getElementById("autoBtn");
 const speedBtn = document.getElementById("speedBtn");
 
-
 // =====================
 // ユーティリティ
 // =====================
@@ -61,33 +57,24 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms / speed));
 }
 
-function flattenLogTree(root){
-
+function flattenLogTree(root) {
   const result = [];
 
-  function walk(node){
-
+  function walk(node) {
     if (node.type === "group") {
-
-result.push({
-  type: "__groupStart",
-  label: node.label ?? null
-});
+      result.push({
+        type: "__groupStart",
+        label: node.label ?? null
+      });
 
       for (const child of node.children) {
         walk(child);
       }
 
       result.push({ type: "__groupEnd" });
-
-    }
-
-    else if (node.type === "event") {
-
+    } else if (node.type === "event") {
       result.push(node.data);
-
     }
-
   }
 
   walk(root);
@@ -95,43 +82,37 @@ result.push({
   return result;
 }
 
-function fitUnitName(el){
-
+function fitUnitName(el) {
   let size = 13;
 
-  while (el.scrollWidth > el.offsetWidth && size > 8){
+  while (el.scrollWidth > el.offsetWidth && size > 8) {
     size--;
     el.style.fontSize = size + "px";
   }
-
 }
 
 function clearEffectHighlights() {
-  document.querySelectorAll(".cell")
-    .forEach(cell => {
-      cell.classList.remove(
-        "attackHighlight",
-        "healHighlight",
-        "buffHighlight",
-        "debuffHighlight"
-      );
-    });
+  document.querySelectorAll(".cell").forEach(cell => {
+    cell.classList.remove(
+      "attackHighlight",
+      "healHighlight",
+      "buffHighlight",
+      "debuffHighlight"
+    );
+  });
 }
 
 function clearActiveUnit() {
-  document.querySelectorAll(".cell")
-    .forEach(cell => {
-      cell.classList.remove("activeUnit");
-    });
+  document.querySelectorAll(".cell").forEach(cell => {
+    cell.classList.remove("activeUnit");
+  });
 }
-
 
 // =====================
 // UIイベント
 // =====================
 
 speedBtn.addEventListener("click", () => {
-
   if (speed === 1) {
     speed = 2;
     speedBtn.textContent = "x2";
@@ -144,11 +125,9 @@ speedBtn.addEventListener("click", () => {
     "--ui-speed",
     speed
   );
-
 });
 
 autoBtn.addEventListener("click", () => {
-
   autoPlay = !autoPlay;
 
   autoBtn.textContent = autoPlay ? "Stop" : "Auto";
@@ -158,11 +137,9 @@ autoBtn.addEventListener("click", () => {
   if (autoPlay) {
     playNextAction();
   }
-
 });
 
 nextBtn.addEventListener("click", playNextAction);
-
 
 // =====================
 // ログ取得
@@ -188,7 +165,6 @@ const battleLog = rawLog
 
 console.log("battleLog", battleLog);
 
-
 // =====================
 // 名前マップ作成
 // =====================
@@ -201,7 +177,6 @@ if (snapshot) {
   });
 }
 
-
 // =====================
 // 盤面作成
 // =====================
@@ -211,29 +186,26 @@ const boardHeight = snapshot?.board?.height ?? 5;
 
 createBoard("board", boardWidth, boardHeight);
 
-
 // =====================
 // 初期配置
 // =====================
 
 if (snapshot) {
-
   snapshot.units.forEach(u => {
-
-boardState.units[u.id] = {
-  x: u.x,
-  y: u.y,
-  hp: u.hp,
-  mhp: u.mhp ?? u.hp,
-  atk: u.atk ?? 0,
-  def: u.def ?? 0,
-  heal: u.heal ?? 0,
-  speed: u.speed ?? 0,
-  cri: u.cri ?? 0,
-  tec: u.tec ?? 0,
-  effects: [],
-  rateEffects: []
-};
+    boardState.units[u.id] = {
+      x: u.x,
+      y: u.y,
+      hp: u.hp,
+      mhp: u.mhp ?? u.hp,
+      atk: u.atk ?? 0,
+      def: u.def ?? 0,
+      heal: u.heal ?? 0,
+      speed: u.speed ?? 0,
+      cri: u.cri ?? 0,
+      tec: u.tec ?? 0,
+      effects: [],
+      rateEffects: []
+    };
 
     placeUnit("board", {
       id: u.id,
@@ -244,24 +216,20 @@ boardState.units[u.id] = {
     });
 
     updateFacing("board", u.id, u.facing);
-
   });
-
 }
 
 const leftSide = document.getElementById("leftSide");
 
 if (snapshot) {
-
   const team1 = snapshot.units.filter(u => u.team === 1);
 
   team1.forEach(u => {
-
     const div = document.createElement("div");
     div.className = "unitStatus";
     div.dataset.unit = u.id;
 
-div.innerHTML = `
+    div.innerHTML = `
 
 <div class="unitHeader">
   <div class="unitName">${u.name || u.id}</div>
@@ -373,13 +341,11 @@ div.innerHTML = `
     leftSide.appendChild(div);
     updateUnitStatUI(u.id, boardState);
 
-const nameEl = div.querySelector(".unitName");
-if (nameEl) {
-  setTimeout(() => fitUnitName(nameEl), 0);
-}
-
+    const nameEl = div.querySelector(".unitName");
+    if (nameEl) {
+      setTimeout(() => fitUnitName(nameEl), 0);
+    }
   });
-
 }
 
 // =====================
@@ -390,48 +356,41 @@ if (turnDisplay) {
   turnDisplay.textContent = "BATTLE START";
 }
 
-
 // =====================
 // 初期行動順
 // =====================
 
 if (snapshot) {
-
   const sorted = [...snapshot.units]
-    .sort((a,b)=>b.speed-a.speed);
+    .sort((a, b) => b.speed - a.speed);
 
-  sorted.forEach(u=>{
+  sorted.forEach(u => {
     if (u.hp > 0) {
       requiredSet.add(u.id);
     }
   });
-
 }
-
 
 // =====================
 // メイン再生
 // =====================
 
 async function playNextAction() {
-
   nextBtn.disabled = true;
 
-  document.querySelectorAll(".cell")
-    .forEach(cell => {
-      cell.classList.remove(
-        "attackRange",
-        "healRange",
-        "buffRange",
-        "debuffRange"
-      );
-    });
+  document.querySelectorAll(".cell").forEach(cell => {
+    cell.classList.remove(
+      "attackRange",
+      "healRange",
+      "buffRange",
+      "debuffRange"
+    );
+  });
 
   if (logIndex >= battleLog.length) {
     nextBtn.disabled = false;
     return;
   }
-
 
   // ======================
   // actionStart 探索
@@ -452,7 +411,6 @@ async function playNextAction() {
     return;
   }
 
-
   // ======================
   // actionEnd 探索
   // ======================
@@ -471,10 +429,7 @@ async function playNextAction() {
     return;
   }
 
-
-const actionEvents = battleLog
-  .slice(start + 1, end);
-
+  const actionEvents = battleLog.slice(start + 1, end);
 
   // ======================
   // 行動ユニット
@@ -487,7 +442,6 @@ const actionEvents = battleLog
   const pos = boardState.units[actingUnit];
 
   if (pos) {
-
     const cell = document.querySelector(
       `.cell[data-x="${pos.x}"][data-y="${pos.y}"]`
     );
@@ -495,75 +449,59 @@ const actionEvents = battleLog
     if (cell) {
       cell.classList.add("activeUnit");
     }
-
   }
-
 
   // ======================
   // ターン表示
   // ======================
 
   if (uiTurn === 0) {
-
     uiTurn = 1;
 
     if (turnDisplay) {
       turnDisplay.textContent = "TURN 1";
     }
+  } else if (
+    [...requiredSet].every(id => actedSet.has(id))
+  ) {
+    uiTurn++;
 
-  }
-
-else if (
-  [...requiredSet].every(id => actedSet.has(id))
-) {
-
-  uiTurn++;
-
-  if (turnDisplay) {
-    turnDisplay.textContent = `TURN ${uiTurn}`;
-  }
-
-  actedSet.clear();
-  
-
-  // ======================
-  // rate effect 減衰（UI側）
-  // ======================
-
-for (const [unitId, unit] of Object.entries(boardState.units)) {
-
-  if (!unit.rateEffects) continue;
-
-  for (let i = unit.rateEffects.length - 1; i >= 0; i--) {
-
-    const e = unit.rateEffects[i];
-
-    e.duration--;
-
-    if (e.duration <= 0) {
-      unit.rateEffects.splice(i,1);
+    if (turnDisplay) {
+      turnDisplay.textContent = `TURN ${uiTurn}`;
     }
 
+    actedSet.clear();
+
+    // ======================
+    // rate effect 減衰（UI側）
+    // ======================
+
+    for (const [unitId, unit] of Object.entries(boardState.units)) {
+      if (!unit.rateEffects) continue;
+
+      for (let i = unit.rateEffects.length - 1; i >= 0; i--) {
+        const e = unit.rateEffects[i];
+
+        e.duration--;
+
+        if (e.duration <= 0) {
+          unit.rateEffects.splice(i, 1);
+        }
+      }
+
+      updateUnitEffectUI(unitId, boardState);
+      updateUnitStatUI(unitId, boardState);
+    }
   }
-
-  updateUnitEffectUI(unitId, boardState);
-updateUnitStatUI(unitId, boardState);
-
-}
-
-}
-
 
   // ======================
   // 行動ヘッダー
   // ======================
 
-
-
   const header = document.createElement("div");
 
-const displayName =
-  nameMap?.[actingUnit] || actingUnit;
+  const displayName =
+    nameMap?.[actingUnit] || actingUnit;
 
   header.textContent = `▶ ${displayName} の行動`;
   header.classList.add("actionHeader");
@@ -571,156 +509,141 @@ const displayName =
   logArea.innerHTML = "";
   logArea.appendChild(header);
 
-
   await sleep(HEADER_DELAY);
 
   clearActiveUnit();
-
 
   // ======================
   // イベント再生
   // ======================
 
   let depth = 0;
-  for (let i = 0; i < actionEvents.length; i++) {
 
+  for (let i = 0; i < actionEvents.length; i++) {
     const ev = actionEvents[i];
 
-if (ev.type === "__groupStart") {
+    if (ev.type === "__groupStart") {
+      if (ev.label) {
+        playLogEvent(
+          ev.label,
+          null,
+          boardState,
+          logArea,
+          nameMap,
+          depth
+        );
 
-  if (ev.label) {
+        await sleep(EVENT_DELAY);
+      }
 
-    playLogEvent(
-      ev.label,
-      null,
-      boardState,
-      logArea,
-      nameMap,
-      depth
-    );
+      depth++;
+      continue;
+    }
 
-    await sleep(EVENT_DELAY);
-  }
-
-  depth++;
-  continue;
-}
-
-if (ev.type === "__groupEnd") {
-  depth--;
-  await sleep(EFFECT_DELAY);
-  continue;
-}
+    if (ev.type === "__groupEnd") {
+      depth--;
+      await sleep(EFFECT_DELAY);
+      continue;
+    }
 
     if (ev.type === "battleEnd") {
+      if (turnDisplay) {
+        turnDisplay.textContent = "BATTLE FINISHED";
+      }
 
-  if (turnDisplay) {
-    turnDisplay.textContent = "BATTLE FINISHED";
-  }
+      logArea.innerHTML = "";
 
-  logArea.innerHTML = "";
+      const div = document.createElement("div");
+      div.classList.add("battleEndBlock");
 
-  const div = document.createElement("div");
-  div.classList.add("battleEndBlock");
+      const text =
+        ev.winner === 1
+          ? "LEFT TEAM WIN"
+          : ev.winner === 2
+          ? "RIGHT TEAM WIN"
+          : "DRAW";
 
-  const text =
-    ev.winner === 1
-      ? "LEFT TEAM WIN"
-      : ev.winner === 2
-      ? "RIGHT TEAM WIN"
-      : "DRAW";
-
-  div.innerHTML = `
+      div.innerHTML = `
     <div style="font-size:20px;font-weight:bold;">
       ${text}
     </div>
   `;
 
-  logArea.appendChild(div);
+      logArea.appendChild(div);
 
-  logIndex = battleLog.length;
-  return;
-}
+      logIndex = battleLog.length;
+      return;
+    }
 
     if (ev.type === "death") {
       requiredSet.delete(ev.unit);
     }
 
-    document.querySelectorAll(".cell")
-      .forEach(cell => {
-        cell.classList.remove(
-          "attackRange",
-          "healRange",
-          "buffRange",
-          "debuffRange"
-        );
-      });
-
+    document.querySelectorAll(".cell").forEach(cell => {
+      cell.classList.remove(
+        "attackRange",
+        "healRange",
+        "buffRange",
+        "debuffRange"
+      );
+    });
 
     if (
       ev.type === "move" &&
       i + 1 < actionEvents.length &&
       actionEvents[i + 1].type === "faceChange"
     ) {
+      playLogEvent(
+        ev,
+        actionEvents[i + 1],
+        boardState,
+        logArea,
+        nameMap,
+        depth
+      );
 
-playLogEvent(
-  ev,
-  actionEvents[i + 1],
-  boardState,
-  logArea,
-  nameMap,
-  depth
-);
-playLogEvent(
-  actionEvents[i + 1],
-  actionEvents[i + 2],
-  boardState,
-  logArea,
-  nameMap,
-  depth
-);
+      playLogEvent(
+        actionEvents[i + 1],
+        actionEvents[i + 2],
+        boardState,
+        logArea,
+        nameMap,
+        depth
+      );
+
       i++;
-
+    } else {
+      playLogEvent(
+        ev,
+        actionEvents[i + 1],
+        boardState,
+        logArea,
+        nameMap,
+        depth
+      );
     }
 
-    else {
+    let wait = EFFECT_DELAY;
 
-playLogEvent(
-  ev,
-  actionEvents[i + 1],
-  boardState,
-  logArea,
-  nameMap,
-  depth
-);
-
+    if (
+      ev.type === "skillUse" ||
+      ev.type === "move" ||
+      ev.type === "wait"
+    ) {
+      wait = EVENT_DELAY;
     }
 
+    if (
+      ev.type !== "hpChange" &&
+      ev.type !== "effectExpired"
+    ) {
+      await sleep(wait);
 
-let wait = EFFECT_DELAY;
-
-if (
-  ev.type === "skillUse" ||
-  ev.type === "move" ||
-  ev.type === "wait"
-) {
-  wait = EVENT_DELAY;
-}
-    
-if (
-  ev.type !== "hpChange" &&
-  ev.type !== "effectExpired"
-) {
-  await sleep(wait);
-
-  const next = actionEvents[i + 1];
-
-}
+      const next = actionEvents[i + 1];
+    }
 
     clearEffectHighlights();
-
   }
-
 
   actedSet.add(actingUnit);
 
@@ -731,5 +654,4 @@ if (
   if (autoPlay) {
     setTimeout(playNextAction, UNIT_DELAY);
   }
-
 }
