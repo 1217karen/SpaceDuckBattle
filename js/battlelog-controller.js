@@ -196,7 +196,8 @@ if (snapshot) {
       cri: u.cri ?? 0,
       tec: u.tec ?? 0,
       effects: [],
-      rateEffects: []
+      rateEffects: [],
+      cooldowns: {}   
     };
 
     placeUnit("board", {
