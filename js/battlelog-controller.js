@@ -83,6 +83,10 @@ function fitUnitName(el) {
   }
 }
 
+function displayName(id, nameMap) {
+  return nameMap?.[id] || id;
+}
+
 function clearEffectHighlights() {
   document.querySelectorAll(".cell").forEach(cell => {
     cell.classList.remove(
