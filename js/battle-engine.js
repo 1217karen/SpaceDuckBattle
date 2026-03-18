@@ -449,6 +449,12 @@ context.pushLog({
 
 if (handler.cooldown && handler.cooldown > 0) {
   skill._currentCooldown = handler.cooldown;
+  context.pushLog({
+    type: "cooldownSet",
+    unit: unit.id,
+    skill: skill.type,
+    value: handler.cooldown
+  });
 }
 
 endGroup();
