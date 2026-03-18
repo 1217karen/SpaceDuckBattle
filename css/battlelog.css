@@ -419,6 +419,7 @@ position: relative;
 }
 
 .cooldownLabel {
+  background: red;
   position: absolute;
   inset: 0;
   display: flex;
