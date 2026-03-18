@@ -632,7 +632,7 @@ top:50%;
 
 transform:translate(-50%,-50%);
 
-font-size:16px;
+font-size:14px;
 font-weight:bold;
 
 white-space:nowrap;
@@ -647,7 +647,6 @@ text-shadow:
 
 .skillNumber{
 color:#ffffff;
-font-size:14px;
 font-weight:bold;
 letter-spacing:1px;
 }
@@ -662,7 +661,6 @@ color:#66ff99;
 
 .effectApplyNumber{
 color:#66ccff;
-font-size:14px;
 }
 
 .effectRemoveNumber{
@@ -671,6 +669,7 @@ color:#bbbbbb;
 
 .effectEndNumber{
 color:#888;
+font-size:0.9em;
 }
 
 .statUpNumber{
@@ -683,19 +682,17 @@ color:#ff5555;
 
 .statUpNumber,
 .statDownNumber{
-font-size:14px;
 }
 
 .criticalNumber{
 color:#ffd966;
-font-size:12px;
 font-weight:bold;
 letter-spacing:1px;
+font-size:0.9em;
 }
 
 .effectTriggerNumber{
 color:#ffcc33;
-font-size:14px;
 font-weight:bold;
 letter-spacing:1px;
 }
