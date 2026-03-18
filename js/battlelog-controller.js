@@ -427,33 +427,16 @@ async function playNextAction() {
   // ======================
   // actionEnd 探索
   // ======================
+let end = start + 1;
 
-  // actionEndまで探す
-  let end = start + 1;
+while (
+  end < battleLog.length &&
+  battleLog[end].type !== "actionEnd"
+) {
+  end++;
+}
 
-  while (
-    end < battleLog.length &&
-    battleLog[end].type !== "actionEnd"
-  ) {
-    end++;
-  }
-
-  if (end >= battleLog.length) {
-    nextBtn.disabled = false;
-    return;
-  }
-
-  // 次のactionStartまで拡張
-  let nextStart = end + 1;
-
-  while (
-    nextStart < battleLog.length &&
-    battleLog[nextStart].type !== "actionStart"
-  ) {
-    nextStart++;
-  }
-
-  const actionEvents = battleLog.slice(start + 1, nextStart);
+const actionEvents = battleLog.slice(start + 1, end);
   
   // ======================
   // 行動ユニット
@@ -688,7 +671,7 @@ async function playNextAction() {
 
   actedSet.add(actingUnit);
 
-  logIndex = nextStart;
+  logIndex = end + 1;
 
   nextBtn.disabled = false;
 
