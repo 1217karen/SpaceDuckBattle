@@ -427,7 +427,7 @@ if (battleLog[logIndex]?.type !== "actionStart") {
 
   // ▼Turn End表示
   const header = document.createElement("div");
-  header.textContent = "▶ TURN END";
+  header.textContent = `▶ TURN ${uiTurn} → TURN ${uiTurn + 1}`;
   header.classList.add("actionHeader");
 
   logArea.innerHTML = "";
