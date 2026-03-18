@@ -389,6 +389,7 @@ if (snapshot) {
 // =====================
 
 async function playNextAction() {
+  
   nextBtn.disabled = true;
 
   document.querySelectorAll(".cell").forEach(cell => {
@@ -404,6 +405,52 @@ async function playNextAction() {
     nextBtn.disabled = false;
     return;
   }
+
+  // ======================
+// actionStartが無い場合 → Turn End扱い
+// ======================
+
+if (battleLog[logIndex]?.type !== "actionStart") {
+
+  const start = logIndex;
+
+  let end = logIndex;
+
+  while (
+    end < battleLog.length &&
+    battleLog[end].type !== "actionStart"
+  ) {
+    end++;
+  }
+
+  const events = battleLog.slice(start, end);
+
+  // ▼Turn End表示
+  const header = document.createElement("div");
+  header.textContent = "▶ TURN END";
+  header.classList.add("actionHeader");
+
+  logArea.innerHTML = "";
+  logArea.appendChild(header);
+
+  await sleep(HEADER_DELAY);
+
+  let depth = 0;
+
+  for (let ev of events) {
+    playLogEvent(ev, null, boardState, logArea, nameMap, depth);
+    await sleep(EFFECT_DELAY);
+  }
+
+  logIndex = end;
+  nextBtn.disabled = false;
+
+  if (autoPlay) {
+    setTimeout(playNextAction, UNIT_DELAY);
+  }
+
+  return;
+}
 
   // ======================
   // actionStart 探索
