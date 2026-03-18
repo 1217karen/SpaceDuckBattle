@@ -632,7 +632,9 @@ top:50%;
 
 transform:translate(-50%,-50%);
 
-font-size:14px;
+--float-size-base: 14px;
+--float-size-scale: 1;
+font-size: calc(var(--float-size-base) * var(--float-size-scale));
 font-weight:bold;
 
 white-space:nowrap;
@@ -653,12 +655,12 @@ letter-spacing:1px;
 
 .damageNumber{
 color:#ff5555;
-font-size:1.3em;
+--float-size-scale: 1.2;
 }
 
 .healNumber{
 color:#66ff99;
-font-size:1.3em;
+--float-size-scale: 1.2;
 }
 
 .effectApplyNumber{
@@ -671,7 +673,7 @@ color:#bbbbbb;
 
 .effectEndNumber{
 color:#888;
-font-size:0.85em;
+--float-size-scale: 0.85;
 }
 
 .statUpNumber{
@@ -690,7 +692,7 @@ color:#ff5555;
 color:#ffd966;
 font-weight:bold;
 letter-spacing:1px;
-font-size:0.9em;
+--float-size-scale: 0.85;
 }
 
 .effectTriggerNumber{
