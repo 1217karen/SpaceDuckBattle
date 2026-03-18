@@ -406,7 +406,7 @@ async function playNextAction() {
     return;
   }
 
-  // ======================
+// ======================
 // actionStartが無い場合 → Turn End扱い
 // ======================
 
@@ -440,10 +440,45 @@ if (
 
   let depth = 0;
 
-  for (let ev of events) {
-    playLogEvent(ev, null, boardState, logArea, nameMap, depth);
+  // ======================
+// unitごとにまとめる
+// ======================
+
+const grouped = {};
+
+for (let ev of events) {
+
+  // unitがないものは無視
+  if (!ev.unit) continue;
+
+  if (!grouped[ev.unit]) {
+    grouped[ev.unit] = [];
+  }
+
+  grouped[ev.unit].push(ev);
+}
+
+// ======================
+// 出力
+// ======================
+
+for (const unitId in grouped) {
+
+  // ▼ユニット名
+  const nameDiv = document.createElement("div");
+  nameDiv.textContent = displayName(unitId, nameMap);
+  nameDiv.classList.add("turnUnitHeader");
+
+  logArea.appendChild(nameDiv);
+
+  await sleep(EFFECT_DELAY);
+
+  // ▼そのユニットのイベント
+  for (const ev of grouped[unitId]) {
+    playLogEvent(ev, null, boardState, logArea, nameMap, 1);
     await sleep(EFFECT_DELAY);
   }
+}
 
   logIndex = end;
   nextBtn.disabled = false;
