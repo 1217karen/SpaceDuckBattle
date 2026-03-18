@@ -428,6 +428,7 @@ async function playNextAction() {
   // actionEnd 探索
   // ======================
 
+  // actionEndまで探す
   let end = start + 1;
 
   while (
@@ -442,8 +443,18 @@ async function playNextAction() {
     return;
   }
 
-  const actionEvents = battleLog.slice(start + 1, end);
+  // 次のactionStartまで拡張
+  let nextStart = end + 1;
 
+  while (
+    nextStart < battleLog.length &&
+    battleLog[nextStart].type !== "actionStart"
+  ) {
+    nextStart++;
+  }
+
+  const actionEvents = battleLog.slice(start + 1, nextStart);
+  
   // ======================
   // 行動ユニット
   // ======================
