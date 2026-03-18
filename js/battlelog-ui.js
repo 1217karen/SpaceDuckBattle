@@ -1005,6 +1005,23 @@ else if (result === "turnEnd") {
             }
           }
         }
+
+        else if (event.effect.result === "turnDecay") {
+
+  if (existing) {
+    existing.duration = event.effect.duration;
+  }
+
+}
+
+else if (event.effect.result === "turnEnd") {
+
+  if (existing) {
+    unit.rateEffects =
+      unit.rateEffects.filter(e => e !== existing);
+  }
+
+}
       }
 
       updateUnitEffectUI(
