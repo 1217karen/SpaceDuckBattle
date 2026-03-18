@@ -5,6 +5,7 @@ import { chooseStep, facingFromDelta } from "./movement.js";
 import { applyMove } from "./battle-actions.js";
 import { processBeforeAction, processAfterAction } from "./battle-effects.js";
 import { decideFallbackMove } from "./battle-ai.js";
+import { createScoreFn, isDangerCell } from "./new-battle-ai.js";
 
 export function runBattleTurns({
   context,
@@ -279,8 +280,12 @@ else {
           }
         }
 
-        const step =
-          chooseStep(unit, units, targetPos, board, moveMode);
+const step =
+  chooseStep(unit, units, targetPos, board, {
+    moveMode,
+    scoreFn: createScoreFn(unit),
+    isDanger: (x, y) => isDangerCell(unit, units, x, y)
+  });
 
         if (!step) break;
 
