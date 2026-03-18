@@ -348,6 +348,7 @@ if (snapshot) {
       img.style.height = "100%";
 
       slot.dataset.skill = s.type;
+      boardState.units[u.id].cooldowns[s.type] = 0;
 
       slot.appendChild(img);
     });
