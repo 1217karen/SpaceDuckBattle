@@ -468,33 +468,16 @@ export function processBeforeAction(unit, ctx) {
 
   const net = gravityStock - floatStock;
 
-if (net > 0) {
+if (net !== 0) {
 
-ctx.beginGroup();
+  ctx.beginGroup({
+    type: "effectTrigger",
+    block: "effect",
+    unit: unit.id,
+    effect: net > 0 ? "gravity" : "float"
+  });
 
-ctx.pushLog({
-  type: "effectTrigger",
-  block: "effect",
-  unit: unit.id,
-  effect: "gravity"
-});
-
-}
-
-else if (net < 0) {
-
-ctx.beginGroup();
-
-ctx.pushLog({
-  type: "effectTrigger",
-  block: "effect",
-  unit: unit.id,
-  effect: "float"
-});
-
-}
-
-  if (net !== 0 && unit.skills && unit.skills.length > 0) {
+  if (unit.skills && unit.skills.length > 0) {
 
     const steps = Math.abs(net);
     const dir = net > 0 ? +1 : -1;
@@ -512,25 +495,21 @@ ctx.pushLog({
           s._currentCooldown ?? 0;
 
         if (dir > 0) {
-
           if (maxCt > 0 && cur < maxCt)
             eligible.push({ s, maxCt, cur });
-
         } else {
-
           if (cur > 0)
             eligible.push({ s, maxCt, cur });
-
         }
       }
 
       if (eligible.length === 0) {
 
-ctx.pushLog({
-  type: "cooldownLimit",
-  block: "effect",
-  unit: unit.id
-});
+        ctx.pushLog({
+          type: "cooldownLimit",
+          block: "effect",
+          unit: unit.id
+        });
 
         break;
       }
@@ -553,19 +532,19 @@ ctx.pushLog({
 
       s._currentCooldown = newCt;
 
-ctx.pushLog({
-  type: "cooldownChange",
-  block: "effect",
-  unit: unit.id,
-  skill: s.type,
-  delta: dir
-});
+      ctx.pushLog({
+        type: "cooldownChange",
+        block: "effect",
+        unit: unit.id,
+        skill: s.type,
+        delta: dir
+      });
     }
 
-    if (net !== 0) {
+  }
+
   ctx.endGroup();
 }
-  }
 
 if (gravityStock > 0 || floatStock > 0) {
 
@@ -611,9 +590,7 @@ const stock =
 
 if (stock <= 0) continue;
 
-ctx.beginGroup();
-
-ctx.pushLog({
+ctx.beginGroup({
   type: "effectTrigger",
   block: "effect",
   unit: unit.id,
