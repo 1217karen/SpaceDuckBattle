@@ -3,21 +3,7 @@
 
 import {runBeforeDamage,runAfterDamage} from "./new-battle-effects.js";
 import { getEffectiveStat } from "./new-battle-stats.js";
-
-
-
-//==========================================================
-// クリティカル判定
-//==========================================================
-
-export function rollCritical(unit) {
-  const cri = unit.cri ?? 0;
-
-  const chance =
-    Math.min(Math.max(cri, 1), 90); // 1%保証 / 90%上限
-
-  return Math.random() * 100 < chance;
-}
+import { rollCritical } from "./new-battle-utils.js";
 
 
 //========================================================== 
@@ -127,15 +113,16 @@ ctx.pushLog({
     target: target.id,
     hp: Math.max(target.hp, 0)
   });
-  if (target.hp <= 0) {
-  ctx.killUnit(target);
-}
-
+  
 runAfterDamage(ctx, {
   source,
   target,
   damage: finalDamage,
   type
 });
+
+if (target.hp <= 0) {
+  ctx.killUnit(target);
+}
 }
 
