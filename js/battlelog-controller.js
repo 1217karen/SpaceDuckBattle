@@ -4,17 +4,9 @@
 // import
 // =====================
 
-import {
-  createBoard,
-  placeUnit,
-  updateFacing
-} from "./board.js";
-
-import {
-  playLogEvent,
-  updateUnitStatUI,
-  updateUnitEffectUI
-} from "./battlelog-ui.js";
+import {createBoard,placeUnit,updateFacing} from "./board.js";
+import {playLogEvent,updateUnitStatUI,updateUnitEffectUI} from "./battlelog-ui.js";
+import { skillHandlers } from "./skills.js";
 
 // =====================
 // 設定値
@@ -339,6 +331,23 @@ if (snapshot) {
 `;
 
     leftSide.appendChild(div);
+
+    const skillSlots = div.querySelectorAll(".skillSlot");
+
+    (u.skills || []).forEach((s, i) => {
+      const handler = skillHandlers[s.type];
+      if (!handler) return;
+
+      const slot = skillSlots[i];
+      if (!slot) return;
+
+      const img = document.createElement("img");
+      img.src = handler.icon || "";
+      img.style.width = "100%";
+      img.style.height = "100%";
+
+      slot.appendChild(img);
+    });
     updateUnitStatUI(u.id, boardState);
 
     const nameEl = div.querySelector(".unitName");
