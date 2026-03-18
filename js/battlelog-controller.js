@@ -523,6 +523,11 @@ async function playNextAction() {
     const ev = actionEvents[i];
 
   if (ev.type === "__groupStart") {
+
+    const spacer = document.createElement("div");
+    spacer.style.height = "3px";
+    logArea.appendChild(spacer);
+
     if (ev.label) {
       playLogEvent(
         ev.label,
@@ -551,7 +556,7 @@ async function playNextAction() {
 
       // ▼ 余白追加
       const spacer = document.createElement("div");
-      spacer.style.height = "6px"; // ←ここで調整
+      spacer.style.height = "px"; // ←ここで調整
       logArea.appendChild(spacer);
 
       await sleep(EFFECT_DELAY);
