@@ -189,9 +189,21 @@ export function updateUnitStatUI(unitId, boardState) {
 
     let base = unit[key] ?? 0;
 
-    const value = getEffectiveStat(unit, key);
+    // ======================
+    // flatだけ適用
+    // ======================
 
-    valueEl.textContent = value;
+    let flatBonus = 0;
+
+    for (const e of unit.effects || []) {
+      if (e.stat === key && e.mode === "flat") {
+        flatBonus += e.value;
+      }
+    }
+
+    const displayValue = Math.round(base + flatBonus);
+
+    valueEl.textContent = displayValue;
 
     // ======================
     // rate表示計算
