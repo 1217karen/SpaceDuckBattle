@@ -2,7 +2,7 @@
 
 
 import {runBeforeDamage,runAfterDamage} from "./new-battle-effects.js";
-
+import { getEffectiveStat } from "./new-battle-stats.js";
 
 
 
