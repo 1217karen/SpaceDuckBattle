@@ -60,47 +60,6 @@ function getPreferredDirs(unit, targetPos) {
   return dirs;
 }
 
-export function facingFromDelta(dx, dy, fallbackFacing) {
-
-  const absDx = Math.abs(dx);
-  const absDy = Math.abs(dy);
-
-  if (absDx >= absDy && dx !== 0) return dx > 0 ? "E" : "W";
-  if (dy !== 0) return dy > 0 ? "S" : "N";
-
-  return fallbackFacing;
-}
-
-function getPreferredDirs(unit, targetPos) {
-
-  const dx = targetPos.x - unit.x;
-  const dy = targetPos.y - unit.y;
-
-  const absDx = Math.abs(dx);
-  const absDy = Math.abs(dy);
-
-  const dirs = [];
-
-  const horiz =
-    dx > 0 ? { dx: 1, dy: 0 } : { dx: -1, dy: 0 };
-
-  const vert =
-    dy > 0 ? { dx: 0, dy: 1 } : { dx: 0, dy: -1 };
-
-  const horizOpp =
-    dx > 0 ? { dx: -1, dy: 0 } : { dx: 1, dy: 0 };
-
-  const vertOpp =
-    dy > 0 ? { dx: 0, dy: -1 } : { dx: 0, dy: 1 };
-
-  if (absDx >= absDy) {
-    dirs.push(horiz, vert, vertOpp, horizOpp);
-  } else {
-    dirs.push(vert, horiz, horizOpp, vertOpp);
-  }
-
-  return dirs;
-}
 
 const DIR4 = [
   { dx: 1, dy: 0 },
@@ -161,7 +120,7 @@ export function getPullCell(source, target, units, board) {
   return { x: nx, y: ny };
 }
 
-export function chooseStep(unit, units, targetPos, board, options) {
+export function chooseStep(unit, units, targetPos, board, options = {}) {
 
 const moveMode = options.moveMode ?? "toward";
 
@@ -179,15 +138,14 @@ const dirs =
 
 
     // 盤外
-    if (nx < 0 || nx >= board.width ||
-        ny < 0 || ny >= board.height) {
+    if (!inBounds(nx, ny, board)) {
       continue;
     }
 
     // 占有
-    if (isOccupiedCell(units, nx, ny, unit.id)) {
-      continue;
-    }
+if (options.isDanger && options.isDanger(nx, ny)) {
+  continue;
+}
 
     const newDist =
       Math.abs(nx - targetPos.x) +
