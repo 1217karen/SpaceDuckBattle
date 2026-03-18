@@ -33,6 +33,10 @@ function spawnFloatingNumber(unitId, value, type) {
 
   num.classList.add("floatingNumber");
 
+  if (type === "skill") {
+    num.classList.add("skillNumber");
+  }
+
   if (type === "damage") {
     num.classList.add("damageNumber");
   }
