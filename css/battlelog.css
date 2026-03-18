@@ -97,6 +97,17 @@ font-weight:bold;
 margin-bottom:4px;
 }
 
+.logSkill{
+font-size:13px;
+font-weight:bold;
+color:#ffffff;
+}
+
+.logEffect{
+font-size:11px;
+color:#ffffff;
+}
+
 .logNumber{
 font-size:13px;
 font-weight:bold;
