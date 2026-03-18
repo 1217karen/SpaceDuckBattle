@@ -103,7 +103,7 @@ export const skillHandlers = {
   // =========================
   satellite_meteor_field: {
     cooldown: 3,
-    icon: "https://rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
+    icon: "https://placehold.co/20x20",
 
     generateActions(unit, ctx) {
       const allies = ctx.getAllies(ctx.units, unit.team, unit.id);
@@ -205,7 +205,7 @@ export const skillHandlers = {
   // =========================
   buff_wave: {
     cooldown: 3,
-    icon: "https://rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+    icon: "https://placehold.co/20x20",
 
     generateActions(unit, ctx) {
       const allies = ctx
