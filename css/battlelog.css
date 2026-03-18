@@ -425,11 +425,12 @@ position: relative;
   align-items: center;
   justify-content: center;
 
-  font-weight: bold;
-  font-size: 14px;
-  color: white;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  color:#aee0ff;
+  text-shadow: 0 0 2px #aee0ff, 0 0 4px #aee0ff;
 
-  background: rgba(0,0,0,0.5);
   pointer-events: none;
 }
 
