@@ -3,52 +3,17 @@
 // 前半は旧部分
 
 import { EFFECTS } from "./effects-config.js";
-import { rollCritical } from "./battle-actions.js";
+import { rollCritical } from "./new-battle-utils.js";
+import { getEffectiveStat } from "./new-battle-stats.js";
 
-export function getEffectiveStat(unit, statName) {
-
-  const base = (unit[statName] ?? 0) + 5;
-
-  let flatBonus = 0;
-  let rateBonus = 0;
-
-  // flat は effects から取得
-  if (unit.effects) {
-
-    for (let effect of unit.effects) {
-
-      if (effect.stat !== statName) continue;
-
-      if (effect.mode === "flat") {
-        flatBonus += effect.value;
-      }
-
-    }
-
-  }
-
-  // rate は rateEffects から取得
-  if (unit.rateEffects) {
-
-    for (let effect of unit.rateEffects) {
-
-      if (effect.stat !== statName) continue;
-
-      rateBonus += effect.value;
-
-    }
-
-  }
-
-  const afterFlat = base + flatBonus;
-  const finalValue = afterFlat * (1 + rateBonus);
-
-  return Math.round(finalValue);
-}
 
 const CORROSION_RATE = 0.0025;
 const MAX_STACK = 99;
 const EFFECT_CAP = 25;
+
+// ==========================================================
+// Effect: 付与・管理
+// ==========================================================
 
 export function applyEffect(source, target, action, ctx) {
 
@@ -60,7 +25,7 @@ export function applyEffect(source, target, action, ctx) {
 // ==========================================================
 if (effectData.power !== undefined) {
 
-  const tec = ctx.getEffectiveStat(source, "tec");
+  const tec = getEffectiveStat(source, "tec");
 
   const amount =
     Math.floor(tec * 0.2 * effectData.power);
@@ -447,6 +412,10 @@ export function removeRandomEffectByGroup(unit, group, ctx) {
   return target;
 }
 
+// ==========================================================
+// Effect: ターン処理
+// ==========================================================
+
 export function processBeforeAction(unit, ctx) {
 
   if (!unit.effects || unit.effects.length === 0) return;
@@ -700,7 +669,9 @@ ctx.pushLog({
   }
 }
 
-
+// ==========================================================
+// Effect: 戦闘フック（Damage）
+/* before / after */
 //ここからnew部分
 
 export function runBeforeDamage(ctx, payload) {
@@ -754,12 +725,13 @@ export function runBeforeDamage(ctx, payload) {
   // =========================
   if (damage > 0 && (type === "normal" || type === "pierce")) {
 
-    const satellite =
-      target.effects?.find(e => e.type === "satellite");
+    const effects = target.effects ?? [];
+const satellite =
+  effects.find(e => e.type === "satellite");
 
     if (satellite && satellite.stock > 0) {
 
-      const df = ctx.getEffectiveStat(target, "def");
+      const df = getEffectiveStat(target, "def");
       const perStockRate = 0.01 + Math.floor(df / 10) * 0.01;
 
       const maxReduction = satellite.stock * perStockRate;
@@ -825,12 +797,13 @@ export function runAfterDamage(ctx, payload) {
 
   if (!(type === "normal" || type === "pierce")) return;
 
-  const meteor =
-    target.effects?.find(e => e.type === "meteor");
+const effects = target.effects ?? [];
+const meteor =
+  effects.find(e => e.type === "meteor");
 
   if (!meteor || meteor.stock <= 0) return;
 
-  const atk = ctx.getEffectiveStat(target, "atk");
+  const atk = getEffectiveStat(target, "atk");
   const reflectRate =
     Math.min(Math.max(atk, 1), 50) / 100;
 
