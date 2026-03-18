@@ -25,6 +25,8 @@ export function tryUseSkill(unit, context) {
       a.type === "damage" ||
       a.type === "heal" ||
       a.type === "applyEffect" ||
+      a.type === "removeEffect" ||
+      a.type === "clearEffect" ||
       a.type === "move"
     );
 
