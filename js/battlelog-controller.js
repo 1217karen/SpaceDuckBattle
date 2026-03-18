@@ -410,7 +410,10 @@ async function playNextAction() {
 // actionStartが無い場合 → Turn End扱い
 // ======================
 
-if (battleLog[logIndex]?.type !== "actionStart") {
+if (
+  logIndex !== 0 &&
+  battleLog[logIndex]?.type !== "actionStart"
+) {
 
   const start = logIndex;
 
