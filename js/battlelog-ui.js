@@ -260,10 +260,39 @@ function updateSkillCooldownUI(unitId, boardState) {
     const ct =
       unit.cooldowns?.[skill] ?? 0;
 
+    // ======================
+    // クールダウン状態
+    // ======================
+
     if (ct > 0) {
       slot.classList.add("cooldown");
     } else {
       slot.classList.remove("cooldown");
+    }
+
+    // ======================
+    // 数字表示
+    // ======================
+
+    let label =
+      slot.querySelector(".cooldownLabel");
+
+    if (ct > 0) {
+
+      if (!label) {
+        label = document.createElement("div");
+        label.className = "cooldownLabel";
+        slot.appendChild(label);
+      }
+
+      label.textContent = ct;
+
+    } else {
+
+      if (label) {
+        label.remove();
+      }
+
     }
 
   });
