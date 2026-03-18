@@ -77,7 +77,7 @@ const context = {
     endGroup,
   
     units,
-    log,
+    log: rootGroup,
     getRateEffects: (unit) => unit.rateEffects || [],
 
     pushLog,
