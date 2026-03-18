@@ -104,6 +104,10 @@ function clearActiveUnit() {
   });
 }
 
+function scrollLogToBottom() {
+  logArea.scrollTop = logArea.scrollHeight;
+}
+
 // =====================
 // UIイベント
 // =====================
@@ -518,6 +522,7 @@ if (actingUnit === "__turn__") {
 
   logArea.innerHTML = "";
   logArea.appendChild(header);
+  scrollLogToBottom();
 
   await sleep(HEADER_DELAY);
 
@@ -537,6 +542,7 @@ if (actingUnit === "__turn__") {
     const spacer = document.createElement("div");
     spacer.style.height = "3px";
     logArea.appendChild(spacer);
+    scrollLogToBottom();
 
     if (ev.label) {
       playLogEvent(
@@ -628,6 +634,7 @@ if (actingUnit === "__turn__") {
         nameMap,
         depth
       );
+      scrollLogToBottom();
 
       playLogEvent(
         actionEvents[i + 1],
@@ -648,6 +655,7 @@ if (actingUnit === "__turn__") {
         nameMap,
         depth
       );
+      scrollLogToBottom();
     }
 
     let wait = EFFECT_DELAY;
