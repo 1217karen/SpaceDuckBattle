@@ -39,6 +39,54 @@ export const skillHandlers = {
   },
 
   // =========================
+  // 前方1マス攻撃　５回
+  // =========================
+  attack_front1: {
+    cooldown: 2,
+    icon: "https://placehold.co/20x20",
+
+    generateActions(unit, ctx) {
+      const target = getFrontTarget(unit, ctx);
+      if (!target) return null;
+      if (target.team === unit.team) return null;
+
+      let x = unit.x;
+      let y = unit.y;
+
+      if (unit.facing === "N") y -= 1;
+      if (unit.facing === "S") y += 1;
+      if (unit.facing === "E") x += 1;
+      if (unit.facing === "W") x -= 1;
+
+      return {
+        preview: {
+          cells: [{ x, y }],
+          style: "attack"
+        },
+        const actions = [];
+
+        for (let i = 0; i < 5; i++) {
+          actions.push({
+            type: "damage",
+            source: unit.id,
+            target: target.id,
+            power: 2,
+            damageType: "normal"
+          });
+        }
+
+        return {
+          preview: {
+            cells: [{ x, y }],
+            style: "attack"
+          },
+          actions
+        };
+      };
+    }
+  },
+  
+  // =========================
   // DF3
   // =========================
   buff_def20: {
