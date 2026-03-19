@@ -1,7 +1,5 @@
 //new-battle-effects.js
 
-// 前半は旧部分
-
 import { EFFECTS } from "./effects-config.js";
 import { rollCritical } from "./new-battle-utils.js";
 import { getEffectiveStat } from "./new-battle-stats.js";
