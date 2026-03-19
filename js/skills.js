@@ -41,7 +41,7 @@ export const skillHandlers = {
   // =========================
   // 前方1マス攻撃　５回
   // =========================
-  attack_front1: {
+  attack_front1_5: {
     cooldown: 2,
     icon: "https://placehold.co/20x20",
 
