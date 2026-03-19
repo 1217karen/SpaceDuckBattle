@@ -1,10 +1,10 @@
 // new-battle-turn.js
 
 import { tryUseSkill } from "./new-battle-skill.js";
-import { chooseStep, facingFromDelta } from "./movement.js";
-import { applyMove } from "./battle-actions.js";
-import { processBeforeAction, processAfterAction } from "./battle-effects.js";
-import { decideFallbackMove } from "./battle-ai.js";
+import { chooseStep, facingFromDelta } from "./new-movement.js";
+import { applyMove } from "./new-battle-move.js";
+import { processBeforeAction, processAfterAction } from "./new-battle-effects.js";
+import { decideFallbackMove } from "./new-battle-ai.js";
 import { createScoreFn, isDangerCell } from "./new-battle-ai.js";
 
 export function runBattleTurns({
