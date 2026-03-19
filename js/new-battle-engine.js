@@ -6,7 +6,9 @@ import { applyEffect, processBeforeAction, processAfterAction } from "./new-batt
 import { getEffectiveStat } from "./new-battle-stats.js";
 import { EFFECTS } from "./effects-config.js";
 import { getNearestEnemy, getLowestHpAlly, getIdleFacing, decideFallbackMove } from "./new-battle-ai.js";
-import { applyDamage, applyHeal, applyMove } from "./new-battle-actions.js";
+import { applyDamage } from "./new-battle-damage.js";
+import { applyHeal } from "./new-battle-heal.js";
+import { applyMove } from "./new-battle-move.js";
 import {getSkillChainCount,getManhattanCells,getAliveUnits,getEnemies,getAllies,getDistance,getChebyshevDistance,getRandomEnemy,getRandomAlly,
         getRandomAny,getUnitsInManhattanRange,getUnitsInSameRow,getUnitsInSameColumn} from "./new-battle-utils.js";
 import { createBattleContext } from "./new-battle-context.js";
