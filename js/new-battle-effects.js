@@ -508,7 +508,7 @@ if (rollCritical(source)) {
 
 ctx.pushLog({
   type: "critical",
-  groupLevel: ctx.groupLevel,
+  groupLevel: ctx.depth,
   subLevel: 1,
   block: "skill"
 });
