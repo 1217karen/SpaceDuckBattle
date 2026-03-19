@@ -67,10 +67,41 @@ export async function playNextAction() {
   });
 
   if (battleState.logIndex >= battleState.battleLog.length) {
+
+  // まだ結果表示していないなら、ここで専用アクションとして出す
+  if (battleState.battleResult !== undefined && !battleState._resultShown) {
+
+    battleState._resultShown = true;
+
+    battleState.logArea.innerHTML = "";
+
+    const div = document.createElement("div");
+    div.classList.add("battleEndBlock");
+
+    const text =
+      battleState.battleResult === 1
+        ? "LEFT TEAM WIN"
+        : battleState.battleResult === 2
+        ? "RIGHT TEAM WIN"
+        : "DRAW";
+
+    div.innerHTML = `
+      <div style="font-size:20px;font-weight:bold;">
+        ${text}
+      </div>
+    `;
+
+    battleState.logArea.appendChild(div);
+
     battleState.nextBtn.disabled = false;
     battleState.isPlaying = false;
     return;
   }
+
+  battleState.nextBtn.disabled = false;
+  battleState.isPlaying = false;
+  return;
+}
 
 
   // ======================
