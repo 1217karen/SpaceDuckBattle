@@ -1,11 +1,11 @@
 //new-battle-engine.js
 
 import { skillHandlers } from "./skills.js";
-import { chooseStep, facingFromDelta, isOccupiedCell, getKnockbackCell, getPullCell } from "./movement.js";
-import { getEffectiveStat, applyEffect, processBeforeAction, processAfterAction } from "./battle-effects.js";
+import { chooseStep, facingFromDelta, isOccupiedCell, getKnockbackCell, getPullCell } from "./new-movement.js";
+import { getEffectiveStat, applyEffect, processBeforeAction, processAfterAction } from "./new-battle-effects.js";
 import { EFFECTS } from "./effects-config.js";
-import { getNearestEnemy, getLowestHpAlly, getIdleFacing, decideFallbackMove } from "./battle-ai.js";
-import { applyDamage, applyHeal, applyMove } from "./battle-actions.js";
+import { getNearestEnemy, getLowestHpAlly, getIdleFacing, decideFallbackMove } from "./new-battle-ai.js";
+import { applyDamage, applyHeal, applyMove } from "./new-battle-actions.js";
 import {getSkillChainCount,getManhattanCells,getAliveUnits,getEnemies,getAllies,getDistance,getChebyshevDistance,getRandomEnemy,getRandomAlly,
         getRandomAny,getUnitsInManhattanRange,getUnitsInSameRow,getUnitsInSameColumn} from "./new-battle-utils.js";
 import { createBattleContext } from "./new-battle-context.js";
