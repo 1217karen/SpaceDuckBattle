@@ -263,6 +263,9 @@ else {
         continue;
       }
 
+
+      let moved = false;
+      
       // ==================================================
       // 移動処理
       // ==================================================
@@ -298,7 +301,14 @@ applyMove({
   y: step.y,
   forced: false
 }, context);
+
+moved = true;
       }
+
+      if (!moved) {
+  waitAction(unit);
+  continue;
+}
 
       endAction(unit);
     }
