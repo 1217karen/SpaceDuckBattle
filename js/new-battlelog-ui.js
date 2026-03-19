@@ -6,7 +6,6 @@
 
 import {moveUnit,updateFacing,highlightCell,highlightCells,removeUnit} from "./board.js";
 import { EFFECTS } from "./effects-config.js";
-import { getEffectiveStat } from "./battle-effects.js";
 import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,
         applyEffectRemoved,applyEffectApplied,applyMove,applyDeath} from "./new-battlelog-state-updater.js";
 
@@ -633,10 +632,11 @@ updateUnitEffectUI(
 
 let oldStock = 0;
 let current = 0;
+let existing = null;
 
 if (unit) {
-  const existing =
-    unit.effects.find(
+  existing =
+    (unit.effects || []).find(
       x => x.type === e.type
     );
 
