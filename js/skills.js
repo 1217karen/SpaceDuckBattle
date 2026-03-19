@@ -58,30 +58,24 @@ export const skillHandlers = {
       if (unit.facing === "E") x += 1;
       if (unit.facing === "W") x -= 1;
 
+      const actions = [];
+
+      for (let i = 0; i < 5; i++) {
+        actions.push({
+          type: "damage",
+          source: unit.id,
+          target: target.id,
+          power: 2,
+          damageType: "normal"
+        });
+      }
+
       return {
         preview: {
           cells: [{ x, y }],
           style: "attack"
         },
-        const actions = [];
-
-        for (let i = 0; i < 5; i++) {
-          actions.push({
-            type: "damage",
-            source: unit.id,
-            target: target.id,
-            power: 2,
-            damageType: "normal"
-          });
-        }
-
-        return {
-          preview: {
-            cells: [{ x, y }],
-            style: "attack"
-          },
-          actions
-        };
+        actions
       };
     }
   },
