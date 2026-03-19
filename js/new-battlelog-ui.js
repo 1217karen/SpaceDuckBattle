@@ -70,6 +70,10 @@ function spawnFloatingNumber(unitId, value, type) {
     num.classList.add("effectEndNumber");
   }
 
+  if (type === "effectRemove") {
+    num.classList.add("effectRemoveNumber");
+  }
+
   num.textContent = value;
 
   num.style.position = "absolute";
@@ -1024,7 +1028,7 @@ updateUnitStatUI(
     );
   }
 
-　else if (event.type === "wait") {
+  else if (event.type === "wait") {
 　  div.textContent =
 　    `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
 
