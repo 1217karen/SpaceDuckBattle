@@ -252,39 +252,13 @@ export async function playNextAction() {
       continue;
     }
 
-    if (ev.type === "battleEnd") {
+if (ev.type === "battleEnd") {
 
-      if (battleState.turnDisplay) {
-        battleState.turnDisplay.textContent =
-          "BATTLE FINISHED";
-      }
+  // 勝敗情報だけ保持（表示は最後に任せる）
+  battleState.battleResult = ev.winner;
 
-      battleState.logArea.innerHTML = "";
-
-      const div = document.createElement("div");
-      div.classList.add("battleEndBlock");
-
-      const text =
-        ev.winner === 1
-          ? "LEFT TEAM WIN"
-          : ev.winner === 2
-          ? "RIGHT TEAM WIN"
-          : "DRAW";
-
-      div.innerHTML = `
-        <div style="font-size:20px;font-weight:bold;">
-          ${text}
-        </div>
-      `;
-
-      battleState.logArea.appendChild(div);
-
-      battleState.logIndex =
-        battleState.battleLog.length;
-
-      battleState.isPlaying = false;
-      return;
-    }
+  continue;
+}
 
     if (ev.type === "death") {
       battleState.requiredSet.delete(ev.unit);
