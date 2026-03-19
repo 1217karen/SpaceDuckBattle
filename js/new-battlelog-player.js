@@ -360,9 +360,10 @@ export async function playNextAction() {
 
   battleState.logIndex = end + 1;
 
-  battleState.nextBtn.disabled = false;
+  battleState.isPlaying = false;
+
+  battleState.nextBtn.disabled = battleState.autoPlay;
 
   if (battleState.autoPlay) {
     setTimeout(playNextAction, UNIT_DELAY);
   }
-}
