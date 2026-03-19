@@ -336,11 +336,7 @@ export async function playNextAction() {
 
     let wait = EFFECT_DELAY;
 
-    if (
-      ev.type === "skillUse" ||
-      ev.type === "move" ||
-      ev.type === "wait"
-    ) {
+    if (ev.type === "skillUse") {
       wait = EVENT_DELAY;
     }
 
