@@ -9,8 +9,21 @@ import { getNearestEnemy, getLowestHpAlly, getIdleFacing, decideFallbackMove } f
 import { applyDamage } from "./new-battle-damage.js";
 import { applyHeal } from "./new-battle-heal.js";
 import { applyMove } from "./new-battle-move.js";
-import {getSkillChainCount,getManhattanCells,getAliveUnits,getEnemies,getAllies,getDistance,getChebyshevDistance,getRandomEnemy,getRandomAlly,
-        getRandomAny,getUnitsInManhattanRange,getUnitsInSameRow,getUnitsInSameColumn} from "./new-battle-utils.js";
+import {
+  getSkillChainCount,
+  getManhattanCells,
+  getAliveUnits,
+  getEnemies,
+  getAllies,
+  getDistance,
+  getChebyshevDistance,
+  getRandomEnemy,
+  getRandomAlly,
+  getRandomAny,
+  getUnitsInManhattanRange,
+  getUnitsInSameRow,
+  getUnitsInSameColumn
+} from "./new-battle-utils.js";
 import { createBattleContext } from "./new-battle-context.js";
 import { tryUseSkill } from "./new-battle-skill.js";
 import { runBattleTurns } from "./new-battle-turn.js";
@@ -29,15 +42,15 @@ export function simulateBattle(snapshot) {
   // snapshotコピー
   // ======================================================
 
-const units = snapshot.units.map(u => ({
-  ...u,
-  effects: [],        // stack系
-  rateEffects: [],    // rate専用
-  skills: (u.skills || []).map(s => ({
-    ...s,
-    _currentCooldown: 0
-  }))
-}));
+  const units = snapshot.units.map(u => ({
+    ...u,
+    effects: [],
+    rateEffects: [],
+    skills: (u.skills || []).map(s => ({
+      ...s,
+      _currentCooldown: 0
+    }))
+  }));
 
   // ======================================================
   // 行動順固定
@@ -45,7 +58,17 @@ const units = snapshot.units.map(u => ({
 
   units.sort((a, b) => b.speed - a.speed);
 
-　  function killUnit(unit) {
+  // ======================================================
+  // バトル状態
+  // ======================================================
+
+  const battleState = { finished: false };
+
+  // ======================================================
+  // kill処理
+  // ======================================================
+
+  function killUnit(unit) {
     if (unit._isDead) return;
 
     unit.hp = 0;
@@ -69,49 +92,58 @@ const units = snapshot.units.map(u => ({
         winner: [...aliveTeams][0]
       });
 
-      battleFinished = true;
+      battleState.finished = true;
     }
   }
 
+  // ======================================================
+  // context生成
+  // ======================================================
+
   const context = createBattleContext({
-  units,
-  board,
-  skillHandlers,
-  getDistance,
-  getChebyshevDistance,
-  getEnemies,
-  getAllies,
-  getNearestEnemy,
-  getLowestHpAlly,
-  getIdleFacing,
-  getUnitsInManhattanRange,
-  getUnitsInSameRow,
-  getUnitsInSameColumn,
-  getEffectiveStat,
-  facingFromDelta,
-  getKnockbackCell,
-  getPullCell,
-  applyEffect,
-  getManhattanCells,
-  getRandomEnemy,
-  getRandomAlly,
-  getRandomAny,
-  killUnit
-});
+    units,
+    board,
+    skillHandlers,
+    getDistance,
+    getChebyshevDistance,
+    getEnemies,
+    getAllies,
+    getNearestEnemy,
+    getLowestHpAlly,
+    getIdleFacing,
+    getUnitsInManhattanRange,
+    getUnitsInSameRow,
+    getUnitsInSameColumn,
+    getEffectiveStat,
+    facingFromDelta,
+    getKnockbackCell,
+    getPullCell,
+    applyEffect,
+    getManhattanCells,
+    getRandomEnemy,
+    getRandomAlly,
+    getRandomAny,
+    killUnit,
+    battleState
+  });
 
-const log = context.log;
+  const log = context.log;
 
-runBattleTurns({
-  context,
-  units,
-  board,
-  MAX_TURNS,
-  getDistance,
-  getEnemies,
-  getNearestEnemy,
-  getLowestHpAlly,
-  getAllies
-});
+  // ======================================================
+  // 実行
+  // ======================================================
+
+  runBattleTurns({
+    context,
+    units,
+    board,
+    MAX_TURNS,
+    getDistance,
+    getEnemies,
+    getNearestEnemy,
+    getLowestHpAlly,
+    getAllies
+  });
 
   return log;
 }
