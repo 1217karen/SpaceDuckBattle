@@ -6,6 +6,7 @@ import { applyMove } from "./new-battle-move.js";
 import { processBeforeAction, processAfterAction } from "./new-battle-effects.js";
 import { decideFallbackMove } from "./new-battle-ai.js";
 import { createScoreFn, isDangerCell } from "./new-battle-ai.js";
+import { getSkillChainCount } from "./new-battle-utils.js";
 
 export function runBattleTurns({
   context,
@@ -77,7 +78,7 @@ export function runBattleTurns({
 
     for (let unit of units) {
 
-      if (battleFinished) return;
+      if (context.battleState.finished) return;
       if (unit.hp <= 0) continue;
 
       context.pushLog({
@@ -99,7 +100,7 @@ export function runBattleTurns({
         return;
       }
 
-const skillChain = context.getSkillChainCount(unit);
+const skillChain = getSkillChainCount(unit);
 
 let usedSkill = false;
 
