@@ -5,7 +5,7 @@
 // =====================
 
 import { battleState } from "./new-battlelog-state.js";
-import { playLogEvent } from "./battlelog-ui.js";
+import { playLogEvent } from "./new-battlelog-ui.js";
 
 // =====================
 // 設定値
