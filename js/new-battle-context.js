@@ -23,6 +23,7 @@ export function createBattleContext({
   getRandomEnemy,
   getRandomAlly,
   getRandomAny,
+  battleState,
   killUnit
 }) {
 
@@ -122,6 +123,7 @@ const context = {
     getRandomAlly,
     getRandomAny,
 
+    battleState,
     killUnit
   };
 
