@@ -334,8 +334,10 @@ moved = true;
 }
 
       endAction(unit);
-      if (context.battleState.finished) break;
-    }
+if (context.battleState.finished) break;
+}
+
+if (context.battleState.finished) break;
 
 // ==================================================
 // turn change
