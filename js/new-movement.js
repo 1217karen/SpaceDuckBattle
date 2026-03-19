@@ -142,7 +142,12 @@ const dirs =
       continue;
     }
 
-    // 占有
+// 占有
+if (isOccupiedCell(units, nx, ny, unit.id)) {
+  continue;
+}
+
+// 危険マス
 if (options.isDanger && options.isDanger(nx, ny)) {
   continue;
 }
