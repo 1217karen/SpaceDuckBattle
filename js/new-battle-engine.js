@@ -62,7 +62,7 @@ export function simulateBattle(snapshot) {
   // バトル状態
   // ======================================================
 
-  const battleState = { finished: false };
+  const simState = { finished: false };
 
   // ======================================================
   // kill処理
@@ -92,7 +92,7 @@ export function simulateBattle(snapshot) {
         winner: [...aliveTeams][0]
       });
 
-      battleState.finished = true;
+      simState.finished = true;
     }
   }
 
@@ -124,7 +124,7 @@ export function simulateBattle(snapshot) {
     getRandomAlly,
     getRandomAny,
     killUnit,
-    battleState
+    battleState: simState
   });
 
   const log = context.log;
