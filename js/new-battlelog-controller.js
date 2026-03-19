@@ -6,7 +6,6 @@
 
 import {createBoard,placeUnit,updateFacing} from "./board.js";
 import {playLogEvent,updateUnitStatUI,updateUnitEffectUI} from "./new-battlelog-ui.js";
-import { skillHandlers } from "./skills.js";
 import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
 import { createLeftSideUI } from "./new-battlelog-ui-init.js";
