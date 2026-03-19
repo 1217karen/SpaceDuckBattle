@@ -28,7 +28,10 @@ export function runBattleTurns({
 
         const e = unit.effects[i];
 
-        if (e.type === "accel" || e.type === "slow") {
+        if (
+          (e.type === "accel" || e.type === "slow") &&
+          e._usedThisAction
+        ) {
 
           e.stock = 0;
 
@@ -85,6 +88,13 @@ export function runBattleTurns({
         type: "actionStart",
         unit: unit.id
       });
+
+      // effect使用フラグをリセット
+      if (unit.effects) {
+        for (const e of unit.effects) {
+          e._usedThisAction = false;
+        }
+      }
 
       processBeforeAction(unit, context);
 
@@ -148,11 +158,19 @@ if (usedSkill) {
         for (const e of unit.effects) {
 
 if (e.type === "accel") {
-  accel = Math.max(accel, e.stock ?? 0);
+  const val = e.stock ?? 0;
+  if (val > accel) {
+    accel = val;
+    e._usedThisAction = true;
+  }
 }
 
 if (e.type === "slow") {
-  slow = Math.max(slow, e.stock ?? 0);
+  const val = e.stock ?? 0;
+  if (val > slow) {
+    slow = val;
+    e._usedThisAction = true;
+  }
 }
         }
       }
