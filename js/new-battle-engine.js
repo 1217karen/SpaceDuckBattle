@@ -2,7 +2,8 @@
 
 import { skillHandlers } from "./skills.js";
 import { chooseStep, facingFromDelta, isOccupiedCell, getKnockbackCell, getPullCell } from "./new-movement.js";
-import { getEffectiveStat, applyEffect, processBeforeAction, processAfterAction } from "./new-battle-effects.js";
+import { applyEffect, processBeforeAction, processAfterAction } from "./new-battle-effects.js";
+import { getEffectiveStat } from "./new-battle-stats.js";
 import { EFFECTS } from "./effects-config.js";
 import { getNearestEnemy, getLowestHpAlly, getIdleFacing, decideFallbackMove } from "./new-battle-ai.js";
 import { applyDamage, applyHeal, applyMove } from "./new-battle-actions.js";
