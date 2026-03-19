@@ -62,6 +62,10 @@ export function runBattleTurns({
     });
 
     endAction(unit);
+
+if (context.battleState.finished) {
+  return "END";
+}
   }
 
   
@@ -81,7 +85,6 @@ export function runBattleTurns({
 
     for (let unit of units) {
 
-      if (context.battleState.finished) return;
       if (unit.hp <= 0) continue;
 
       context.pushLog({
@@ -106,9 +109,9 @@ export function runBattleTurns({
       const enemies = getEnemies(units, unit.team);
 
       if (enemies.length === 0) {
-        endAction(unit);
-        return;
-      }
+  endAction(unit);
+  break;
+}
 
 const skillChain = getSkillChainCount(unit);
 
@@ -127,8 +130,10 @@ for (let i = 0; i < skillChain; i++) {
 if (usedSkill) {
 
   endAction(unit);
-  continue;
 
+  if (context.battleState.finished) break;
+
+  continue;
 }
 
       const {
@@ -206,14 +211,14 @@ context.endGroup();
 }
 
       if (!targetUnit) {
-        waitAction(unit);
+        if (waitAction(unit) === "END") break;
         continue;
       }
 
       const targetPos = targetUnit;
 
       if (finalMoveCount <= 0) {
-        waitAction(unit);
+        if (waitAction(unit) === "END") break;
         continue;
       }
 
@@ -271,11 +276,11 @@ else {
             continue;
           }
 
-          waitAction(unit);
+          if (waitAction(unit) === "END") break;
         }
 
         else {
-          waitAction(unit);
+          if (waitAction(unit) === "END") break;
         }
 
         continue;
@@ -324,11 +329,12 @@ moved = true;
       }
 
       if (!moved) {
-  waitAction(unit);
+  if (waitAction(unit) === "END") break;
   continue;
 }
 
       endAction(unit);
+      if (context.battleState.finished) break;
     }
 
 // ==================================================
