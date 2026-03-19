@@ -51,7 +51,10 @@ function scrollLogToBottom() {
 // メイン再生
 // =====================
 export async function playNextAction() {
-  
+
+   if (battleState.isPlaying) return;
+   battleState.isPlaying = true;
+
   battleState.nextBtn.disabled = true;
 
   document.querySelectorAll(".cell").forEach(cell => {
@@ -65,6 +68,7 @@ export async function playNextAction() {
 
   if (battleState.logIndex >= battleState.battleLog.length) {
     battleState.nextBtn.disabled = false;
+    battleState.isPlaying = false;
     return;
   }
 
@@ -84,6 +88,7 @@ export async function playNextAction() {
   if (start >= battleState.battleLog.length) {
     battleState.logIndex = battleState.battleLog.length;
     battleState.nextBtn.disabled = false;
+    battleState.isPlaying = false;
     return;
   }
 
@@ -276,6 +281,7 @@ export async function playNextAction() {
       battleState.logIndex =
         battleState.battleLog.length;
 
+      battleState.isPlaying = false;
       return;
     }
 
