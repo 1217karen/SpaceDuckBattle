@@ -72,6 +72,7 @@ export async function playNextAction() {
     return;
   }
 
+
   // ======================
   // actionStart 探索
   // ======================
@@ -367,3 +368,4 @@ export async function playNextAction() {
   if (battleState.autoPlay) {
     setTimeout(playNextAction, UNIT_DELAY);
   }
+}
