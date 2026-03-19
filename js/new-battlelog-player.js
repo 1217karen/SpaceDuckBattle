@@ -238,7 +238,7 @@ export async function playNextAction() {
       depth--;
 
       const spacer = document.createElement("div");
-      spacer.style.height = "px";
+      spacer.style.height = "3px";
 
       battleState.logArea.appendChild(spacer);
 
