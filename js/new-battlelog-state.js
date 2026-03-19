@@ -4,6 +4,7 @@ export const battleState = {
   // 再生制御
   speed: 1,
   autoPlay: false,
+  isPlaying: false,
 
   // ログ進行
   logIndex: 0,
