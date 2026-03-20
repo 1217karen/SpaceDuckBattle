@@ -259,3 +259,4 @@ if (snapshot) {
   });
 }
 
+window.rebuildBoardFromState = rebuildBoardFromState;
