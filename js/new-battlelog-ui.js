@@ -7,7 +7,7 @@
 import {moveUnit,updateFacing,highlightCell,highlightCells,removeUnit} from "./board.js";
 import { EFFECTS } from "./effects-config.js";
 import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,
-        applyEffectRemoved,applyEffectApplied,applyMove,applyDeath} from "./new-battlelog-state-updater.js";
+        applyEffectRemoved,applyEffectApplied,applyMove,applyDeath,applyFacing} from "./new-battlelog-state-updater.js";
 
 
 
