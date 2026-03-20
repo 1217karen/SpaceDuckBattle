@@ -196,46 +196,46 @@ createBoard("board", boardWidth, boardHeight);
 // 初期配置
 // =====================
 
-if (snapshot) {
+function initializeBoardState(snapshot) {
+
+  // stateリセット
+  battleState.boardState.units = {};
+
+  if (!snapshot) return;
+
   snapshot.units.forEach(u => {
-const cooldowns = {};
 
-(u.skills || []).forEach(s => {
-  cooldowns[s.type] = 0;
-});
+    const cooldowns = {};
 
-battleState.boardState.units[u.id] = {
-  x: u.x,
-  y: u.y,
-  hp: u.hp,
-  mhp: u.mhp ?? u.hp,
-  atk: u.atk ?? 0,
-  def: u.def ?? 0,
-  heal: u.heal ?? 0,
-  speed: u.speed ?? 0,
-  cri: u.cri ?? 0,
-  tec: u.tec ?? 0,
-
-  team: u.team,
-  icon: u.icon || "https://placehold.co/60x60",
-  facing: u.facing,
-
-  effects: [],
-  rateEffects: [],
-  cooldowns
-};
-
-    placeUnit("board", {
-      id: u.id,
-      x: u.x,
-      y: u.y,
-      team: u.team,
-      icon: u.icon || "https://placehold.co/60x60"
+    (u.skills || []).forEach(s => {
+      cooldowns[s.type] = 0;
     });
 
-    updateFacing("board", u.id, u.facing);
+    battleState.boardState.units[u.id] = {
+      x: u.x,
+      y: u.y,
+      hp: u.hp,
+      mhp: u.mhp ?? u.hp,
+      atk: u.atk ?? 0,
+      def: u.def ?? 0,
+      heal: u.heal ?? 0,
+      speed: u.speed ?? 0,
+      cri: u.cri ?? 0,
+      tec: u.tec ?? 0,
+
+      team: u.team,
+      icon: u.icon || "https://placehold.co/60x60",
+      facing: u.facing,
+
+      effects: [],
+      rateEffects: [],
+      cooldowns
+    };
+
   });
 }
+initializeBoardState(snapshot);
+rebuildBoardFromState();
 
 createLeftSideUI(snapshot, battleState);
 
