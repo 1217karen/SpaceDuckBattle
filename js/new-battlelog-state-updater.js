@@ -193,6 +193,19 @@ export function applyMove(event, boardState) {
   unit.y = event.y;
 }
 
+// =====================
+// facing
+// =====================
+export function applyFacing(event, boardState) {
+  const unit = boardState.units[event.unit];
+  if (!unit) return;
+
+  unit.facing = event.facing;
+}
+
+// =====================
+// Death
+// =====================
 export function applyDeath(event, boardState) {
   delete boardState.units[event.unit];
 }
