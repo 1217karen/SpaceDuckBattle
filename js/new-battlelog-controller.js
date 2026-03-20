@@ -21,10 +21,12 @@ const logArea = document.getElementById("logArea");
 const nextBtn = document.getElementById("nextBtn");
 const autoBtn = document.getElementById("autoBtn");
 const speedBtn = document.getElementById("speedBtn");
+const skipBtn = document.getElementById("skipBtn");
 
 battleState.turnDisplay = turnDisplay;
 battleState.logArea = logArea;
 battleState.nextBtn = nextBtn;
+
 
 // =====================
 // ユーティリティ
@@ -242,6 +244,7 @@ autoBtn.addEventListener("click", () => {
 });
 
 nextBtn.addEventListener("click", playNextAction);
+skipBtn.addEventListener("click", skipToEnd);
 
 // =====================
 // ログ取得
