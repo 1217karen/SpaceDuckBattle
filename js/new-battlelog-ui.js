@@ -1039,5 +1039,27 @@ updateUnitStatUI(
 　  );
 　}
 
+else if (event.type === "battleEnd") {
+
+  const div = document.createElement("div");
+  div.classList.add("battleEndBlock");
+
+  const text =
+    event.winner === 1
+      ? "LEFT TEAM WIN"
+      : event.winner === 2
+      ? "RIGHT TEAM WIN"
+      : "DRAW";
+
+  div.innerHTML = `
+    <div style="font-size:20px;font-weight:bold;">
+      ${text}
+    </div>
+  `;
+
+  logArea.appendChild(div);
+  return;
+}
+
   logArea.appendChild(div);
 }
