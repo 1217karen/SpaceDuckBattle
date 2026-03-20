@@ -26,6 +26,7 @@ const skipBtn = document.getElementById("skipBtn");
 battleState.turnDisplay = turnDisplay;
 battleState.logArea = logArea;
 battleState.nextBtn = nextBtn;
+battleState.skipBtn = skipBtn;
 
 
 // =====================
