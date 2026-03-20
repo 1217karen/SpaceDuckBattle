@@ -170,6 +170,11 @@ battleState.boardState.units[u.id] = {
   speed: u.speed ?? 0,
   cri: u.cri ?? 0,
   tec: u.tec ?? 0,
+
+  team: u.team,
+  icon: u.icon || "https://placehold.co/60x60",
+  facing: u.facing,
+
   effects: [],
   rateEffects: [],
   cooldowns
