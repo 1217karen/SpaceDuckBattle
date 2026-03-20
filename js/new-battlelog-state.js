@@ -16,7 +16,11 @@ export const battleState = {
   actedSet: new Set(),
 
   // 盤面
-  boardState: { units: {} },
+  boardState: {
+    width: 0,
+    height: 0,
+    units: {}
+  },
 
   // 外部参照
   nameMap: {},
