@@ -67,8 +67,8 @@ function rebuildBoardFromState() {
   // マス再生成
   // ======================
 
-  const width = board.style.gridTemplateColumns.split(" ").length;
-  const height = board.style.gridTemplateRows.split(" ").length;
+  const width = battleState.boardState.width;
+  const height = battleState.boardState.height;
 
   createBoard("board", width, height);
 
@@ -186,6 +186,9 @@ battleState.nameMap = nameMap;
 
 const boardWidth = snapshot?.board?.width ?? 7;
 const boardHeight = snapshot?.board?.height ?? 5;
+
+battleState.boardState.width = boardWidth;
+battleState.boardState.height = boardHeight;
 
 createBoard("board", boardWidth, boardHeight);
 
