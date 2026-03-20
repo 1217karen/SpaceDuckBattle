@@ -98,6 +98,11 @@ export async function playNextAction() {
 
       battleState.logIndex++;
 
+      // 戦闘終了後は再生しない
+      if (ev.type === "battleEnd") {
+        battleState.nextBtn.disabled = true;
+      }
+
     }
 
    battleState.nextBtn.disabled = false;
