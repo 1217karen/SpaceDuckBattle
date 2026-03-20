@@ -86,13 +86,8 @@ export function simulateBattle(snapshot) {
     );
 
     if (aliveTeams.size === 1) {
-
-      context.pushLog({
-        type: "battleEnd",
-        winner: [...aliveTeams][0]
-      });
-
       simState.finished = true;
+      simState.winner = [...aliveTeams][0];
     }
   }
 
