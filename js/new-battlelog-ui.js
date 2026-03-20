@@ -321,13 +321,23 @@ export function playLogEvent(
     return;
   }
 
-    else if (event.type === "turnUnit") {
+else if (event.type === "turnUnit") {
 
   const name =
     displayName(event.unit, nameMap);
 
-  div.textContent = name;
+  const unit =
+    boardState.units[event.unit];
 
+  if (unit?.team === 1) {
+    div.classList.add("team1Text");
+  } else if (unit?.team === 2) {
+    div.classList.add("team2Text");
+  }
+
+  div.classList.add("actionHeader");
+
+  div.textContent = name;
 }
 
   else if (event.type === "hpChange") {
