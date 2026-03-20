@@ -361,12 +361,15 @@ export function playLogEvent(
   }
 
   else if (event.type === "faceChange") {
-    updateFacing(
-      "board",
-      event.unit,
-      event.facing
-    );
+    applyFacing(event, boardState);
 
+    if (!battleState.isSkipping) {
+      updateFacing(
+        "board",
+        event.unit,
+        event.facing
+      );
+    }
     div.textContent =
       `${displayName(event.unit, nameMap)} は ${event.facing} を向いた`;
   }
