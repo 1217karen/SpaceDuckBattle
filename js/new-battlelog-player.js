@@ -85,6 +85,8 @@ export async function playNextAction() {
 
     if (ev) {
 
+      battleState.logArea.innerHTML = "";
+
       playLogEvent(
         ev,
         null,
