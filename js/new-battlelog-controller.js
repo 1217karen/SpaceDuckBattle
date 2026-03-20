@@ -9,6 +9,8 @@ import {playLogEvent,updateUnitStatUI,updateUnitEffectUI} from "./new-battlelog-
 import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
 import { createLeftSideUI } from "./new-battlelog-ui-init.js";
+import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,applyEffectRemoved,
+        applyEffectApplied,applyMove,applyDeath,applyFacing} from "./new-battlelog-state-updater.js";
 
 // =====================
 // DOM取得
@@ -93,6 +95,106 @@ function rebuildBoardFromState() {
     updateFacing("board", id, u.facing);
   }
 
+}
+
+
+// ======================
+// 全スキップ
+// ======================
+function skipToEnd() {
+
+  if (battleState.isPlaying) return;
+
+  battleState.isPlaying = true;
+
+  // ======================
+  // 初期化
+  // ======================
+
+  initializeBoardState(snapshot);
+
+  // ======================
+  // 全ログ適用
+  // ======================
+
+  for (const ev of battleState.battleLog) {
+
+    switch (ev.type) {
+
+      case "hpChange":
+        applyHpChange(ev, battleState.boardState);
+        break;
+
+      case "cooldownSet":
+        applyCooldownSet(ev, battleState.boardState);
+        break;
+
+      case "cooldownChange":
+        applyCooldownChange(ev, battleState.boardState);
+        break;
+
+      case "effectDecay":
+        applyEffectDecay(ev, battleState.boardState);
+        break;
+
+      case "effectExpired":
+        applyEffectExpired(ev, battleState.boardState);
+        break;
+
+      case "effectRemoved":
+        applyEffectRemoved(ev, battleState.boardState);
+        break;
+
+      case "effectApplied":
+        applyEffectApplied(ev, battleState.boardState);
+        break;
+
+      case "move":
+        applyMove(ev, battleState.boardState);
+        break;
+
+      case "death":
+        applyDeath(ev, battleState.boardState);
+        break;
+
+      case "faceChange":
+        applyFacing(ev, battleState.boardState);
+        break;
+    }
+  }
+
+  // ======================
+  // 盤面再構築
+  // ======================
+
+  rebuildBoardFromState();
+
+  // ======================
+  // 最後のログ表示
+  // ======================
+
+  const last = [...battleState.battleLog]
+    .reverse()
+    .find(e => e.type === "battleEnd");
+
+  if (last) {
+    battleState.logArea.innerHTML = "";
+    playLogEvent(
+      last,
+      null,
+      battleState.boardState,
+      battleState.logArea,
+      battleState.nameMap,
+      0
+    );
+  }
+
+  // ======================
+  // 状態更新
+  // ======================
+
+  battleState.logIndex = battleState.battleLog.length;
+  battleState.isPlaying = false;
 }
 
 function fitUnitName(el) {
@@ -263,3 +365,4 @@ if (snapshot) {
 }
 
 window.rebuildBoardFromState = rebuildBoardFromState;
+window.skipToEnd = skipToEnd;
