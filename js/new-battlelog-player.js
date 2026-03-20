@@ -56,6 +56,7 @@ export async function playNextAction() {
    battleState.isPlaying = true;
 
   battleState.nextBtn.disabled = true;
+  skipBtn.disabled = true;
 
   document.querySelectorAll(".cell").forEach(cell => {
     cell.classList.remove(
@@ -347,6 +348,7 @@ export async function playNextAction() {
   battleState.isPlaying = false;
 
   battleState.nextBtn.disabled = battleState.autoPlay;
+  skipBtn.disabled = false;
 
   if (battleState.autoPlay) {
     setTimeout(playNextAction, UNIT_DELAY);
