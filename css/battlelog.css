@@ -92,9 +92,49 @@ padding: 8px;
 }
 
 .actionHeader{
-font-size:14px;
-font-weight:bold;
-margin-bottom:4px;
+  position: relative;
+  display: inline-block;
+
+  color:#ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom:4px;
+}
+
+.team1Text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.1em;
+
+  width: 100%;
+  height: 0.4em;
+
+  background: linear-gradient(
+    to right,
+    rgba(0,255,136,0.9),
+    rgba(0,255,136,0)
+  );
+
+  z-index: -1;
+}
+
+.team2Text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.1em;
+
+  width: 100%;
+  height: 0.4em;
+
+  background: linear-gradient(
+    to right,
+    rgba(187,85,255,0.9),
+    rgba(187,85,255,0)
+  );
+
+  z-index: -1;
 }
 
 .logSkill{
