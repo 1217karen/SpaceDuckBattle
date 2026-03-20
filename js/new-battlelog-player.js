@@ -80,8 +80,25 @@ export async function playNextAction() {
   }
 
   if (start >= battleState.battleLog.length) {
-    battleState.logIndex = battleState.battleLog.length;
-    battleState.nextBtn.disabled = false;
+
+    const ev = battleState.battleLog[battleState.logIndex];
+
+    if (ev) {
+
+      playLogEvent(
+        ev,
+        null,
+        battleState.boardState,
+        battleState.logArea,
+        battleState.nameMap,
+        0
+      );
+
+      battleState.logIndex++;
+
+    }
+
+   battleState.nextBtn.disabled = false;
     battleState.isPlaying = false;
     return;
   }
