@@ -481,3 +481,4 @@ for (let u of units) {
       winner: null
     });
   }
+}
