@@ -53,19 +53,31 @@ export function runBattleTurns({
       type: "actionEnd",
       unit: unit.id
     });
-  }
 
-  function waitAction(unit) {
-    context.pushLog({
-      type: "wait",
-      unit: unit.id
-    });
+    if (
+      context.battleState.finished &&
+      !context.battleState._battleEndLogged
+    ) {
+      context.pushLog({
+        type: "battleEnd",
+        winner: context.battleState.winner ?? null
+      });
 
-    endAction(unit);
+      context.battleState._battleEndLogged = true;
+    }
+      }
 
-if (context.battleState.finished) {
-  return "END";
-}
+      function waitAction(unit) {
+        context.pushLog({
+          type: "wait",
+          unit: unit.id
+        });
+
+        endAction(unit);
+
+    if (context.battleState.finished) {
+      return "END";
+    }
   }
 
   
@@ -463,8 +475,9 @@ for (let u of units) {
   // 引き分け
   // ======================================================
 
-  context.pushLog({
-    type: "battleEnd",
-    winner: null
-  });
-}
+  if (!context.battleState._battleEndLogged) {
+    context.pushLog({
+      type: "battleEnd",
+      winner: null
+    });
+  }
