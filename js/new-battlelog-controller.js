@@ -4,7 +4,7 @@
 // import
 // =====================
 
-import {createBoard,placeUnit,updateFacing} from "./board.js";
+import {createBoard,placeUnit,updateFacing,removeUnit} from "./board.js";
 import {playLogEvent,updateUnitStatUI,updateUnitEffectUI} from "./new-battlelog-ui.js";
 import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
@@ -51,6 +51,48 @@ function flattenLogTree(root) {
   walk(root);
 
   return result;
+}
+
+function rebuildBoardFromState() {
+
+  const board = document.getElementById("board");
+
+  // ======================
+  // 全消し
+  // ======================
+
+  board.innerHTML = "";
+
+  // ======================
+  // マス再生成
+  // ======================
+
+  const width = board.style.gridTemplateColumns.split(" ").length;
+  const height = board.style.gridTemplateRows.split(" ").length;
+
+  createBoard("board", width, height);
+
+  // ======================
+  // ユニット再配置
+  // ======================
+
+  const units = battleState.boardState.units;
+
+  for (const id in units) {
+
+    const u = units[id];
+
+    placeUnit("board", {
+      id: id,
+      x: u.x,
+      y: u.y,
+      team: u.team,
+      icon: u.icon
+    });
+
+    updateFacing("board", id, u.facing);
+  }
+
 }
 
 function fitUnitName(el) {
