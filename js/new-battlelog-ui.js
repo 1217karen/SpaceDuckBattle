@@ -320,6 +320,10 @@ export function playLogEvent(
     return;
   }
 
+  if (event.type === "battleEnd") {
+    return;
+  }
+
     else if (event.type === "turnUnit") {
 
   const name =
