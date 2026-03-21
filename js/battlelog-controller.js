@@ -130,7 +130,7 @@ speedBtn.addEventListener("click", () => {
 autoBtn.addEventListener("click", () => {
   autoPlay = !autoPlay;
 
-  autoBtn.textContent = autoPlay ? "Stop" : "Auto";
+  autoBtn.textContent = autoPlay ? "STOP" : "AUTO";
 
   nextBtn.disabled = autoPlay;
 
