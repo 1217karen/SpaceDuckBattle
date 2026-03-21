@@ -209,3 +209,53 @@ export function applyFacing(event, boardState) {
 export function applyDeath(event, boardState) {
   delete boardState.units[event.unit];
 }
+
+
+// =====================
+// Event dispatcher
+// =====================
+export function applyEvent(event, boardState) {
+  if (!event) return;
+
+  switch (event.type) {
+    case "hpChange":
+      applyHpChange(event, boardState);
+      break;
+
+    case "cooldownSet":
+      applyCooldownSet(event, boardState);
+      break;
+
+    case "cooldownChange":
+      applyCooldownChange(event, boardState);
+      break;
+
+    case "effectDecay":
+      applyEffectDecay(event, boardState);
+      break;
+
+    case "effectExpired":
+      applyEffectExpired(event, boardState);
+      break;
+
+    case "effectRemoved":
+      applyEffectRemoved(event, boardState);
+      break;
+
+    case "effectApplied":
+      applyEffectApplied(event, boardState);
+      break;
+
+    case "move":
+      applyMove(event, boardState);
+      break;
+
+    case "death":
+      applyDeath(event, boardState);
+      break;
+
+    case "faceChange":
+      applyFacing(event, boardState);
+      break;
+  }
+}
