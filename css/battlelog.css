@@ -497,16 +497,12 @@ display: flex;
 justify-content: center;
 align-items: center;
 
-background: rgba(10,15,30,0.9);
+background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=board.webp") no-repeat center / contain;
 
-border: 2px solid rgba(120,180,255,0.8);
-border-radius: 8px;
+border: none;
+box-shadow: none;
 
-box-shadow:
-0 0 10px rgba(80,140,255,0.6),
-inset 0 0 10px rgba(80,140,255,0.3);
-
-padding: 10px;
+padding: 0;
 }
 
 
@@ -522,10 +518,7 @@ padding: 10px;
 display: flex;
 justify-content: center;
 
-background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=board_BG.webp");
-background-size: 100% 100%;
-background-position: center;
-background-repeat: no-repeat;
+background: none;
 
 padding: 6px;
 }
