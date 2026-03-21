@@ -6,6 +6,7 @@
 
 import { battleState } from "./new-battlelog-state.js";
 import { playLogEvent } from "./new-battlelog-ui.js";
+import { applyEvent } from "./new-battlelog-state-updater.js";
 
 // =====================
 // 設定値
@@ -314,6 +315,7 @@ export async function playNextAction() {
       actionEvents[i + 1].type === "faceChange"
     ) {
 
+      applyEvent(ev, battleState.boardState);
       playLogEvent(
         ev,
         actionEvents[i + 1],
@@ -325,6 +327,7 @@ export async function playNextAction() {
 
       scrollLogToBottom();
 
+      applyEvent(actionEvents[i + 1], battleState.boardState);
       playLogEvent(
         actionEvents[i + 1],
         actionEvents[i + 2],
@@ -338,6 +341,7 @@ export async function playNextAction() {
 
     } else {
 
+      applyEvent(ev, battleState.boardState);
       playLogEvent(
         ev,
         actionEvents[i + 1],
