@@ -173,6 +173,10 @@ if (ev.type === "actionStart") {
 
   backlogContent.appendChild(div);
 
+  const spacer = document.createElement("div");
+  spacer.style.height = "3px";
+  backlogContent.appendChild(spacer);
+
   continue;
 }
 
