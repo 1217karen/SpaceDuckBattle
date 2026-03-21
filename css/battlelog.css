@@ -930,3 +930,8 @@ background:#1b2a44;
   font-size: 10px;
   color: #e6f4ff;
 }
+
+.backlogActionDivider {
+  border-top: 1px dashed rgba(120,180,255,0.45);
+  margin: 8px 0 6px 0;
+}
