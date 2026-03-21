@@ -135,6 +135,44 @@ function rebuildTurnDisplayFromLogIndex() {
   }
 }
 
+function rebuildPlaybackStateFromLogIndex() {
+  battleState.requiredSet.clear();
+  battleState.actedSet.clear();
+
+  // 現在生存しているユニットを requiredSet に入れる
+  for (const unitId in battleState.boardState.units) {
+    battleState.requiredSet.add(unitId);
+  }
+
+  // 現在ターンを決める
+  let currentTurn = 0;
+  let lastTurnStartIndex = -1;
+
+  for (let i = 0; i < battleState.logIndex; i++) {
+    const ev = battleState.battleLog[i];
+
+    if (ev?.type === "actionStart" && ev.unit === "__turn__") {
+      if (typeof ev.turn === "number") {
+        currentTurn = ev.turn;
+      }
+      lastTurnStartIndex = i;
+    }
+  }
+
+  battleState.uiTurn = currentTurn;
+
+  // そのターン開始以後、すでに行動済みのユニットを actedSet に入れる
+  for (let i = lastTurnStartIndex + 1; i < battleState.logIndex; i++) {
+    const ev = battleState.battleLog[i];
+
+    if (ev?.type === "actionStart" && ev.unit && ev.unit !== "__turn__") {
+      if (battleState.requiredSet.has(ev.unit)) {
+        battleState.actedSet.add(ev.unit);
+      }
+    }
+  }
+}
+
 // ======================
 // バックログ
 // ======================
@@ -306,6 +344,13 @@ setSuppressBoardEffects(false);
 
 function jumpToLogIndex(targetIndex) {
 
+  battleState.autoPlay = false;
+  battleState.isPlaying = false;
+
+  autoBtn.textContent = "Auto";
+  nextBtn.disabled = false;
+  skipBtn.disabled = false;
+
   initializeBoardState(battleState.boardState, snapshot);
 
   for (let i = 0; i < targetIndex; i++) {
@@ -314,9 +359,13 @@ function jumpToLogIndex(targetIndex) {
 
   battleState.logIndex = targetIndex;
 
+  rebuildPlaybackStateFromLogIndex();
+
   rebuildBoardFromState();
   refreshLeftSideUI(battleState.boardState, snapshot);
   rebuildTurnDisplayFromLogIndex();
+
+  battleState.logArea.innerHTML = "";
 }
 
 // ======================
