@@ -136,7 +136,12 @@ function renderBacklog() {
 
   const startDiv = document.createElement("div");
   startDiv.classList.add("actionHeader");
-  startDiv.textContent = "BATTLE START";
+
+  const startText = document.createElement("span");
+  startText.classList.add("actionHeaderText");
+  startText.textContent = "BATTLE START";
+
+  startDiv.appendChild(startText);
   backlogContent.appendChild(startDiv);
 
   const startSpacer = document.createElement("div");
@@ -166,6 +171,9 @@ if (ev.type === "actionStart") {
   const div = document.createElement("div");
   div.classList.add("actionHeader");
 
+  const headerText = document.createElement("span");
+  headerText.classList.add("actionHeaderText");
+
   if (ev.unit === "__turn__") {
 
     const nextTurn = ev.turn ?? "?";
@@ -174,26 +182,28 @@ if (ev.type === "actionStart") {
         ? nextTurn - 1
         : "?";
 
-    div.textContent =
+    headerText.textContent =
       `TURN ${prevTurn} → TURN ${nextTurn}`;
 
-    } else {
+  } else {
 
-      const name =
-        battleState.nameMap?.[ev.unit] || ev.unit;
+    const name =
+      battleState.nameMap?.[ev.unit] || ev.unit;
 
-      const unit =
-        tempState.units[ev.unit];
+    const unit =
+      tempState.units[ev.unit];
 
-      if (unit?.team === 1) {
-        div.classList.add("team1Text");
-      } else if (unit?.team === 2) {
-        div.classList.add("team2Text");
-      }
-
-      div.textContent =
-        `▶ ${name} の行動`;
+    if (unit?.team === 1) {
+      div.classList.add("team1Text");
+    } else if (unit?.team === 2) {
+      div.classList.add("team2Text");
     }
+
+    headerText.textContent =
+      `▶ ${name} の行動`;
+  }
+
+  div.appendChild(headerText);
 
   backlogContent.appendChild(div);
 
