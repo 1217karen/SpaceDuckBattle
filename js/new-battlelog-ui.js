@@ -342,7 +342,6 @@ else if (event.type === "turnUnit") {
 
   else if (event.type === "hpChange") {
     
-    applyHpChange(event, boardState);
     const unit = boardState.units[event.target];
 
     const bar = document.querySelector(
@@ -372,7 +371,6 @@ else if (event.type === "turnUnit") {
   }
 
   else if (event.type === "faceChange") {
-    applyFacing(event, boardState);
 
     if (!battleState.isSkipping) {
       updateFacing(
@@ -436,17 +434,12 @@ else if (event.type === "turnUnit") {
 
   else if (event.type === "cooldownSet") {
 
-    applyCooldownSet(event, boardState);
-
     updateSkillCooldownUI(event.unit, boardState);
 
     return;
   }
 
 else if (event.type === "cooldownChange") {
-
-  applyCooldownChange(event, boardState);
-
  updateSkillCooldownUI(event.unit, boardState);
 
   const text =
@@ -577,8 +570,6 @@ else if (event.type === "cooldownChange") {
 
   else if (event.type === "effectDecay") {
     const e = event.effect;
-    
-applyEffectDecay(event, boardState);
 
 updateUnitEffectUI(
   event.unit,
@@ -600,8 +591,6 @@ updateUnitEffectUI(
 
   else if (event.type === "effectExpired") {
     const e = event.effect;
-
-applyEffectExpired(event, boardState);
 
 updateUnitEffectUI(
   event.unit,
@@ -636,8 +625,6 @@ updateUnitEffectUI(
 
       div.innerHTML =
         `${displayName(event.unit, nameMap)} の ${name} を全解除`;
-
-applyEffectRemoved(event, boardState);
 
 updateUnitEffectUI(
   event.unit,
@@ -929,7 +916,6 @@ else if (result === "turnEnd") {
         { once: true }
       );
     }
-applyEffectApplied(event, boardState);
 
 updateUnitEffectUI(
   event.target,
@@ -944,8 +930,6 @@ updateUnitStatUI(
 
   else if (event.type === "death") {
     removeUnit("board", event.unit);
-
-    applyDeath(event, boardState);
 
     div.textContent =
       `${displayName(event.unit, nameMap)} は戦線を離脱`;
@@ -965,8 +949,6 @@ updateUnitStatUI(
       event.x,
       event.y
     );
-
-    applyMove(event, boardState);
 
     div.textContent =
       `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
