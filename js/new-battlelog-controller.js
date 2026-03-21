@@ -466,7 +466,9 @@ backlogContent.addEventListener("click", (e) => {
   if (!jumpEl) return;
 
   const jumpIndex = Number(jumpEl.dataset.jumpIndex);
-  console.log("jumpIndex", jumpIndex);
+
+  jumpToLogIndex(jumpIndex);
+  backlogOverlay.classList.add("hidden");
 });
 
 // =====================
