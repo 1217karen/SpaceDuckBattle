@@ -5,12 +5,15 @@
 // =====================
 
 import {createBoard,placeUnit,updateFacing,removeUnit} from "./board.js";
-import {playLogEvent,updateUnitStatUI,updateUnitEffectUI} from "./new-battlelog-ui.js";
+import {playLogEvent,updateUnitStatUI,updateUnitEffectUI,setSuppressBoardEffects} from "./new-battlelog-ui.js";
 import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
 import { createLeftSideUI } from "./new-battlelog-ui-init.js";
 import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,applyEffectRemoved,
         applyEffectApplied,applyMove,applyDeath,applyFacing,applyEvent} from "./new-battlelog-state-updater.js";
+
+
+
 
 // =====================
 // DOM取得
@@ -112,6 +115,7 @@ function rebuildBoardFromState() {
 // バックログ
 // ======================
 
+
 function renderBacklog() {
 
   backlogContent.innerHTML = "";
@@ -127,6 +131,7 @@ function renderBacklog() {
   const tempState = JSON.parse(JSON.stringify(battleState.boardState));
 
   let depth = 0;
+  setSuppressBoardEffects(true);
 
   const logs = battleState.battleLog.slice(0, battleState.logIndex);
 
@@ -213,6 +218,7 @@ if (ev.type === "actionStart") {
       depth
     );
   }
+setSuppressBoardEffects(false);
 }
 
 // ======================
