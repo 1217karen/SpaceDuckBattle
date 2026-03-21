@@ -343,7 +343,11 @@ else if (event.type === "turnUnit") {
 
   div.classList.add("actionHeader");
 
-  div.textContent = name;
+  const headerText = document.createElement("span");
+  headerText.classList.add("actionHeaderText");
+  headerText.textContent = name;
+
+  div.appendChild(headerText);
 }
 
   else if (event.type === "hpChange") {
