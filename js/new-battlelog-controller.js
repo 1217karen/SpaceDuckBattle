@@ -126,9 +126,13 @@ function renderBacklog() {
   // 一時stateを作る
   // ======================
 
-  initializeBoardState(snapshot);
+    const tempState = {
+    width: battleState.boardState.width,
+    height: battleState.boardState.height,
+    units: {}
+  };
 
-  const tempState = JSON.parse(JSON.stringify(battleState.boardState));
+  initializeBoardState(tempState, snapshot);
 
   let depth = 0;
   setSuppressBoardEffects(true);
@@ -374,17 +378,11 @@ logBtn.addEventListener("click", () => {
 
 backlogClose.addEventListener("click", () => {
   backlogOverlay.classList.add("hidden");
-
-  // stateに基づいて盤面を完全再構築
-  rebuildBoardFromState();
 });
 
 backlogOverlay.addEventListener("click", (e) => {
   if (e.target === backlogOverlay) {
     backlogOverlay.classList.add("hidden");
-
-    // stateとDOMを再同期
-    rebuildBoardFromState();
   }
 });
 
@@ -442,11 +440,9 @@ createBoard("board", boardWidth, boardHeight);
 // =====================
 // 初期配置
 // =====================
+function initializeBoardState(targetBoardState, snapshot) {
 
-function initializeBoardState(snapshot) {
-
-  // stateリセット
-  battleState.boardState.units = {};
+  targetBoardState.units = {};
 
   if (!snapshot) return;
 
@@ -458,7 +454,7 @@ function initializeBoardState(snapshot) {
       cooldowns[s.type] = 0;
     });
 
-    battleState.boardState.units[u.id] = {
+    targetBoardState.units[u.id] = {
       x: u.x,
       y: u.y,
       hp: u.hp,
