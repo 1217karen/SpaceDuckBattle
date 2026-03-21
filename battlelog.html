@@ -28,6 +28,7 @@
   <button id="autoBtn">AUTO</button>
   <button id="speedBtn">x1</button>
   <button id="skipBtn">SKIP</button>
+  <button id="logBtn">LOG</button>
 </div>
 
 <div id="logArea"></div>
@@ -41,4 +42,18 @@
 </div>
 
 <script type="module" src="./js/new-battlelog-controller.js?v=1"></script>
+
+<div id="backlogOverlay" class="hidden">
+  <div id="backlogWindow">
+
+    <div id="backlogHeader">
+      <span>LOG</span>
+      <button id="backlogClose">×</button>
+    </div>
+
+    <div id="backlogContent"></div>
+
+  </div>
+</div>
+
 </html>
