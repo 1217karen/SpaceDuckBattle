@@ -280,6 +280,26 @@ if (ev.type === "actionStart") {
 setSuppressBoardEffects(false);
 }
 
+function jumpToLogIndex(targetIndex) {
+
+  initializeBoardState(battleState.boardState, snapshot);
+
+  for (let i = 0; i < targetIndex; i++) {
+    applyEvent(battleState.battleLog[i], battleState.boardState);
+  }
+
+  rebuildBoardFromState();
+
+  const units = battleState.boardState.units;
+
+  for (const unitId in units) {
+    updateUnitStatUI(unitId, battleState.boardState);
+    updateUnitEffectUI(unitId, battleState.boardState);
+  }
+
+  battleState.logIndex = targetIndex;
+}
+
 // ======================
 // 全スキップ
 // ======================
