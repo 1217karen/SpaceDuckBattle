@@ -877,7 +877,7 @@ background:#1b2a44;
 
 #backlogWindow {
   width: min(600px, 90vw);
-  height: min(500px, 80vh);
+  height: min(800px, 80vh);
 
   background: rgba(10,15,30,0.95);
 
