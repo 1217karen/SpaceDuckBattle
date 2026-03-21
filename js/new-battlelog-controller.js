@@ -141,7 +141,12 @@ function renderBacklog() {
   startText.classList.add("actionHeaderText");
   startText.textContent = "BATTLE START";
 
+  const jumpText = document.createElement("span");
+  jumpText.classList.add("backlogJumpText");
+  jumpText.textContent = " [JUMP]";
+
   startDiv.appendChild(startText);
+  startDiv.appendChild(jumpText);
   backlogContent.appendChild(startDiv);
 
   const startSpacer = document.createElement("div");
@@ -184,6 +189,11 @@ if (ev.type === "actionStart") {
 
     headerText.textContent =
       `TURN ${prevTurn} → TURN ${nextTurn}`;
+
+  const jumpText = document.createElement("span");
+  jumpText.classList.add("backlogJumpText");
+  jumpText.textContent = " [JUMP]";
+  div.appendChild(jumpText);
 
   } else {
 
