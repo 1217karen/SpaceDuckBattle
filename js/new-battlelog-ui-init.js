@@ -18,8 +18,13 @@ export function createLeftSideUI(snapshot, battleState) {
   const team1 = snapshot.units.filter(u => u.team === 1);
 
   team1.forEach(u => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "unitFrame";
+
     const div = document.createElement("div");
     div.className = "unitStatus";
+
+    wrapper.appendChild(div);
     div.dataset.unit = u.id;
 
         div.innerHTML = `
@@ -133,7 +138,7 @@ export function createLeftSideUI(snapshot, battleState) {
 </div>
 `;
 
-    leftSide.appendChild(div);
+    leftSide.appendChild(wrapper);
 
     const skillSlots = div.querySelectorAll(".skillSlot");
 
