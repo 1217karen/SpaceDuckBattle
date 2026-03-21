@@ -211,9 +211,18 @@ padding: 6px;
 display: flex;
 flex-direction: column;
 
-background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=unit_frame.webp") no-repeat center / contain;
-
 position: relative;
+}
+
+.unitFrame {
+  width: 310px;
+  height: 162px;
+
+  background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=unit_frame.webp") no-repeat center / contain;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* =======================================================
