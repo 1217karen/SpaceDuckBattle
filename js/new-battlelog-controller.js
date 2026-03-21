@@ -372,36 +372,6 @@ function skipToEnd() {
   rebuildBoardFromState();
 
   // ======================
-  // 左UI再描画
-  // ======================
-
-  for (const unitId in battleState.boardState.units) {
-    updateUnitStatUI(unitId, battleState.boardState);
-    updateUnitEffectUI(unitId, battleState.boardState);
-
-    const unit = battleState.boardState.units[unitId];
-
-    const bar = document.querySelector(
-      `.unitStatus[data-unit="${unitId}"] .hpFill`
-    );
-
-    if (bar) {
-      const max = unit?.mhp || 1;
-      const rate = Math.max(unit.hp / max, 0);
-      bar.style.width = (rate * 100) + "%";
-    }
-
-    const text = document.querySelector(
-      `.unitStatus[data-unit="${unitId}"] .hpText`
-    );
-
-    if (text) {
-      const max = unit?.mhp || unit.hp;
-      text.textContent = `HP ${unit.hp}/${max}`;
-    }
-  }
-
-  // ======================
   // 最後のログ表示
   // ======================
 
