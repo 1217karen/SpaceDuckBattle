@@ -155,7 +155,7 @@ color:#ffffff;
 }
 
 .effectGroup > div {
-  display: inline-block;
+  display: inline;
   background: rgba(255,255,255,0.06);
   border-radius: 3px;
   padding: 0 4px;
