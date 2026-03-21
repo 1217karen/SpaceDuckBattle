@@ -26,20 +26,19 @@ function sleep(ms) {
   );
 }
 
-function clearEffectHighlights() {
+function clearAllHighlights() {
   document.querySelectorAll(".cell").forEach(cell => {
     cell.classList.remove(
+      "attackRange",
+      "healRange",
+      "buffRange",
+      "debuffRange",
       "attackHighlight",
       "healHighlight",
       "buffHighlight",
-      "debuffHighlight"
+      "debuffHighlight",
+      "activeUnit"
     );
-  });
-}
-
-function clearActiveUnit() {
-  document.querySelectorAll(".cell").forEach(cell => {
-    cell.classList.remove("activeUnit");
   });
 }
 
@@ -58,15 +57,6 @@ export async function playNextAction() {
 
   battleState.nextBtn.disabled = true;
   battleState.skipBtn.disabled = true;
-
-  document.querySelectorAll(".cell").forEach(cell => {
-    cell.classList.remove(
-      "attackRange",
-      "healRange",
-      "buffRange",
-      "debuffRange"
-    );
-  });
 
   // ======================
   // actionStart 探索
@@ -134,8 +124,6 @@ export async function playNextAction() {
 
   const actingUnit =
     battleState.battleLog[start].unit;
-
-  clearActiveUnit();
 
   const pos =
     battleState.boardState.units[actingUnit];
@@ -224,9 +212,7 @@ export async function playNextAction() {
   scrollLogToBottom();
 
   await sleep(HEADER_DELAY);
-
-  clearActiveUnit();
-
+  
   // ======================
   // イベント再生
   // ======================
@@ -235,6 +221,7 @@ export async function playNextAction() {
   let currentEffectGroup = null;
 
   for (let i = 0; i < actionEvents.length; i++) {
+  clearAllHighlights();
   const ev = actionEvents[i];
 
   if (ev.type === "__groupStart") {
@@ -300,15 +287,6 @@ export async function playNextAction() {
       battleState.requiredSet.delete(ev.unit);
     }
 
-    document.querySelectorAll(".cell").forEach(cell => {
-      cell.classList.remove(
-        "attackRange",
-        "healRange",
-        "buffRange",
-        "debuffRange"
-      );
-    });
-
     if (
       ev.type === "move" &&
       i + 1 < actionEvents.length &&
@@ -367,7 +345,6 @@ export async function playNextAction() {
       await sleep(wait);
     }
 
-    clearEffectHighlights();
   }
 
   battleState.actedSet.add(actingUnit);
