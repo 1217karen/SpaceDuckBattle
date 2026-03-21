@@ -92,7 +92,7 @@ export async function playNextAction() {
         ev,
         null,
         battleState.boardState,
-        battleState.logArea,
+        battleState.logArea
         battleState.nameMap,
         0
       );
@@ -231,52 +231,69 @@ export async function playNextAction() {
   // ======================
 
   let depth = 0;
+  let currentEffectGroup = null;
 
   for (let i = 0; i < actionEvents.length; i++) {
-    const ev = actionEvents[i];
+  const ev = actionEvents[i];
 
-    if (ev.type === "__groupStart") {
+  if (ev.type === "__groupStart") {
 
-      const spacer = document.createElement("div");
-      spacer.style.height = "3px";
+    const isEffectGroup =
+      ev.label?.type === "effectTrigger";
 
-      battleState.logArea.appendChild(spacer);
-      scrollLogToBottom();
-
-      if (ev.label) {
-        playLogEvent(
-          ev.label,
-          null,
-          battleState.boardState,
-          battleState.logArea,
-          battleState.nameMap,
-          depth
-        );
-
-        const delay =
-          ev.label.type === "effectTrigger"
-            ? EFFECT_DELAY
-            : EVENT_DELAY;
-
-        await sleep(delay);
-      }
-
-      depth++;
-      continue;
+    if (isEffectGroup) {
+      currentEffectGroup = document.createElement("div");
+      currentEffectGroup.classList.add("effectGroup");
+      battleState.logArea.appendChild(currentEffectGroup);
     }
+
+    const target =
+      currentEffectGroup || battleState.logArea;
+
+    const spacer = document.createElement("div");
+    spacer.style.height = "3px";
+    target.appendChild(spacer);
+
+    if (ev.label) {
+      playLogEvent(
+        ev.label,
+        null,
+        battleState.boardState,
+        target,
+        battleState.nameMap,
+        depth
+      );
+
+      const delay =
+        ev.label.type === "effectTrigger"
+          ? EFFECT_DELAY
+          : EVENT_DELAY;
+
+      await sleep(delay);
+    }
+
+    depth++;
+    continue;}
 
     if (ev.type === "__groupEnd") {
 
       depth--;
 
+      const target =
+        currentEffectGroup || battleState.logArea;
+
       const spacer = document.createElement("div");
       spacer.style.height = "3px";
-
-      battleState.logArea.appendChild(spacer);
+      target.appendChild(spacer);
 
       await sleep(EFFECT_DELAY);
-      continue;
-    }
+
+      // effectグループ終了時にリセット
+      if (currentEffectGroup) {
+        currentEffectGroup = null;
+      }
+
+      continue;}
 
     if (ev.type === "death") {
       battleState.requiredSet.delete(ev.unit);
@@ -301,7 +318,7 @@ export async function playNextAction() {
         ev,
         actionEvents[i + 1],
         battleState.boardState,
-        battleState.logArea,
+        currentEffectGroup || battleState.logArea,
         battleState.nameMap,
         depth
       );
@@ -312,7 +329,7 @@ export async function playNextAction() {
         actionEvents[i + 1],
         actionEvents[i + 2],
         battleState.boardState,
-        battleState.logArea,
+        currentEffectGroup || battleState.logArea,
         battleState.nameMap,
         depth
       );
@@ -325,7 +342,7 @@ export async function playNextAction() {
         ev,
         actionEvents[i + 1],
         battleState.boardState,
-        battleState.logArea,
+        currentEffectGroup || battleState.logArea,
         battleState.nameMap,
         depth
       );
