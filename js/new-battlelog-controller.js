@@ -131,8 +131,42 @@ function renderBacklog() {
   const logs = battleState.battleLog.slice(0, battleState.logIndex);
 
   for (let i = 0; i < logs.length; i++) {
-
+          
     const ev = logs[i];
+
+// ======================
+// actionStart（ヘッダー）
+// ======================
+if (ev.type === "actionStart") {
+
+  const div = document.createElement("div");
+  div.classList.add("actionHeader");
+
+  if (ev.unit === "__turn__") {
+
+    const nextTurn = ev.turn ?? "?";
+    const prevTurn =
+      typeof nextTurn === "number"
+        ? nextTurn - 1
+        : "?";
+
+    div.textContent =
+      `TURN ${prevTurn} → TURN ${nextTurn}`;
+
+  } else {
+
+    const name =
+      battleState.nameMap?.[ev.unit] || ev.unit;
+
+    div.textContent =
+      `▶ ${name} の行動`;
+  }
+
+  backlogContent.appendChild(div);
+
+  continue;
+}
+
 
     // ======================
     // group start
