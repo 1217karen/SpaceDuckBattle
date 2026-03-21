@@ -238,7 +238,7 @@ function skipToEnd() {
   // 初期化
   // ======================
 
-  initializeBoardState(snapshot);
+  initializeBoardState(battleState.boardState, snapshot);
 
   // ======================
   // 全ログ適用
@@ -477,7 +477,7 @@ function initializeBoardState(targetBoardState, snapshot) {
 
   });
 }
-initializeBoardState(snapshot);
+initializeBoardState(battleState.boardState, snapshot);
 rebuildBoardFromState();
 
 createLeftSideUI(snapshot, battleState);
