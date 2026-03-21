@@ -81,8 +81,11 @@ overflow-y: auto;
 #turnDisplay {
 text-align: center;
 font-size: 24px;
-font-weight: bold;
+font-weight: normal;
 margin-bottom: 10px;
+
+font-family: 'Iceberg', sans-serif;
+color: #ffffff;
 }
 
 /* イベントログ */
