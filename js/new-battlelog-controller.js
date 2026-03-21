@@ -148,6 +148,12 @@ function renderBacklog() {
 // ======================
 if (ev.type === "actionStart") {
 
+  if (backlogContent.children.length > 0) {
+    const divider = document.createElement("div");
+    divider.classList.add("backlogActionDivider");
+    backlogContent.appendChild(divider);
+  }
+
   const div = document.createElement("div");
   div.classList.add("actionHeader");
 
