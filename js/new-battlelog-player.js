@@ -92,7 +92,7 @@ export async function playNextAction() {
         ev,
         null,
         battleState.boardState,
-        battleState.logArea
+        battleState.logArea,
         battleState.nameMap,
         0
       );
