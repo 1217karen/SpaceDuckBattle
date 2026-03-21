@@ -148,6 +148,13 @@ font-size:11px;
 color:#ffffff;
 }
 
+.effectGroup {
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin: 2px 0;
+}
+
 .logNumber{
 font-size:13px;
 font-weight:bold;
