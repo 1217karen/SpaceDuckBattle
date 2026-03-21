@@ -10,7 +10,7 @@ import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
 import { createLeftSideUI } from "./new-battlelog-ui-init.js";
 import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,applyEffectRemoved,
-        applyEffectApplied,applyMove,applyDeath,applyFacing} from "./new-battlelog-state-updater.js";
+        applyEffectApplied,applyMove,applyDeath,applyFacing,applyEvent} from "./new-battlelog-state-updater.js";
 
 // =====================
 // DOM取得
@@ -25,6 +25,7 @@ const skipBtn = document.getElementById("skipBtn");
 const logBtn = document.getElementById("logBtn");
 const backlogOverlay = document.getElementById("backlogOverlay");
 const backlogClose = document.getElementById("backlogClose");
+const backlogContent = document.getElementById("backlogContent");
 
 battleState.turnDisplay = turnDisplay;
 battleState.logArea = logArea;
@@ -60,6 +61,10 @@ function flattenLogTree(root) {
 
   return result;
 }
+
+// ======================
+// 盤面再生成
+// ======================
 
 function rebuildBoardFromState() {
 
@@ -103,6 +108,78 @@ function rebuildBoardFromState() {
 
 }
 
+// ======================
+// バックログ
+// ======================
+
+function renderBacklog() {
+
+  backlogContent.innerHTML = "";
+
+  if (!snapshot) return;
+
+  // ======================
+  // 一時stateを作る
+  // ======================
+
+  initializeBoardState(snapshot);
+
+  const tempState = JSON.parse(JSON.stringify(battleState.boardState));
+
+  let depth = 0;
+
+  const logs = battleState.battleLog.slice(0, battleState.logIndex);
+
+  for (let i = 0; i < logs.length; i++) {
+
+    const ev = logs[i];
+
+    // ======================
+    // group start
+    // ======================
+
+    if (ev.type === "__groupStart") {
+
+      if (ev.label) {
+        playLogEvent(
+          ev.label,
+          null,
+          tempState,
+          backlogContent,
+          battleState.nameMap,
+          depth
+        );
+      }
+
+      depth++;
+      continue;
+    }
+
+    // ======================
+    // group end
+    // ======================
+
+    if (ev.type === "__groupEnd") {
+      depth--;
+      continue;
+    }
+
+    // ======================
+    // 通常イベント
+    // ======================
+
+    applyEvent(ev, tempState);
+
+    playLogEvent(
+      ev,
+      logs[i + 1],
+      tempState,
+      backlogContent,
+      battleState.nameMap,
+      depth
+    );
+  }
+}
 
 // ======================
 // 全スキップ
@@ -251,6 +328,7 @@ nextBtn.addEventListener("click", playNextAction);
 skipBtn.addEventListener("click", skipToEnd);
 
 logBtn.addEventListener("click", () => {
+  renderBacklog();
   backlogOverlay.classList.remove("hidden");
 });
 
