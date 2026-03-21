@@ -848,3 +848,85 @@ background:#1b2a44;
   cursor: not-allowed;
   opacity: 0.7;
 }
+
+/* ======================
+バックログオーバーレイ
+====================== */
+
+#backlogOverlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,0.6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+}
+
+/* 非表示 */
+#backlogOverlay.hidden {
+  display: none;
+}
+
+/* ======================
+ウィンドウ本体
+====================== */
+
+#backlogWindow {
+  width: min(600px, 90vw);
+  height: min(500px, 80vh);
+
+  background: rgba(10,15,30,0.95);
+
+  border: 2px solid rgba(120,180,255,0.8);
+  border-radius: 8px;
+
+  box-shadow:
+    0 0 10px rgba(80,140,255,0.6),
+    inset 0 0 6px rgba(80,140,255,0.3);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* ======================
+ヘッダー
+====================== */
+
+#backlogHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  color: #aee0ff;
+  font-weight: bold;
+
+  border-bottom: 1px solid rgba(120,180,255,0.5);
+}
+
+#backlogClose {
+  background: none;
+  border: none;
+  color: #aee0ff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* ======================
+ログ内容
+====================== */
+
+#backlogContent {
+  flex: 1;
+  overflow-y: auto;
+
+  padding: 8px;
+
+  font-size: 10px;
+  color: #e6f4ff;
+}
