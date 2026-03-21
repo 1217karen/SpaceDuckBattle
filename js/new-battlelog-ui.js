@@ -249,6 +249,88 @@ export function updateUnitStatUI(unitId, boardState) {
   }
 }
 
+export function refreshLeftSideUI(boardState, snapshot) {
+  if (!snapshot?.units) return;
+
+  for (const u of snapshot.units) {
+    const unitId = u.id;
+
+    const container = document.querySelector(
+      `.unitStatus[data-unit="${unitId}"]`
+    );
+
+    if (!container) continue;
+
+    const currentUnit = boardState.units[unitId];
+
+    // ======================
+    // 生存 / 離脱の見た目
+    // ======================
+    if (!currentUnit) {
+      container.style.opacity = "0.45";
+    } else {
+      container.style.opacity = "1";
+    }
+
+    // ======================
+    // HP表示
+    // ======================
+    const hpText = container.querySelector(".hpText");
+    const hpFill = container.querySelector(".hpFill");
+
+    if (hpText) {
+      const hp = currentUnit?.hp ?? 0;
+      const mhp = currentUnit?.mhp ?? (u.mhp ?? u.hp ?? 0);
+      hpText.textContent = `HP ${hp}/${mhp}`;
+    }
+
+    if (hpFill) {
+      const hp = currentUnit?.hp ?? 0;
+      const mhp = currentUnit?.mhp ?? (u.mhp ?? u.hp ?? 1);
+      const rate = mhp > 0 ? Math.max(hp / mhp, 0) : 0;
+      hpFill.style.width = `${rate * 100}%`;
+    }
+
+    // ======================
+    // stat / effect / cooldown
+    // ======================
+    if (currentUnit) {
+      updateUnitStatUI(unitId, boardState);
+      updateUnitEffectUI(unitId, boardState);
+      updateSkillCooldownUI(unitId, boardState);
+    } else {
+      // 離脱後は見た目を0に戻す
+      const effectCounts =
+        container.querySelectorAll(".effectItem .effectCount");
+
+      effectCounts.forEach(el => {
+        el.textContent = "00";
+      });
+
+      container.querySelectorAll(".effectItem").forEach(el => {
+        el.classList.remove("active");
+      });
+
+      container.querySelectorAll(".statValue").forEach(el => {
+        el.textContent = "0";
+      });
+
+      container.querySelectorAll(".statRate").forEach(el => {
+        el.textContent = "";
+      });
+
+      container.querySelectorAll(".skillSlot").forEach(slot => {
+        slot.classList.remove("cooldown");
+
+        const label = slot.querySelector(".cooldownLabel");
+        if (label) {
+          label.remove();
+        }
+      });
+    }
+  }
+}
+
 function updateSkillCooldownUI(unitId, boardState) {
 
   const unit = boardState.units[unitId];
