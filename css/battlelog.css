@@ -115,8 +115,6 @@ padding: 8px;
   font-size: 14px;
   font-weight: bold;
   margin-bottom:4px;
-
-  z-index: 10;
 }
 
 .team1Text::after {
@@ -133,6 +131,8 @@ padding: 8px;
     rgba(0,255,136,0.9),
     rgba(0,255,136,0)
   );
+  
+  z-index: -1;
 }
 
 .team2Text::after {
