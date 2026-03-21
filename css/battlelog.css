@@ -938,6 +938,10 @@ background:#1b2a44;
   color: #e6f4ff;
 }
 
+.backlogJumpText {
+  text-decoration: underline;
+}
+
 .backlogActionDivider {
   border-top: 1px dashed rgba(120,180,255,0.45);
   margin: 8px 0 6px 0;
