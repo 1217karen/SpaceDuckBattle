@@ -312,16 +312,11 @@ function jumpToLogIndex(targetIndex) {
     applyEvent(battleState.battleLog[i], battleState.boardState);
   }
 
-  rebuildBoardFromState();
-
-  const units = battleState.boardState.units;
-
-  for (const unitId in units) {
-    updateUnitStatUI(unitId, battleState.boardState);
-    updateUnitEffectUI(unitId, battleState.boardState);
-  }
-
   battleState.logIndex = targetIndex;
+
+  rebuildBoardFromState();
+  refreshLeftSideUI(battleState.boardState, snapshot);
+  rebuildTurnDisplayFromLogIndex();
 }
 
 // ======================
