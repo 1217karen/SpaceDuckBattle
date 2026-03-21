@@ -203,8 +203,13 @@ overflow-y: auto;
 
 .unitStatus {
 width: 294px;
+height: 140px;
+overflow: hidden;
 box-sizing: border-box;
 padding: 6px;
+
+display: flex;
+flex-direction: column;
 
 background: rgba(10,15,30,0.85);
 
@@ -247,10 +252,12 @@ border-top: none;
 ステータス内部レイアウト
 ======================================================= */
 
-.unitRow{
-display:flex;
-align-items:flex-start;
-gap:6px;
+.unitRow {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
 }
 
 /* メインステータスブロック */
@@ -258,6 +265,9 @@ gap:6px;
 .unitMain{
 flex:1;
 min-width:0;
+display: flex;
+flex-direction: column;
+min-height: 0;
 }
 
 /* アイコン＋名前＋状態 */
@@ -267,6 +277,7 @@ display: flex;
 flex-direction: column;
 align-items: stretch;
 gap: 4px;
+min-height: 0;
 }
 
 .unitTopRow{
@@ -281,6 +292,7 @@ flex-direction:column;
 justify-content:flex-start;
 flex:1;
 min-width:0;
+min-height: 0;
 }
 
 .statRow{
@@ -410,6 +422,7 @@ align-items: center;
 gap: 6px;
 
 width:100%;
+margin-top: auto;
 }
 
 .hpText {
@@ -453,6 +466,8 @@ gap:4px;
 
 margin-top:3px;
 margin-left:1px;
+
+flex-shrink: 0;
 }
 
 .skillSlot{
