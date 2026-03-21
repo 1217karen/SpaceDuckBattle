@@ -170,6 +170,9 @@ export async function playNextAction() {
 
   const header = document.createElement("div");
 
+  const headerText = document.createElement("span");
+  headerText.classList.add("actionHeaderText");
+
   if (actingUnit === "__turn__") {
 
     const turnEvent =
@@ -183,7 +186,7 @@ export async function playNextAction() {
         ? nextTurn - 1
         : "?";
 
-    header.textContent =
+    headerText.textContent =
       `TURN ${prevTurn} → TURN ${nextTurn}`;
 
   } else {
@@ -192,9 +195,11 @@ export async function playNextAction() {
       battleState.nameMap?.[actingUnit] ||
       actingUnit;
 
-    header.textContent =
+    headerText.textContent =
       `▶ ${displayName} の行動`;
   }
+
+  header.appendChild(headerText);
 
   header.classList.add("actionHeader");
 
