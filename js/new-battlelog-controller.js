@@ -441,6 +441,14 @@ backlogOverlay.addEventListener("click", (e) => {
   }
 });
 
+backlogContent.addEventListener("click", (e) => {
+  const jumpEl = e.target.closest(".backlogJumpText");
+  if (!jumpEl) return;
+
+  const jumpIndex = Number(jumpEl.dataset.jumpIndex);
+  console.log("jumpIndex", jumpIndex);
+});
+
 // =====================
 // ログ取得
 // =====================
