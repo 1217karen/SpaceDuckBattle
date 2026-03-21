@@ -11,12 +11,18 @@ import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,appl
 import { battleState } from "./new-battlelog-state.js";
 
 
+let suppressBoardEffects = false;
+
+export function setSuppressBoardEffects(value) {
+  suppressBoardEffects = value;
+}
 
 function displayName(id, nameMap) {
   return nameMap?.[id] || id;
 }
 
 function spawnFloatingNumber(unitId, value, type) {
+if (suppressBoardEffects) return;
   const wrapper =
     document.querySelector(`[data-unit-id="${unitId}"]`);
 
@@ -372,7 +378,7 @@ else if (event.type === "turnUnit") {
 
   else if (event.type === "faceChange") {
 
-    if (!battleState.isSkipping) {
+    if (!suppressBoardEffects && !battleState.isSkipping) {
       updateFacing(
         "board",
         event.unit,
@@ -422,7 +428,7 @@ else if (event.type === "turnUnit") {
       if (event.rangeStyle === "buff") cls = "buffRange";
       if (event.rangeStyle === "debuff") cls = "debuffRange";
 
-      if (cls) {
+      if (cls && !suppressBoardEffects) {
         highlightCells(
           "board",
           event.rangeCells,
@@ -472,12 +478,14 @@ else if (event.type === "cooldownChange") {
       boardState.units[event.target];
 
     if (unitState) {
-      highlightCell(
+      if (!suppressBoardEffects) {
+        highlightCell(
         "board",
         unitState.x,
         unitState.y,
         "attackHighlight"
       );
+        }
 
       const img = document.querySelector(
         `[data-unit-id="${event.target}"] .unitImage`
@@ -525,12 +533,14 @@ else if (event.type === "cooldownChange") {
       boardState.units[event.target];
 
     if (unitState) {
-      highlightCell(
+      if (!suppressBoardEffects) {
+        highlightCell(
         "board",
         unitState.x,
         unitState.y,
         "healHighlight"
       );
+      }
     }
 
     const img = document.querySelector(
@@ -695,8 +705,6 @@ if (unit) {
     // ==========================
     // 状態削除
     // ==========================
-
-applyEffectRemoved(event, boardState);
 
 updateUnitEffectUI(
   event.unit,
@@ -888,12 +896,14 @@ else if (result === "turnEnd") {
       const cls =
         isBuff ? "buffHighlight" : "debuffHighlight";
 
-      highlightCell(
+      if (!suppressBoardEffects) {
+        highlightCell(
         "board",
         unitState.x,
         unitState.y,
         cls
       );
+      }
     }
 
     const img = document.querySelector(
@@ -929,7 +939,9 @@ updateUnitStatUI(
   }
 
   else if (event.type === "death") {
-    removeUnit("board", event.unit);
+    if (!suppressBoardEffects) {
+      removeUnit("board", event.unit);
+    }
 
     div.textContent =
       `${displayName(event.unit, nameMap)} は戦線を離脱`;
@@ -943,12 +955,14 @@ updateUnitStatUI(
       return;
     }
 
-    moveUnit(
-      "board",
-      event.unit,
-      event.x,
-      event.y
-    );
+    if (!suppressBoardEffects) {
+      moveUnit(
+        "board",
+        event.unit,
+        event.x,
+        event.y
+      );
+    }
 
     div.textContent =
       `${displayName(event.unit, nameMap)} が (${event.x},${event.y}) に移動`;
