@@ -939,6 +939,8 @@ background:#1b2a44;
 }
 
 .backlogJumpText {
+  display: inline-block;
+  margin-left: 60px;
   text-decoration: underline;
 }
 
