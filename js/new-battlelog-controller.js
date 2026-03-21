@@ -374,11 +374,17 @@ logBtn.addEventListener("click", () => {
 
 backlogClose.addEventListener("click", () => {
   backlogOverlay.classList.add("hidden");
+
+  // stateに基づいて盤面を完全再構築
+  rebuildBoardFromState();
 });
 
 backlogOverlay.addEventListener("click", (e) => {
   if (e.target === backlogOverlay) {
     backlogOverlay.classList.add("hidden");
+
+    // stateとDOMを再同期
+    rebuildBoardFromState();
   }
 });
 
