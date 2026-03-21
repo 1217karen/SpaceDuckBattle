@@ -209,6 +209,14 @@ export async function playNextAction() {
 
   header.classList.add("actionHeader");
 
+  const unitState = battleState.boardState.units[actingUnit];
+
+  if (unitState?.team === 1) {
+    header.classList.add("team1Text");
+  } else if (unitState?.team === 2) {
+    header.classList.add("team2Text");
+  }
+
   battleState.logArea.innerHTML = "";
   battleState.logArea.appendChild(header);
 
