@@ -134,6 +134,15 @@ function renderBacklog() {
 
   initializeBoardState(tempState, snapshot);
 
+  const startDiv = document.createElement("div");
+  startDiv.classList.add("actionHeader");
+  startDiv.textContent = "BATTLE START";
+  backlogContent.appendChild(startDiv);
+
+  const startSpacer = document.createElement("div");
+  startSpacer.style.height = "3px";
+  backlogContent.appendChild(startSpacer);
+
   let depth = 0;
   setSuppressBoardEffects(true);
 
