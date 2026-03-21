@@ -179,6 +179,8 @@ if (ev.type === "actionStart") {
   const headerText = document.createElement("span");
   headerText.classList.add("actionHeaderText");
 
+  let jumpText = null;
+
   if (ev.unit === "__turn__") {
 
     const nextTurn = ev.turn ?? "?";
@@ -190,10 +192,9 @@ if (ev.type === "actionStart") {
     headerText.textContent =
       `TURN ${prevTurn} → TURN ${nextTurn}`;
 
-  const jumpText = document.createElement("span");
-  jumpText.classList.add("backlogJumpText");
-  jumpText.textContent = " [JUMP]";
-  div.appendChild(jumpText);
+    jumpText = document.createElement("span");
+    jumpText.classList.add("backlogJumpText");
+    jumpText.textContent = " [JUMP]";
 
   } else {
 
@@ -214,6 +215,10 @@ if (ev.type === "actionStart") {
   }
 
   div.appendChild(headerText);
+
+  if (jumpText) {
+    div.appendChild(jumpText);
+  }
 
   backlogContent.appendChild(div);
 
