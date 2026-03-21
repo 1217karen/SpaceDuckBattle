@@ -5,7 +5,7 @@
 // =====================
 
 import {createBoard,placeUnit,updateFacing,removeUnit} from "./board.js";
-import {playLogEvent,updateUnitStatUI,updateUnitEffectUI,setSuppressBoardEffects} from "./new-battlelog-ui.js";
+import {playLogEvent,updateUnitStatUI,updateUnitEffectUI,setSuppressBoardEffects,refreshLeftSideUI} from "./new-battlelog-ui.js";
 import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
 import { createLeftSideUI } from "./new-battlelog-ui-init.js";
@@ -109,6 +109,30 @@ function rebuildBoardFromState() {
     updateFacing("board", id, u.facing);
   }
 
+}
+
+function rebuildTurnDisplayFromLogIndex() {
+  let lastTurn = 0;
+
+  for (let i = 0; i < battleState.logIndex; i++) {
+    const ev = battleState.battleLog[i];
+
+    if (ev?.type === "actionStart" && ev.unit === "__turn__") {
+      if (typeof ev.turn === "number") {
+        lastTurn = ev.turn;
+      }
+    }
+  }
+
+  battleState.uiTurn = lastTurn;
+
+  if (!battleState.turnDisplay) return;
+
+  if (lastTurn > 0) {
+    battleState.turnDisplay.textContent = `TURN ${lastTurn}`;
+  } else {
+    battleState.turnDisplay.textContent = "BATTLE START";
+  }
 }
 
 // ======================
@@ -394,8 +418,11 @@ function skipToEnd() {
   // ======================
   // 状態更新
   // ======================
-
   battleState.logIndex = battleState.battleLog.length;
+
+  refreshLeftSideUI(battleState.boardState, snapshot);
+  rebuildTurnDisplayFromLogIndex();
+
   battleState.isPlaying = false;
 }
 
