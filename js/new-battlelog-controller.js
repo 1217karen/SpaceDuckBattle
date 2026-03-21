@@ -144,6 +144,7 @@ function renderBacklog() {
   const jumpText = document.createElement("span");
   jumpText.classList.add("backlogJumpText");
   jumpText.textContent = " [JUMP]";
+  jumpText.dataset.jumpIndex = "0";
 
   startDiv.appendChild(startText);
   startDiv.appendChild(jumpText);
@@ -195,6 +196,7 @@ if (ev.type === "actionStart") {
     jumpText = document.createElement("span");
     jumpText.classList.add("backlogJumpText");
     jumpText.textContent = " [JUMP]";
+    jumpText.dataset.jumpIndex = String(i);
 
   } else {
 
