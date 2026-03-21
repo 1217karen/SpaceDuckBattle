@@ -22,6 +22,9 @@ const nextBtn = document.getElementById("nextBtn");
 const autoBtn = document.getElementById("autoBtn");
 const speedBtn = document.getElementById("speedBtn");
 const skipBtn = document.getElementById("skipBtn");
+const logBtn = document.getElementById("logBtn");
+const backlogOverlay = document.getElementById("backlogOverlay");
+const backlogClose = document.getElementById("backlogClose");
 
 battleState.turnDisplay = turnDisplay;
 battleState.logArea = logArea;
@@ -246,6 +249,20 @@ autoBtn.addEventListener("click", () => {
 
 nextBtn.addEventListener("click", playNextAction);
 skipBtn.addEventListener("click", skipToEnd);
+
+logBtn.addEventListener("click", () => {
+  backlogOverlay.classList.remove("hidden");
+});
+
+backlogClose.addEventListener("click", () => {
+  backlogOverlay.classList.add("hidden");
+});
+
+backlogOverlay.addEventListener("click", (e) => {
+  if (e.target === backlogOverlay) {
+    backlogOverlay.classList.add("hidden");
+  }
+});
 
 // =====================
 // ログ取得
