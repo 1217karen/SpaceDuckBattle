@@ -177,14 +177,23 @@ if (ev.type === "actionStart") {
     div.textContent =
       `TURN ${prevTurn} → TURN ${nextTurn}`;
 
-  } else {
+    } else {
 
-    const name =
-      battleState.nameMap?.[ev.unit] || ev.unit;
+      const name =
+        battleState.nameMap?.[ev.unit] || ev.unit;
 
-    div.textContent =
-      `▶ ${name} の行動`;
-  }
+      const unit =
+        tempState.units[ev.unit];
+
+      if (unit?.team === 1) {
+        div.classList.add("team1Text");
+      } else if (unit?.team === 2) {
+        div.classList.add("team2Text");
+      }
+
+      div.textContent =
+        `▶ ${name} の行動`;
+    }
 
   backlogContent.appendChild(div);
 
