@@ -37,8 +37,6 @@ export function simulateBattle(snapshot) {
   const board = snapshot.board ?? { width: 7, height: 5 };
   const MAX_TURNS = snapshot.maxTurns ?? 50;
 
-  console.log("snapshot units =", JSON.stringify(snapshot.units, null, 2));
-
   // ======================================================
   // snapshotコピー
   // ======================================================
