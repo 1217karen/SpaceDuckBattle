@@ -7,6 +7,7 @@
 import { battleState } from "./new-battlelog-state.js";
 import { playLogEvent } from "./new-battlelog-ui.js";
 import { applyEvent } from "./new-battlelog-state-updater.js";
+import { resetCommPanel, updateCommByEvent } from "./new-battlelog-comm.js";
 
 // =====================
 // 設定値
@@ -124,6 +125,8 @@ export async function playNextAction() {
 
   const actingUnit =
     battleState.battleLog[start].unit;
+
+    resetCommPanel();
 
   const pos =
     battleState.boardState.units[actingUnit];
@@ -291,6 +294,8 @@ export async function playNextAction() {
     if (ev.type === "death") {
       battleState.requiredSet.delete(ev.unit);
     }
+
+    updateCommByEvent(ev, battleState.snapshot);
 
     if (
       ev.type === "move" &&
