@@ -151,73 +151,58 @@ skills:[]
 },
 
 {
-name:"テストヒーラー",
-type:"heal",
+  name: "テストヒーラー",
+  type: "heal",
 
-icon:{
-main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
-},
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
+  defaultCommIconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
 
-commIcons:[
-{
-  id:"comm01",
-  url:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
-},
-{
-  id:"comm02",
-  url:"https://placehold.co/60x60?text=HEAL"
+  mhp: 100,
+
+  atk: 1,
+  def: 2,
+  heal: 10,
+  speed: 5,
+  cri: 8,
+  tec: 4,
+
+  patterns: [
+    {
+      name: "基本",
+      public: true,
+      skills: [
+        {
+          type: "heal_cross2",
+          dialogue: {
+            iconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
+            text: "回復ライン接続、まとめて立て直します。"
+          }
+        },
+        {
+          type: "repair_wave",
+          dialogue: {
+            iconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
+            text: "修復波を展開します、持ちこたえてください。"
+          }
+        },
+        {
+          type: "satellite_meteor_field",
+          dialogue: {
+            iconUrl: "https://placehold.co/60x60?text=HEAL",
+            text: "衛星管制リンク確立、迎撃フィールドを起動。"
+          }
+        }
+      ]
+    }
+  ]
 }
-],
-
-mhp:100,
-
-stats:{
-atk:1,
-def:2,
-heal:10,
-speed:5,
-cri:8,
-tec:4
-},
-
-patterns:[
-{
-name:"基本",
-public:true,
-skills:[
-{
-  type:"heal_cross2",
-  dialogue:{
-    iconId:"comm01",
-    text:"回復ライン接続、まとめて立て直します。"
-  }
-},
-{
-  type:"repair_wave",
-  dialogue:{
-    iconId:"comm01",
-    text:"修復波を展開します、持ちこたえてください。"
-  }
-},
-{
-  type:"satellite_meteor_field",
-  dialogue:{
-    iconId:"comm02",
-    text:"衛星管制リンク確立、迎撃フィールドを起動。"
-  }
-}
-]
-}
-]
-},
 
 {
 name:"テストアタッカー",
 type:"attack",
 
-icon:{
-main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp"
-},
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
+  defaultCommIconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
 
 mhp:120,
 
@@ -248,9 +233,9 @@ skills:[
 name:"テストサポーター",
 type:"support",
 
-icon:{
-main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp"
-},
+
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
+  defaultCommIconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
 
 mhp:90,
 
