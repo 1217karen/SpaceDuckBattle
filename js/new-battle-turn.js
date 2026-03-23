@@ -98,25 +98,19 @@ export function runBattleTurns({
         turn: 1
       });
 
-      context.pushLog({
-        type: "actionEnd",
-        unit: "__turn__"
-      });
-
       for (const unit of units) {
         if (unit.hp <= 0) continue;
 
         context.pushLog({
-          type: "actionStart",
-          unit: unit.id,
-          actionLabel: "スタンバイ"
-        });
-
-        context.pushLog({
-          type: "actionEnd",
+          type: "standbyUnit",
           unit: unit.id
         });
       }
+
+      context.pushLog({
+        type: "actionEnd",
+        unit: "__turn__"
+      });
     }
 
     // ==================================================
