@@ -64,7 +64,9 @@ height: 100vh;
 gap: 20px;
 }
 
-/* 中央エリア */
+/* =======================================================
+中央エリア
+======================================================= */
 
 #centerArea {
 display: flex;
@@ -87,7 +89,9 @@ font-family: 'Iceberg', sans-serif;
 color: #ffffff;
 }
 
-/* イベントログ */
+/* =======================================================
+テキストログ
+======================================================= */
 
 #logArea {
 width: var(--log-width);
@@ -201,6 +205,115 @@ color:#ffffff;
 .logLevel3 { padding-left: 27px; }
 
 .logLevel4 { padding-left: 36px; }
+
+
+/* =======================================================
+通信パネル
+======================================================= */
+
+#commPanel {
+  width: 460px;
+  min-height: 84px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px 12px;
+
+  background:
+    linear-gradient(
+      to right,
+      rgba(20,40,70,0.92),
+      rgba(10,20,40,0.92)
+    );
+
+  border: 2px solid rgba(120,180,255,0.75);
+  border-radius: 8px;
+
+  box-shadow:
+    0 0 10px rgba(80,140,255,0.35),
+    inset 0 0 10px rgba(120,200,255,0.15);
+
+  position: relative;
+  overflow: hidden;
+}
+
+#commPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.05) 0px,
+      rgba(255,255,255,0.05) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+#commIconFrame {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(120,180,255,0.7);
+
+  box-shadow:
+    0 0 8px rgba(80,140,255,0.25),
+    inset 0 0 6px rgba(120,200,255,0.12);
+}
+
+#commIcon {
+  width: 60px;
+  height: 60px;
+  display: block;
+  object-fit: cover;
+}
+
+#commTextArea {
+  min-width: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+
+  position: relative;
+  z-index: 1;
+}
+
+#commLabel {
+  font-family: 'Iceberg', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #8fd3ff;
+
+  text-shadow: 0 0 6px rgba(120,200,255,0.45);
+}
+
+#commMessage {
+  min-height: 24px;
+
+  color: #e6f4ff;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+
+  word-break: break-word;
+}
 
 /* =======================================================
 サイドUI（ユニットステータス）
