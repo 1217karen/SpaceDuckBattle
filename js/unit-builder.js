@@ -21,38 +21,54 @@ export function buildUnitFromDuck(duck, pattern, team, x, y, facing, duckIndex){
   　speed * 0;
 
   
-  const unit = {
+const unit = {
 
-    id: "duck_" + duckIndex,
+  id: "duck_" + duckIndex,
 
-    name: duck.name,
+  name: duck.name,
 
-    team: team,
+  team: team,
 
-    role: duck.type,
+  role: duck.type,
 
-    hp: mhp,
-    mhp: mhp,
+  hp: mhp,
+  mhp: mhp,
 
-atk: atk,
-def: def,
-heal: heal,
-tec: tec,
-speed: speed,
-cri: cri,
+  atk: atk,
+  def: def,
+  heal: heal,
+  tec: tec,
+  speed: speed,
+  cri: cri,
 
-    x: x,
-    y: y,
+  x: x,
+  y: y,
 
-    facing: facing,
+  facing: facing,
 
-    icon: duck.icon.main,
+  icon: duck.icon.main,
 
-    skills: pattern.skills
-      .filter(s => s !== "")
-      .map(s => ({ type:s }))
+  skills: (pattern.skills || [])
+    .filter(s => {
+      if (typeof s === "string") {
+        return s !== "";
+      }
 
-  };
+      if (s && typeof s === "object") {
+        return s.type && s.type !== "";
+      }
+
+      return false;
+    })
+    .map(s => {
+      if (typeof s === "string") {
+        return { type: s };
+      }
+
+      return { ...s };
+    })
+
+};
 
   return unit;
 
