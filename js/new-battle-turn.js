@@ -85,6 +85,8 @@ export function runBattleTurns({
 // ターンループ
 // ======================================================
 
+  let turn = 1;
+
   while (turn <= MAX_TURNS) {
 
     context.pushLog({ type: "turnStart", turn });
