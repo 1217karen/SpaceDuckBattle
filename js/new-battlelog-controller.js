@@ -197,26 +197,6 @@ function renderBacklog() {
 
   initializeBoardState(tempState, snapshot);
 
-  const startDiv = document.createElement("div");
-  startDiv.classList.add("actionHeader");
-
-  const startText = document.createElement("span");
-  startText.classList.add("actionHeaderText");
-  startText.textContent = "BATTLE START";
-
-  const jumpText = document.createElement("span");
-  jumpText.classList.add("backlogJumpText");
-  jumpText.textContent = " [JUMP]";
-  jumpText.dataset.jumpIndex = "0";
-
-  startDiv.appendChild(startText);
-  startDiv.appendChild(jumpText);
-  backlogContent.appendChild(startDiv);
-
-  const startSpacer = document.createElement("div");
-  startSpacer.style.height = "3px";
-  backlogContent.appendChild(startSpacer);
-
   let depth = 0;
   setSuppressBoardEffects(true);
 
