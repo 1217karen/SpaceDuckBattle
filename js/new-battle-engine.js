@@ -40,8 +40,8 @@ export function simulateBattle(snapshot) {
   alert(
   JSON.stringify(
     {
-      topLevelSkills: snapshot.units[0]?.skills ?? null,
-      patterns: snapshot.units[0]?.patterns ?? null
+      topLevelSkills: snapshot.units[1]?.skills ?? null,
+      patterns: snapshot.units[1]?.patterns ?? null
     },
     null,
     2
