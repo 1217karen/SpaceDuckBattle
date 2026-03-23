@@ -48,6 +48,9 @@ const unit = {
 
   icon: duck.icon.main,
 
+  patterns: duck.patterns || [],
+  commIcons: duck.commIcons || [],
+
   skills: (pattern.skills || [])
     .filter(s => {
       if (typeof s === "string") {
