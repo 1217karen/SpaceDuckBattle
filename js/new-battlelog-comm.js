@@ -18,6 +18,8 @@ function getUnitSnapshot(snapshot, unitId) {
 function getDialogueByEvent(unitSnapshot, event) {
   if (!unitSnapshot || !event) return null;
 
+  console.log("COMM DEBUG", unitSnapshot, event);
+
   // 今回は skillUse のみ対応
   if (event.type === "skillUse") {
 
