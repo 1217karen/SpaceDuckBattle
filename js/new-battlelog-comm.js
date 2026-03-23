@@ -15,20 +15,24 @@ function getUnitSnapshot(snapshot, unitId) {
   return snapshot?.units?.find(u => u.id === unitId) || null;
 }
 
-function getSkillDialogue(unitSnapshot, skillType) {
-  if (!unitSnapshot) return null;
+function getDialogueByEvent(unitSnapshot, event) {
+  if (!unitSnapshot || !event) return null;
 
-  const patterns = unitSnapshot.patterns || [];
+  // 今回は skillUse のみ対応
+  if (event.type === "skillUse") {
 
-  for (const pattern of patterns) {
-    const skills = pattern.skills || [];
+    const patterns = unitSnapshot.patterns || [];
 
-    for (const skill of skills) {
-      if (skill.type !== skillType) continue;
+    for (const pattern of patterns) {
+      const skills = pattern.skills || [];
 
-      if (!skill.dialogue) return null;
+      for (const skill of skills) {
+        if (skill.type !== event.skill) continue;
 
-      return skill.dialogue;
+        if (!skill.dialogue) return null;
+
+        return skill.dialogue;
+      }
     }
   }
 
@@ -71,13 +75,11 @@ export function showCommPanel({ iconUrl, text }) {
 export function updateCommByEvent(event, snapshot) {
   if (!event) return;
 
-  if (event.type !== "skillUse") return;
-
   const unitSnapshot =
     getUnitSnapshot(snapshot, event.unit);
 
   const dialogue =
-    getSkillDialogue(unitSnapshot, event.skill);
+    getDialogueByEvent(unitSnapshot, event);
 
   if (!dialogue?.text) return;
 
