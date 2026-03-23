@@ -46,10 +46,19 @@ export function simulateBattle(snapshot) {
     ...u,
     effects: [],
     rateEffects: [],
-    skills: (u.skills || []).map(s => ({
-      ...s,
-      _currentCooldown: 0
-    }))
+    skills: (u.skills || []).map(s => {
+      if (typeof s === "string") {
+        return {
+          type: s,
+          _currentCooldown: 0
+        };
+      }
+
+      return {
+        ...s,
+        _currentCooldown: 0
+      };
+    })
   }));
 
   // ======================================================
