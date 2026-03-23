@@ -158,6 +158,17 @@ icon:{
 main:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
 },
 
+commIcons:[
+{
+  id:"comm01",
+  url:"https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
+},
+{
+  id:"comm02",
+  url:"https://placehold.co/60x60?text=HEAL"
+}
+],
+
 mhp:100,
 
 stats:{
@@ -174,13 +185,30 @@ patterns:[
 name:"基本",
 public:true,
 skills:[
-"heal_cross2",
-"repair_wave",
-"satellite_meteor_field"
+{
+  type:"heal_cross2",
+  dialogue:{
+    iconId:"comm01",
+    text:"回復ライン接続、まとめて立て直します。"
+  }
+},
+{
+  type:"repair_wave",
+  dialogue:{
+    iconId:"comm01",
+    text:"修復波を展開します、持ちこたえてください。"
+  }
+},
+{
+  type:"satellite_meteor_field",
+  dialogue:{
+    iconId:"comm02",
+    text:"衛星管制リンク確立、迎撃フィールドを起動。"
+  }
+}
 ]
 }
 ]
-
 },
 
 {
