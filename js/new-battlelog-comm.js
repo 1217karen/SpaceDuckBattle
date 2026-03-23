@@ -81,6 +81,18 @@ export function showCommPanel({ iconUrl, text }) {
   }
 }
 
+export function showUnitDefaultComm(unitId, snapshot) {
+  const unitSnapshot = getUnitSnapshot(snapshot, unitId);
+  if (!unitSnapshot) return;
+
+  const iconUrl = unitSnapshot.icon || getFallbackIcon();
+
+  showCommPanel({
+    iconUrl,
+    text: ""
+  });
+}
+
 export function updateCommByEvent(event, snapshot) {
   if (!event) return;
 
