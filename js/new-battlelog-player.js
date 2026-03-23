@@ -232,44 +232,47 @@ export async function playNextAction() {
   clearAllHighlights();
   const ev = actionEvents[i];
 
-  if (ev.type === "__groupStart") {
+if (ev.type === "__groupStart") {
 
-    const isEffectGroup =
-      ev.label?.type === "effectTrigger";
+  const isEffectGroup =
+    ev.label?.type === "effectTrigger";
 
-    if (isEffectGroup) {
-      currentEffectGroup = document.createElement("div");
-      currentEffectGroup.classList.add("effectGroup");
-      battleState.logArea.appendChild(currentEffectGroup);
-    }
+  if (isEffectGroup) {
+    currentEffectGroup = document.createElement("div");
+    currentEffectGroup.classList.add("effectGroup");
+    battleState.logArea.appendChild(currentEffectGroup);
+  }
 
-    const target =
-      currentEffectGroup || battleState.logArea;
+  const target =
+    currentEffectGroup || battleState.logArea;
 
-    const spacer = document.createElement("div");
-    spacer.style.height = "3px";
-    target.appendChild(spacer);
+  const spacer = document.createElement("div");
+  spacer.style.height = "3px";
+  target.appendChild(spacer);
 
-    if (ev.label) {
-      playLogEvent(
-        ev.label,
-        null,
-        battleState.boardState,
-        target,
-        battleState.nameMap,
-        depth
-      );
+  if (ev.label) {
+    updateCommByEvent(ev.label, battleState.snapshot);
 
-      const delay =
-        ev.label.type === "effectTrigger"
-          ? EFFECT_DELAY
-          : EVENT_DELAY;
+    playLogEvent(
+      ev.label,
+      null,
+      battleState.boardState,
+      target,
+      battleState.nameMap,
+      depth
+    );
 
-      await sleep(delay);
-    }
+    const delay =
+      ev.label.type === "effectTrigger"
+        ? EFFECT_DELAY
+        : EVENT_DELAY;
 
-    depth++;
-    continue;}
+    await sleep(delay);
+  }
+
+  depth++;
+  continue;
+}
 
     if (ev.type === "__groupEnd") {
 
