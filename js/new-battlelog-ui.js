@@ -427,7 +427,13 @@ else if (event.type === "turnUnit") {
 
   const headerText = document.createElement("span");
   headerText.classList.add("actionHeaderText");
-  headerText.textContent = name;
+
+  if (event.actionLabel) {
+    headerText.textContent =
+      `▼ ${name}　${event.actionLabel}`;
+  } else {
+    headerText.textContent = name;
+  }
 
   div.appendChild(headerText);
 }
