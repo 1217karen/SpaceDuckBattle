@@ -7,7 +7,7 @@
 import { battleState } from "./new-battlelog-state.js";
 import { playLogEvent } from "./new-battlelog-ui.js";
 import { applyEvent } from "./new-battlelog-state-updater.js";
-import { resetCommPanel, updateCommByEvent } from "./new-battlelog-comm.js";
+import { resetCommPanel, updateCommByEvent, showUnitDefaultComm } from "./new-battlelog-comm.js";
 
 // =====================
 // 設定値
@@ -127,6 +127,10 @@ export async function playNextAction() {
     battleState.battleLog[start].unit;
 
     resetCommPanel();
+
+    if (actingUnit !== "__turn__") {
+      showUnitDefaultComm(actingUnit, battleState.snapshot);
+    }
 
   const pos =
     battleState.boardState.units[actingUnit];
