@@ -438,30 +438,6 @@ else if (event.type === "turnUnit") {
   div.appendChild(headerText);
 }
 
-else if (event.type === "standbyUnit") {
-
-  const name =
-    displayName(event.unit, nameMap);
-
-  const unit =
-    boardState.units[event.unit];
-
-  if (unit?.team === 1) {
-    div.classList.add("team1Text");
-  } else if (unit?.team === 2) {
-    div.classList.add("team2Text");
-  }
-
-  div.classList.add("actionHeader");
-
-  const headerText = document.createElement("span");
-  headerText.classList.add("actionHeaderText");
-  headerText.textContent =
-    `▼ ${name}　スタンバイ`;
-
-  div.appendChild(headerText);
-}
-
   else if (event.type === "hpChange") {
     
     const unit = boardState.units[event.target];
