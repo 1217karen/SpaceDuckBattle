@@ -11,6 +11,7 @@ import { battleState } from "./new-battlelog-state.js";
 import { createLeftSideUI } from "./new-battlelog-ui-init.js";
 import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,applyEffectRemoved,
         applyEffectApplied,applyMove,applyDeath,applyFacing,applyEvent} from "./new-battlelog-state-updater.js";
+import { resetCommPanel } from "./new-battlelog-comm.js";
 
 
 
@@ -645,6 +646,8 @@ createLeftSideUI(snapshot, battleState);
 if (turnDisplay) {
   turnDisplay.textContent = "BATTLE START";
 }
+
+resetCommPanel();
 
 // =====================
 // 初期行動順
