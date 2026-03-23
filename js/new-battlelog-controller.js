@@ -275,13 +275,8 @@ if (ev.type === "actionStart") {
       div.classList.add("team2Text");
     }
 
-    if (ev.actionLabel) {
-      headerText.textContent =
-        `▼ ${name}　${ev.actionLabel}`;
-    } else {
-      headerText.textContent =
-        `▶ ${name} の行動`;
-    }
+    headerText.textContent =
+      `▶ ${name} の行動`;
   }
 
   div.appendChild(headerText);
