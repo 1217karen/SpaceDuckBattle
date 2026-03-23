@@ -512,6 +512,8 @@ display: flex;
 justify-content: center;
 align-items: center;
 
+flex-shrink: 0;
+
 background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=board.webp") no-repeat center / contain;
 
 border: none;
