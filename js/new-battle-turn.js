@@ -82,14 +82,42 @@ export function runBattleTurns({
 
   
 // ======================================================
-  // ターンループ
-  // ======================================================
+// ターンループ
+// ======================================================
 
   let turn = 1;
 
   while (turn <= MAX_TURNS) {
 
     context.pushLog({ type: "turnStart", turn });
+
+    if (turn === 1) {
+      context.pushLog({
+        type: "actionStart",
+        unit: "__turn__",
+        turn: 1
+      });
+
+      context.pushLog({
+        type: "actionEnd",
+        unit: "__turn__"
+      });
+
+      for (const unit of units) {
+        if (unit.hp <= 0) continue;
+
+        context.pushLog({
+          type: "actionStart",
+          unit: unit.id,
+          actionLabel: "スタンバイ"
+        });
+
+        context.pushLog({
+          type: "actionEnd",
+          unit: unit.id
+        });
+      }
+    }
 
     // ==================================================
     // ユニット行動
