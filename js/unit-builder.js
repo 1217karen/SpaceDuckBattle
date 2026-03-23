@@ -46,7 +46,7 @@ const unit = {
 
   facing: facing,
 
-  icon: duck.icon.main,
+  icon: duck.icon?.default ?? duck.icon?.main ?? "",
 
   patterns: duck.patterns || [],
   commIcons: duck.commIcons || [],
