@@ -302,6 +302,13 @@ if (ev.type === "actionStart") {
     if (ev.type === "__groupStart") {
 
       if (ev.label) {
+
+        if (backlogContent.children.length > 0) {
+          const spacer = document.createElement("div");
+          spacer.style.height = "6px";
+          backlogContent.appendChild(spacer);
+        }
+
         playLogEvent(
           ev.label,
           null,
@@ -310,6 +317,10 @@ if (ev.type === "actionStart") {
           battleState.nameMap,
           depth
         );
+
+        const spacer = document.createElement("div");
+        spacer.style.height = "3px";
+        backlogContent.appendChild(spacer);
       }
 
       depth++;
