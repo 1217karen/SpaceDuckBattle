@@ -20,6 +20,13 @@ function getDialogueByEvent(unitSnapshot, event) {
 
   console.log("COMM DEBUG", unitSnapshot, event);
 
+  console.log("COMM CHECK", {
+  eventSkill: event.skill,
+  skillTypes: (unitSnapshot.patterns || [])
+    .flatMap(p => p.skills || [])
+    .map(s => s.type)
+});
+
   // 今回は skillUse のみ対応
   if (event.type === "skillUse") {
 
