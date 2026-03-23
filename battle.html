@@ -122,11 +122,11 @@ name:"アヒル未設定",
 type:"attack",
 
 icon:{
-main:"",
-N:"",
-E:"",
-S:"",
-W:""
+  default:"",
+  N:"",
+  E:"",
+  S:"",
+  W:""
 },
 
 mhp:1,
@@ -154,17 +154,23 @@ skills:[]
   name: "テストヒーラー",
   type: "heal",
 
-  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
+  icon: {
+    default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
+    N: "",
+    E: "",
+    S: "",
+    W: ""
+  },
   defaultCommIconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
-
-  mhp: 100,
-
-  atk: 1,
-  def: 2,
-  heal: 10,
-  speed: 5,
-  cri: 8,
-  tec: 4,
+  
+stats:{
+  atk:1,
+  def:2,
+  heal:10,
+  speed:5,
+  cri:8,
+  tec:4
+},
 
   patterns: [
     {
@@ -201,10 +207,14 @@ skills:[]
 name:"テストアタッカー",
 type:"attack",
 
-  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
-  defaultCommIconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
-
-mhp:120,
+icon: {
+  default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
+  N: "",
+  E: "",
+  S: "",
+  W: ""
+},
+defaultCommIconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
 
 stats:{
 atk:10,
@@ -234,10 +244,14 @@ name:"テストサポーター",
 type:"support",
 
 
-  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
-  defaultCommIconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
-
-mhp:90,
+icon: {
+  default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
+  N: "",
+  E: "",
+  S: "",
+  W: ""
+},
+defaultCommIconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
 
 stats:{
 atk:4,
@@ -286,7 +300,7 @@ const item = document.createElement("div");
 item.className = "duck-item";
 
 const img = document.createElement("img");
-img.src = duck.icon.main;
+img.src = duck.icon?.default || "";
 
 const name = document.createElement("span");
 name.textContent = duck.name;
@@ -367,7 +381,7 @@ if(duckIndex === null) return;
 const duck = testDucks[duckIndex];
 
 const img = document.createElement("img");
-img.src = duck.icon.main;
+img.src = duck.icon?.default || "";
 img.style.width = "64px";
 img.style.height = "64px";
 
@@ -460,7 +474,7 @@ delete placedSlots[slot];
 cell.innerHTML = "";
 
 const img = document.createElement("img");
-img.src = duck.icon.main;
+img.src = duck.icon?.default || "";
 img.style.width = "40px";
 img.style.height = "40px";
 
