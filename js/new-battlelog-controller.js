@@ -581,6 +581,7 @@ if (snapshot) {
 
 battleState.battleLog = battleLog;
 battleState.nameMap = nameMap;
+battleState.snapshot = snapshot;
 
 // =====================
 // 盤面作成
