@@ -295,7 +295,10 @@ export async function playNextAction() {
       battleState.requiredSet.delete(ev.unit);
     }
 
-    updateCommByEvent(ev, battleState.snapshot);
+    updateCommByEvent(
+      ev.type === "__groupStart" ? ev.label : ev,
+      battleState.snapshot
+    );
 
     if (
       ev.type === "move" &&
