@@ -15,34 +15,68 @@ function getUnitSnapshot(snapshot, unitId) {
   return snapshot?.units?.find(u => u.id === unitId) || null;
 }
 
-function getDialogueByEvent(unitSnapshot, event) {
+function getSkillDialogue(unitSnapshot, skillType) {
+  if (!unitSnapshot || !skillType) return null;
+
+  const patterns = unitSnapshot.patterns || [];
+
+  for (const pattern of patterns) {
+    const skills = pattern.skills || [];
+
+    for (const skill of skills) {
+      if (skill.type !== skillType) continue;
+      return skill.dialogue || null;
+    }
+  }
+
+  return null;
+}
+
+function getBattleStartDialogue(unitSnapshot) {
+  if (!unitSnapshot) return null;
+
+  // ここは後で正式な保存場所が決まったら差し替える
+  // 今は未設定扱いで null を返す
+  return null;
+}
+
+function resolveCommPayload(unitSnapshot, event) {
   if (!unitSnapshot || !event) return null;
 
-  console.log("COMM DEBUG", unitSnapshot, event);
-
-  console.log("COMM CHECK", {
-  eventSkill: event.skill,
-  skillTypes: (unitSnapshot.patterns || [])
-    .flatMap(p => p.skills || [])
-    .map(s => s.type)
-});
-
-  // 今回は skillUse のみ対応
+  // スキル使用時
   if (event.type === "skillUse") {
+    const dialogue =
+      getSkillDialogue(unitSnapshot, event.skill);
 
-    const patterns = unitSnapshot.patterns || [];
-
-    for (const pattern of patterns) {
-      const skills = pattern.skills || [];
-
-      for (const skill of skills) {
-        if (skill.type !== event.skill) continue;
-
-        if (!skill.dialogue) return null;
-
-        return skill.dialogue;
-      }
+    if (!dialogue?.text) {
+      return null;
     }
+
+    return {
+      iconUrl: resolveIconUrl(unitSnapshot, dialogue.iconId),
+      text: dialogue.text
+    };
+  }
+
+  // 戦闘開始時スタンバイ
+  if (
+    event.type === "turnUnit" &&
+    event.actionLabel === "スタンバイ"
+  ) {
+    const dialogue =
+      getBattleStartDialogue(unitSnapshot);
+
+    if (!dialogue?.text) {
+      return {
+        iconUrl: unitSnapshot.icon || getFallbackIcon(),
+        text: ""
+      };
+    }
+
+    return {
+      iconUrl: resolveIconUrl(unitSnapshot, dialogue.iconId),
+      text: dialogue.text
+    };
   }
 
   return null;
@@ -99,16 +133,10 @@ export function updateCommByEvent(event, snapshot) {
   const unitSnapshot =
     getUnitSnapshot(snapshot, event.unit);
 
-  const dialogue =
-    getDialogueByEvent(unitSnapshot, event);
+  const payload =
+    resolveCommPayload(unitSnapshot, event);
 
-  if (!dialogue?.text) return;
+  if (!payload) return;
 
-  const iconUrl =
-    resolveIconUrl(unitSnapshot, dialogue.iconId);
-
-  showCommPanel({
-    iconUrl,
-    text: dialogue.text
-  });
+  showCommPanel(payload);
 }
