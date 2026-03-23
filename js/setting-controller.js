@@ -199,7 +199,7 @@ function loadDuck() {
     duck.type ?? "attack";
 
   document.getElementById("iconDefault").value =
-  duck.icon?.default ?? duck.icon?.main ?? "";
+    duck.icon?.default ?? "";
 
   document.getElementById("iconN").value =
     duck.icon?.N ?? "";
