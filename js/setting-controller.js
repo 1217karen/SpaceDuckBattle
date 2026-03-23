@@ -247,7 +247,7 @@ saveBtn.addEventListener("click", () => {
     document.getElementById("duckType").value;
 
   const icon = {
-    main: document.getElementById("iconMain").value,
+    default: document.getElementById("iconDefault").value,
     N: document.getElementById("iconN").value,
     E: document.getElementById("iconE").value,
     S: document.getElementById("iconS").value,
