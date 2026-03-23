@@ -198,8 +198,8 @@ function loadDuck() {
   document.getElementById("duckType").value =
     duck.type ?? "attack";
 
-  document.getElementById("iconMain").value =
-    duck.icon?.main ?? "";
+  document.getElementById("iconDefault").value =
+  duck.icon?.default ?? duck.icon?.main ?? "";
 
   document.getElementById("iconN").value =
     duck.icon?.N ?? "";
