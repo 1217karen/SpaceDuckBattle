@@ -2,33 +2,144 @@
 
 import { skillHandlers } from "./skills.js";
 
-
 let currentSlot = 0;
 
+const skillList = Object.keys(skillHandlers);
+const skillArea = document.getElementById("skillArea");
+
 const patterns = [
-  { name:"", public:true, skills:["","","","","",""] },
-  { name:"", public:false, skills:["","","","","",""] },
-  { name:"", public:false, skills:["","","","","",""] }
+  {
+    name: "",
+    public: true,
+    skills: [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
+  },
+  {
+    name: "",
+    public: false,
+    skills: [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
+  },
+  {
+    name: "",
+    public: false,
+    skills: [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
+  }
 ];
 
 const tabs = document.querySelectorAll(".patternTab");
 
 tabs.forEach(tab => {
-
   tab.addEventListener("click", () => {
-
     saveCurrentPattern();
-
     currentSlot = Number(tab.dataset.slot);
-
     loadPattern(currentSlot);
-
   });
-
 });
 
-function loadPattern(slot){
+function normalizeSkill(skill) {
+  if (typeof skill === "string") {
+    return { type: skill };
+  }
 
+  if (skill && typeof skill === "object") {
+    return {
+      type: skill.type ?? "",
+      dialogue: skill.dialogue?.text
+        ? { text: skill.dialogue.text }
+        : undefined
+    };
+  }
+
+  return { type: "" };
+}
+
+function normalizePattern(pattern, isFirstSlot = false) {
+  const normalizedSkills = Array.from({ length: 6 }, (_, i) =>
+    normalizeSkill(pattern?.skills?.[i])
+  );
+
+  return {
+    name: pattern?.name ?? "",
+    public: isFirstSlot ? true : !!pattern?.public,
+    skills: normalizedSkills
+  };
+}
+
+function createSkillBlock(skillData, index) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "skillBlock";
+  wrapper.dataset.index = String(index);
+
+  const select = document.createElement("select");
+  select.className = "skillSelect";
+
+  const emptyOption = document.createElement("option");
+  emptyOption.value = "";
+  emptyOption.textContent = "なし";
+  select.appendChild(emptyOption);
+
+  for (const skillId of skillList) {
+    const option = document.createElement("option");
+    option.value = skillId;
+    option.textContent = skillId;
+    select.appendChild(option);
+  }
+
+  select.value = skillData?.type ?? "";
+
+  const textInput = document.createElement("input");
+  textInput.type = "text";
+  textInput.className = "skillDialogueInput";
+  textInput.placeholder = "スキル使用時セリフ";
+  textInput.value = skillData?.dialogue?.text ?? "";
+
+  wrapper.appendChild(select);
+  wrapper.appendChild(document.createElement("br"));
+  wrapper.appendChild(textInput);
+
+  return wrapper;
+}
+
+function renderSkillArea(skills) {
+  skillArea.innerHTML = "";
+
+  skills.forEach((skillData, index) => {
+    const block = createSkillBlock(skillData, index);
+    skillArea.appendChild(block);
+
+    if (index < skills.length - 1) {
+      skillArea.appendChild(document.createElement("br"));
+    }
+  });
+}
+
+function readSkillArea() {
+  const blocks = skillArea.querySelectorAll(".skillBlock");
+
+  return [...blocks].map(block => {
+    const type =
+      block.querySelector(".skillSelect")?.value ?? "";
+
+    const text =
+      block.querySelector(".skillDialogueInput")?.value.trim() ?? "";
+
+    if (!type) {
+      return { type: "" };
+    }
+
+    if (!text) {
+      return { type };
+    }
+
+    return {
+      type,
+      dialogue: {
+        text
+      }
+    };
+  });
+}
+
+function loadPattern(slot) {
   const p = patterns[slot];
 
   document.getElementById("patternName").value = p.name;
@@ -38,80 +149,48 @@ function loadPattern(slot){
 
   publicCheck.checked = p.public;
 
-  if(slot === 0){
+  if (slot === 0) {
     publicCheck.disabled = true;
-  }else{
+  } else {
     publicCheck.disabled = false;
   }
 
-  const selects =
-    document.querySelectorAll(".skillSelect");
-
-  selects.forEach((s,i)=>{
-    s.value = p.skills[i] ?? "";
-  });
-
+  renderSkillArea(p.skills);
 }
 
-function saveCurrentPattern(){
-
+function saveCurrentPattern() {
   const p = patterns[currentSlot];
 
   p.name =
     document.getElementById("patternName").value;
 
   p.public =
-    document.getElementById("patternPublic").checked;
+    currentSlot === 0
+      ? true
+      : document.getElementById("patternPublic").checked;
 
-  const selects =
-    document.querySelectorAll(".skillSelect");
-
-  p.skills = [...selects].map(s => s.value);
-
-}
-
-const skillList = Object.keys(skillHandlers);
-
-const selects =
-  document.querySelectorAll(".skillSelect");
-
-for (const select of selects) {
-
-  for (const skillId of skillList) {
-
-    const option =
-      document.createElement("option");
-
-    option.value = skillId;
-    option.textContent = skillId;
-
-    select.appendChild(option);
-  }
+  p.skills = readSkillArea();
 }
 
 loadDuck();
 
-function loadDuck(){
-
+function loadDuck() {
   const data =
     localStorage.getItem("duck");
 
-  if (!data) return;
+  if (!data) {
+    loadPattern(currentSlot);
+    return;
+  }
 
   const duck =
     JSON.parse(data);
 
   if (duck.patterns) {
-
-  for (let i = 0; i < 3; i++) {
-
-    if (duck.patterns[i]) {
-      patterns[i] = duck.patterns[i];
+    for (let i = 0; i < 3; i++) {
+      patterns[i] = normalizePattern(duck.patterns[i], i === 0);
     }
-
   }
-
-}
 
   document.getElementById("duckName").value =
     duck.name ?? "";
@@ -151,19 +230,16 @@ function loadDuck(){
 
   document.getElementById("statTEC").value =
     duck.stats?.tec ?? 0;
-  
+
   loadPattern(currentSlot);
 }
-
-
 
 const saveBtn =
   document.getElementById("saveDuck");
 
 saveBtn.addEventListener("click", () => {
-  
-saveCurrentPattern();
-  
+  saveCurrentPattern();
+
   const name =
     document.getElementById("duckName").value;
 
@@ -187,29 +263,21 @@ saveCurrentPattern();
     tec: Number(document.getElementById("statTEC").value)
   };
 
-
-const duck = {
-
-  id: "player_duck",
-
-  name,
-  type,
-
-  icon,
-
-  stats,
-
-  patterns
-
-};
+  const duck = {
+    id: "player_duck",
+    name,
+    type,
+    icon,
+    stats,
+    patterns
+  };
 
   localStorage.setItem(
     "duck",
     JSON.stringify(duck)
   );
-  
-  alert("アヒル設定を保存しました");
 
+  alert("アヒル設定を保存しました");
 });
 
 loadPattern(currentSlot);
