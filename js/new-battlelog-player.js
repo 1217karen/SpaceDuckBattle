@@ -202,8 +202,16 @@ export async function playNextAction() {
       battleState.nameMap?.[actingUnit] ||
       actingUnit;
 
-    headerText.textContent =
-      `▶ ${displayName} の行動`;
+    const actionLabel =
+      battleState.battleLog[start].actionLabel;
+
+    if (actionLabel) {
+      headerText.textContent =
+        `▼ ${displayName}　${actionLabel}`;
+    } else {
+      headerText.textContent =
+        `▶ ${displayName} の行動`;
+    }
   }
 
   header.appendChild(headerText);
