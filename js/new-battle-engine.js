@@ -37,6 +37,17 @@ export function simulateBattle(snapshot) {
   const board = snapshot.board ?? { width: 7, height: 5 };
   const MAX_TURNS = snapshot.maxTurns ?? 50;
 
+  alert(
+  JSON.stringify(
+    {
+      topLevelSkills: snapshot.units[0]?.skills ?? null,
+      patterns: snapshot.units[0]?.patterns ?? null
+    },
+    null,
+    2
+  )
+);
+
   // ======================================================
   // snapshotコピー
   // ======================================================
