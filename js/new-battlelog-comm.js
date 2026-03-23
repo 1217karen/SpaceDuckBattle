@@ -44,52 +44,55 @@ function resolveCommPayload(unitSnapshot, event) {
   if (!unitSnapshot || !event) return null;
 
   // スキル使用時
-  if (event.type === "skillUse") {
-    const dialogue =
-      getSkillDialogue(unitSnapshot, event.skill);
+if (event.type === "skillUse") {
+  const dialogue =
+    getSkillDialogue(unitSnapshot, event.skill);
 
-    if (!dialogue?.text) {
-      return null;
-    }
+  if (!dialogue?.text) {
+    return null;
+  }
 
+  return {
+    iconUrl:
+      dialogue.iconUrl ||
+      unitSnapshot.defaultCommIconUrl ||
+      unitSnapshot.icon ||
+      getFallbackIcon(),
+    text: dialogue.text
+  };
+}
+
+if (
+  event.type === "turnUnit" &&
+  event.actionLabel === "スタンバイ"
+) {
+  const dialogue =
+    getBattleStartDialogue(unitSnapshot);
+
+  if (!dialogue?.text) {
     return {
-      iconUrl: resolveIconUrl(unitSnapshot, dialogue.iconId),
-      text: dialogue.text
+      iconUrl:
+        unitSnapshot.defaultCommIconUrl ||
+        unitSnapshot.icon ||
+        getFallbackIcon(),
+      text: ""
     };
   }
 
-  // 戦闘開始時スタンバイ
-  if (
-    event.type === "turnUnit" &&
-    event.actionLabel === "スタンバイ"
-  ) {
-    const dialogue =
-      getBattleStartDialogue(unitSnapshot);
-
-    if (!dialogue?.text) {
-      return {
-        iconUrl: unitSnapshot.icon || getFallbackIcon(),
-        text: ""
-      };
-    }
-
-    return {
-      iconUrl: resolveIconUrl(unitSnapshot, dialogue.iconId),
-      text: dialogue.text
-    };
-  }
+  return {
+    iconUrl:
+      dialogue.iconUrl ||
+      unitSnapshot.defaultCommIconUrl ||
+      unitSnapshot.icon ||
+      getFallbackIcon(),
+    text: dialogue.text
+  };
+}
 
   return null;
 }
 
-function resolveIconUrl(unitSnapshot, iconId) {
-  if (!unitSnapshot) return getFallbackIcon();
 
-  const icons = unitSnapshot.commIcons || [];
-  const found = icons.find(x => x.id === iconId);
-
-  return found?.url || getFallbackIcon();
-}
 
 export function resetCommPanel() {
   const { icon, message } = getCommElements();
@@ -119,11 +122,31 @@ export function showUnitDefaultComm(unitId, snapshot) {
   const unitSnapshot = getUnitSnapshot(snapshot, unitId);
   if (!unitSnapshot) return;
 
-  const iconUrl = unitSnapshot.icon || getFallbackIcon();
+  const iconUrl =
+    unitSnapshot.defaultCommIconUrl ||
+    unitSnapshot.icon ||
+    getFallbackIcon();
 
   showCommPanel({
     iconUrl,
     text: ""
+  });
+}
+
+export function updateCommByEvent(event, snapshot) {
+  if (!event) return;
+
+  const unitSnapshot =
+    getUnitSnapshot(snapshot, event.unit);
+
+  const payload =
+    resolveCommPayload(unitSnapshot, event);
+
+  if (!payload) return;
+
+  showCommPanel({
+    iconUrl: payload.iconUrl || getFallbackIcon(),
+    text: payload.text || ""
   });
 }
 
