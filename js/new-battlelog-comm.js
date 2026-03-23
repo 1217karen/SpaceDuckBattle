@@ -144,22 +144,5 @@ export function updateCommByEvent(event, snapshot) {
 
   if (!payload) return;
 
-  showCommPanel({
-    iconUrl: payload.iconUrl || getFallbackIcon(),
-    text: payload.text || ""
-  });
-}
-
-export function updateCommByEvent(event, snapshot) {
-  if (!event) return;
-
-  const unitSnapshot =
-    getUnitSnapshot(snapshot, event.unit);
-
-  const payload =
-    resolveCommPayload(unitSnapshot, event);
-
-  if (!payload) return;
-
   showCommPanel(payload);
 }
