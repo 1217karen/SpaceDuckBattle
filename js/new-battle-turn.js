@@ -101,10 +101,13 @@ export function runBattleTurns({
       for (const unit of units) {
         if (unit.hp <= 0) continue;
 
-        context.pushLog({
-          type: "standbyUnit",
-          unit: unit.id
+        context.beginGroup({
+          type: "turnUnit",
+          unit: unit.id,
+          actionLabel: "スタンバイ"
         });
+
+        context.endGroup();
       }
 
       context.pushLog({
