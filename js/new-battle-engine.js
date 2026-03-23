@@ -28,7 +28,6 @@ import { createBattleContext } from "./new-battle-context.js";
 import { tryUseSkill } from "./new-battle-skill.js";
 import { runBattleTurns } from "./new-battle-turn.js";
 
-console.log("snapshot units", snapshot.units);
 // ==========================================================
 // メイン
 // ==========================================================
@@ -37,6 +36,8 @@ export function simulateBattle(snapshot) {
 
   const board = snapshot.board ?? { width: 7, height: 5 };
   const MAX_TURNS = snapshot.maxTurns ?? 50;
+
+  console.log("snapshot units", snapshot.units);
 
   // ======================================================
   // snapshotコピー
