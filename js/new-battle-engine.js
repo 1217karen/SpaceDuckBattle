@@ -28,7 +28,7 @@ import { createBattleContext } from "./new-battle-context.js";
 import { tryUseSkill } from "./new-battle-skill.js";
 import { runBattleTurns } from "./new-battle-turn.js";
 
-
+console.log("snapshot units", snapshot.units);
 // ==========================================================
 // メイン
 // ==========================================================
