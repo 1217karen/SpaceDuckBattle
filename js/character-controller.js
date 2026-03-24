@@ -2,27 +2,6 @@
 
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 
-function getNoImageUrl() {
-  return "https://placehold.co/60x60?text=NO+IMG";
-}
-
-function normalizeCommIcons(commIcons) {
-  if (!Array.isArray(commIcons)) return [];
-
-  return commIcons
-    .map((item, index) => ({
-      id:
-        typeof item?.id === "number"
-          ? item.id
-          : index + 1,
-      url:
-        typeof item?.url === "string"
-          ? item.url
-          : ""
-    }))
-    .filter(item => item.url.trim() !== "");
-}
-
 function normalizeDialogueList(dialogue) {
   if (Array.isArray(dialogue)) {
     return dialogue.map(item => ({
@@ -131,38 +110,6 @@ function addCommRow(typeKey, rowData = {}) {
   if (!list) return;
 
   list.appendChild(createCommRowElement(typeKey, rowData));
-}
-
-function createIconCard(item) {
-  const card = document.createElement("div");
-  card.className = "iconPickerCard";
-  card.dataset.id = String(item.id);
-  card.dataset.url = item.url;
-
-  const img = document.createElement("img");
-  img.src = item.url;
-  img.alt = `icon ${item.id}`;
-
-  const label = document.createElement("div");
-  label.className = "iconPickerCardId";
-  label.textContent = `ID ${item.id}`;
-
-  card.appendChild(img);
-  card.appendChild(label);
-
-  card.addEventListener("click", () => {
-    if (!currentPickerButton) return;
-
-    setButtonPreview(
-      currentPickerButton,
-      item.id,
-      item.url
-    );
-
-    closeIconPicker();
-  });
-
-  return card;
 }
 
 function renderIconPicker() {
