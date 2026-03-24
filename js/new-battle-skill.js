@@ -34,14 +34,16 @@ export function tryUseSkill(unit, context) {
 
     if (!hasEffect) continue;
 
-    context.beginGroup({
-      type: "skillUse",
-      block: "skill",
-      unit: unit.id,
-      skill: skill.type,
-      rangeCells: result.preview?.cells ?? null,
-      rangeStyle: result.preview?.style ?? null
-    });
+    context.beginGroup(
+      context.attachCommToEvent({
+        type: "skillUse",
+        block: "skill",
+        unit: unit.id,
+        skill: skill.type,
+        rangeCells: result.preview?.cells ?? null,
+        rangeStyle: result.preview?.style ?? null
+      })
+    );
 
     for (let action of actions) {
 
