@@ -255,7 +255,11 @@ if (ev.type === "__groupStart") {
   target.appendChild(spacer);
 
   if (ev.label) {
-    updateCommByEvent(ev.label, battleState.snapshot);
+    updateCommByEvent(
+      ev.label,
+      battleState.snapshot,
+      actingUnit
+    );
 
     playLogEvent(
       ev.label,
@@ -304,7 +308,8 @@ if (ev.type === "__groupStart") {
 
     updateCommByEvent(
       ev.type === "__groupStart" ? ev.label : ev,
-      battleState.snapshot
+      battleState.snapshot,
+      actingUnit
     );
 
     if (
