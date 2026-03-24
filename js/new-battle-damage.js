@@ -122,7 +122,7 @@ runAfterDamage(ctx, {
 });
 
 if (target.hp <= 0) {
-  ctx.killUnit(target);
+  ctx.killUnit(target, source);
 }
 }
 
