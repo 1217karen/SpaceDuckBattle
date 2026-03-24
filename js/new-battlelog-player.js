@@ -270,10 +270,13 @@ if (ev.type === "__groupStart") {
       depth
     );
 
-    const delay =
-      ev.label.type === "effectTrigger"
-        ? EFFECT_DELAY
-        : EVENT_DELAY;
+    let delay = EVENT_DELAY;
+
+    if (ev.label.type === "effectTrigger") {
+      delay = EFFECT_DELAY;
+    } else if (ev.label.type === "turnUnit") {
+      delay = UNIT_DELAY;
+    }
 
     await sleep(delay);
   }
