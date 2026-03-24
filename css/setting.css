@@ -1,0 +1,30 @@
+.skillBlock {
+  margin-bottom: 20px;
+}
+
+.skillSelect {
+  min-width: 220px;
+  margin-bottom: 10px;
+}
+
+.skillDialogueList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skillDialogueRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skillDialogueInput {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.addSkillDialogueLine {
+  align-self: flex-start;
+}
