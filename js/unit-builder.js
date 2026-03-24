@@ -50,6 +50,7 @@ const unit = {
 
   patterns: duck.patterns || [],
   commIcons: duck.commIcons || [],
+  commDialogues: duck.commDialogues || {},
 
   skills: (pattern.skills || [])
     .filter(s => {
