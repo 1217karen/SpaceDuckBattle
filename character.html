@@ -29,31 +29,42 @@
 
 <h2>汎用セリフ</h2>
 
-<label>
-  戦闘開始時セリフ
-  <input id="battleStartText">
-</label>
+<div class="commRow">
+  <button type="button" id="battleStartIconButton" class="commIconPickerButton">
+    <img id="battleStartIconPreview" src="https://placehold.co/60x60?text=NO+IMG" alt="battle start icon">
+  </button>
 
-<div class="commIconSection">
-  <div class="commIconSectionTitle">戦闘開始時アイコン</div>
-  <div id="battleStartIconList" class="commIconList"></div>
+  <div class="commInputArea">
+    <label class="commLabelText">戦闘開始時セリフ</label>
+    <input id="battleStartText">
+  </div>
 </div>
 
-<br>
+<div class="commRow">
+  <button type="button" id="turnChangeIconButton" class="commIconPickerButton">
+    <img id="turnChangeIconPreview" src="https://placehold.co/60x60?text=NO+IMG" alt="turn change icon">
+  </button>
 
-<label>
-  ターンチェンジ時セリフ
-  <input id="turnChangeText">
-</label>
-
-<div class="commIconSection">
-  <div class="commIconSectionTitle">ターンチェンジ時アイコン</div>
-  <div id="turnChangeIconList" class="commIconList"></div>
+  <div class="commInputArea">
+    <label class="commLabelText">ターンチェンジ時セリフ</label>
+    <input id="turnChangeText">
+  </div>
 </div>
 
 <br><br>
 
 <button id="saveCharacter">キャラ設定を保存</button>
+
+<div id="iconPickerModal" class="iconPickerModal hidden">
+  <div class="iconPickerWindow">
+    <div class="iconPickerHeader">
+      <span>アイコン選択</span>
+      <button type="button" id="iconPickerClose">×</button>
+    </div>
+
+    <div id="iconPickerList" class="iconPickerList"></div>
+  </div>
+</div>
 
 <script type="module" src="./js/character-controller.js"></script>
 
