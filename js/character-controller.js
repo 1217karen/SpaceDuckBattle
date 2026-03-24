@@ -21,17 +21,120 @@ function normalizeCommIcons(commIcons) {
     .filter(item => item.url.trim() !== "");
 }
 
-let currentPickerTarget = null;
+function normalizeDialogueList(dialogue) {
+  if (Array.isArray(dialogue)) {
+    return dialogue.map(item => ({
+      text:
+        typeof item?.text === "string"
+          ? item.text
+          : "",
+      iconId:
+        typeof item?.iconId === "number" && item.iconId > 0
+          ? item.iconId
+          : null,
+      iconUrl:
+        typeof item?.iconUrl === "string"
+          ? item.iconUrl
+          : ""
+    }));
+  }
+
+  if (dialogue && typeof dialogue === "object") {
+    return [{
+      text:
+        typeof dialogue.text === "string"
+          ? dialogue.text
+          : "",
+      iconId:
+        typeof dialogue.iconId === "number" && dialogue.iconId > 0
+          ? dialogue.iconId
+          : null,
+      iconUrl:
+        typeof dialogue.iconUrl === "string"
+          ? dialogue.iconUrl
+          : ""
+    }];
+  }
+
+  return [{
+    text: "",
+    iconId: null,
+    iconUrl: ""
+  }];
+}
+
+let currentPickerButton = null;
 let currentCommIcons = [];
+let nextCommRowId = 1;
 
-function setPreview(target, iconId, iconUrl) {
-  const preview =
-    document.getElementById(`${target}IconPreview`);
+function createCommRowElement(typeKey, rowData = {}) {
+  const rowId = nextCommRowId++;
+  const row = document.createElement("div");
+  row.className = "commRow";
+  row.dataset.type = typeKey;
+  row.dataset.rowId = String(rowId);
 
-  const button =
-    document.getElementById(`${target}IconButton`);
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "commIconPickerButton";
+  button.dataset.selectedId =
+    rowData.iconId ? String(rowData.iconId) : "";
+  button.dataset.selectedUrl =
+    rowData.iconUrl || "";
 
-  if (!preview || !button) return;
+  const img = document.createElement("img");
+  img.src = rowData.iconUrl || getNoImageUrl();
+  img.alt = `${typeKey} icon`;
+
+  button.appendChild(img);
+
+  button.addEventListener("click", () => {
+    currentPickerButton = button;
+    renderIconPicker();
+    document.getElementById("iconPickerModal")
+      .classList.remove("hidden");
+  });
+
+  const inputArea = document.createElement("div");
+  inputArea.className = "commInputArea";
+
+  const input = document.createElement("input");
+  input.className = "commTextInput";
+  input.value = rowData.text || "";
+
+  inputArea.appendChild(input);
+
+  const removeButton = document.createElement("button");
+  removeButton.type = "button";
+  removeButton.textContent = "×";
+
+  removeButton.addEventListener("click", () => {
+    const list = document.getElementById(`${typeKey}List`);
+    if (!list) return;
+
+    row.remove();
+
+    if (list.children.length === 0) {
+      addCommRow(typeKey);
+    }
+  });
+
+  row.appendChild(button);
+  row.appendChild(inputArea);
+  row.appendChild(removeButton);
+
+  return row;
+}
+
+function addCommRow(typeKey, rowData = {}) {
+  const list = document.getElementById(`${typeKey}List`);
+  if (!list) return;
+
+  list.appendChild(createCommRowElement(typeKey, rowData));
+}
+
+function setButtonPreview(button, iconId, iconUrl) {
+  if (!button) return;
 
   const safeId =
     typeof iconId === "number" && iconId > 0
@@ -49,8 +152,10 @@ function setPreview(target, iconId, iconUrl) {
   button.dataset.selectedUrl =
     safeUrl;
 
-  preview.src =
-    safeUrl || getNoImageUrl();
+  const img = button.querySelector("img");
+  if (img) {
+    img.src = safeUrl || getNoImageUrl();
+  }
 }
 
 function createIconCard(item) {
@@ -71,10 +176,10 @@ function createIconCard(item) {
   card.appendChild(label);
 
   card.addEventListener("click", () => {
-    if (!currentPickerTarget) return;
+    if (!currentPickerButton) return;
 
-    setPreview(
-      currentPickerTarget,
+    setButtonPreview(
+      currentPickerButton,
       item.id,
       item.url
     );
@@ -104,19 +209,61 @@ function renderIconPicker() {
   });
 }
 
-function openIconPicker(target) {
-  currentPickerTarget = target;
-  renderIconPicker();
-
-  document.getElementById("iconPickerModal")
-    .classList.remove("hidden");
-}
-
 function closeIconPicker() {
   document.getElementById("iconPickerModal")
     .classList.add("hidden");
 
-  currentPickerTarget = null;
+  currentPickerButton = null;
+}
+
+function getCommRows(typeKey) {
+  const list = document.getElementById(`${typeKey}List`);
+  if (!list) return [];
+
+  return [...list.querySelectorAll(".commRow")];
+}
+
+function collectDialogueList(typeKey) {
+  const rows = getCommRows(typeKey);
+
+  return rows
+    .map(row => {
+      const button =
+        row.querySelector(".commIconPickerButton");
+
+      const input =
+        row.querySelector(".commTextInput");
+
+      const iconId =
+        Number(button?.dataset.selectedId || 0);
+
+      const iconUrl =
+        button?.dataset.selectedUrl || "";
+
+      const text =
+        input?.value.trim() || "";
+
+      return {
+        text,
+        iconId: iconId || null,
+        iconUrl
+      };
+    })
+    .filter(item => item.text !== "" || item.iconUrl !== "");
+}
+
+function renderCommList(typeKey, dialogues) {
+  const list = document.getElementById(`${typeKey}List`);
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  const normalized =
+    normalizeDialogueList(dialogues);
+
+  normalized.forEach(item => {
+    addCommRow(typeKey, item);
+  });
 }
 
 function loadCharacter() {
@@ -125,8 +272,8 @@ function loadCharacter() {
 
   if (!data) {
     currentCommIcons = [];
-    setPreview("battleStart", null, "");
-    setPreview("turnChange", null, "");
+    renderCommList("battleStart", null);
+    renderCommList("turnChange", null);
     return;
   }
 
@@ -136,36 +283,28 @@ function loadCharacter() {
   document.getElementById("duckName").value =
     duck.name ?? "";
 
-  document.getElementById("battleStartText").value =
-    duck.commDialogues?.battleStart?.text ?? "";
-
-  document.getElementById("turnChangeText").value =
-    duck.commDialogues?.turnChange?.text ?? "";
-
   currentCommIcons =
     normalizeCommIcons(duck.commIcons);
 
-  setPreview(
+  renderCommList(
     "battleStart",
-    duck.commDialogues?.battleStart?.iconId ?? null,
-    duck.commDialogues?.battleStart?.iconUrl ?? ""
+    duck.commDialogues?.battleStart
   );
 
-  setPreview(
+  renderCommList(
     "turnChange",
-    duck.commDialogues?.turnChange?.iconId ?? null,
-    duck.commDialogues?.turnChange?.iconUrl ?? ""
+    duck.commDialogues?.turnChange
   );
 }
 
-document.getElementById("battleStartIconButton")
+document.getElementById("addBattleStartLine")
   .addEventListener("click", () => {
-    openIconPicker("battleStart");
+    addCommRow("battleStart");
   });
 
-document.getElementById("turnChangeIconButton")
+document.getElementById("addTurnChangeLine")
   .addEventListener("click", () => {
-    openIconPicker("turnChange");
+    addCommRow("turnChange");
   });
 
 document.getElementById("iconPickerClose")
@@ -189,29 +328,11 @@ document.getElementById("saveCharacter")
     const name =
       document.getElementById("duckName").value;
 
-    const battleStartText =
-      document.getElementById("battleStartText").value.trim();
+    const battleStartList =
+      collectDialogueList("battleStart");
 
-    const turnChangeText =
-      document.getElementById("turnChangeText").value.trim();
-
-    const battleStartButton =
-      document.getElementById("battleStartIconButton");
-
-    const turnChangeButton =
-      document.getElementById("turnChangeIconButton");
-
-    const battleStartIconId =
-      Number(battleStartButton.dataset.selectedId || 0);
-
-    const turnChangeIconId =
-      Number(turnChangeButton.dataset.selectedId || 0);
-
-    const battleStartIconUrl =
-      battleStartButton.dataset.selectedUrl || "";
-
-    const turnChangeIconUrl =
-      turnChangeButton.dataset.selectedUrl || "";
+    const turnChangeList =
+      collectDialogueList("turnChange");
 
     const duck = {
       ...oldDuck,
@@ -219,18 +340,8 @@ document.getElementById("saveCharacter")
       name,
       commDialogues: {
         ...(oldDuck.commDialogues || {}),
-        battleStart: {
-          ...(oldDuck.commDialogues?.battleStart || {}),
-          text: battleStartText,
-          iconId: battleStartIconId || null,
-          iconUrl: battleStartIconUrl
-        },
-        turnChange: {
-          ...(oldDuck.commDialogues?.turnChange || {}),
-          text: turnChangeText,
-          iconId: turnChangeIconId || null,
-          iconUrl: turnChangeIconUrl
-        }
+        battleStart: battleStartList,
+        turnChange: turnChangeList
       }
     };
 
