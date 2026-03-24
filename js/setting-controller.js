@@ -1,11 +1,17 @@
 //setting-controller.js
 
 import { skillHandlers } from "./skills.js";
+import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 
 let currentSlot = 0;
 
 const skillList = Object.keys(skillHandlers);
 const skillArea = document.getElementById("skillArea");
+
+let currentCommIcons = [];
+let nextDialogueRowId = 1;
+
+const iconPicker = createIconPicker();
 
 const patterns = [
   {
@@ -35,21 +41,75 @@ tabs.forEach(tab => {
   });
 });
 
+function normalizeDialogueList(dialogue) {
+  if (Array.isArray(dialogue)) {
+    return dialogue.map(item => ({
+      text:
+        typeof item?.text === "string"
+          ? item.text
+          : "",
+      iconId:
+        typeof item?.iconId === "number" && item.iconId > 0
+          ? item.iconId
+          : null,
+      iconUrl:
+        typeof item?.iconUrl === "string"
+          ? item.iconUrl
+          : ""
+    }));
+  }
+
+  if (dialogue && typeof dialogue === "object") {
+    return [{
+      text:
+        typeof dialogue.text === "string"
+          ? dialogue.text
+          : "",
+      iconId:
+        typeof dialogue.iconId === "number" && dialogue.iconId > 0
+          ? dialogue.iconId
+          : null,
+      iconUrl:
+        typeof dialogue.iconUrl === "string"
+          ? dialogue.iconUrl
+          : ""
+    }];
+  }
+
+  return [{
+    text: "",
+    iconId: null,
+    iconUrl: ""
+  }];
+}
+
 function normalizeSkill(skill) {
   if (typeof skill === "string") {
-    return { type: skill };
+    return {
+      type: skill,
+      dialogue: [{
+        text: "",
+        iconId: null,
+        iconUrl: ""
+      }]
+    };
   }
 
   if (skill && typeof skill === "object") {
     return {
       type: skill.type ?? "",
-      dialogue: skill.dialogue?.text
-        ? { text: skill.dialogue.text }
-        : undefined
+      dialogue: normalizeDialogueList(skill.dialogue)
     };
   }
 
-  return { type: "" };
+  return {
+    type: "",
+    dialogue: [{
+      text: "",
+      iconId: null,
+      iconUrl: ""
+    }]
+  };
 }
 
 function normalizePattern(pattern, isFirstSlot = false) {
@@ -62,6 +122,86 @@ function normalizePattern(pattern, isFirstSlot = false) {
     public: isFirstSlot ? true : !!pattern?.public,
     skills: normalizedSkills
   };
+}
+
+function createSkillDialogueRow(dialogueData = {}) {
+  const rowId = nextDialogueRowId++;
+
+  const row = document.createElement("div");
+  row.className = "skillDialogueRow";
+  row.dataset.rowId = String(rowId);
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "commIconPickerButton";
+  button.dataset.selectedId =
+    dialogueData.iconId ? String(dialogueData.iconId) : "";
+  button.dataset.selectedUrl =
+    dialogueData.iconUrl || "";
+
+  const img = document.createElement("img");
+  img.src = dialogueData.iconUrl || getNoImageUrl();
+  img.alt = "dialogue icon";
+
+  button.appendChild(img);
+
+  button.addEventListener("click", () => {
+    iconPicker.open(button, currentCommIcons);
+  });
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "skillDialogueInput";
+  input.placeholder = "スキル使用時セリフ";
+  input.value = dialogueData.text || "";
+
+  const removeButton = document.createElement("button");
+  removeButton.type = "button";
+  removeButton.textContent = "×";
+
+  removeButton.addEventListener("click", () => {
+    const list = row.parentElement;
+    if (!list) return;
+
+    row.remove();
+
+    if (list.children.length === 0) {
+      list.appendChild(createSkillDialogueRow());
+    }
+  });
+
+  row.appendChild(button);
+  row.appendChild(input);
+  row.appendChild(removeButton);
+
+  return row;
+}
+
+function createSkillDialogueList(dialogues = []) {
+  const list = document.createElement("div");
+  list.className = "skillDialogueList";
+
+  const normalized = normalizeDialogueList(dialogues);
+
+  normalized.forEach(item => {
+    list.appendChild(createSkillDialogueRow(item));
+  });
+
+  const addButton = document.createElement("button");
+  addButton.type = "button";
+  addButton.className = "addSkillDialogueLine";
+  addButton.textContent = "＋";
+
+  addButton.addEventListener("click", () => {
+    list.insertBefore(
+      createSkillDialogueRow(),
+      addButton
+    );
+  });
+
+  list.appendChild(addButton);
+
+  return list;
 }
 
 function createSkillBlock(skillData, index) {
@@ -86,15 +226,13 @@ function createSkillBlock(skillData, index) {
 
   select.value = skillData?.type ?? "";
 
-  const textInput = document.createElement("input");
-  textInput.type = "text";
-  textInput.className = "skillDialogueInput";
-  textInput.placeholder = "スキル使用時セリフ";
-  textInput.value = skillData?.dialogue?.text ?? "";
+  const dialogueList = createSkillDialogueList(
+    skillData?.dialogue
+  );
 
   wrapper.appendChild(select);
   wrapper.appendChild(document.createElement("br"));
-  wrapper.appendChild(textInput);
+  wrapper.appendChild(dialogueList);
 
   return wrapper;
 }
@@ -119,22 +257,45 @@ function readSkillArea() {
     const type =
       block.querySelector(".skillSelect")?.value ?? "";
 
-    const text =
-      block.querySelector(".skillDialogueInput")?.value.trim() ?? "";
+    const dialogueRows =
+      block.querySelectorAll(".skillDialogueRow");
+
+    const dialogue = [...dialogueRows]
+      .map(row => {
+        const button =
+          row.querySelector(".commIconPickerButton");
+
+        const input =
+          row.querySelector(".skillDialogueInput");
+
+        const iconId =
+          Number(button?.dataset.selectedId || 0);
+
+        const iconUrl =
+          button?.dataset.selectedUrl || "";
+
+        const text =
+          input?.value.trim() || "";
+
+        return {
+          text,
+          iconId: iconId || null,
+          iconUrl
+        };
+      })
+      .filter(item => item.text !== "" || item.iconUrl !== "");
 
     if (!type) {
       return { type: "" };
     }
 
-    if (!text) {
+    if (dialogue.length === 0) {
       return { type };
     }
 
     return {
       type,
-      dialogue: {
-        text
-      }
+      dialogue
     };
   });
 }
@@ -185,6 +346,9 @@ function loadDuck() {
 
   const duck =
     JSON.parse(data);
+
+  currentCommIcons =
+    normalizeCommIcons(duck.commIcons);
 
   if (duck.patterns) {
     for (let i = 0; i < 3; i++) {
