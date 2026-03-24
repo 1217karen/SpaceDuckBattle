@@ -6,6 +6,7 @@
 
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/common.css">
+<link rel="stylesheet" href="./css/character.css">
 </head>
 
 <body>
@@ -17,34 +18,44 @@
 
   <main class="center-panel">
 
-    <h1>キャラ設定</h1>
+<h1>キャラ設定</h1>
 
-    <h2>名前</h2>
+<h2>名前</h2>
 
-    <label>
-      アヒル名（15文字以内）
-      <input id="duckName" maxlength="15">
-    </label>
+<label>
+  アヒル名（15文字以内）
+  <input id="duckName" maxlength="15">
+</label>
 
-    <h2>汎用セリフ</h2>
+<h2>汎用セリフ</h2>
 
-    <label>
-      戦闘開始時セリフ
-      <input id="battleStartText">
-    </label>
+<label>
+  戦闘開始時セリフ
+  <input id="battleStartText">
+</label>
 
-    <br><br>
+<div class="commIconSection">
+  <div class="commIconSectionTitle">戦闘開始時アイコン</div>
+  <div id="battleStartIconList" class="commIconList"></div>
+</div>
 
-    <label>
-      ターンチェンジ時セリフ
-      <input id="turnChangeText">
-    </label>
+<br>
 
-    <br><br>
+<label>
+  ターンチェンジ時セリフ
+  <input id="turnChangeText">
+</label>
 
-    <button id="saveCharacter">キャラ設定を保存</button>
+<div class="commIconSection">
+  <div class="commIconSectionTitle">ターンチェンジ時アイコン</div>
+  <div id="turnChangeIconList" class="commIconList"></div>
+</div>
 
-    <script type="module" src="./js/character-controller.js"></script>
+<br><br>
+
+<button id="saveCharacter">キャラ設定を保存</button>
+
+<script type="module" src="./js/character-controller.js"></script>
 
   </main>
 
