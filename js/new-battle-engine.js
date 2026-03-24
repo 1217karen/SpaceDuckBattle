@@ -71,6 +71,156 @@ export function simulateBattle(snapshot) {
   // ======================================================
 
   const simState = { finished: false };
+  // ======================================================
+  // ランダム抽選
+  // ======================================================
+
+  function normalizeDialogueCandidates(dialogue) {
+  if (!dialogue) return [];
+
+  if (Array.isArray(dialogue)) {
+    return dialogue.filter(item =>
+      item && typeof item.text === "string"
+    );
+  }
+
+  if (typeof dialogue.text === "string") {
+    return [dialogue];
+  }
+
+  return [];
+}
+
+function pickRandomDialogue(dialogue) {
+  const candidates =
+    normalizeDialogueCandidates(dialogue);
+
+  if (candidates.length === 0) return null;
+  if (candidates.length === 1) return candidates[0];
+
+  const index =
+    Math.floor(Math.random() * candidates.length);
+
+  return candidates[index];
+}
+
+function findUnitById(unitId) {
+  return units.find(u => u.id === unitId) || null;
+}
+
+function buildCommPayload(unit, dialogue) {
+  if (!unit || !dialogue?.text) return null;
+
+  return {
+    iconUrl:
+      dialogue.iconUrl ||
+      unit.defaultCommIconUrl ||
+      unit.icon ||
+      "https://placehold.co/60x60?text=NO+IMG",
+    text: dialogue.text
+  };
+}
+
+function getSkillDialogue(unit, skillType) {
+  if (!unit || !skillType) return null;
+
+  const patterns = unit.patterns || [];
+
+  for (const pattern of patterns) {
+    const skills = pattern.skills || [];
+
+    for (const skill of skills) {
+      if (skill.type !== skillType) continue;
+      return pickRandomDialogue(skill.dialogue || null);
+    }
+  }
+
+  return null;
+}
+
+function getFixedDialogue(unit, key) {
+  if (!unit || !key) return null;
+
+  const dialogues = unit.commDialogues || null;
+  if (!dialogues) return null;
+
+  return pickRandomDialogue(dialogues[key] || null);
+}
+
+function resolveCommPayloadForEvent(event) {
+  if (!event) return null;
+
+  if (event.type === "skillUse") {
+    const unit = findUnitById(event.unit);
+    const dialogue =
+      getSkillDialogue(unit, event.skill);
+
+    return buildCommPayload(unit, dialogue);
+  }
+
+  if (event.type === "turnUnit") {
+    const unit = findUnitById(event.unit);
+    if (!unit) return null;
+
+    let dialogue = null;
+
+    if (event.phase === "battleStart") {
+      dialogue = getFixedDialogue(unit, "battleStart");
+    } else if (event.phase === "turnChange") {
+      dialogue = getFixedDialogue(unit, "turnChange");
+    }
+
+    if (!dialogue?.text) {
+      return {
+        iconUrl:
+          unit.defaultCommIconUrl ||
+          unit.icon ||
+          "https://placehold.co/60x60?text=NO+IMG",
+        text: ""
+      };
+    }
+
+    return buildCommPayload(unit, dialogue);
+  }
+
+  if (event.type === "kill") {
+    const unit = findUnitById(event.unit);
+    const dialogue =
+      getFixedDialogue(unit, "kill");
+
+    return buildCommPayload(unit, dialogue);
+  }
+
+  if (event.type === "battleEnd") {
+    if (event.winner == null) return null;
+
+    const unit = findUnitById(event.unit);
+    if (!unit) return null;
+    if (unit.team !== event.winner) return null;
+
+    const dialogue =
+      getFixedDialogue(unit, "battleEndWin");
+
+    return buildCommPayload(unit, dialogue);
+  }
+
+  return null;
+}
+
+function pushBattleLog(event) {
+  const comm =
+    resolveCommPayloadForEvent(event);
+
+  if (comm) {
+    context.pushLog({
+      ...event,
+      comm
+    });
+    return;
+  }
+
+  context.pushLog(event);
+}
 
   // ======================================================
   // kill処理
@@ -83,7 +233,7 @@ export function simulateBattle(snapshot) {
     unit._isDead = true;
 
     if (source && source.id !== unit.id) {
-      context.pushLog({
+      context.pushBattleLog({
         type: "kill",
         unit: source.id,
         target: unit.id
