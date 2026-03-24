@@ -207,19 +207,24 @@ function resolveCommPayloadForEvent(event) {
   return null;
 }
 
-function pushBattleLog(event) {
+function attachCommToEvent(event) {
   const comm =
     resolveCommPayloadForEvent(event);
 
   if (comm) {
-    context.pushLog({
+    return {
       ...event,
       comm
-    });
-    return;
+    };
   }
 
-  context.pushLog(event);
+  return event;
+}
+
+function pushBattleLog(event) {
+  context.pushLog(
+    attachCommToEvent(event)
+  );
 }
 
   // ======================================================
@@ -287,6 +292,9 @@ function pushBattleLog(event) {
     killUnit,
     battleState: simState
   });
+
+  context.attachCommToEvent = attachCommToEvent;
+  context.pushBattleLog = pushBattleLog;
 
   const log = context.log;
 
