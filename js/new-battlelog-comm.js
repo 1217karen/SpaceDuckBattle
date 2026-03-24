@@ -15,6 +15,30 @@ function getUnitSnapshot(snapshot, unitId) {
   return snapshot?.units?.find(u => u.id === unitId) || null;
 }
 
+function normalizeDialogueCandidates(dialogue) {
+  if (!dialogue) return [];
+
+  if (Array.isArray(dialogue)) {
+    return dialogue.filter(item => item && typeof item.text === "string");
+  }
+
+  if (typeof dialogue.text === "string") {
+    return [dialogue];
+  }
+
+  return [];
+}
+
+function pickRandomDialogue(dialogue) {
+  const candidates = normalizeDialogueCandidates(dialogue);
+
+  if (candidates.length === 0) return null;
+  if (candidates.length === 1) return candidates[0];
+
+  const index = Math.floor(Math.random() * candidates.length);
+  return candidates[index];
+}
+
 function getSkillDialogue(unitSnapshot, skillType) {
   if (!unitSnapshot || !skillType) return null;
 
@@ -25,7 +49,7 @@ function getSkillDialogue(unitSnapshot, skillType) {
 
     for (const skill of skills) {
       if (skill.type !== skillType) continue;
-      return skill.dialogue || null;
+      return pickRandomDialogue(skill.dialogue || null);
     }
   }
 
@@ -35,25 +59,14 @@ function getSkillDialogue(unitSnapshot, skillType) {
 function getFixedDialogue(unitSnapshot, key) {
   if (!unitSnapshot || !key) return null;
 
-  const dialogues =
-    unitSnapshot.commDialogues || null;
-
+  const dialogues = unitSnapshot.commDialogues || null;
   if (!dialogues) return null;
 
-  return dialogues[key] || null;
+  return pickRandomDialogue(dialogues[key] || null);
 }
 
-function resolveCommPayload(unitSnapshot, event) {
-  if (!unitSnapshot || !event) return null;
-
-  // スキル使用時
-if (event.type === "skillUse") {
-  const dialogue =
-    getSkillDialogue(unitSnapshot, event.skill);
-
-  if (!dialogue?.text) {
-    return null;
-  }
+function buildCommPayload(unitSnapshot, dialogue) {
+  if (!unitSnapshot || !dialogue?.text) return null;
 
   return {
     iconUrl:
@@ -65,17 +78,15 @@ if (event.type === "skillUse") {
   };
 }
 
-if (event.type === "turnUnit") {
+function resolveTurnUnitPayload(unitSnapshot, event) {
+  if (!unitSnapshot || !event) return null;
+
   let dialogue = null;
 
   if (event.phase === "battleStart") {
-    dialogue =
-      getFixedDialogue(unitSnapshot, "battleStart");
-  }
-
-  else if (event.phase === "turnChange") {
-    dialogue =
-      getFixedDialogue(unitSnapshot, "turnChange");
+    dialogue = getFixedDialogue(unitSnapshot, "battleStart");
+  } else if (event.phase === "turnChange") {
+    dialogue = getFixedDialogue(unitSnapshot, "turnChange");
   }
 
   if (!dialogue?.text) {
@@ -88,20 +99,43 @@ if (event.type === "turnUnit") {
     };
   }
 
-  return {
-    iconUrl:
-      dialogue.iconUrl ||
-      unitSnapshot.defaultCommIconUrl ||
-      unitSnapshot.icon ||
-      getFallbackIcon(),
-    text: dialogue.text
-  };
+  return buildCommPayload(unitSnapshot, dialogue);
 }
+
+function resolveBattleEndPayload(unitSnapshot, event) {
+  if (!unitSnapshot || !event) return null;
+
+  if (event.winner == null) return null;
+  if (unitSnapshot.team !== event.winner) return null;
+
+  const dialogue =
+    getFixedDialogue(unitSnapshot, "battleEndWin");
+
+  if (!dialogue?.text) return null;
+
+  return buildCommPayload(unitSnapshot, dialogue);
+}
+
+function resolveCommPayload(unitSnapshot, event) {
+  if (!unitSnapshot || !event) return null;
+
+  if (event.type === "skillUse") {
+    const dialogue =
+      getSkillDialogue(unitSnapshot, event.skill);
+
+    return buildCommPayload(unitSnapshot, dialogue);
+  }
+
+  if (event.type === "turnUnit") {
+    return resolveTurnUnitPayload(unitSnapshot, event);
+  }
+
+  if (event.type === "battleEnd") {
+    return resolveBattleEndPayload(unitSnapshot, event);
+  }
 
   return null;
 }
-
-
 
 export function resetCommPanel() {
   const { icon, message } = getCommElements();
@@ -142,11 +176,16 @@ export function showUnitDefaultComm(unitId, snapshot) {
   });
 }
 
-export function updateCommByEvent(event, snapshot) {
+export function updateCommByEvent(event, snapshot, fallbackUnitId = null) {
   if (!event) return;
 
+  const unitId =
+    event.unit || fallbackUnitId;
+
+  if (!unitId) return;
+
   const unitSnapshot =
-    getUnitSnapshot(snapshot, event.unit);
+    getUnitSnapshot(snapshot, unitId);
 
   const payload =
     resolveCommPayload(unitSnapshot, event);
