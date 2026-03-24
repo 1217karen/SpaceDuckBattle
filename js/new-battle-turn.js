@@ -58,8 +58,9 @@ export function runBattleTurns({
       context.battleState.finished &&
       !context.battleState._battleEndLogged
     ) {
-      context.pushLog({
+      context.pushBattleLog({
         type: "battleEnd",
+        unit: unit.id,
         winner: context.battleState.winner ?? null
       });
 
@@ -101,12 +102,14 @@ export function runBattleTurns({
       for (const unit of units) {
         if (unit.hp <= 0) continue;
 
-        context.beginGroup({
-          type: "turnUnit",
-          unit: unit.id,
-          phase: "battleStart",
-          actionLabel: "スタンバイ"
-        });
+        context.beginGroup(
+          context.attachCommToEvent({
+            type: "turnUnit",
+            unit: unit.id,
+            phase: "battleStart",
+            actionLabel: "スタンバイ"
+          })
+        );
 
         context.endGroup();
       }
@@ -390,11 +393,13 @@ for (let u of units) {
 
   let hasLog = false;
 
-  context.beginGroup({
-    type: "turnUnit",
-    unit: u.id,
-    phase: "turnChange"
-  });
+  context.beginGroup(
+    context.attachCommToEvent({
+      type: "turnUnit",
+      unit: u.id,
+      phase: "turnChange"
+    })
+  );
 
   // ======================
   // rate effect 減衰
@@ -503,7 +508,7 @@ for (let u of units) {
   // ======================================================
 
   if (!context.battleState._battleEndLogged) {
-    context.pushLog({
+    context.pushBattleLog({
       type: "battleEnd",
       winner: null
     });
