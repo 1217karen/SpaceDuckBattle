@@ -504,12 +504,7 @@ if (effectData.power !== undefined) {
 
 if (rollCritical(source)) {
 
-ctx.pushLog({
-  type: "critical",
-  groupLevel: ctx.depth,
-  subLevel: 1,
-  block: "skill"
-});
+ctx.pushCriticalLog(source, "skill");
 
   if (effectData.stock !== undefined) {
     effectData.stock =
