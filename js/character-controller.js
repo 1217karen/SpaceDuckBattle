@@ -1,5 +1,7 @@
 //character-controller.js
 
+import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
+
 function getNoImageUrl() {
   return "https://placehold.co/60x60?text=NO+IMG";
 }
@@ -63,9 +65,10 @@ function normalizeDialogueList(dialogue) {
   }];
 }
 
-let currentPickerButton = null;
 let currentCommIcons = [];
 let nextCommRowId = 1;
+
+const iconPicker = createIconPicker();
 
 function createCommRowElement(typeKey, rowData = {}) {
   const rowId = nextCommRowId++;
@@ -89,10 +92,7 @@ function createCommRowElement(typeKey, rowData = {}) {
   button.appendChild(img);
 
   button.addEventListener("click", () => {
-    currentPickerButton = button;
-    renderIconPicker();
-    document.getElementById("iconPickerModal")
-      .classList.remove("hidden");
+    iconPicker.open(button, currentCommIcons);
   });
 
   const inputArea = document.createElement("div");
@@ -131,31 +131,6 @@ function addCommRow(typeKey, rowData = {}) {
   if (!list) return;
 
   list.appendChild(createCommRowElement(typeKey, rowData));
-}
-
-function setButtonPreview(button, iconId, iconUrl) {
-  if (!button) return;
-
-  const safeId =
-    typeof iconId === "number" && iconId > 0
-      ? iconId
-      : null;
-
-  const safeUrl =
-    typeof iconUrl === "string" && iconUrl.trim() !== ""
-      ? iconUrl
-      : "";
-
-  button.dataset.selectedId =
-    safeId ? String(safeId) : "";
-
-  button.dataset.selectedUrl =
-    safeUrl;
-
-  const img = button.querySelector("img");
-  if (img) {
-    img.src = safeUrl || getNoImageUrl();
-  }
 }
 
 function createIconCard(item) {
@@ -327,16 +302,6 @@ document.getElementById("addCriticalLine")
 document.getElementById("addKillLine")
   .addEventListener("click", () => {
     addCommRow("kill");
-  });
-
-document.getElementById("iconPickerClose")
-  .addEventListener("click", closeIconPicker);
-
-document.getElementById("iconPickerModal")
-  .addEventListener("click", (e) => {
-    if (e.target.id === "iconPickerModal") {
-      closeIconPicker();
-    }
   });
 
 document.getElementById("saveCharacter")
