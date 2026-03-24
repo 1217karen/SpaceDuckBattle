@@ -192,26 +192,8 @@ function loadDuck() {
     }
   }
 
-  document.getElementById("duckName").value =
-    duck.name ?? "";
-
   document.getElementById("duckType").value =
     duck.type ?? "attack";
-
-  document.getElementById("iconDefault").value =
-    duck.icon?.default ?? "";
-
-  document.getElementById("iconN").value =
-    duck.icon?.N ?? "";
-
-  document.getElementById("iconE").value =
-    duck.icon?.E ?? "";
-
-  document.getElementById("iconS").value =
-    duck.icon?.S ?? "";
-
-  document.getElementById("iconW").value =
-    duck.icon?.W ?? "";
 
   document.getElementById("statAT").value =
     duck.stats?.atk ?? 0;
@@ -240,19 +222,8 @@ const saveBtn =
 saveBtn.addEventListener("click", () => {
   saveCurrentPattern();
 
-  const name =
-    document.getElementById("duckName").value;
-
   const type =
     document.getElementById("duckType").value;
-
-  const icon = {
-    default: document.getElementById("iconDefault").value,
-    N: document.getElementById("iconN").value,
-    E: document.getElementById("iconE").value,
-    S: document.getElementById("iconS").value,
-    W: document.getElementById("iconW").value
-  };
 
   const stats = {
     atk: Number(document.getElementById("statAT").value),
@@ -263,11 +234,16 @@ saveBtn.addEventListener("click", () => {
     tec: Number(document.getElementById("statTEC").value)
   };
 
+  const oldData =
+    localStorage.getItem("duck");
+
+  const oldDuck =
+    oldData ? JSON.parse(oldData) : {};
+
   const duck = {
-    id: "player_duck",
-    name,
+    ...oldDuck,
+    id: oldDuck.id ?? "player_duck",
     type,
-    icon,
     stats,
     patterns
   };
