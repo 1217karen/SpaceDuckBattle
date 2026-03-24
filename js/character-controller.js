@@ -274,6 +274,8 @@ function loadCharacter() {
     currentCommIcons = [];
     renderCommList("battleStart", null);
     renderCommList("turnChange", null);
+    renderCommList("critical", null);
+    renderCommList("kill", null);
     return;
   }
 
@@ -295,6 +297,16 @@ function loadCharacter() {
     "turnChange",
     duck.commDialogues?.turnChange
   );
+
+  renderCommList(
+    "critical",
+    duck.commDialogues?.critical
+  );
+
+  renderCommList(
+    "kill",
+    duck.commDialogues?.kill
+  );
 }
 
 document.getElementById("addBattleStartLine")
@@ -305,6 +317,16 @@ document.getElementById("addBattleStartLine")
 document.getElementById("addTurnChangeLine")
   .addEventListener("click", () => {
     addCommRow("turnChange");
+  });
+
+document.getElementById("addCriticalLine")
+  .addEventListener("click", () => {
+    addCommRow("critical");
+  });
+
+document.getElementById("addKillLine")
+  .addEventListener("click", () => {
+    addCommRow("kill");
   });
 
 document.getElementById("iconPickerClose")
@@ -334,6 +356,12 @@ document.getElementById("saveCharacter")
     const turnChangeList =
       collectDialogueList("turnChange");
 
+    const criticalList =
+      collectDialogueList("critical");
+
+    const killList =
+      collectDialogueList("kill");
+
     const duck = {
       ...oldDuck,
       id: oldDuck.id ?? "player_duck",
@@ -341,7 +369,9 @@ document.getElementById("saveCharacter")
       commDialogues: {
         ...(oldDuck.commDialogues || {}),
         battleStart: battleStartList,
-        turnChange: turnChangeList
+        turnChange: turnChangeList,
+        critical: criticalList,
+        kill: killList
       }
     };
 
