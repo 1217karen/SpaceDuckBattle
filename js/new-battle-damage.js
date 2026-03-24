@@ -87,10 +87,7 @@ if (
     finalDamage =
       Math.floor(finalDamage * 1.5);
 
-ctx.pushLog({
-  type: "critical",
-  block: "skill"
-});
+ctx.pushCriticalLog(source, "skill");
   }
 
 }
