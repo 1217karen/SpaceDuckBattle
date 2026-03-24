@@ -1,4 +1,4 @@
-//management-controller.js
+//assets-controller.js
 
 function normalizeCommIcons(commIcons) {
   if (!Array.isArray(commIcons)) return [];
