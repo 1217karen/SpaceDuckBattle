@@ -32,12 +32,15 @@ function getSkillDialogue(unitSnapshot, skillType) {
   return null;
 }
 
-function getBattleStartDialogue(unitSnapshot) {
-  if (!unitSnapshot) return null;
+function getFixedDialogue(unitSnapshot, key) {
+  if (!unitSnapshot || !key) return null;
 
-  // ここは後で正式な保存場所が決まったら差し替える
-  // 今は未設定扱いで null を返す
-  return null;
+  const dialogues =
+    unitSnapshot.commDialogues || null;
+
+  if (!dialogues) return null;
+
+  return dialogues[key] || null;
 }
 
 function resolveCommPayload(unitSnapshot, event) {
@@ -62,12 +65,18 @@ if (event.type === "skillUse") {
   };
 }
 
-if (
-  event.type === "turnUnit" &&
-  event.actionLabel === "スタンバイ"
-) {
-  const dialogue =
-    getBattleStartDialogue(unitSnapshot);
+if (event.type === "turnUnit") {
+  let dialogue = null;
+
+  if (event.phase === "battleStart") {
+    dialogue =
+      getFixedDialogue(unitSnapshot, "battleStart");
+  }
+
+  else if (event.phase === "turnChange") {
+    dialogue =
+      getFixedDialogue(unitSnapshot, "turnChange");
+  }
 
   if (!dialogue?.text) {
     return {
