@@ -6,104 +6,80 @@
 
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/common.css">
-  
 </head>
 
 <body>
 <div class="layout">
 
   <aside class="left-panel">
-  メニュー
+    メニュー
   </aside>
 
   <main class="center-panel">
 
-<h1>アヒル設定</h1>
+    <h1>ユニット設定</h1>
 
-<h2>基本情報</h2>
+    <h2>タイプ</h2>
 
-<label>
-アヒル名（15文字以内）
-<input id="duckName" maxlength="15">
-</label>
+    <label>
+      タイプ
+      <select id="duckType">
+        <option value="attack">アタック</option>
+        <option value="defense">ディフェンス</option>
+        <option value="heal">ヒール</option>
+        <option value="speed">スピード</option>
+        <option value="technical">テクニカル</option>
+        <option value="support">サポート</option>
+      </select>
+    </label>
 
-<br><br>
+    <h2>ステータス</h2>
 
-<label>
-タイプ
-<select id="duckType">
-<option value="attack">アタック</option>
-<option value="defense">ディフェンス</option>
-<option value="heal">ヒール</option>
-<option value="speed">スピード</option>
-<option value="technical">テクニカル</option>
-<option value="support">サポート</option>
-</select>
-</label>
+    <label>ATK <input type="number" id="statAT" value="0"></label><br>
+    <label>DEF <input type="number" id="statDF" value="0"></label><br>
+    <label>HEAL <input type="number" id="statHEAL" value="0"></label><br>
+    <label>SPEED <input type="number" id="statSPEED" value="0"></label><br>
+    <label>CRI <input type="number" id="statCRI" value="0"></label><br>
+    <label>TEC <input type="number" id="statTEC" value="0"></label>
 
+    <h2>スキル設定</h2>
 
-<h2>アイコン</h2>
+    <div id="patternTabs">
+      <button class="patternTab" data-slot="0">設定1</button>
+      <button class="patternTab" data-slot="1">設定2</button>
+      <button class="patternTab" data-slot="2">設定3</button>
+    </div>
 
-<label>デフォルトアイコンURL <input id="iconDefault"></label><br>
-<label>北アイコンURL <input id="iconN"></label><br>
-<label>東アイコンURL <input id="iconE"></label><br>
-<label>南アイコンURL <input id="iconS"></label><br>
-<label>西アイコンURL <input id="iconW"></label>
+    <br>
 
+    <label>
+      パターン名
+      <input id="patternName">
+    </label>
 
-<h2>ステータス</h2>
+    <br><br>
 
-<label>ATK <input type="number" id="statAT" value="0"></label><br>
-<label>DEF <input type="number" id="statDF" value="0"></label><br>
-<label>HEAL <input type="number" id="statHEAL" value="0"></label><br>
-<label>SPEED <input type="number" id="statSPEED" value="0"></label><br>
-<label>CRI <input type="number" id="statCRI" value="0"></label><br>
-<label>TEC <input type="number" id="statTEC" value="0"></label>
+    <label>
+      公開
+      <input type="checkbox" id="patternPublic">
+    </label>
 
+    <br><br>
 
-<h2>スキル設定</h2>
+    <div id="skillArea"></div>
 
-<div id="patternTabs">
+    <br><br>
 
-<button class="patternTab" data-slot="0">設定1</button>
-<button class="patternTab" data-slot="1">設定2</button>
-<button class="patternTab" data-slot="2">設定3</button>
+    <button id="saveDuck">設定を保存</button>
 
-</div>
-
-<br>
-
-<label>
-パターン名
-<input id="patternName">
-</label>
-
-<br><br>
-
-<label>
-公開
-<input type="checkbox" id="patternPublic">
-</label>
-
-<br><br>
-
-<div id="skillArea">
-</div>
-    
-<br><br>
-
-<button id="saveDuck">アヒル保存</button>
-
-
-  <script type="module" src="./js/setting-controller.js"></script>
+    <script type="module" src="./js/setting-controller.js"></script>
 
   </main>
 
   <aside class="right-panel">
-  補助エリア
+    補助エリア
   </aside>
 
 </div>
-
 </body>
 </html>
