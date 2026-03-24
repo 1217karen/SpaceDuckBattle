@@ -116,6 +116,18 @@ function resolveBattleEndPayload(unitSnapshot, event) {
   return buildCommPayload(unitSnapshot, dialogue);
 }
 
+function resolveKillPayload(unitSnapshot, event) {
+  if (!unitSnapshot || !event) return null;
+  if (!event.unit) return null;
+
+  const dialogue =
+    getFixedDialogue(unitSnapshot, "kill");
+
+  if (!dialogue?.text) return null;
+
+  return buildCommPayload(unitSnapshot, dialogue);
+}
+
 function resolveCommPayload(unitSnapshot, event) {
   if (!unitSnapshot || !event) return null;
 
@@ -128,6 +140,10 @@ function resolveCommPayload(unitSnapshot, event) {
 
   if (event.type === "turnUnit") {
     return resolveTurnUnitPayload(unitSnapshot, event);
+  }
+
+  if (event.type === "kill") {
+    return resolveKillPayload(unitSnapshot, event);
   }
 
   if (event.type === "battleEnd") {
