@@ -1,5 +1,9 @@
 //character-controller.js
 
+function getNoImageUrl() {
+  return "https://placehold.co/60x60?text=NO+IMG";
+}
+
 function normalizeCommIcons(commIcons) {
   if (!Array.isArray(commIcons)) return [];
 
@@ -17,14 +21,41 @@ function normalizeCommIcons(commIcons) {
     .filter(item => item.url.trim() !== "");
 }
 
-function createIconCard(item, selectedId, onSelect) {
+let currentPickerTarget = null;
+let currentCommIcons = [];
+
+function setPreview(target, iconId, iconUrl) {
+  const preview =
+    document.getElementById(`${target}IconPreview`);
+
+  const button =
+    document.getElementById(`${target}IconButton`);
+
+  if (!preview || !button) return;
+
+  const safeId =
+    typeof iconId === "number" && iconId > 0
+      ? iconId
+      : null;
+
+  const safeUrl =
+    typeof iconUrl === "string" && iconUrl.trim() !== ""
+      ? iconUrl
+      : "";
+
+  button.dataset.selectedId =
+    safeId ? String(safeId) : "";
+
+  button.dataset.selectedUrl =
+    safeUrl;
+
+  preview.src =
+    safeUrl || getNoImageUrl();
+}
+
+function createIconCard(item) {
   const card = document.createElement("div");
-  card.className = "commIconCard";
-
-  if (item.id === selectedId) {
-    card.classList.add("selected");
-  }
-
+  card.className = "iconPickerCard";
   card.dataset.id = String(item.id);
   card.dataset.url = item.url;
 
@@ -33,44 +64,59 @@ function createIconCard(item, selectedId, onSelect) {
   img.alt = `icon ${item.id}`;
 
   const label = document.createElement("div");
-  label.className = "commIconCardId";
+  label.className = "iconPickerCardId";
   label.textContent = `ID ${item.id}`;
 
   card.appendChild(img);
   card.appendChild(label);
 
   card.addEventListener("click", () => {
-    onSelect(item);
+    if (!currentPickerTarget) return;
+
+    setPreview(
+      currentPickerTarget,
+      item.id,
+      item.url
+    );
+
+    closeIconPicker();
   });
 
   return card;
 }
 
-function renderIconList(containerId, commIcons, selectedId) {
-  const container =
-    document.getElementById(containerId);
+function renderIconPicker() {
+  const list =
+    document.getElementById("iconPickerList");
 
-  container.innerHTML = "";
+  list.innerHTML = "";
 
-  if (commIcons.length === 0) {
+  if (currentCommIcons.length === 0) {
     const empty = document.createElement("div");
-    empty.className = "commIconEmpty";
+    empty.className = "iconPickerEmpty";
     empty.textContent = "assets に登録されたキャラアイコンがありません";
-    container.appendChild(empty);
+    list.appendChild(empty);
     return;
   }
 
-  const onSelect = (item) => {
-    container.dataset.selectedId = String(item.id);
-    container.dataset.selectedUrl = item.url;
-    renderIconList(containerId, commIcons, item.id);
-  };
-
-  commIcons.forEach(item => {
-    container.appendChild(
-      createIconCard(item, selectedId, onSelect)
-    );
+  currentCommIcons.forEach(item => {
+    list.appendChild(createIconCard(item));
   });
+}
+
+function openIconPicker(target) {
+  currentPickerTarget = target;
+  renderIconPicker();
+
+  document.getElementById("iconPickerModal")
+    .classList.remove("hidden");
+}
+
+function closeIconPicker() {
+  document.getElementById("iconPickerModal")
+    .classList.add("hidden");
+
+  currentPickerTarget = null;
 }
 
 function loadCharacter() {
@@ -78,8 +124,9 @@ function loadCharacter() {
     localStorage.getItem("duck");
 
   if (!data) {
-    renderIconList("battleStartIconList", [], null);
-    renderIconList("turnChangeIconList", [], null);
+    currentCommIcons = [];
+    setPreview("battleStart", null, "");
+    setPreview("turnChange", null, "");
     return;
   }
 
@@ -95,116 +142,104 @@ function loadCharacter() {
   document.getElementById("turnChangeText").value =
     duck.commDialogues?.turnChange?.text ?? "";
 
-  const commIcons =
+  currentCommIcons =
     normalizeCommIcons(duck.commIcons);
 
-  const battleStartId =
-    duck.commDialogues?.battleStart?.iconId ?? null;
-
-  const turnChangeId =
-    duck.commDialogues?.turnChange?.iconId ?? null;
-
-  renderIconList(
-    "battleStartIconList",
-    commIcons,
-    battleStartId
+  setPreview(
+    "battleStart",
+    duck.commDialogues?.battleStart?.iconId ?? null,
+    duck.commDialogues?.battleStart?.iconUrl ?? ""
   );
 
-  renderIconList(
-    "turnChangeIconList",
-    commIcons,
-    turnChangeId
+  setPreview(
+    "turnChange",
+    duck.commDialogues?.turnChange?.iconId ?? null,
+    duck.commDialogues?.turnChange?.iconUrl ?? ""
   );
-
-  const battleStartList =
-    document.getElementById("battleStartIconList");
-
-  const turnChangeList =
-    document.getElementById("turnChangeIconList");
-
-  const battleStartIcon =
-    commIcons.find(x => x.id === battleStartId);
-
-  const turnChangeIcon =
-    commIcons.find(x => x.id === turnChangeId);
-
-  battleStartList.dataset.selectedId =
-    battleStartIcon ? String(battleStartIcon.id) : "";
-
-  battleStartList.dataset.selectedUrl =
-    battleStartIcon?.url ?? "";
-
-  turnChangeList.dataset.selectedId =
-    turnChangeIcon ? String(turnChangeIcon.id) : "";
-
-  turnChangeList.dataset.selectedUrl =
-    turnChangeIcon?.url ?? "";
 }
 
-const saveBtn =
-  document.getElementById("saveCharacter");
+document.getElementById("battleStartIconButton")
+  .addEventListener("click", () => {
+    openIconPicker("battleStart");
+  });
 
-saveBtn.addEventListener("click", () => {
-  const oldData =
-    localStorage.getItem("duck");
+document.getElementById("turnChangeIconButton")
+  .addEventListener("click", () => {
+    openIconPicker("turnChange");
+  });
 
-  const oldDuck =
-    oldData ? JSON.parse(oldData) : {};
+document.getElementById("iconPickerClose")
+  .addEventListener("click", closeIconPicker);
 
-  const name =
-    document.getElementById("duckName").value;
-
-  const battleStartText =
-    document.getElementById("battleStartText").value.trim();
-
-  const turnChangeText =
-    document.getElementById("turnChangeText").value.trim();
-
-  const battleStartList =
-    document.getElementById("battleStartIconList");
-
-  const turnChangeList =
-    document.getElementById("turnChangeIconList");
-
-  const battleStartIconId =
-    Number(battleStartList.dataset.selectedId || 0);
-
-  const turnChangeIconId =
-    Number(turnChangeList.dataset.selectedId || 0);
-
-  const battleStartIconUrl =
-    battleStartList.dataset.selectedUrl || "";
-
-  const turnChangeIconUrl =
-    turnChangeList.dataset.selectedUrl || "";
-
-  const duck = {
-    ...oldDuck,
-    id: oldDuck.id ?? "player_duck",
-    name,
-    commDialogues: {
-      ...(oldDuck.commDialogues || {}),
-      battleStart: {
-        ...(oldDuck.commDialogues?.battleStart || {}),
-        text: battleStartText,
-        iconId: battleStartIconId || null,
-        iconUrl: battleStartIconUrl
-      },
-      turnChange: {
-        ...(oldDuck.commDialogues?.turnChange || {}),
-        text: turnChangeText,
-        iconId: turnChangeIconId || null,
-        iconUrl: turnChangeIconUrl
-      }
+document.getElementById("iconPickerModal")
+  .addEventListener("click", (e) => {
+    if (e.target.id === "iconPickerModal") {
+      closeIconPicker();
     }
-  };
+  });
 
-  localStorage.setItem(
-    "duck",
-    JSON.stringify(duck)
-  );
+document.getElementById("saveCharacter")
+  .addEventListener("click", () => {
+    const oldData =
+      localStorage.getItem("duck");
 
-  alert("キャラ設定を保存しました");
-});
+    const oldDuck =
+      oldData ? JSON.parse(oldData) : {};
+
+    const name =
+      document.getElementById("duckName").value;
+
+    const battleStartText =
+      document.getElementById("battleStartText").value.trim();
+
+    const turnChangeText =
+      document.getElementById("turnChangeText").value.trim();
+
+    const battleStartButton =
+      document.getElementById("battleStartIconButton");
+
+    const turnChangeButton =
+      document.getElementById("turnChangeIconButton");
+
+    const battleStartIconId =
+      Number(battleStartButton.dataset.selectedId || 0);
+
+    const turnChangeIconId =
+      Number(turnChangeButton.dataset.selectedId || 0);
+
+    const battleStartIconUrl =
+      battleStartButton.dataset.selectedUrl || "";
+
+    const turnChangeIconUrl =
+      turnChangeButton.dataset.selectedUrl || "";
+
+    const duck = {
+      ...oldDuck,
+      id: oldDuck.id ?? "player_duck",
+      name,
+      commDialogues: {
+        ...(oldDuck.commDialogues || {}),
+        battleStart: {
+          ...(oldDuck.commDialogues?.battleStart || {}),
+          text: battleStartText,
+          iconId: battleStartIconId || null,
+          iconUrl: battleStartIconUrl
+        },
+        turnChange: {
+          ...(oldDuck.commDialogues?.turnChange || {}),
+          text: turnChangeText,
+          iconId: turnChangeIconId || null,
+          iconUrl: turnChangeIconUrl
+        }
+      }
+    };
+
+    localStorage.setItem(
+      "duck",
+      JSON.stringify(duck)
+    );
+
+    alert("キャラ設定を保存しました");
+  });
 
 loadCharacter();
