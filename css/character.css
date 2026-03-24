@@ -1,45 +1,102 @@
-.commIconSection {
-  margin-top: 10px;
+.commRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 18px;
 }
 
-.commIconSectionTitle {
-  margin-bottom: 8px;
+.commIconPickerButton {
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 1px solid #888;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.commIconPickerButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.commInputArea {
+  flex: 1;
+}
+
+.commInputArea input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.commLabelText {
+  display: block;
+  margin-bottom: 6px;
   font-weight: bold;
 }
 
-.commIconList {
+.iconPickerModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.iconPickerModal.hidden {
+  display: none;
+}
+
+.iconPickerWindow {
+  width: min(720px, 90vw);
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #666;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.iconPickerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.iconPickerList {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
-.commIconCard {
-  width: 72px;
+.iconPickerCard {
+  width: 84px;
   border: 1px solid #888;
   padding: 6px;
+  background: #fff;
   cursor: pointer;
   text-align: center;
-  background: #fff;
+  box-sizing: border-box;
 }
 
-.commIconCard.selected {
-  border: 2px solid #2a6df4;
-}
-
-.commIconCard img {
-  width: 48px;
-  height: 48px;
+.iconPickerCard img {
+  width: 60px;
+  height: 60px;
   object-fit: cover;
   display: block;
   margin: 0 auto 6px;
 }
 
-.commIconCardId {
+.iconPickerCardId {
   font-size: 12px;
 }
 
-.commIconEmpty {
+.iconPickerEmpty {
   color: #666;
   font-size: 13px;
 }
