@@ -183,6 +183,14 @@ function resolveCommPayloadForEvent(event) {
     return buildCommPayload(unit, dialogue);
   }
 
+    if (event.type === "critical") {
+    const unit = findUnitById(event.unit);
+    const dialogue =
+      getFixedDialogue(unit, "critical");
+
+    return buildCommPayload(unit, dialogue);
+  }
+
   if (event.type === "kill") {
     const unit = findUnitById(event.unit);
     const dialogue =
@@ -219,6 +227,24 @@ function attachCommToEvent(event) {
   }
 
   return event;
+}
+
+function pushCriticalLog(unit, block = "skill") {
+  if (!unit?.id) return;
+
+  context.pushLog(
+    attachCommToEvent({
+      type: "critical",
+      block,
+      unit: unit.id
+    })
+  );
+}
+
+function pushBattleLog(event) {
+  context.pushLog(
+    attachCommToEvent(event)
+  );
 }
 
 function pushBattleLog(event) {
@@ -295,6 +321,7 @@ function pushBattleLog(event) {
 
   context.attachCommToEvent = attachCommToEvent;
   context.pushBattleLog = pushBattleLog;
+  context.pushCriticalLog = pushCriticalLog;
 
   const log = context.log;
 
