@@ -1,0 +1,45 @@
+.commIconSection {
+  margin-top: 10px;
+  margin-bottom: 18px;
+}
+
+.commIconSectionTitle {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.commIconList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.commIconCard {
+  width: 72px;
+  border: 1px solid #888;
+  padding: 6px;
+  cursor: pointer;
+  text-align: center;
+  background: #fff;
+}
+
+.commIconCard.selected {
+  border: 2px solid #2a6df4;
+}
+
+.commIconCard img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+.commIconCardId {
+  font-size: 12px;
+}
+
+.commIconEmpty {
+  color: #666;
+  font-size: 13px;
+}
