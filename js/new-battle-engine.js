@@ -76,11 +76,19 @@ export function simulateBattle(snapshot) {
   // kill処理
   // ======================================================
 
-  function killUnit(unit) {
+  function killUnit(unit, source = null) {
     if (unit._isDead) return;
 
     unit.hp = 0;
     unit._isDead = true;
+
+    if (source && source.id !== unit.id) {
+      context.pushLog({
+        type: "kill",
+        unit: source.id,
+        target: unit.id
+      });
+    }
 
     context.pushLog({
       type: "death",
