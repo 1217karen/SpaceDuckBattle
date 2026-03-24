@@ -104,6 +104,7 @@ export function runBattleTurns({
         context.beginGroup({
           type: "turnUnit",
           unit: unit.id,
+          phase: "battleStart",
           actionLabel: "スタンバイ"
         });
 
@@ -391,7 +392,8 @@ for (let u of units) {
 
   context.beginGroup({
     type: "turnUnit",
-    unit: u.id
+    unit: u.id,
+    phase: "turnChange"
   });
 
   // ======================
