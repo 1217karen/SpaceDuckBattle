@@ -39,7 +39,7 @@ body {
 display: grid;
 
 /* 左余白可変 / 中央固定 / 右余白可変 */
-grid-template-columns: minmax(0, 1fr) 700px minmax(0, 1fr);
+grid-template-columns: minmax(0, 1fr) 650px minmax(0, 1fr);
 
 height: 100vh;
 
