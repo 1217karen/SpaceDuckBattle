@@ -9,17 +9,17 @@ import { skillHandlers } from "./skills.js";
 import { updateUnitStatUI } from "./new-battlelog-ui.js";
 
 
-export function createLeftSideUI(snapshot, battleState) {
+export function createSideUI(snapshot, battleState, sideId, team) {
 
-  const leftSide = document.getElementById("leftSide");
+  const side = document.getElementById(sideId);
 
-  if (!snapshot) return;
+  if (!snapshot || !side) return;
 
-  const team1 = snapshot.units.filter(u => u.team === 1);
+  const units = snapshot.units.filter(u => u.team === team);
 
-  team1.forEach(u => {
+  units.forEach(u => {
     const wrapper = document.createElement("div");
-    wrapper.className = "unitFrame";
+    wrapper.className = `unitFrame team${team}Frame`;
 
     const div = document.createElement("div");
     div.className = "unitStatus";
@@ -138,7 +138,7 @@ export function createLeftSideUI(snapshot, battleState) {
 </div>
 `;
 
-    leftSide.appendChild(wrapper);
+    side.appendChild(wrapper);
 
     const skillSlots = div.querySelectorAll(".skillSlot");
 
