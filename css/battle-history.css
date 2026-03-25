@@ -1,0 +1,48 @@
+#battleHistoryList{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.battle-history-item{
+  border:1px solid #ccc;
+  padding:12px;
+}
+
+.battle-history-header{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+}
+
+.battle-history-stage{
+  font-weight:bold;
+}
+
+.battle-history-result.win{
+  color:#0a7a0a;
+}
+
+.battle-history-result.lose{
+  color:#b00020;
+}
+
+.battle-history-party{
+  display:flex;
+  gap:8px;
+  margin:8px 0;
+  flex-wrap:wrap;
+}
+
+.battle-history-party img{
+  width:40px;
+  height:40px;
+  border:1px solid #ccc;
+}
+
+.battle-history-link{
+  display:inline-block;
+  margin-top:8px;
+}
