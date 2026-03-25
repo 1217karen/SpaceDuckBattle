@@ -310,7 +310,7 @@ if (ev.type === "__groupStart") {
     }
 
     updateCommByEvent(
-      ev.type === "__groupStart" ? ev.label : ev,
+      ev,
       battleState.snapshot,
       actingUnit
     );
