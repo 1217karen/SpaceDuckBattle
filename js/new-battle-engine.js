@@ -130,6 +130,103 @@ function getFixedDialogue(unit, key) {
   return pickRandomDialogue(dialogues[key] || null);
 }
 
+  function getAliveUnitsByTeam(team) {
+  return units.filter(u =>
+    u &&
+    u.hp > 0 &&
+    u.team === team
+  );
+}
+
+function getTeamHpRatio(team) {
+  const teamUnits = getAliveUnitsByTeam(team);
+
+  if (teamUnits.length === 0) return 0;
+
+  const currentHp = teamUnits.reduce(
+    (sum, u) => sum + Math.max(0, u.hp ?? 0),
+    0
+  );
+
+  const maxHp = teamUnits.reduce(
+    (sum, u) => sum + Math.max(1, u.mhp ?? 1),
+    0
+  );
+
+  if (maxHp <= 0) return 0;
+
+  return currentHp / maxHp;
+}
+
+function getUnitHpRatio(unit) {
+  if (!unit) return 0;
+
+  const hp = Math.max(0, unit.hp ?? 0);
+  const mhp = Math.max(1, unit.mhp ?? 1);
+
+  return hp / mhp;
+}
+
+function getTurnChangeDialogueKey(unit) {
+  if (!unit) return "turnChangeNeutral";
+
+  const selfRatio = getUnitHpRatio(unit);
+  const myTeamRatio = getTeamHpRatio(unit.team);
+
+  const enemyTeams = [...new Set(
+    units
+      .filter(u => u && u.hp > 0 && u.team !== unit.team)
+      .map(u => u.team)
+  )];
+
+  const enemyTeam = enemyTeams[0] ?? null;
+  const enemyRatio =
+    enemyTeam == null ? 0 : getTeamHpRatio(enemyTeam);
+
+  const selfPinch =
+    selfRatio <= 0.1 ||
+    myTeamRatio <= 0.2;
+
+  const enemyPinch =
+    enemyRatio <= 0.2;
+
+  if (selfPinch) {
+    return "turnChangePinch";
+  }
+
+  if (enemyPinch) {
+    return "turnChangeAdvantage";
+  }
+
+  const selfDisadvantage =
+    myTeamRatio <= 0.5;
+
+  const enemyDisadvantage =
+    enemyRatio <= 0.5;
+
+  if (selfDisadvantage && enemyDisadvantage) {
+    if (myTeamRatio > enemyRatio) {
+      return "turnChangeAdvantage";
+    }
+
+    if (myTeamRatio < enemyRatio) {
+      return "turnChangeDisadvantage";
+    }
+
+    return "turnChangeNeutral";
+  }
+
+  if (enemyDisadvantage) {
+    return "turnChangeAdvantage";
+  }
+
+  if (selfDisadvantage) {
+    return "turnChangeDisadvantage";
+  }
+
+  return "turnChangeNeutral";
+}
+
 function resolveCommPayloadForEvent(event) {
   if (!event) return null;
 
@@ -141,30 +238,33 @@ function resolveCommPayloadForEvent(event) {
     return buildCommPayload(unit, dialogue);
   }
 
-  if (event.type === "turnUnit") {
-    const unit = findUnitById(event.unit);
-    if (!unit) return null;
+if (event.type === "turnUnit") {
+  const unit = findUnitById(event.unit);
+  if (!unit) return null;
 
-    let dialogue = null;
+  let dialogue = null;
 
-    if (event.phase === "battleStart") {
-      dialogue = getFixedDialogue(unit, "battleStart");
-    } else if (event.phase === "turnChange") {
-      dialogue = getFixedDialogue(unit, "turnChange");
-    }
+  if (event.phase === "battleStart") {
+    dialogue = getFixedDialogue(unit, "battleStart");
+  } else if (event.phase === "turnChange") {
+    const key =
+      getTurnChangeDialogueKey(unit);
 
-    if (!dialogue?.text) {
-      return {
-        iconUrl:
-          unit.defaultCommIconUrl ||
-          unit.icon ||
-          "https://placehold.co/60x60?text=NO+IMG",
-        text: ""
-      };
-    }
-
-    return buildCommPayload(unit, dialogue);
+    dialogue = getFixedDialogue(unit, key);
   }
+
+  if (!dialogue?.text) {
+    return {
+      iconUrl:
+        unit.defaultCommIconUrl ||
+        unit.icon ||
+        "https://placehold.co/60x60?text=NO+IMG",
+      text: ""
+    };
+  }
+
+  return buildCommPayload(unit, dialogue);
+}
 
     if (event.type === "critical") {
     const unit = findUnitById(event.unit);
