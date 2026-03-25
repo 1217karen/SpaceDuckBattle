@@ -91,8 +91,8 @@ color: #ffffff;
 
 #logArea {
 width: var(--log-width);
+height: 500px;
 min-height: 200px;
-max-height: 500px;
 overflow-y: auto;
 color: #e6f4ff;
 background: rgba(10,15,30,0.9);
@@ -107,6 +107,7 @@ inset 0 0 6px rgba(80,140,255,0.3);
 
 padding: 8px;
 box-sizing: border-box;
+flex-shrink: 1;
 }
 
 .actionHeader {
