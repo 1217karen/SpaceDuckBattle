@@ -1131,15 +1131,15 @@ updateUnitStatUI(
   }
 
   else if (event.type === "wait") {
-　  div.textContent =
-　    `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
+    div.textContent =
+      `${displayName(event.unit, nameMap)} は様子をうかがっている……`;
 
-　  spawnFloatingNumber(
-　    event.unit,
-　    "STAY",
-　    "skill"
-　  );
-　}
+    spawnFloatingNumber(
+      event.unit,
+      "STAY",
+      "skill"
+    );
+  }
 
 else if (event.type === "battleEnd") {
 
