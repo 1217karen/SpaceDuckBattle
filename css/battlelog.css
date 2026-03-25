@@ -46,6 +46,19 @@ height: 100vh;
 gap: 20px;
 }
 
+#leftSide,
+#rightSide,
+#centerArea {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE / Edge旧 */
+}
+
+#leftSide::-webkit-scrollbar,
+#rightSide::-webkit-scrollbar,
+#centerArea::-webkit-scrollbar {
+  display: none;              /* Chrome / Safari */
+}
+
 /* =======================================================
 中央エリア
 ======================================================= */
