@@ -8,7 +8,7 @@ import {createBoard,placeUnit,updateFacing,removeUnit} from "./board.js";
 import {playLogEvent,setSuppressBoardEffects,refreshLeftSideUI} from "./new-battlelog-ui.js";
 import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
-import { createLeftSideUI } from "./new-battlelog-ui-init.js";
+import { createSideUI } from "./new-battlelog-ui-init.js";
 import {applyEvent} from "./new-battlelog-state-updater.js";
 import { resetCommPanel } from "./new-battlelog-comm.js";
 
@@ -577,7 +577,8 @@ function initializeBoardState(targetBoardState, snapshot) {
 initializeBoardState(battleState.boardState, snapshot);
 rebuildBoardFromState();
 
-createLeftSideUI(snapshot, battleState);
+createSideUI(snapshot, battleState, "leftSide", 1);
+createSideUI(snapshot, battleState, "rightSide", 2);
 
 // =====================
 // 初期ターンUI
