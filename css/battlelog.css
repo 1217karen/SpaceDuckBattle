@@ -352,6 +352,7 @@ position: relative;
 .unitFrame {
   width: 310px;
   height: 162px;
+  flex-shrink: 0;
 
   background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=unit_frame.webp") no-repeat center / contain;
 
