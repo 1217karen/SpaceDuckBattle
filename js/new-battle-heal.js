@@ -40,10 +40,7 @@ finalHeal = runBeforeDamage(ctx, {
 // クリティカル
 // ==========================================================
   
-if (
-  finalHeal > 0 &&
-  type === "scale"
-) {
+if (finalHeal > 0) {
 
   if (rollCritical(source)) {
 
