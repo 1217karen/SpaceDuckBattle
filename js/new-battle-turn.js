@@ -20,6 +20,32 @@ export function runBattleTurns({
   getAllies
 }) {
 
+function pickBattleEndSpeaker(units, winnerTeam) {
+  if (winnerTeam == null) return null;
+
+  const candidates = units.filter(unit => {
+    if (!unit) return false;
+    if (unit.hp <= 0) return false;
+    if (unit.team !== winnerTeam) return false;
+
+    const lines = unit.commDialogues?.battleEndWin;
+
+    if (!Array.isArray(lines)) return false;
+
+    return lines.some(line =>
+      line &&
+      typeof line.text === "string" &&
+      line.text.trim() !== ""
+    );
+  });
+
+  if (candidates.length === 0) return null;
+  if (candidates.length === 1) return candidates[0];
+
+  const index = Math.floor(Math.random() * candidates.length);
+  return candidates[index];
+}
+
   function endAction(unit) {
 
     // accel / slow 消費
@@ -58,10 +84,16 @@ export function runBattleTurns({
       context.battleState.finished &&
       !context.battleState._battleEndLogged
     ) {
+      const winner =
+        context.battleState.winner ?? null;
+
+      const speaker =
+        pickBattleEndSpeaker(units, winner);
+
       context.pushBattleLog({
         type: "battleEnd",
-        unit: unit.id,
-        winner: context.battleState.winner ?? null
+        unit: speaker?.id ?? unit.id,
+        winner
       });
 
       context.battleState._battleEndLogged = true;
