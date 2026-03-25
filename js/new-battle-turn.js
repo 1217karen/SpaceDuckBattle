@@ -391,8 +391,6 @@ if (context.battleState.finished) break;
 
 for (let u of units) {
 
-  let hasLog = false;
-
   context.beginGroup(
     context.attachCommToEvent({
       type: "turnUnit",
@@ -451,8 +449,6 @@ for (let u of units) {
 
       }
 
-      hasLog = true;
-
       if (e.duration <= 0) {
         u.rateEffects.splice(i, 1);
       }
@@ -487,7 +483,6 @@ for (let u of units) {
         });
       }
 
-      hasLog = true;
     }
   }
 
