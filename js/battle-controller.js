@@ -230,6 +230,7 @@ startBtn.addEventListener("click", () => {
   const battleResult = simulateBattle(snapshot);
   const log = battleResult.log;
   const winner = battleResult.winner;
+  const result = winner === 1 ? "win" : "lose";
   const battleID = "battle_" + Date.now();
 
   Object.keys(localStorage).forEach((k) => {
