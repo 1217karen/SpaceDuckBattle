@@ -195,7 +195,10 @@ function loadCharacter() {
   if (!data) {
     currentCommIcons = [];
     renderCommList("battleStart", null);
-    renderCommList("turnChange", null);
+    renderCommList("turnChangeAdvantage", null);
+    renderCommList("turnChangeNeutral", null);
+    renderCommList("turnChangeDisadvantage", null);
+    renderCommList("turnChangePinch", null);
     renderCommList("critical", null);
     renderCommList("kill", null);
     return;
@@ -215,10 +218,25 @@ function loadCharacter() {
     duck.commDialogues?.battleStart
   );
 
-  renderCommList(
-    "turnChange",
-    duck.commDialogues?.turnChange
-  );
+renderCommList(
+  "turnChangeAdvantage",
+  duck.commDialogues?.turnChangeAdvantage
+);
+
+renderCommList(
+  "turnChangeNeutral",
+  duck.commDialogues?.turnChangeNeutral
+);
+
+renderCommList(
+  "turnChangeDisadvantage",
+  duck.commDialogues?.turnChangeDisadvantage
+);
+
+renderCommList(
+  "turnChangePinch",
+  duck.commDialogues?.turnChangePinch
+);
 
   renderCommList(
     "critical",
@@ -236,9 +254,24 @@ document.getElementById("addBattleStartLine")
     addCommRow("battleStart");
   });
 
-document.getElementById("addTurnChangeLine")
+document.getElementById("addTurnChangeAdvantageLine")
   .addEventListener("click", () => {
-    addCommRow("turnChange");
+    addCommRow("turnChangeAdvantage");
+  });
+
+document.getElementById("addTurnChangeNeutralLine")
+  .addEventListener("click", () => {
+    addCommRow("turnChangeNeutral");
+  });
+
+document.getElementById("addTurnChangeDisadvantageLine")
+  .addEventListener("click", () => {
+    addCommRow("turnChangeDisadvantage");
+  });
+
+document.getElementById("addTurnChangePinchLine")
+  .addEventListener("click", () => {
+    addCommRow("turnChangePinch");
   });
 
 document.getElementById("addCriticalLine")
@@ -265,8 +298,17 @@ document.getElementById("saveCharacter")
     const battleStartList =
       collectDialogueList("battleStart");
 
-    const turnChangeList =
-      collectDialogueList("turnChange");
+const turnChangeAdvantageList =
+  collectDialogueList("turnChangeAdvantage");
+
+const turnChangeNeutralList =
+  collectDialogueList("turnChangeNeutral");
+
+const turnChangeDisadvantageList =
+  collectDialogueList("turnChangeDisadvantage");
+
+const turnChangePinchList =
+  collectDialogueList("turnChangePinch");
 
     const criticalList =
       collectDialogueList("critical");
@@ -278,13 +320,16 @@ document.getElementById("saveCharacter")
       ...oldDuck,
       id: oldDuck.id ?? "player_duck",
       name,
-      commDialogues: {
-        ...(oldDuck.commDialogues || {}),
-        battleStart: battleStartList,
-        turnChange: turnChangeList,
-        critical: criticalList,
-        kill: killList
-      }
+commDialogues: {
+  ...(oldDuck.commDialogues || {}),
+  battleStart: battleStartList,
+  turnChangeAdvantage: turnChangeAdvantageList,
+  turnChangeNeutral: turnChangeNeutralList,
+  turnChangeDisadvantage: turnChangeDisadvantageList,
+  turnChangePinch: turnChangePinchList,
+  critical: criticalList,
+  kill: killList
+}
     };
 
     localStorage.setItem(
