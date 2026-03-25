@@ -12,7 +12,6 @@ import { rollCritical } from "./new-battle-utils.js";
 export function applyDamage(source, target, action, ctx) {
 
   let finalDamage = 0;
-  let isCritical = false;
 
   const power = action.power || 0;
   const type = action.damageType || "normal";
@@ -81,8 +80,6 @@ if (
 ) {
 
   if (rollCritical(source)) {
-
-    isCritical = true;
 
     finalDamage =
       Math.floor(finalDamage * 1.5);
