@@ -5,7 +5,7 @@
 // =====================
 
 import {createBoard,placeUnit,updateFacing,removeUnit} from "./board.js";
-import {playLogEvent,updateUnitStatUI,updateUnitEffectUI,setSuppressBoardEffects,refreshLeftSideUI} from "./new-battlelog-ui.js";
+import {playLogEvent,setSuppressBoardEffects,refreshLeftSideUI} from "./new-battlelog-ui.js";
 import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
 import { createLeftSideUI } from "./new-battlelog-ui-init.js";
