@@ -241,7 +241,7 @@ function pushBattleLog(event) {
     unit._isDead = true;
 
     if (source && source.id !== unit.id) {
-      context.pushBattleLog({
+      pushBattleLog({
         type: "kill",
         unit: source.id,
         target: unit.id
