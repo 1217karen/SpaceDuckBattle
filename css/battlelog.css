@@ -330,8 +330,10 @@ align-items: flex-end;
 padding: 12px 10px;
 box-sizing: border-box;
 
-background: rgba(255,255,255,0.06);
-border-radius: 10px;
+background-image: url("ここに左右カラム用の画像URL");
+background-repeat: no-repeat;
+background-position: center top;
+background-size: auto 100%;
 }
 
 #rightSide {
@@ -346,8 +348,10 @@ align-items: flex-start;
 padding: 12px 10px;
 box-sizing: border-box;
 
-background: rgba(255,255,255,0.06);
-border-radius: 10px;
+background-image: url("ここに左右カラム用の画像URL");
+background-repeat: no-repeat;
+background-position: center top;
+background-size: auto 100%;
 }
 
 /* ユニットステータスカード */
