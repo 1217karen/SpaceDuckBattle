@@ -92,7 +92,7 @@ color: #ffffff;
 #logArea {
 width: var(--log-width);
 height: 400px;
-min-height: 200px;
+min-height: 100px;
 overflow-y: auto;
 color: #e6f4ff;
 background: rgba(10,15,30,0.9);
