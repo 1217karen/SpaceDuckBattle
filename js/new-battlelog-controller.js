@@ -9,8 +9,7 @@ import {playLogEvent,setSuppressBoardEffects,refreshLeftSideUI} from "./new-batt
 import { playNextAction } from "./new-battlelog-player.js";
 import { battleState } from "./new-battlelog-state.js";
 import { createLeftSideUI } from "./new-battlelog-ui-init.js";
-import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,applyEffectRemoved,
-        applyEffectApplied,applyMove,applyDeath,applyFacing,applyEvent} from "./new-battlelog-state-updater.js";
+import {applyEvent} from "./new-battlelog-state-updater.js";
 import { resetCommPanel } from "./new-battlelog-comm.js";
 
 
@@ -380,49 +379,7 @@ function skipToEnd() {
   // ======================
 
   for (const ev of battleState.battleLog) {
-
-    switch (ev.type) {
-
-      case "hpChange":
-        applyHpChange(ev, battleState.boardState);
-        break;
-
-      case "cooldownSet":
-        applyCooldownSet(ev, battleState.boardState);
-        break;
-
-      case "cooldownChange":
-        applyCooldownChange(ev, battleState.boardState);
-        break;
-
-      case "effectDecay":
-        applyEffectDecay(ev, battleState.boardState);
-        break;
-
-      case "effectExpired":
-        applyEffectExpired(ev, battleState.boardState);
-        break;
-
-      case "effectRemoved":
-        applyEffectRemoved(ev, battleState.boardState);
-        break;
-
-      case "effectApplied":
-        applyEffectApplied(ev, battleState.boardState);
-        break;
-
-      case "move":
-        applyMove(ev, battleState.boardState);
-        break;
-
-      case "death":
-        applyDeath(ev, battleState.boardState);
-        break;
-
-      case "faceChange":
-        applyFacing(ev, battleState.boardState);
-        break;
-    }
+    applyEvent(ev, battleState.boardState);
   }
 
   // ======================
@@ -460,15 +417,6 @@ function skipToEnd() {
   rebuildTurnDisplayFromLogIndex();
 
   battleState.isPlaying = false;
-}
-
-function fitUnitName(el) {
-  let size = 13;
-
-  while (el.scrollWidth > el.offsetWidth && size > 8) {
-    size--;
-    el.style.fontSize = size + "px";
-  }
 }
 
 function displayName(id, nameMap) {
