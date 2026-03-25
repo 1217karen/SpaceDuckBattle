@@ -326,13 +326,19 @@ gap: 4px;
 
 height: 100%;
 overflow-y: auto;
+align-items: flex-start;
 }
 
 #rightSide {
+display: flex;
+flex-direction: column;
+gap: 4px;
+
 outline: 2px solid green;
 
 height: 100%;
 overflow-y: auto;
+align-items: flex-start;
 }
 
 /* ユニットステータスカード */
@@ -359,6 +365,12 @@ position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.team1Frame {
+}
+
+.team2Frame {
 }
 
 /* =======================================================
