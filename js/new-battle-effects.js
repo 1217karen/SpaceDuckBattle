@@ -377,7 +377,7 @@ ctx.beginGroup({
 ctx.pushLog({
 type: "damage",
 block: "effect",
-from: null,
+source: null,
 target: unit.id,
 amount: amount,
 damageType: "effect"
@@ -398,7 +398,7 @@ damageType: "effect"
 ctx.pushLog({
 type: "heal",
 block: "effect",
-from: null,
+source: null,
 target: unit.id,
 amount: amount,
 healType: "effect"
