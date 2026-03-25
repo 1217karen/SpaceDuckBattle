@@ -341,5 +341,9 @@ function pushBattleLog(event) {
     getAllies
   });
 
-  return log;
+  return {
+    log,
+    finished: simState.finished,
+    winner: simState.winner ?? null
+  };
 }
