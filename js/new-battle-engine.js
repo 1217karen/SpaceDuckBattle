@@ -1,31 +1,14 @@
 //new-battle-engine.js
 
 import { skillHandlers } from "./skills.js";
-import { chooseStep, facingFromDelta, isOccupiedCell, getKnockbackCell, getPullCell } from "./new-movement.js";
-import { applyEffect, processBeforeAction, processAfterAction } from "./new-battle-effects.js";
+import { facingFromDelta, getKnockbackCell, getPullCell } from "./new-movement.js";
+import { applyEffect } from "./new-battle-effects.js";
 import { getEffectiveStat } from "./new-battle-stats.js";
-import { EFFECTS } from "./effects-config.js";
-import { getNearestEnemy, getLowestHpAlly, getIdleFacing, decideFallbackMove } from "./new-battle-ai.js";
-import { applyDamage } from "./new-battle-damage.js";
+import { getNearestEnemy, getLowestHpAlly, getIdleFacing } from "./new-battle-ai.js";
 import { applyHeal } from "./new-battle-heal.js";
-import { applyMove } from "./new-battle-move.js";
-import {
-  getSkillChainCount,
-  getManhattanCells,
-  getAliveUnits,
-  getEnemies,
-  getAllies,
-  getDistance,
-  getChebyshevDistance,
-  getRandomEnemy,
-  getRandomAlly,
-  getRandomAny,
-  getUnitsInManhattanRange,
-  getUnitsInSameRow,
-  getUnitsInSameColumn
-} from "./new-battle-utils.js";
+import {getManhattanCells,getEnemies,getAllies,getDistance,getChebyshevDistance,getRandomEnemy,
+  getRandomAlly,getRandomAny,getUnitsInManhattanRange,getUnitsInSameRow,getUnitsInSameColumn} from "./new-battle-utils.js";
 import { createBattleContext } from "./new-battle-context.js";
-import { tryUseSkill } from "./new-battle-skill.js";
 import { runBattleTurns } from "./new-battle-turn.js";
 
 // ==========================================================
@@ -238,12 +221,6 @@ function pushCriticalLog(unit, block = "skill") {
       block,
       unit: unit.id
     })
-  );
-}
-
-function pushBattleLog(event) {
-  context.pushLog(
-    attachCommToEvent(event)
   );
 }
 
