@@ -1,0 +1,68 @@
+#party{
+  display:flex;
+  gap:10px;
+  margin:10px 0;
+}
+
+.pt-slot{
+  width:64px;
+  height:64px;
+  border:2px solid #888;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.pt-slot:hover{
+  background:#eee;
+}
+
+#board{
+  display:grid;
+  gap:2px;
+  margin-top:10px;
+}
+
+.cell{
+  width:50px;
+  height:50px;
+  border:1px solid #888;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.cell:hover{
+  background:#ddd;
+}
+
+.pt-slot.selected{
+  border-color:#ff9900;
+  box-shadow:0 0 6px #ff9900;
+}
+
+#duckList{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.duck-item{
+  border:1px solid #888;
+  padding:5px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.duck-item img{
+  width:40px;
+  height:40px;
+}
+
+.duck-item.selected{
+  background:#ddd;
+}
