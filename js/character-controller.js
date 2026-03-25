@@ -201,6 +201,7 @@ function loadCharacter() {
     renderCommList("turnChangePinch", null);
     renderCommList("critical", null);
     renderCommList("kill", null);
+    renderCommList("battleEndWin", null);
     return;
   }
 
@@ -247,6 +248,13 @@ renderCommList(
     "kill",
     duck.commDialogues?.kill
   );
+
+  renderCommList(
+  "battleEndWin",
+  duck.commDialogues?.battleEndWin
+);
+
+  
 }
 
 document.getElementById("addBattleStartLine")
@@ -284,6 +292,11 @@ document.getElementById("addKillLine")
     addCommRow("kill");
   });
 
+document.getElementById("addBattleEndWinLine")
+  .addEventListener("click", () => {
+    addCommRow("battleEndWin");
+  });
+
 document.getElementById("saveCharacter")
   .addEventListener("click", () => {
     const oldData =
@@ -316,10 +329,14 @@ const turnChangePinchList =
     const killList =
       collectDialogueList("kill");
 
+    const battleEndWinList =
+  collectDialogueList("battleEndWin");
+
     const duck = {
       ...oldDuck,
       id: oldDuck.id ?? "player_duck",
       name,
+      
 commDialogues: {
   ...(oldDuck.commDialogues || {}),
   battleStart: battleStartList,
@@ -328,7 +345,8 @@ commDialogues: {
   turnChangeDisadvantage: turnChangeDisadvantageList,
   turnChangePinch: turnChangePinchList,
   critical: criticalList,
-  kill: killList
+  kill: killList,
+  battleEndWin: battleEndWinList
 }
     };
 
