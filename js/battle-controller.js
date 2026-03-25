@@ -231,20 +231,59 @@ startBtn.addEventListener("click", () => {
   const log = battleResult.log;
   const winner = battleResult.winner;
   const result = winner === 1 ? "win" : "lose";
-  const battleID = "battle_" + Date.now();
 
-  Object.keys(localStorage).forEach((k) => {
-    if (k.startsWith("battle_")) {
-      localStorage.removeItem(k);
-    }
-  });
+  const createdAt = Date.now();
+  const randomSuffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+  const battleID = `battle_${createdAt}_${randomSuffix}`;
+
+  const stageNameMap = {
+    tutorial: "チュートリアル",
+    normal: "通常戦"
+  };
+
+  const partyMembers = partySlots
+    .filter((duckIndex) => duckIndex !== null)
+    .map((duckIndex) => ducks[duckIndex]);
+
+  const party = {
+    leaderName: partyMembers[0]?.name || "",
+    memberNames: partyMembers.map((duck) => duck.name),
+    memberIcons: partyMembers.map((duck) => duck.icon?.default || "")
+  };
+
+  const battleRecord = {
+    battleId: battleID,
+    mode: "pve",
+    createdAt: createdAt,
+    stage: {
+      id: stageType,
+      name: stageNameMap[stageType] || stageType
+    },
+    result: result,
+    party: party,
+    snapshot: snapshot,
+    log: log
+  };
+
+  const MAX_BATTLE_HISTORY = 50;
+
+  const battleKeys = Object.keys(localStorage)
+    .filter((key) => key.startsWith("battle_"))
+    .sort((a, b) => {
+      const aTime = Number(JSON.parse(localStorage.getItem(a))?.createdAt || 0);
+      const bTime = Number(JSON.parse(localStorage.getItem(b))?.createdAt || 0);
+      return aTime - bTime;
+    });
+
+  while (battleKeys.length >= MAX_BATTLE_HISTORY) {
+    const oldestKey = battleKeys.shift();
+    if (!oldestKey) break;
+    localStorage.removeItem(oldestKey);
+  }
 
   localStorage.setItem(
     battleID,
-    JSON.stringify({
-      snapshot: snapshot,
-      log: log
-    })
+    JSON.stringify(battleRecord)
   );
 
   window.location.href = `battlelog.html?id=${battleID}`;
