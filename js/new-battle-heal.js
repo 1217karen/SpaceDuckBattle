@@ -10,7 +10,6 @@ import { rollCritical } from "./new-battle-utils.js";
 export function applyHeal(source, target, action, ctx) {
 
   let finalHeal = 0;
-  let isCritical = false;
 
   const power = action.power || 0;
   const type = action.healType || "fixed";
@@ -43,8 +42,6 @@ finalHeal = runBeforeDamage(ctx, {
 if (finalHeal > 0) {
 
   if (rollCritical(source)) {
-
-    isCritical = true;
 
     finalHeal =
       Math.floor(finalHeal * 1.5);
