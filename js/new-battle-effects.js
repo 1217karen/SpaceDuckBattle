@@ -473,8 +473,12 @@ const EFFECT_CAP = 25;
 
 export function applyEffect(source, target, action, ctx) {
 
-  const effectData = action.effect;
-  if (!effectData) return;
+const baseEffect = action.effect;
+if (!baseEffect) return;
+
+const effectData = {
+  ...baseEffect
+};
 
 // ==========================================================
 // TECスケール計算
@@ -504,16 +508,11 @@ if (effectData.power !== undefined) {
 
 if (rollCritical(source)) {
 
-ctx.pushCriticalLog(source, "skill");
+  ctx.pushCriticalLog(source, "skill");
 
   if (effectData.stock !== undefined) {
     effectData.stock =
       Math.ceil(effectData.stock * 1.5);
-  }
-
-  if (effectData.value !== undefined) {
-    effectData.value =
-      effectData.value * 1.5;
   }
 
 }
