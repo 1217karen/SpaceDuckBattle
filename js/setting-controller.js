@@ -233,25 +233,13 @@ function createSkillBlock(skillData, index) {
   select.value = skillData?.type ?? "";
 
 const cutinLabel = document.createElement("div");
-cutinLabel.textContent = "カットイン";
+cutinLabel.textContent = "カットインURL";
 
-const cutinButton = document.createElement("button");
-cutinButton.type = "button";
-cutinButton.className = "cutinPickerButton";
-cutinButton.dataset.selectedId =
-  skillData?.cutinId ? String(skillData.cutinId) : "";
-cutinButton.dataset.selectedUrl =
-  skillData?.cutinUrl || "";
-
-const cutinImg = document.createElement("img");
-cutinImg.src = skillData?.cutinUrl || getNoImageUrl();
-cutinImg.alt = "cutin image";
-
-cutinButton.appendChild(cutinImg);
-
-cutinButton.addEventListener("click", () => {
-  iconPicker.open(cutinButton, currentCommIcons);
-});
+const cutinInput = document.createElement("input");
+cutinInput.type = "text";
+cutinInput.className = "cutinUrlInput";
+cutinInput.placeholder = "https://... または画像URL";
+cutinInput.value = skillData?.cutinUrl || "";
 
   const dialogueList = createSkillDialogueList(
     skillData?.dialogue
