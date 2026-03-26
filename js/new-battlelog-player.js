@@ -8,6 +8,7 @@ import { battleState } from "./new-battlelog-state.js";
 import { playLogEvent } from "./new-battlelog-ui.js";
 import { applyEvent } from "./new-battlelog-state-updater.js";
 import { resetCommPanel, updateCommByEvent, showUnitDefaultComm } from "./new-battlelog-comm.js";
+import { showCutin, hideCutin } from "./new-battlelog-cutin.js";
 
 // =====================
 // 設定値
@@ -126,11 +127,12 @@ export async function playNextAction() {
   const actingUnit =
     battleState.battleLog[start].unit;
 
-    resetCommPanel();
+  hideCutin();
+  resetCommPanel();
 
-    if (actingUnit !== "__turn__") {
-      showUnitDefaultComm(actingUnit, battleState.snapshot);
-    }
+  if (actingUnit !== "__turn__") {
+    showUnitDefaultComm(actingUnit, battleState.snapshot);
+  }
 
   const pos =
     battleState.boardState.units[actingUnit];
@@ -362,7 +364,10 @@ if (ev.type === "__groupStart") {
 
     let wait = EFFECT_DELAY;
 
-    if (ev.type === "skillUse") {
+    if (ev.cutin?.imageUrl) {
+      showCutin(ev.cutin);
+      wait = ev.cutin.duration ?? 2000;
+    } else if (ev.type === "skillUse") {
       wait = EVENT_DELAY;
     }
 
@@ -373,11 +378,17 @@ if (ev.type === "__groupStart") {
       await sleep(wait);
     }
 
+    if (ev.cutin?.imageUrl) {
+      hideCutin();
+    }
+
   }
 
   battleState.actedSet.add(actingUnit);
 
   battleState.logIndex = end + 1;
+
+  hideCutin();
 
   battleState.isPlaying = false;
 
