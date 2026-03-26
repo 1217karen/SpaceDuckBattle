@@ -238,54 +238,61 @@ export async function playNextAction() {
   clearAllHighlights();
   const ev = actionEvents[i];
 
-if (ev.type === "__groupStart") {
+  if (ev.type === "__groupStart") {
 
-  const isEffectGroup =
-    ev.label?.type === "effectTrigger";
+    const isEffectGroup =
+      ev.label?.type === "effectTrigger";
 
-  if (isEffectGroup) {
-    currentEffectGroup = document.createElement("div");
-    currentEffectGroup.classList.add("effectGroup");
-    battleState.logArea.appendChild(currentEffectGroup);
-  }
-
-  const target =
-    currentEffectGroup || battleState.logArea;
-
-  const spacer = document.createElement("div");
-  spacer.style.height = "3px";
-  target.appendChild(spacer);
-
-  if (ev.label) {
-    updateCommByEvent(
-      ev.label,
-      battleState.snapshot,
-      actingUnit
-    );
-
-    playLogEvent(
-      ev.label,
-      null,
-      battleState.boardState,
-      target,
-      battleState.nameMap,
-      depth
-    );
-
-    let delay = EVENT_DELAY;
-
-    if (ev.label.type === "effectTrigger") {
-      delay = EFFECT_DELAY;
-    } else if (ev.label.type === "turnUnit") {
-      delay = UNIT_DELAY;
+    if (isEffectGroup) {
+      currentEffectGroup = document.createElement("div");
+      currentEffectGroup.classList.add("effectGroup");
+      battleState.logArea.appendChild(currentEffectGroup);
     }
 
-    await sleep(delay);
-  }
+    const target =
+      currentEffectGroup || battleState.logArea;
 
-  depth++;
-  continue;
-}
+    const spacer = document.createElement("div");
+    spacer.style.height = "3px";
+    target.appendChild(spacer);
+
+    if (ev.label) {
+      updateCommByEvent(
+        ev.label,
+        battleState.snapshot,
+        actingUnit
+      );
+
+      playLogEvent(
+        ev.label,
+        null,
+        battleState.boardState,
+        target,
+        battleState.nameMap,
+        depth
+      );
+
+      let delay = EVENT_DELAY;
+
+      if (ev.label.cutin?.imageUrl) {
+        showCutin(ev.label.cutin);
+        delay = ev.label.cutin.duration ?? 2000;
+      } else if (ev.label.type === "effectTrigger") {
+        delay = EFFECT_DELAY;
+      } else if (ev.label.type === "turnUnit") {
+        delay = UNIT_DELAY;
+      }
+
+      await sleep(delay);
+
+      if (ev.label.cutin?.imageUrl) {
+        hideCutin();
+      }
+    }
+
+    depth++;
+    continue;
+  }
 
     if (ev.type === "__groupEnd") {
 
