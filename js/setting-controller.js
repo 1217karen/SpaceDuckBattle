@@ -238,7 +238,7 @@ cutinLabel.textContent = "カットインURL";
 const cutinInput = document.createElement("input");
 cutinInput.type = "text";
 cutinInput.className = "cutinUrlInput";
-cutinInput.placeholder = "https://... または画像URL";
+cutinInput.placeholder = "https://...";
 cutinInput.value = skillData?.cutinUrl || "";
 
   const dialogueList = createSkillDialogueList(
