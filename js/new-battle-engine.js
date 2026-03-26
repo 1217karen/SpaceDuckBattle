@@ -121,6 +121,49 @@ function getSkillDialogue(unit, skillType) {
   return null;
 }
 
+  function getSkillCutin(unit, skillType) {
+  if (!unit || !skillType) return null;
+
+  const patterns = unit.patterns || [];
+
+  for (const pattern of patterns) {
+    const skills = pattern.skills || [];
+
+    for (const skill of skills) {
+      if (skill.type !== skillType) continue;
+
+      if (
+        typeof skill.cutinUrl === "string" &&
+        skill.cutinUrl.trim() !== ""
+      ) {
+        return skill.cutinUrl;
+      }
+
+      return null;
+    }
+  }
+
+  return null;
+}
+
+function resolveCutinPayloadForEvent(event) {
+  if (!event) return null;
+
+  if (event.type === "skillUse") {
+    const unit = findUnitById(event.unit);
+    const imageUrl = getSkillCutin(unit, event.skill);
+
+    if (!imageUrl) return null;
+
+    return {
+      imageUrl,
+      duration: 2000
+    };
+  }
+
+  return null;
+}
+
 function getFixedDialogue(unit, key) {
   if (!unit || !key) return null;
 
@@ -302,10 +345,14 @@ function attachCommToEvent(event) {
   const comm =
     resolveCommPayloadForEvent(event);
 
-  if (comm) {
+  const cutin =
+    resolveCutinPayloadForEvent(event);
+
+  if (comm || cutin) {
     return {
       ...event,
-      comm
+      ...(comm ? { comm } : {}),
+      ...(cutin ? { cutin } : {})
     };
   }
 
