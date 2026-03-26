@@ -897,12 +897,12 @@ transform: translateY(24px);
 
 15% {
 opacity: 1;
-transform: translateY(0);
+transform: translateY(4px);
 }
 
 85% {
 opacity: 1;
-transform: translateY(0);
+transform: translateY(-4px);
 }
 
 100% {
