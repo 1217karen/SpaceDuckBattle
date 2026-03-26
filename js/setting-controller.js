@@ -87,7 +87,6 @@ function normalizeSkill(skill) {
   if (typeof skill === "string") {
     return {
       type: skill,
-      cutinId: null,
       cutinUrl: "",
       dialogue: [{
         text: "",
@@ -100,10 +99,6 @@ function normalizeSkill(skill) {
   if (skill && typeof skill === "object") {
     return {
       type: skill.type ?? "",
-      cutinId:
-        typeof skill.cutinId === "number" && skill.cutinId > 0
-          ? skill.cutinId
-          : null,
       cutinUrl:
         typeof skill.cutinUrl === "string"
           ? skill.cutinUrl
@@ -114,7 +109,6 @@ function normalizeSkill(skill) {
 
   return {
     type: "",
-    cutinId: null,
     cutinUrl: "",
     dialogue: [{
       text: "",
@@ -238,37 +232,37 @@ function createSkillBlock(skillData, index) {
 
   select.value = skillData?.type ?? "";
 
-  const cutinLabel = document.createElement("div");
-  cutinLabel.textContent = "カットイン";
+const cutinLabel = document.createElement("div");
+cutinLabel.textContent = "カットイン";
 
-  const cutinButton = document.createElement("button");
-  cutinButton.type = "button";
-  cutinButton.className = "cutinPickerButton";
-  cutinButton.dataset.selectedId =
-    skillData?.cutinId ? String(skillData.cutinId) : "";
-  cutinButton.dataset.selectedUrl =
-    skillData?.cutinUrl || "";
+const cutinButton = document.createElement("button");
+cutinButton.type = "button";
+cutinButton.className = "cutinPickerButton";
+cutinButton.dataset.selectedId =
+  skillData?.cutinId ? String(skillData.cutinId) : "";
+cutinButton.dataset.selectedUrl =
+  skillData?.cutinUrl || "";
 
-  const cutinImg = document.createElement("img");
-  cutinImg.src = skillData?.cutinUrl || getNoImageUrl();
-  cutinImg.alt = "cutin image";
+const cutinImg = document.createElement("img");
+cutinImg.src = skillData?.cutinUrl || getNoImageUrl();
+cutinImg.alt = "cutin image";
 
-  cutinButton.appendChild(cutinImg);
+cutinButton.appendChild(cutinImg);
 
-  cutinButton.addEventListener("click", () => {
-    iconPicker.open(cutinButton, currentCommIcons);
-  });
+cutinButton.addEventListener("click", () => {
+  iconPicker.open(cutinButton, currentCommIcons);
+});
 
   const dialogueList = createSkillDialogueList(
     skillData?.dialogue
   );
 
-  wrapper.appendChild(select);
-  wrapper.appendChild(document.createElement("br"));
-  wrapper.appendChild(cutinLabel);
-  wrapper.appendChild(cutinButton);
-  wrapper.appendChild(document.createElement("br"));
-  wrapper.appendChild(dialogueList);
+wrapper.appendChild(select);
+wrapper.appendChild(document.createElement("br"));
+wrapper.appendChild(cutinLabel);
+wrapper.appendChild(cutinInput);
+wrapper.appendChild(document.createElement("br"));
+wrapper.appendChild(dialogueList);
 
   return wrapper;
 }
@@ -293,14 +287,11 @@ function readSkillArea() {
     const type =
       block.querySelector(".skillSelect")?.value ?? "";
 
-    const cutinButton =
-      block.querySelector(".cutinPickerButton");
-
-    const cutinId =
-      Number(cutinButton?.dataset.selectedId || 0);
+    const cutinInput =
+      block.querySelector(".cutinUrlInput");
 
     const cutinUrl =
-      cutinButton?.dataset.selectedUrl || "";
+      cutinInput?.value.trim() || "";
 
     const dialogueRows =
       block.querySelectorAll(".skillDialogueRow");
@@ -339,7 +330,6 @@ function readSkillArea() {
     };
 
     if (cutinUrl !== "") {
-      result.cutinId = cutinId || null;
       result.cutinUrl = cutinUrl;
     }
 
