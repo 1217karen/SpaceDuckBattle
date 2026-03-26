@@ -87,6 +87,8 @@ function normalizeSkill(skill) {
   if (typeof skill === "string") {
     return {
       type: skill,
+      cutinId: null,
+      cutinUrl: "",
       dialogue: [{
         text: "",
         iconId: null,
@@ -98,12 +100,22 @@ function normalizeSkill(skill) {
   if (skill && typeof skill === "object") {
     return {
       type: skill.type ?? "",
+      cutinId:
+        typeof skill.cutinId === "number" && skill.cutinId > 0
+          ? skill.cutinId
+          : null,
+      cutinUrl:
+        typeof skill.cutinUrl === "string"
+          ? skill.cutinUrl
+          : "",
       dialogue: normalizeDialogueList(skill.dialogue)
     };
   }
 
   return {
     type: "",
+    cutinId: null,
+    cutinUrl: "",
     dialogue: [{
       text: "",
       iconId: null,
@@ -281,6 +293,15 @@ function readSkillArea() {
     const type =
       block.querySelector(".skillSelect")?.value ?? "";
 
+    const cutinButton =
+      block.querySelector(".cutinPickerButton");
+
+    const cutinId =
+      Number(cutinButton?.dataset.selectedId || 0);
+
+    const cutinUrl =
+      cutinButton?.dataset.selectedUrl || "";
+
     const dialogueRows =
       block.querySelectorAll(".skillDialogueRow");
 
@@ -313,14 +334,20 @@ function readSkillArea() {
       return { type: "" };
     }
 
-    if (dialogue.length === 0) {
-      return { type };
+    const result = {
+      type
+    };
+
+    if (cutinUrl !== "") {
+      result.cutinId = cutinId || null;
+      result.cutinUrl = cutinUrl;
     }
 
-    return {
-      type,
-      dialogue
-    };
+    if (dialogue.length > 0) {
+      result.dialogue = dialogue;
+    }
+
+    return result;
   });
 }
 
