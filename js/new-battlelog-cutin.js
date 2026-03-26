@@ -11,6 +11,7 @@ export function hideCutin() {
   const { overlay, image } = getCutinElements();
 
   if (image) {
+    image.classList.remove("cutinAnimate");
     image.src = "";
   }
 
@@ -25,6 +26,12 @@ export function showCutin({ imageUrl }) {
   if (!overlay || !image) return;
   if (!imageUrl) return;
 
+  image.classList.remove("cutinAnimate");
+
   image.src = imageUrl;
   overlay.classList.remove("hidden");
+
+  void image.offsetWidth;
+
+  image.classList.add("cutinAnimate");
 }
