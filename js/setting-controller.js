@@ -226,11 +226,35 @@ function createSkillBlock(skillData, index) {
 
   select.value = skillData?.type ?? "";
 
+  const cutinLabel = document.createElement("div");
+  cutinLabel.textContent = "カットイン";
+
+  const cutinButton = document.createElement("button");
+  cutinButton.type = "button";
+  cutinButton.className = "cutinPickerButton";
+  cutinButton.dataset.selectedId =
+    skillData?.cutinId ? String(skillData.cutinId) : "";
+  cutinButton.dataset.selectedUrl =
+    skillData?.cutinUrl || "";
+
+  const cutinImg = document.createElement("img");
+  cutinImg.src = skillData?.cutinUrl || getNoImageUrl();
+  cutinImg.alt = "cutin image";
+
+  cutinButton.appendChild(cutinImg);
+
+  cutinButton.addEventListener("click", () => {
+    iconPicker.open(cutinButton, currentCommIcons);
+  });
+
   const dialogueList = createSkillDialogueList(
     skillData?.dialogue
   );
 
   wrapper.appendChild(select);
+  wrapper.appendChild(document.createElement("br"));
+  wrapper.appendChild(cutinLabel);
+  wrapper.appendChild(cutinButton);
   wrapper.appendChild(document.createElement("br"));
   wrapper.appendChild(dialogueList);
 
