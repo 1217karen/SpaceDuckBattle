@@ -28,7 +28,13 @@ export const STAGES = {
 
 tutorial: {
 board: BOARDS.small,
+
+placement: {
+allyStartColumns: 2
+},
+
 maxTurns: 20,
+
 enemies: [
 makeEnemy(ENEMIES.tutorialEnemyA, {
 id: "T1",
@@ -40,7 +46,13 @@ y: 1
 
 normal: {
 board: BOARDS.medium,
+
+placement: {
+allyStartColumns: 2
+},
+
 maxTurns: 20,
+
 enemies: [
 makeEnemy(ENEMIES.normalEnemyA, {
 id: "N1",
@@ -52,7 +64,13 @@ y: 2
 
 boss: {
 board: BOARDS.large,
+
+placement: {
+allyStartColumns: 3
+},
+
 maxTurns: 20,
+
 enemies: [
 makeEnemy(ENEMIES.testEnemyA, {
 id: "B1",
