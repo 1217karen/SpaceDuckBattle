@@ -110,18 +110,18 @@ pointer-events: none;
 .sideToggleButton {
 pointer-events: auto;
 
-min-width: 72px;
-height: 32px;
-padding: 0 12px;
+min-width: 88px;
+height: 38px;
+padding: 0 16px;
 
 background: rgba(10, 20, 40, 0.92);
 color: #aee0ff;
 
 border: 1px solid rgba(120,180,255,0.7);
-border-radius: 16px;
+border-radius: 19px;
 
 font-family: 'Iceberg', sans-serif;
-font-size: 14px;
+font-size: 16px;
 letter-spacing: 0.5px;
 
 box-shadow:
