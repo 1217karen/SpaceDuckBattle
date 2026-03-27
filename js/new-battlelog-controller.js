@@ -29,6 +29,11 @@ const logBtn = document.getElementById("logBtn");
 const backlogOverlay = document.getElementById("backlogOverlay");
 const backlogClose = document.getElementById("backlogClose");
 const backlogContent = document.getElementById("backlogContent");
+const leftToggleBtn = document.getElementById("leftToggleBtn");
+const rightToggleBtn = document.getElementById("rightToggleBtn");
+const leftSide = document.getElementById("leftSide");
+const rightSide = document.getElementById("rightSide");
+
 
 battleState.turnDisplay = turnDisplay;
 battleState.logArea = logArea;
@@ -63,6 +68,43 @@ function flattenLogTree(root) {
   walk(root);
 
   return result;
+}
+
+function isCompactLayout() {
+  return window.matchMedia("(max-width: 1320px)").matches;
+}
+
+function closeSidePanels() {
+  leftSide?.classList.remove("is-open");
+  rightSide?.classList.remove("is-open");
+}
+
+function toggleLeftPanel() {
+  if (!isCompactLayout()) return;
+
+  const willOpen = !leftSide.classList.contains("is-open");
+
+  rightSide.classList.remove("is-open");
+
+  if (willOpen) {
+    leftSide.classList.add("is-open");
+  } else {
+    leftSide.classList.remove("is-open");
+  }
+}
+
+function toggleRightPanel() {
+  if (!isCompactLayout()) return;
+
+  const willOpen = !rightSide.classList.contains("is-open");
+
+  leftSide.classList.remove("is-open");
+
+  if (willOpen) {
+    rightSide.classList.add("is-open");
+  } else {
+    rightSide.classList.remove("is-open");
+  }
 }
 
 // ======================
@@ -480,6 +522,31 @@ backlogContent.addEventListener("click", (e) => {
 
   jumpToLogIndex(jumpIndex);
   backlogOverlay.classList.add("hidden");
+});
+leftToggleBtn?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleLeftPanel();
+});
+
+rightToggleBtn?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleRightPanel();
+});
+
+leftSide?.addEventListener("click", () => {
+  if (!isCompactLayout()) return;
+  leftSide.classList.remove("is-open");
+});
+
+rightSide?.addEventListener("click", () => {
+  if (!isCompactLayout()) return;
+  rightSide.classList.remove("is-open");
+});
+
+window.addEventListener("resize", () => {
+  if (!isCompactLayout()) {
+    closeSidePanels();
+  }
 });
 
 // =====================
