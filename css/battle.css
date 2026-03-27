@@ -38,6 +38,15 @@
   background:#ddd;
 }
 
+.cell.disabled-cell{
+  background:#ccc;
+  cursor:not-allowed;
+}
+
+.cell.disabled-cell:hover{
+  background:#ccc;
+}
+
 .pt-slot.selected{
   border-color:#ff9900;
   box-shadow:0 0 6px #ff9900;
