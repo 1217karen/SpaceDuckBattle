@@ -1266,4 +1266,12 @@ background:#1b2a44;
     transform: translateX(100%);
     align-items: flex-start;
   }
+
+  #leftSide.is-open {
+    transform: translateX(0);
+  }
+
+  #rightSide.is-open {
+    transform: translateX(0);
+  }
 }
