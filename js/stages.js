@@ -32,7 +32,6 @@ maxTurns: 20,
 enemies: [
 makeEnemy(ENEMIES.tutorialEnemyA, {
 id: "T1",
-name: "チュートリアル敵A",
 x: 4,
 y: 1
 })
@@ -45,7 +44,6 @@ maxTurns: 20,
 enemies: [
 makeEnemy(ENEMIES.normalEnemyA, {
 id: "N1",
-name: "通常敵A",
 x: 6,
 y: 2
 })
@@ -58,7 +56,6 @@ maxTurns: 20,
 enemies: [
 makeEnemy(ENEMIES.testEnemyA, {
 id: "B1",
-name: "ボス敵A",
 x: 7,
 y: 2
 })
