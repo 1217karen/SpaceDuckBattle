@@ -73,6 +73,8 @@ align-items: center;
 width: 650px;
 height: 100%;
 overflow-y: auto;
+
+position: relative;
 }
 
 #centerContent {
@@ -85,24 +87,25 @@ width: 650px;
 min-width: 0;
 }
 
+/* サイドボタン */
 
 #sideToggleBar {
 display: none;
-width: 100%;
-box-sizing: border-box;
-padding: 8px 10px 0 10px;
 
-position: sticky;
-top: 0;
+position: absolute;
+top: 8px;
+left: 0;
+right: 0;
 z-index: 110;
+
+padding: 0 10px;
+box-sizing: border-box;
 
 justify-content: space-between;
 align-items: center;
 
 pointer-events: none;
 }
-
-/* サイドボタン */
 
 .sideToggleButton {
 pointer-events: auto;
