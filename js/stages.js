@@ -51,11 +51,11 @@ y: 2
 
 },
 
-test_9x7: {
+test_8x6: {
 
 board: {
-width: 9,
-height: 7
+width: 8,
+height: 6
 },
 
 maxTurns: 20,
@@ -64,7 +64,7 @@ enemies: [
 makeEnemy(ENEMIES.testEnemyA, {
 id: "T1",
 name: "テスト敵A",
-x: 8,
+x: 7,
 y: 3
 })
 ]
