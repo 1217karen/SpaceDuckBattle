@@ -24,6 +24,30 @@ const partySlots = [0, null, null, null];
 const placedSlots = {};
 
 let selectedSlot = null;
+
+function isPlaceableCell(stage, x, y) {
+  const placement = stage.placement;
+  if (!placement) return true;
+
+  if (typeof placement.allyStartColumns === "number") {
+    if (x >= placement.allyStartColumns) {
+      return false;
+    }
+  }
+
+  if (Array.isArray(placement.blockedCells)) {
+    const blocked = placement.blockedCells.some((cell) => {
+      return cell.x === x && cell.y === y;
+    });
+
+    if (blocked) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 let selectedCell = null;
 
 function renderParty() {
@@ -103,7 +127,10 @@ function renderDuckList() {
   });
 }
 
-function createBoard(width, height) {
+function createBoard(stage) {
+  const width = stage.board.width;
+  const height = stage.board.height;
+
   boardDiv.innerHTML = "";
   boardDiv.style.gridTemplateColumns = `repeat(${width}, 50px)`;
 
@@ -115,21 +142,26 @@ function createBoard(width, height) {
       cell.dataset.x = x;
       cell.dataset.y = y;
 
+      const placeable = isPlaceableCell(stage, x, y);
+
+      if (!placeable) {
+        cell.classList.add("disabled-cell");
+      }
+
       cell.addEventListener("click", () => {
+        if (!placeable) return;
         if (selectedSlot === null) return;
 
         const duckIndex = partySlots[selectedSlot];
         const duck = ducks[duckIndex];
         if (!duck) return;
 
-        /* ① 同じPTがすでに配置されていたら消す */
         if (placedSlots[selectedSlot]) {
           const prev = placedSlots[selectedSlot];
           const prevCell = document.querySelector(`.cell[data-x="${prev.x}"][data-y="${prev.y}"]`);
           if (prevCell) prevCell.innerHTML = "";
         }
 
-        /* ② このセルに別PTがいたら消す */
         Object.keys(placedSlots).forEach((slot) => {
           const p = placedSlots[slot];
 
@@ -141,7 +173,6 @@ function createBoard(width, height) {
           }
         });
 
-        /* ③ 新しく配置 */
         cell.innerHTML = "";
 
         const img = document.createElement("img");
@@ -153,7 +184,6 @@ function createBoard(width, height) {
 
         placedSlots[selectedSlot] = { x, y };
 
-        /* ④ 選択解除 */
         selectedSlot = null;
         ptSlots.forEach((s) => s.classList.remove("selected"));
       });
@@ -238,7 +268,8 @@ startBtn.addEventListener("click", () => {
 
   const stageNameMap = {
     tutorial: "チュートリアル",
-    normal: "通常戦"
+    normal: "通常戦",
+    boss: "ボス戦"
   };
 
   const partyMembers = partySlots
@@ -296,9 +327,9 @@ stageSelect.addEventListener("change", () => {
     return;
   }
 
-  const stage = STAGES[stageSelect.value];
-  createBoard(stage.board.width, stage.board.height);
-  resetPlacement();
+const stage = STAGES[stageSelect.value];
+createBoard(stage);
+resetPlacement();
 });
 
 renderParty();
