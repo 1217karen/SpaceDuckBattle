@@ -391,10 +391,8 @@ align-items: flex-end;
 padding: 12px 10px;
 box-sizing: border-box;
 
-background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG1.webp");
-background-repeat: no-repeat;
-background-position: center top;
-background-size: cover;
+position: relative;
+isolation: isolate;
 }
 
 #rightSide {
@@ -409,10 +407,31 @@ align-items: flex-start;
 padding: 12px 10px;
 box-sizing: border-box;
 
-background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG2.webp");
-background-repeat: no-repeat;
-background-position: center top;
-background-size: cover;
+position: relative;
+isolation: isolate;
+}
+
+#leftSide::before,
+#rightSide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#leftSide::before {
+  background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG1.webp");
+}
+
+#rightSide::before {
+  background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG2.webp");
 }
 
 /* ユニットステータスカード */
