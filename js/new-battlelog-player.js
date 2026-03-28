@@ -378,13 +378,13 @@ export async function playNextAction() {
       wait = EVENT_DELAY;
     }
 
-    if (
-      ev.type !== "hpChange" &&
-      ev.type !== "effectExpired"
-    ) {
-      await sleep(wait);
-    }
-
+if (
+  ev.type !== "hpChange" &&
+  ev.type !== "effectExpired" &&
+  ev.type !== "cooldownSet"
+) {
+  await sleep(wait);
+}
     if (ev.cutin?.imageUrl) {
       hideCutin();
     }
