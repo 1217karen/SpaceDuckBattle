@@ -1245,7 +1245,7 @@ background:#1b2a44;
 横幅不足時：中央優先＋左右収納
 ======================================================= */
 
-@media (max-width: 1320px) {
+@media (max-width: 1350px) {
   #battleLayout {
     grid-template-columns: 1fr;
     gap: 0;
