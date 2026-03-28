@@ -704,7 +704,6 @@ position: relative;
 ======================================================= */
 
 #boardFrame {
-
 width: 100%;
 max-width: 650px;
 height: 500px;
@@ -727,8 +726,11 @@ box-sizing: border-box;
 width: 650px;
 height: 500px;
 
-position: relative;
-margin: 0 auto;
+position: absolute;
+top: 0;
+left: 50%;
+
+margin: 0;
 transform-origin: top center;
 will-change: transform;
 }
