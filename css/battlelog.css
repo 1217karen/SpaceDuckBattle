@@ -149,10 +149,9 @@ color: #ffffff;
 /* =======================================================
 テキストログ
 ======================================================= */
-
 #logArea {
 width: min(var(--log-width), 100%);
-height: clamp(200px, calc(100vh - 560px), 600px);
+height: 400px;
 overflow-y: auto;
 color: #e6f4ff;
 background: rgba(10,15,30,0.9);
