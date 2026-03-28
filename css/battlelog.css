@@ -391,10 +391,10 @@ align-items: flex-end;
 padding: 12px 10px;
 box-sizing: border-box;
 
-background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG2.webp");
+background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG1.webp");
 background-repeat: no-repeat;
 background-position: center top;
-background-size: auto 100%;
+background-size: cover;
 }
 
 #rightSide {
@@ -409,10 +409,10 @@ align-items: flex-start;
 padding: 12px 10px;
 box-sizing: border-box;
 
-background-image: url("ここに左右カラム用の画像URL");
+background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG2.webp");
 background-repeat: no-repeat;
 background-position: center top;
-background-size: auto 100%;
+background-size: cover;
 }
 
 /* ユニットステータスカード */
