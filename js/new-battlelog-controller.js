@@ -74,16 +74,16 @@ function flattenLogTree(root) {
 }
 
 function updateBoardScale() {
-  if (!centerContent || !boardFrame || !boardScaleWrap) return;
+  if (!boardFrame || !boardScaleWrap) return;
 
-  const availableWidth = centerContent.clientWidth;
+  const availableWidth = boardFrame.clientWidth;
   const baseWidth = 650;
   const baseHeight = 500;
 
   const scale = Math.min(1, availableWidth / baseWidth);
   const scaledHeight = baseHeight * scale;
 
-  boardScaleWrap.style.transform = `scale(${scale})`;
+  boardScaleWrap.style.transform = `translateX(-50%) scale(${scale})`;
   boardFrame.style.height = `${scaledHeight}px`;
 }
 
