@@ -705,12 +705,11 @@ position: relative;
 
 #boardFrame {
 
-width: 650px;
+width: 100%;
+max-width: 650px;
 height: 500px;
 
-display: flex;
-justify-content: center;
-align-items: center;
+display: block;
 
 flex-shrink: 0;
 
@@ -720,7 +719,8 @@ box-shadow: none;
 padding: 0;
 
 position: relative;
-overflow: visible;
+overflow: hidden;
+box-sizing: border-box;
 }
 
 #boardScaleWrap {
@@ -728,6 +728,7 @@ width: 650px;
 height: 500px;
 
 position: relative;
+margin: 0 auto;
 transform-origin: top center;
 will-change: transform;
 }
@@ -1240,11 +1241,13 @@ background:#1b2a44;
     min-width: 0;
   }
 
-  #centerContent {
-    width: 650px;
-    max-width: 100%;
-    margin: 0 auto;
-  }
+#centerContent {
+  width: 650px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
 
     #sideToggleBar {
     display: flex;
