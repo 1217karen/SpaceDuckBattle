@@ -1261,7 +1261,7 @@ background:#1b2a44;
   width: 650px;
   max-width: 100%;
   margin: 0 auto;
-  padding: 0;
+  padding: 0 0 20px 0;
   box-sizing: border-box;
 }
 
