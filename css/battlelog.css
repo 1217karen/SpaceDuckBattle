@@ -151,7 +151,7 @@ color: #ffffff;
 ======================================================= */
 
 #logArea {
-width: var(--log-width);
+width: min(var(--log-width), 100%);
 height: 400px;
 min-height: 100px;
 overflow-y: auto;
@@ -272,7 +272,7 @@ color:#ffffff;
 ======================================================= */
 
 #commPanel {
-  width: 460px;
+  width: min(460px, 100%);
   min-height: 84px;
   box-sizing: border-box;
 
@@ -714,15 +714,35 @@ align-items: center;
 
 flex-shrink: 0;
 
-background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=board.webp") no-repeat center / contain;
-
 border: none;
 box-shadow: none;
 
 padding: 0;
 
 position: relative;
-overflow: hidden;
+overflow: visible;
+}
+
+#boardScaleWrap {
+width: 650px;
+height: 500px;
+
+position: relative;
+transform-origin: top center;
+will-change: transform;
+}
+
+#boardArea {
+display: flex;
+justify-content: center;
+
+width: 650px;
+height: 500px;
+
+background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=board.webp") no-repeat center / contain;
+
+padding: 6px;
+box-sizing: border-box;
 }
 
 #cutinOverlay {
@@ -738,6 +758,21 @@ background: rgba(0,0,0,0.35);
 
 pointer-events: none;
 }
+
+#cutinOverlay {
+position: absolute;
+inset: 0;
+z-index: 20;
+
+display: flex;
+justify-content: center;
+align-items: center;
+
+background: rgba(0,0,0,0.35);
+
+pointer-events: none;
+}
+
 
 #cutinOverlay.hidden {
 display: none;
@@ -768,15 +803,6 @@ animation: cutinEnterStayExit 2000ms linear forwards;
 
 #board {
   position: relative;
-}
-
-#boardArea {
-display: flex;
-justify-content: center;
-
-background: none;
-
-padding: 6px;
 }
 
 /* =======================================================
@@ -1090,7 +1116,7 @@ gap:10px;
 justify-content:flex-end;
 align-items:center;
 
-  width: var(--log-width);
+width: min(var(--log-width), 100%);
 }
 
 #battleControls button{
