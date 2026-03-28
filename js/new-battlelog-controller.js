@@ -33,6 +33,9 @@ const leftToggleBtn = document.getElementById("leftToggleBtn");
 const rightToggleBtn = document.getElementById("rightToggleBtn");
 const leftSide = document.getElementById("leftSide");
 const rightSide = document.getElementById("rightSide");
+const centerContent = document.getElementById("centerContent");
+const boardFrame = document.getElementById("boardFrame");
+const boardScaleWrap = document.getElementById("boardScaleWrap");
 
 
 battleState.turnDisplay = turnDisplay;
@@ -68,6 +71,20 @@ function flattenLogTree(root) {
   walk(root);
 
   return result;
+}
+
+function updateBoardScale() {
+  if (!centerContent || !boardFrame || !boardScaleWrap) return;
+
+  const availableWidth = centerContent.clientWidth;
+  const baseWidth = 650;
+  const baseHeight = 500;
+
+  const scale = Math.min(1, availableWidth / baseWidth);
+  const scaledHeight = baseHeight * scale;
+
+  boardScaleWrap.style.transform = `scale(${scale})`;
+  boardFrame.style.height = `${scaledHeight}px`;
 }
 
 function isCompactLayout() {
@@ -671,6 +688,9 @@ if (snapshot) {
     }
   });
 }
+
+updateBoardScale();
+window.addEventListener("resize", updateBoardScale);
 
 window.rebuildBoardFromState = rebuildBoardFromState;
 window.skipToEnd = skipToEnd;
