@@ -391,7 +391,7 @@ align-items: flex-end;
 padding: 12px 10px;
 box-sizing: border-box;
 
-background-image: url("ここに左右カラム用の画像URL");
+background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG2.webp");
 background-repeat: no-repeat;
 background-position: center top;
 background-size: auto 100%;
@@ -493,14 +493,6 @@ justify-content:flex-start;
 flex:1;
 min-width:0;
 min-height: 0;
-}
-
-.statRow{
-display:grid;
-grid-template-columns:repeat(3, 1fr);
-gap:2px 8px;
-font-size:9px;
-color:#aee0ff;
 }
 
 /* 名前＋状態表示ブロック */
@@ -1244,15 +1236,11 @@ background:#1b2a44;
   }
 
 #centerContent {
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 10px;
-
-width: 650px;
-min-width: 0;
-min-height: 100%;
-box-sizing: border-box;
+  width: 650px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
 }
 
     #sideToggleBar {
