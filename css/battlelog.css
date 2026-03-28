@@ -735,6 +735,7 @@ will-change: transform;
 #boardArea {
 display: flex;
 justify-content: center;
+align-items: center;
 
 width: 650px;
 height: 500px;
@@ -758,21 +759,6 @@ background: rgba(0,0,0,0.35);
 
 pointer-events: none;
 }
-
-#cutinOverlay {
-position: absolute;
-inset: 0;
-z-index: 20;
-
-display: flex;
-justify-content: center;
-align-items: center;
-
-background: rgba(0,0,0,0.35);
-
-pointer-events: none;
-}
-
 
 #cutinOverlay.hidden {
 display: none;
