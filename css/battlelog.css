@@ -169,6 +169,7 @@ inset 0 0 6px rgba(80,140,255,0.3);
 padding: 8px;
 box-sizing: border-box;
 flex-shrink: 1;
+margin-bottom: 20px;
 }
 
 .actionHeader {
