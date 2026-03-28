@@ -39,7 +39,7 @@ body {
 display: grid;
 
 /* 左余白可変 / 中央固定 / 右余白可変 */
-grid-template-columns: minmax(0, 1fr) 650px minmax(0, 1fr);
+grid-template-columns: minmax(0, 1fr) minmax(650px, 800px) minmax(0, 1fr);
 
 height: 100vh;
 
@@ -70,7 +70,9 @@ flex-direction: column;
 justify-content: flex-start;
 align-items: center;
 
-width: 650px;
+width: 100%;
+max-width: 800px;
+min-width: 650px;
 height: 100%;
 overflow-y: auto;
 
