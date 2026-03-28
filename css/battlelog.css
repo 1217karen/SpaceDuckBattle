@@ -1245,16 +1245,17 @@ background:#1b2a44;
 横幅不足時：中央優先＋左右収納
 ======================================================= */
 
-@media (max-width: 1350px) {
-  #battleLayout {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  #centerArea {
-    width: 100%;
-    min-width: 0;
-  }
+@media (max-width: 1360px) {
+#battleLayout {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  gap: 0;
+}
+  
+#centerArea {
+  width: min(650px, 100%);
+  min-width: 0;
+}
 
 #centerContent {
   width: 650px;
