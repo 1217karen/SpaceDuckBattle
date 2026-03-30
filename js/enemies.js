@@ -16,8 +16,40 @@ cri: 5,
 tec: 3,
 facing: "W",
 icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D01.webp",
+commDialogues: {
+battleStart: [
+{ text: "（黒いアヒルが並んでいる……）" }
+],
+turnChangeNeutral: [
+{ text: "（黒いアヒルがこちらを見ている）" }
+],
+turnChangeAdvantage: [
+{ text: "（黒いアヒルがこちらを見ている）" }
+],
+turnChangeDisadvantage: [
+{ text: "（黒いアヒルは狼狽えている）" }
+],
+turnChangePinch: [
+{ text: "（黒いアヒルは狼狽えている）" }
+],
+critical: [
+{ text: "" }
+],
+kill: [
+{ text: "「…………。」" }
+],
+battleEndWin: [
+{ text: "「…………。」" }
+]
+},
+
 skills: [
-{ type: "attack_front1" }
+{
+type: "attack_front1",
+dialogue: [
+{ text: "「…………。」" }
+]
+}
 ]
 },
 
