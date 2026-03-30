@@ -217,8 +217,11 @@ function loadCharacter() {
   const duck =
     JSON.parse(data);
 
-  document.getElementById("duckName").value =
-    duck.name ?? "";
+  document.getElementById("defaultCharacterName").value =
+    duck.defaultCharacterName ?? duck.name ?? "";
+
+  document.getElementById("defaultUnitName").value =
+    duck.defaultUnitName ?? duck.name ?? "";
 
   currentCommIcons =
     normalizeCommIcons(duck.commIcons);
@@ -314,8 +317,11 @@ document.getElementById("saveCharacter")
     const oldDuck =
       oldData ? JSON.parse(oldData) : {};
 
-    const name =
-      document.getElementById("duckName").value;
+    const defaultCharacterName =
+      document.getElementById("defaultCharacterName").value;
+
+    const defaultUnitName =
+      document.getElementById("defaultUnitName").value;
 
     const battleStartList =
       collectDialogueList("battleStart");
@@ -344,7 +350,9 @@ const turnChangePinchList =
     const duck = {
       ...oldDuck,
       id: oldDuck.id ?? "player_duck",
-      name,
+      name: defaultCharacterName,
+      defaultCharacterName,
+      defaultUnitName,
       
 commDialogues: {
   ...(oldDuck.commDialogues || {}),
