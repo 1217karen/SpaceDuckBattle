@@ -1,6 +1,7 @@
 //character-controller.js
 
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
+import { renderRichText } from "./rich-text.js";
 
 function normalizeDialogueList(dialogue) {
   if (Array.isArray(dialogue)) {
@@ -81,7 +82,21 @@ function createCommRowElement(typeKey, rowData = {}) {
   input.className = "commTextInput";
   input.value = rowData.text || "";
 
+  const preview = document.createElement("div");
+  preview.className = "commTextPreview";
+  preview.dataset.previewFor = String(rowId);
+
+  function refreshPreview() {
+    const text = input.value || "";
+    renderRichText(preview, text, { preset: "message" });
+  }
+
+  input.addEventListener("input", refreshPreview);
+
   inputArea.appendChild(input);
+  inputArea.appendChild(preview);
+
+  refreshPreview();
 
   const removeButton = document.createElement("button");
   removeButton.type = "button";
