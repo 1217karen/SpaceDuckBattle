@@ -134,9 +134,11 @@ flex-shrink: 0;
 background: rgba(20, 40, 70, 0.96);
 }
 
-/* ターン表示 */
+/* ターン表示　いったん消した */
 
 #turnDisplay {
+display: none;
+
 text-align: center;
 font-size: 35px;
 font-weight: normal;
@@ -1264,8 +1266,8 @@ background:#1b2a44;
   box-sizing: border-box;
 }
 
-    #sideToggleBar {
-    display: flex;
+  #commPanelRow .sideToggleButton {
+    display: block;
   }
 
   #leftSide,
