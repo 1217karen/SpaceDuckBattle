@@ -282,9 +282,9 @@ color:#ffffff;
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 
-  padding: 10px 12px;
+  padding: 10px 10px;
 
   background:
     linear-gradient(
