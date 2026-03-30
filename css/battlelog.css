@@ -1271,11 +1271,6 @@ background:#1b2a44;
     display: block;
   }
 
-  #leftToggleBtn {
-  transform: rotate(90deg);
-  transform-origin: center;
-}
-
   #leftSide,
   #rightSide {
     position: fixed;
