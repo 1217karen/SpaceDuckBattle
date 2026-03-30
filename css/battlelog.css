@@ -98,7 +98,7 @@ min-height: 0;
 
 #commPanelRow {
 display: flex;
-align-items: stretch;
+align-items: center;
 justify-content: center;
 gap: 8px;
 
