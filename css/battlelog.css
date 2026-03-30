@@ -108,8 +108,8 @@ width: min(650px, 100%);
 .sideToggleButton {
 display: none;
 
-min-width: 70px;
-height: 36px;
+min-width: 60px;
+height: 30px;
 padding: 0 14px;
 
 background: rgba(10, 20, 40, 0.92);
