@@ -132,7 +132,7 @@ flex-shrink: 0;
 }
 
 .sideToggleButton:hover {
-background: rgba(20, 40, 70, 0.96);
+background: rgba(70, 100, 145, 0.96);
 }
 
 /* ターン表示　いったん消した */
@@ -1142,7 +1142,7 @@ cursor:pointer;
 }
 
 #battleControls button:hover{
-background:#1b2a44;
+background: rgba(70, 100, 145, 0.96);
 }
 
 #battleControls button:disabled {
