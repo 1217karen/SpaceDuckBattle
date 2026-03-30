@@ -114,8 +114,23 @@ function getSkillDialogue(unit, skillType) {
 
     for (const skill of skills) {
       if (skill.type !== skillType) continue;
-      return pickRandomDialogue(skill.dialogue || null);
+
+      const dialogue =
+        pickRandomDialogue(skill.dialogue || null);
+
+      if (dialogue) return dialogue;
     }
+  }
+
+  const directSkills = unit.skills || [];
+
+  for (const skill of directSkills) {
+    if (skill.type !== skillType) continue;
+
+    const dialogue =
+      pickRandomDialogue(skill.dialogue || null);
+
+    if (dialogue) return dialogue;
   }
 
   return null;
