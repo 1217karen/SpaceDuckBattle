@@ -21,16 +21,16 @@ battleStart: [
 { text: "（黒いアヒルが並んでいる……）" }
 ],
 turnChangeNeutral: [
-{ text: "（黒いアヒルがこちらを見ている）" }
+{ text: "「…………。」" }
 ],
 turnChangeAdvantage: [
-{ text: "（黒いアヒルがこちらを見ている）" }
+{ text: "「…………。」" }
 ],
 turnChangeDisadvantage: [
-{ text: "（黒いアヒルは狼狽えている）" }
+{ text: "「…………。」" }
 ],
 turnChangePinch: [
-{ text: "（黒いアヒルは狼狽えている）" }
+{ text: "「…………。」" }
 ],
 critical: [
 { text: "" }
@@ -47,7 +47,7 @@ skills: [
 {
 type: "attack_front1",
 dialogue: [
-{ text: "「…………。」" }
+{ text: "（勢いよく突進してきた）" }
 ]
 }
 ]
