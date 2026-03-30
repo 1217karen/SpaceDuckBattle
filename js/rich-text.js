@@ -22,6 +22,8 @@ export const RICH_TEXT_TAGS = {
   u: { type: "style" },
   s: { type: "style" },
   br: { type: "single" },
+  rb: { type: "ruby-base" },
+  rt: { type: "ruby-text" },
   f1: { type: "style" },
   f2: { type: "style" },
   f3: { type: "style" },
@@ -41,6 +43,8 @@ export const RICH_TEXT_PRESETS = {
     "u",
     "s",
     "br",
+    "rb",
+    "rt",
     "f1",
     "f2",
     "f3",
@@ -215,9 +219,65 @@ function createStyledSpan(text, activeTags) {
   return span;
 }
 
+function createRubyNode(baseText, rubyText, activeTags) {
+  const ruby = document.createElement("ruby");
+  const baseSpan = createStyledSpan(baseText, activeTags);
+  const rt = document.createElement("rt");
+
+  rt.textContent = rubyText;
+
+  if (activeTags.has("b")) {
+    rt.style.fontWeight = "bold";
+  }
+
+  if (activeTags.has("i")) {
+    rt.style.fontStyle = "italic";
+  }
+
+  const decorations = [];
+
+  if (activeTags.has("u")) {
+    decorations.push("underline");
+  }
+
+  if (activeTags.has("s")) {
+    decorations.push("line-through");
+  }
+
+  if (decorations.length > 0) {
+    rt.style.textDecoration = decorations.join(" ");
+    rt.style.textDecorationSkipInk = "none";
+  }
+
+  let fontScale = 1.0;
+
+  for (const tagName of ["f1", "f2", "f3", "f4", "f5", "f6", "f7"]) {
+    if (activeTags.has(tagName)) {
+      fontScale = getFontScale(tagName);
+    }
+  }
+
+  rt.style.fontSize = `${fontScale * 0.55}em`;
+
+  ruby.appendChild(baseSpan);
+  ruby.appendChild(rt);
+
+  return ruby;
+}
+
 // ========================================
 // 共通描画
 // ========================================
+
+function tokenizedRbText(tokens, startIndex) {
+  const rbTextToken = tokens[startIndex + 1];
+
+  if (rbTextToken?.type === "text") {
+    return rbTextToken.value;
+  }
+
+  return "";
+}
 
 export function renderRichText(targetEl, text, options = {}) {
   if (!targetEl) return;
@@ -237,7 +297,9 @@ export function renderRichText(targetEl, text, options = {}) {
   const tokens = tokenizeRichText(text);
   const activeTags = [];
 
-  for (const token of tokens) {
+  for (let index = 0; index < tokens.length; index++) {
+    const token = tokens[index];
+
     if (token.type === "text") {
       if (!token.value) continue;
 
@@ -263,6 +325,53 @@ export function renderRichText(targetEl, text, options = {}) {
 
     if (token.kind === "single" && token.tagName === "br") {
       targetEl.appendChild(document.createElement("br"));
+      continue;
+    }
+
+    if (
+      token.kind === "open" &&
+      token.tagName === "rb"
+    ) {
+      const rbTextToken = tokens[index + 1];
+      const closeRb = tokens[index + 2];
+      const openRt = tokens[index + 3];
+      const rubyTextToken = tokens[index + 4];
+      const closeRt = tokens[index + 5];
+
+      const isValidRubyPair =
+        rbTextToken?.type === "text" &&
+        closeRb?.type === "tag" &&
+        closeRb.kind === "close" &&
+        closeRb.tagName === "rb" &&
+        openRt?.type === "tag" &&
+        openRt.kind === "open" &&
+        openRt.tagName === "rt" &&
+        rubyTextToken?.type === "text" &&
+        closeRt?.type === "tag" &&
+        closeRt.kind === "close" &&
+        closeRt.tagName === "rt";
+
+      if (
+        isValidRubyPair &&
+        isAllowedRichTextTag("rb", allowedTags) &&
+        isAllowedRichTextTag("rt", allowedTags)
+      ) {
+        const rubyNode = createRubyNode(
+          tokenizedRbText(tokens, index),
+          rubyTextToken.value,
+          new Set(activeTags)
+        );
+
+        targetEl.appendChild(rubyNode);
+        index += 4;
+        continue;
+      }
+
+      const span = createStyledSpan(
+        token.raw,
+        new Set(activeTags)
+      );
+      targetEl.appendChild(span);
       continue;
     }
 
