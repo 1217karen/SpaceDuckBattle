@@ -3,6 +3,7 @@
 import { simulateBattle } from "./new-battle-engine.js";
 import { STAGES } from "./stages.js";
 import { buildBattleUnit } from "./unit-builder.js";
+import { NPCS } from "./battle-npcs.js";
 import { testUnits } from "./battle-test-ducks.js";
 
 const units = structuredClone(testUnits);
