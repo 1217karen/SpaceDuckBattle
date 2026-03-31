@@ -5,40 +5,251 @@ export const skillHandlers = {
   // =========================
 attack_front1: {
   name: "フロントアタック",
-    cooldown: 2,
-    icon: "https://placehold.co/20x20",
+  cooldown: 2,
+  icon: "https://placehold.co/20x20",
 
-    generateActions(unit, ctx) {
-      const target = getFrontTarget(unit, ctx);
-      if (!target) return null;
-      if (target.team === unit.team) return null;
+  generateActions(unit, ctx) {
+    const target = getFrontTarget(unit, ctx);
+    if (!target) return null;
+    if (target.team === unit.team) return null;
 
-      let x = unit.x;
-      let y = unit.y;
+    const frontCell = getFrontCell(unit);
 
-      if (unit.facing === "N") y -= 1;
-      if (unit.facing === "S") y += 1;
-      if (unit.facing === "E") x += 1;
-      if (unit.facing === "W") x -= 1;
+    return {
+      preview: {
+        cells: [frontCell],
+        style: "attack"
+      },
+      actions: [
+        {
+          type: "damage",
+          source: unit.id,
+          target: target.id,
+          power: 5,
+          damageType: "normal"
+        }
+      ]
+    };
+  }
+},
 
-      return {
-        preview: {
-          cells: [{ x, y }],
-          style: "attack"
-        },
-        actions: [
-          {
-            type: "damage",
-            source: unit.id,
-            target: target.id,
-            power: 2,
-            damageType: "normal"
-          }
-        ]
-      };
+  skill_001: {
+  name: "グラビティ",
+  cooldown: 5,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const targets = ctx
+      .getUnitsInManhattanRange(unit, ctx.units, 1)
+      .filter((u) => u.team !== unit.team);
+
+    if (targets.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of targets) {
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "gravity",
+          stock: 2
+        }
+      });
     }
-  },
 
+    return {
+      preview: {
+        cells: ctx.getManhattanCells(unit, 1),
+        style: "debuff"
+      },
+      actions
+    };
+  }
+},
+  skill_002: {
+  name: "サテライト",
+  cooldown: 4,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const targets = ctx.units.filter(
+      (u) =>
+        u.hp > 0 &&
+        u.team === unit.team &&
+        u.id !== unit.id &&
+        ctx.getChebyshevDistance(unit, u) <= 2
+    );
+
+    if (targets.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of targets) {
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "satellite",
+          stock: 3
+        }
+      });
+    }
+
+    return {
+      preview: {
+        cells: targets.map((t) => ({ x: t.x, y: t.y })),
+        style: "buff"
+      },
+      actions
+    };
+  }
+},
+skill_003: {
+  name: "アクセルライン",
+  cooldown: 5,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const targets = ctx
+      .getUnitsInSameColumn(unit, ctx.units)
+      .filter((u) => u.team === unit.team && u.id !== unit.id);
+
+    if (targets.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of targets) {
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "accel",
+          stock: 1
+        }
+      });
+    }
+
+    return {
+      preview: {
+        cells: targets.map((t) => ({ x: t.x, y: t.y })),
+        style: "buff"
+      },
+      actions
+    };
+  }
+},
+
+  skill_004: {
+  name: "ヒールビーム",
+  cooldown: 6,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const allies = ctx.units.filter(
+      (u) => u.hp > 0 && u.team === unit.team
+    );
+
+    if (allies.length === 0) return null;
+
+    let minHp = allies[0].hp;
+
+    for (const a of allies) {
+      if (a.hp < minHp) {
+        minHp = a.hp;
+      }
+    }
+
+    const candidates = allies.filter(
+      (u) =>
+        u.hp === minHp &&
+        ctx.getDistance(unit, u) <= 1
+    );
+
+    if (candidates.length === 0) return null;
+
+    let target = candidates[0];
+    let bestDist = ctx.getDistance(unit, target);
+
+    for (const c of candidates) {
+      const d = ctx.getDistance(unit, c);
+      if (d < bestDist) {
+        bestDist = d;
+        target = c;
+      }
+    }
+
+    return {
+      preview: {
+        cells: [{ x: target.x, y: target.y }],
+        style: "heal"
+      },
+      actions: [
+        {
+          type: "heal",
+          source: unit.id,
+          target: target.id,
+          power: 8,
+          healType: "scale"
+        }
+      ]
+    };
+  }
+},
+
+  skill_005: {
+  name: "オービットヒール",
+  cooldown: 4,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const targets = ctx.units.filter(
+      (u) =>
+        u.hp > 0 &&
+        u.team === unit.team &&
+        ctx.getChebyshevDistance(unit, u) <= 1
+    );
+
+    const otherAllies = targets.filter(
+      (u) => u.id !== unit.id
+    );
+
+    if (otherAllies.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of targets) {
+      actions.push({
+        type: "heal",
+        source: unit.id,
+        target: t.id,
+        power: 2,
+        healType: "scale"
+      });
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "satellite",
+          stock: 3
+        }
+      });
+    }
+
+    return {
+      preview: {
+        cells: targets.map((t) => ({ x: t.x, y: t.y })),
+        style: "buff"
+      },
+      actions
+    };
+  }
+},
   // =========================
   // 前方1マス攻撃　５回
   // =========================
@@ -337,41 +548,45 @@ attack_nearest: {
   // 縦横2マス回復
   // =========================
 heal_cross2: {
-  name: "エリアヒール",
-    cooldown: 3,
-    icon: "https://placehold.co/20x20",
+  name: "リペアライト",
+  cooldown: 4,
+  icon: "https://placehold.co/20x20",
 
-    generateActions(unit, ctx) {
-      const targets = ctx
-        .getUnitsInManhattanRange(unit, ctx.units, 2)
-        .filter(
-          (u) => u.id !== unit.id && u.team === unit.team
-        );
+  generateActions(unit, ctx) {
+    const alliesInRange = ctx.units.filter(
+      (u) =>
+        u.hp > 0 &&
+        u.team === unit.team &&
+        ctx.getChebyshevDistance(unit, u) <= 2
+    );
 
-      if (targets.length === 0) return null;
+    const otherAllies = alliesInRange.filter(
+      (u) => u.id !== unit.id
+    );
 
-      const cells = ctx.getManhattanCells(unit, 2);
-      const actions = [];
+    if (otherAllies.length === 0) return null;
 
-      for (let t of targets) {
-        actions.push({
-          type: "heal",
-          source: unit.id,
-          target: t.id,
-          power: 2,
-          healType: "scale"
-        });
-      }
+    const actions = [];
 
-      return {
-        preview: {
-          cells,
-          style: "heal"
-        },
-        actions
-      };
+    for (const t of alliesInRange) {
+      actions.push({
+        type: "heal",
+        source: unit.id,
+        target: t.id,
+        power: 5,
+        healType: "scale"
+      });
     }
-  },
+
+    return {
+      preview: {
+        cells: alliesInRange.map((t) => ({ x: t.x, y: t.y })),
+        style: "heal"
+      },
+      actions
+    };
+  }
+},
 
   // =========================
   // 周囲2マス 敵全体攻撃（減衰なし）
@@ -663,33 +878,54 @@ repair_wave: {
   // 自分DF50%バフ（3T）
   // =========================
 buff_def50_self: {
-  name: "スーパーバリア",
-    cooldown: 3,
-    icon: "https://placehold.co/20x20",
+  name: "ディフェンスフィールド",
+  cooldown: 6,
+  icon: "https://placehold.co/20x20",
 
-    generateActions(unit, ctx) {
-      return {
-        preview: {
-          cells: [{ x: unit.x, y: unit.y }],
-          style: "buff"
-        },
-        actions: [
-          {
-            type: "applyEffect",
-            source: unit.id,
-            target: unit.id,
-            effect: {
-              stat: "def",
-              value: 0.5,
-              duration: 3
-            }
+  generateActions(unit, ctx) {
+    const nearbyEnemies = ctx.units.filter(
+      (u) =>
+        u.hp > 0 &&
+        u.team !== unit.team &&
+        ctx.getChebyshevDistance(unit, u) <= 1
+    );
+
+    if (nearbyEnemies.length < 2) return null;
+
+    return {
+      preview: {
+        cells: [{ x: unit.x, y: unit.y }],
+        style: "buff"
+      },
+      actions: [
+        {
+          type: "applyEffect",
+          source: unit.id,
+          target: unit.id,
+          effect: {
+            stat: "def",
+            mode: "rate",
+            value: 0.5,
+            duration: 3
           }
-        ]
-      };
-    }
+        }
+      ]
+    };
   }
-};
+},
 
+
+function getFrontCell(unit) {
+  let x = unit.x;
+  let y = unit.y;
+
+  if (unit.facing === "N") y -= 1;
+  if (unit.facing === "S") y += 1;
+  if (unit.facing === "E") x += 1;
+  if (unit.facing === "W") x -= 1;
+
+  return { x, y };
+}
 // =======================
 // 前方ターゲット取得
 // =======================
