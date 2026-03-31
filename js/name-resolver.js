@@ -49,12 +49,12 @@ export function resolveCharacterDisplayName({
 
 export function resolveUnitDisplayName({
   manualName = "",
-  defaultUnitName = "",
+  unitName = "",
   fallback = ""
 } = {}) {
   return pickFirstName(
     manualName,
-    defaultUnitName,
+    unitName,
     fallback
   );
 }
