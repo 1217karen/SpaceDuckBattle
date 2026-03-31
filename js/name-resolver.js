@@ -73,56 +73,64 @@ export function resolveUnitDisplayName({
 // デフォルトユニット名を優先する
 // ========================================
 
-function findIconSpeakerName(commIcons, iconUrl) {
+function normalizeCommName(value) {
+  if (typeof value !== "string") return "";
+  return value.trim();
+}
+
+function findCommIconNameByUrl(commIcons, iconUrl) {
   if (!Array.isArray(commIcons)) return "";
-  if (typeof iconUrl !== "string" || iconUrl.trim() === "") return "";
 
-  const normalizedUrl = iconUrl.trim();
+  const normalizedUrl = normalizeCommName(iconUrl);
+  if (normalizedUrl === "") return "";
 
-  const matched = commIcons.find(icon => {
-    if (!icon || typeof icon !== "object") return false;
-    if (typeof icon.url !== "string") return false;
-    return icon.url.trim() === normalizedUrl;
+  const matched = commIcons.find(item => {
+    if (!item || typeof item !== "object") return false;
+    return normalizeCommName(item.url) === normalizedUrl;
   });
 
-  if (!matched) return "";
-
-  return pickFirstName(
-    matched.speakerName,
-    matched.name
-  );
+  return normalizeCommName(matched?.name);
 }
 
 export function resolveCommDisplayName({
   manualName = "",
   iconUrl = "",
-  text = "",
   commIcons = [],
   defaultCharacterName = "",
   defaultUnitName = "",
-  fallback = ""
+  fallback = "",
+  hasExplicitCommText = false,
+  hasExplicitCommIcon = false
 } = {}) {
-  const normalizedText = normalizeName(text);
-  const normalizedIconUrl = normalizeName(iconUrl);
+  const normalizedManualName =
+    normalizeCommName(manualName);
 
-  const hasCommText = normalizedText !== "";
-  const hasCommIcon = normalizedIconUrl !== "";
+  const normalizedIconName =
+    findCommIconNameByUrl(commIcons, iconUrl);
 
-  if (!hasCommText && !hasCommIcon) {
+  const normalizedDefaultCharacterName =
+    normalizeCommName(defaultCharacterName);
+
+  const normalizedDefaultUnitName =
+    normalizeCommName(defaultUnitName);
+
+  const normalizedFallback =
+    normalizeCommName(fallback);
+
+  const isCharacterComm =
+    hasExplicitCommText || hasExplicitCommIcon;
+
+  if (isCharacterComm) {
     return pickFirstName(
-      defaultUnitName,
-      fallback
+      normalizedManualName,
+      normalizedIconName,
+      normalizedDefaultCharacterName,
+      normalizedFallback
     );
   }
 
-  const iconSpeakerName =
-    findIconSpeakerName(commIcons, normalizedIconUrl);
-
   return pickFirstName(
-    manualName,
-    iconSpeakerName,
-    defaultCharacterName,
-    defaultUnitName,
-    fallback
+    normalizedDefaultUnitName,
+    normalizedFallback
   );
 }
