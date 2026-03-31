@@ -1,4 +1,4 @@
-//character-controller.js
+変更後を送っていくので、確認//character-controller.js
 
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 import { bindTextPreview } from "./text-preview.js";
@@ -262,6 +262,44 @@ function loadCharacter() {
     character.commDialogues?.battleStart
   );
 
+renderCommList(
+  "turnChangeAdvantage",
+  character.commDialogues?.turnChangeAdvantage
+);
+
+renderCommList(
+  "turnChangeNeutral",
+  character.commDialogues?.turnChangeNeutral
+);
+
+renderCommList(
+  "turnChangeDisadvantage",
+  character.commDialogues?.turnChangeDisadvantage
+);
+
+renderCommList(
+  "turnChangePinch",
+  character.commDialogues?.turnChangePinch
+);
+
+  renderCommList(
+    "critical",
+    character.commDialogues?.critical
+  );
+
+  renderCommList(
+    "kill",
+    character.commDialogues?.kill
+  );
+
+  renderCommList(
+  "battleEndWin",
+  character.commDialogues?.battleEndWin
+);
+
+  
+}
+
 document.getElementById("addBattleStartLine")
   .addEventListener("click", () => {
     addCommRow("battleStart");
@@ -305,16 +343,13 @@ document.getElementById("addBattleEndWinLine")
 document.getElementById("saveCharacter")
   .addEventListener("click", () => {
     const oldData =
-      localStorage.getItem("duck");
+      localStorage.getItem("character");
 
-    const oldDuck =
+    const oldCharacter =
       oldData ? JSON.parse(oldData) : {};
 
-const defaultCharacterName =
+const defaultName =
   document.getElementById("defaultCharacterName").value;
-
-const unitName =
-  document.getElementById("unitName").value;
 
     const battleStartList =
       collectDialogueList("battleStart");
@@ -340,32 +375,27 @@ const turnChangePinchList =
     const battleEndWinList =
   collectDialogueList("battleEndWin");
 
-const duck = {
-  ...oldDuck,
-  id: oldDuck.id ?? "player_duck",
-  unitName,
-  defaultCharacterName,
+const character = {
+  ...oldCharacter,
+  defaultName,
 
-commDialogues: {
-  ...(oldDuck.commDialogues || {}),
-  battleStart: battleStartList,
-  turnChangeAdvantage: turnChangeAdvantageList,
-  turnChangeNeutral: turnChangeNeutralList,
-  turnChangeDisadvantage: turnChangeDisadvantageList,
-  turnChangePinch: turnChangePinchList,
-  critical: criticalList,
-  kill: killList,
-  battleEndWin: battleEndWinList
-}
+  commDialogues: {
+    ...(oldCharacter.commDialogues || {}),
+    battleStart: battleStartList,
+    turnChangeAdvantage: turnChangeAdvantageList,
+    turnChangeNeutral: turnChangeNeutralList,
+    turnChangeDisadvantage: turnChangeDisadvantageList,
+    turnChangePinch: turnChangePinchList,
+    critical: criticalList,
+    kill: killList,
+    battleEndWin: battleEndWinList
+  }
 };
 
-    delete duck.name;
-    delete duck.defaultUnitName;
-
-    localStorage.setItem(
-      "duck",
-      JSON.stringify(duck)
-    );
+localStorage.setItem(
+  "character",
+  JSON.stringify(character)
+);
 
     alert("キャラ設定を保存しました");
   });
