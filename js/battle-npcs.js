@@ -48,7 +48,7 @@ export const NPCS = {
               }
             },
             {
-              type: "skill_005",
+              type: "skill_004",
               dialogue: {
                 text: "負傷者を確認、回復ラインを接続します。"
               }
