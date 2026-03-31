@@ -378,6 +378,7 @@ const turnChangePinchList =
 const character = {
   ...oldCharacter,
   defaultName,
+  commIcons: currentCommIcons,
 
   commDialogues: {
     ...(oldCharacter.commDialogues || {}),
