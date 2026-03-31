@@ -408,22 +408,22 @@ function saveCurrentPattern() {
 loadDuck();
 
 function loadDuck() {
-  const data =
-    localStorage.getItem("unit");
+const data =
+  localStorage.getItem("unit");
 
-  if (!data) {
-    loadPattern(currentSlot);
-    return;
-  }
+const characterData =
+  localStorage.getItem("character");
 
-  const unit =
-    JSON.parse(data);;
-
-    const defaultCharacterNameInput =
+if (!data) {
+  const defaultCharacterNameInput =
     document.getElementById("defaultCharacterName");
 
+  const character =
+    characterData ? JSON.parse(characterData) : null;
+
   if (defaultCharacterNameInput) {
-    defaultCharacterNameInput.value = "";
+    defaultCharacterNameInput.value =
+      character?.defaultName ?? "";
 
     defaultCharacterNameInput.addEventListener("input", () => {
       const rows = document.querySelectorAll(".skillDialogueRow");
@@ -447,8 +447,50 @@ function loadDuck() {
     });
   }
 
-  currentCommIcons = [];
+  currentCommIcons =
+    normalizeCommIcons(character?.commIcons);
 
+  loadPattern(currentSlot);
+  return;
+}
+
+const unit =
+  JSON.parse(data);
+
+const character =
+  characterData ? JSON.parse(characterData) : null;
+
+const defaultCharacterNameInput =
+  document.getElementById("defaultCharacterName");
+
+if (defaultCharacterNameInput) {
+  defaultCharacterNameInput.value =
+    character?.defaultName ?? "";
+
+  defaultCharacterNameInput.addEventListener("input", () => {
+    const rows = document.querySelectorAll(".skillDialogueRow");
+
+    rows.forEach(row => {
+      const button =
+        row.querySelector(".commIconPickerButton");
+
+      const nameInput =
+        row.querySelector(".skillDialogueNameInput");
+
+      updateSpeakerNameField({
+        nameInput,
+        button,
+        icons: currentCommIcons,
+        getDefaultName: () =>
+          document.getElementById("defaultCharacterName")?.value.trim() || "",
+        mode: "placeholder"
+      });
+    });
+  });
+}
+
+currentCommIcons =
+  normalizeCommIcons(character?.commIcons);
 if (unit.patterns) {
   for (let i = 0; i < 3; i++) {
     patterns[i] = normalizePattern(unit.patterns[i], i === 0);
