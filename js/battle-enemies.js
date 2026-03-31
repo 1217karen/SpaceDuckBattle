@@ -1,9 +1,7 @@
 // battle-enemies.js
 
-export const battleEnemies = [
-  {
-    id: "tutorialEnemyA",
-
+export const ENEMIES = {
+  tutorialEnemyA: {
     unitData: {
       name: "チュートリアル敵A",
       type: "attack",
@@ -77,9 +75,7 @@ export const battleEnemies = [
     }
   },
 
-  {
-    id: "normalEnemyA",
-
+  normalEnemyA: {
     unitData: {
       name: "通常敵A",
       type: "attack",
@@ -150,9 +146,7 @@ export const battleEnemies = [
     }
   },
 
-  {
-    id: "testEnemyA",
-
+  testEnemyA: {
     unitData: {
       name: "ボス敵A",
       type: "attack",
@@ -222,4 +216,4 @@ export const battleEnemies = [
       }
     }
   }
-];
+};
