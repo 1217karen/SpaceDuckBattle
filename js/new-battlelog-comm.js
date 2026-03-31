@@ -31,11 +31,11 @@ function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
   const unitSnapshot =
     unitId ? getUnitSnapshot(snapshot, unitId) : null;
 
-  const iconUrl =
-    event.comm.iconUrl ||
-    unitSnapshot?.defaultCommIconUrl ||
-    unitSnapshot?.icon ||
-    getFallbackIcon();
+const iconUrl =
+  event.comm.iconUrl ||
+  unitSnapshot?.defaultCharacterIcon ||
+  unitSnapshot?.icon ||
+  getFallbackIcon();
 
   const hasExplicitCommText =
     typeof event.comm.text === "string" &&
@@ -45,19 +45,19 @@ function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
     typeof event.comm.iconUrl === "string" &&
     event.comm.iconUrl.trim() !== "";
 
-  const name = resolveCommDisplayName({
-    manualName: event.comm.name,
-    iconUrl,
-    commIcons: unitSnapshot?.commIcons || [],
-    defaultCharacterName:
-      unitSnapshot?.defaultCharacterName || "",
-    defaultUnitName:
-      unitSnapshot?.defaultUnitName || "",
-    fallback:
-      unitSnapshot?.name || unitId || "",
-    hasExplicitCommText,
-    hasExplicitCommIcon
-  });
+const name = resolveCommDisplayName({
+  manualName: event.comm.name,
+  iconUrl,
+  commIcons: unitSnapshot?.commIcons || [],
+  defaultCharacterName:
+    unitSnapshot?.defaultCharacterName || "",
+  unitName:
+    unitSnapshot?.name || "",
+  fallback:
+    unitId || "",
+  hasExplicitCommText,
+  hasExplicitCommIcon
+});
 
   return {
     iconUrl,
@@ -102,10 +102,10 @@ export function showUnitDefaultComm(unitId, snapshot) {
   const unitSnapshot = getUnitSnapshot(snapshot, unitId);
   if (!unitSnapshot) return;
 
-  const iconUrl =
-    unitSnapshot.defaultCommIconUrl ||
-    unitSnapshot.icon ||
-    getFallbackIcon();
+const iconUrl =
+  unitSnapshot.defaultCharacterIcon ||
+  unitSnapshot.icon ||
+  getFallbackIcon();
 
   const name =
     unitSnapshot.name || unitId || "";
