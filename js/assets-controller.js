@@ -81,34 +81,35 @@ function readCommIconArea() {
 }
 
 function loadManagement() {
-  const data =
-    localStorage.getItem("duck");
+  const unitData =
+    localStorage.getItem("unit");
 
-  if (!data) {
-    renderCommIconArea([]);
-    return;
-  }
+  const characterData =
+    localStorage.getItem("character");
 
-  const duck =
-    JSON.parse(data);
+  const unit =
+    unitData ? JSON.parse(unitData) : null;
+
+  const character =
+    characterData ? JSON.parse(characterData) : null;
 
   document.getElementById("iconDefault").value =
-    duck.icon?.default ?? "";
+    unit?.icon?.default ?? "";
 
   document.getElementById("iconN").value =
-    duck.icon?.N ?? "";
+    unit?.icon?.N ?? "";
 
   document.getElementById("iconE").value =
-    duck.icon?.E ?? "";
+    unit?.icon?.E ?? "";
 
   document.getElementById("iconS").value =
-    duck.icon?.S ?? "";
+    unit?.icon?.S ?? "";
 
   document.getElementById("iconW").value =
-    duck.icon?.W ?? "";
+    unit?.icon?.W ?? "";
 
   const commIcons =
-    normalizeCommIcons(duck.commIcons);
+    normalizeCommIcons(character?.commIcons);
 
   renderCommIconArea(commIcons);
 }
@@ -136,11 +137,17 @@ const saveBtn =
   document.getElementById("saveManagement");
 
 saveBtn.addEventListener("click", () => {
-  const oldData =
-    localStorage.getItem("duck");
+  const oldUnitData =
+    localStorage.getItem("unit");
 
-  const oldDuck =
-    oldData ? JSON.parse(oldData) : {};
+  const oldCharacterData =
+    localStorage.getItem("character");
+
+  const oldUnit =
+    oldUnitData ? JSON.parse(oldUnitData) : {};
+
+  const oldCharacter =
+    oldCharacterData ? JSON.parse(oldCharacterData) : {};
 
   const icon = {
     default: document.getElementById("iconDefault").value,
@@ -153,16 +160,25 @@ saveBtn.addEventListener("click", () => {
   const commIcons =
     readCommIconArea();
 
-  const duck = {
-    ...oldDuck,
-    id: oldDuck.id ?? "player_duck",
-    icon,
+  const unit = {
+    ...oldUnit,
+    id: oldUnit.id ?? "player_unit",
+    icon
+  };
+
+  const character = {
+    ...oldCharacter,
     commIcons
   };
 
   localStorage.setItem(
-    "duck",
-    JSON.stringify(duck)
+    "unit",
+    JSON.stringify(unit)
+  );
+
+  localStorage.setItem(
+    "character",
+    JSON.stringify(character)
   );
 
   alert("アイコン設定を保存しました");
