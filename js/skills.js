@@ -604,7 +604,7 @@ skill_003: {
   // 前方1マス攻撃　５回
   // =========================
  attack_front1_5: {
-  name: "ガトリング",
+  name: "メテオシャワー",
     cooldown: 2,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_2.webp",
 
