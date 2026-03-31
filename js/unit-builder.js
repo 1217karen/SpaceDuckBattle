@@ -27,9 +27,7 @@ const unit = {
 
   name: duck.name || "",
   defaultCharacterName:
-    duck.defaultCharacterName ?? duck.name ?? "",
-  defaultUnitName:
-    duck.defaultUnitName ?? duck.name ?? "",
+    duck.defaultCharacterName ?? "",
 
   team: team,
 
