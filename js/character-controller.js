@@ -251,11 +251,11 @@ function loadCharacter() {
   const duck =
     JSON.parse(data);
 
-  document.getElementById("defaultCharacterName").value =
-    duck.defaultCharacterName ?? duck.name ?? "";
+document.getElementById("defaultCharacterName").value =
+  duck.defaultCharacterName ?? duck.unitName ?? "";
 
-  document.getElementById("unitName").value =
-    duck.name ?? "";
+document.getElementById("unitName").value =
+  duck.unitName ?? "";
 
   currentCommIcons =
     normalizeCommIcons(duck.commIcons);
@@ -384,9 +384,9 @@ const turnChangePinchList =
 const duck = {
   ...oldDuck,
   id: oldDuck.id ?? "player_duck",
-  name: unitName,
+  unitName,
   defaultCharacterName,
-      
+
 commDialogues: {
   ...(oldDuck.commDialogues || {}),
   battleStart: battleStartList,
@@ -399,6 +399,9 @@ commDialogues: {
   battleEndWin: battleEndWinList
 }
 };
+
+    delete duck.name;
+delete duck.defaultUnitName;
 
     localStorage.setItem(
       "duck",
