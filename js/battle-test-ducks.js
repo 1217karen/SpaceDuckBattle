@@ -1,6 +1,6 @@
 //battle-test-ducks.js
 
-export const testDucks = [
+export const testUnits = [
   {
     name:"アヒル未設定",
     type:"attack",
