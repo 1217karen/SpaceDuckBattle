@@ -117,7 +117,6 @@ export function showUnitDefaultComm(unitId, snapshot) {
   if (!unitSnapshot) return;
 
 const iconUrl =
-  unitSnapshot.defaultCharacterIcon ||
   unitSnapshot.icon ||
   getFallbackIcon();
 
