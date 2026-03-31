@@ -74,10 +74,17 @@ export const STAGES = {
         y: 1,
         facing: "E"
       }),
-      makeStageUnit(NPCS.npcSupporter, {
+      makeStageUnit(NPCS.npcAttacker, {
         id: "P2",
         team: 1,
         x: 1,
+        y: 2,
+        facing: "E"
+      }),
+      makeStageUnit(NPCS.npcSupporter, {
+        id: "P3",
+        team: 1,
+        x: 0,
         y: 3,
         facing: "E"
       })
@@ -88,7 +95,21 @@ export const STAGES = {
         id: "N1",
         team: 2,
         x: 6,
+        y: 1,
+        facing: "W"
+      }),
+      makeStageUnit(ENEMIES.normalEnemyB, {
+        id: "N2",
+        team: 2,
+        x: 5,
         y: 2,
+        facing: "W"
+      }),
+      makeStageUnit(ENEMIES.normalEnemyC, {
+        id: "N3",
+        team: 2,
+        x: 6,
+        y: 3,
         facing: "W"
       })
     ]
