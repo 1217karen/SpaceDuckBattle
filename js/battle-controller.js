@@ -5,7 +5,7 @@ import { STAGES } from "./stages.js";
 import { buildBattleUnit } from "./unit-builder.js";
 import { testUnits } from "./battle-test-ducks.js";
 
-const units = structuredClone(testDucks);
+const units = structuredClone(testUnits);
 
 const savedUnit = localStorage.getItem("unit");
 if (savedUnit) {
