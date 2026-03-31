@@ -328,6 +328,275 @@ skill_003: {
     };
   }
 },
+
+  skill_006: {
+  name: "ノヴァ",
+  cooldown: 4,
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_2.webp",
+
+  generateActions(unit, ctx) {
+    const targets = ctx.units.filter(
+      (u) =>
+        u.hp > 0 &&
+        u.team !== unit.team &&
+        ctx.getChebyshevDistance(unit, u) <= 3
+    );
+
+    if (targets.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of targets) {
+      actions.push({
+        type: "damage",
+        source: unit.id,
+        target: t.id,
+        power: 3,
+        damageType: "normal"
+      });
+    }
+
+    return {
+      preview: {
+        cells: targets.map((t) => ({ x: t.x, y: t.y })),
+        style: "attack"
+      },
+      actions
+    };
+  }
+},
+
+  skill_007: {
+  name: "フロートリンク",
+  cooldown: 4,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const nearbyAllies = ctx
+      .getUnitsInManhattanRange(unit, ctx.units, 1)
+      .filter((u) => u.team === unit.team && u.id !== unit.id);
+
+    const actions = [
+      {
+        type: "applyEffect",
+        source: unit.id,
+        target: unit.id,
+        effect: {
+          type: "float",
+          stock: 1
+        }
+      }
+    ];
+
+    const cells = [{ x: unit.x, y: unit.y }];
+
+    if (nearbyAllies.length > 0) {
+      const ally = nearbyAllies[0];
+
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: ally.id,
+        effect: {
+          type: "float",
+          stock: 1
+        }
+      });
+
+      cells.push({ x: ally.x, y: ally.y });
+    }
+
+    return {
+      preview: {
+        cells,
+        style: "buff"
+      },
+      actions
+    };
+  }
+},
+
+  debuff_wave: {
+  name: "ノイズウェーブ",
+  cooldown: 5,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const enemies = ctx
+      .getUnitsInManhattanRange(unit, ctx.units, 2)
+      .filter((u) => u.team !== unit.team);
+
+    if (enemies.length < 2) return null;
+
+    const actions = [];
+
+    for (const t of enemies) {
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          type: "interference",
+          stock: 5
+        }
+      });
+    }
+
+    return {
+      preview: {
+        cells: ctx.getManhattanCells(unit, 2),
+        style: "debuff"
+      },
+      actions
+    };
+  }
+},
+
+  attack_front_knockback: {
+  name: "ノックバックアタック",
+    cooldown: 3,
+    icon: "https://placehold.co/20x20",
+
+    generateActions(unit, ctx) {
+      const target = getFrontTarget(unit, ctx);
+      if (!target) return null;
+      if (target.team === unit.team) return null;
+
+      const cell = ctx.getKnockbackCell(unit, target, ctx.units);
+      const actions = [];
+
+      actions.push({
+        type: "damage",
+        source: unit.id,
+        target: target.id,
+        power: 2,
+        damageType: "normal"
+      });
+
+      if (cell) {
+        actions.push({
+          type: "move",
+          source: unit.id,
+          target: target.id,
+          x: cell.x,
+          y: cell.y,
+          forced: true
+        });
+      }
+
+      let x = unit.x;
+      let y = unit.y;
+
+      if (unit.facing === "N") y -= 1;
+      if (unit.facing === "S") y += 1;
+      if (unit.facing === "E") x += 1;
+      if (unit.facing === "W") x -= 1;
+
+      return {
+        preview: {
+          cells: [{ x, y }],
+          style: "attack"
+        },
+        actions
+      };
+    }
+  },
+  skill_008: {
+  name: "ガードフィールド",
+  cooldown: 4,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const inRangeUnits = ctx.getUnitsInManhattanRange(unit, ctx.units, 1);
+
+    const allies = inRangeUnits.filter(
+      (u) => u.team === unit.team
+    );
+
+    const otherAllies = allies.filter(
+      (u) => u.id !== unit.id
+    );
+
+    const enemies = inRangeUnits.filter(
+      (u) => u.team !== unit.team
+    );
+
+    if (otherAllies.length === 0) return null;
+    if (enemies.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of allies) {
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          stat: "def",
+          mode: "rate",
+          value: 0.3,
+          duration: 2
+        }
+      });
+    }
+
+    return {
+      preview: {
+        cells: allies.map((t) => ({ x: t.x, y: t.y })),
+        style: "buff"
+      },
+      actions
+    };
+  }
+},
+  skill_009: {
+  name: "アタックフィールド",
+  cooldown: 4,
+  icon: "https://placehold.co/20x20",
+
+  generateActions(unit, ctx) {
+    const inRangeUnits = ctx.getUnitsInManhattanRange(unit, ctx.units, 1);
+
+    const allies = inRangeUnits.filter(
+      (u) => u.team === unit.team
+    );
+
+    const otherAllies = allies.filter(
+      (u) => u.id !== unit.id
+    );
+
+    const enemies = inRangeUnits.filter(
+      (u) => u.team !== unit.team
+    );
+
+    if (otherAllies.length === 0) return null;
+    if (enemies.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of allies) {
+      actions.push({
+        type: "applyEffect",
+        source: unit.id,
+        target: t.id,
+        effect: {
+          stat: "atk",
+          mode: "rate",
+          value: 0.3,
+          duration: 2
+        }
+      });
+    }
+
+    return {
+      preview: {
+        cells: allies.map((t) => ({ x: t.x, y: t.y })),
+        style: "buff"
+      },
+      actions
+    };
+  }
+},
   // =========================
   // 前方1マス攻撃　５回
   // =========================
@@ -479,58 +748,6 @@ satellite_meteor_field: {
         preview: {
           cells,
           style: "buff"
-        },
-        actions
-      };
-    }
-  },
-
-  // =========================
-  // 周囲デバフ波
-  // =========================
-debuff_wave: {
-  name: "ノイズウェーブ",
-    cooldown: 3,
-    icon: "https://placehold.co/20x20",
-
-    generateActions(unit, ctx) {
-      const enemies = ctx
-        .getUnitsInManhattanRange(unit, ctx.units, 1)
-        .filter((u) => u.team !== unit.team);
-
-      if (enemies.length === 0) return null;
-
-      const actions = [];
-
-      for (const t of enemies) {
-        actions.push({
-          type: "applyEffect",
-          source: unit.id,
-          target: t.id,
-          effect: { type: "slow", stock: 1 }
-        });
-
-        actions.push({
-          type: "applyEffect",
-          source: unit.id,
-          target: t.id,
-          effect: { type: "gravity", stock: 1 }
-        });
-
-        actions.push({
-          type: "applyEffect",
-          source: unit.id,
-          target: t.id,
-          effect: { type: "interference", stock: 1 }
-        });
-      }
-
-      const cells = ctx.getManhattanCells(unit, 1);
-
-      return {
-        preview: {
-          cells,
-          style: "debuff"
         },
         actions
       };
@@ -719,59 +936,6 @@ attack_random_falloff: {
             falloff: true
           }
         ]
-      };
-    }
-  },
-
-  // =========================
-  // 前方攻撃＋ノックバック
-  // =========================
-attack_front_knockback: {
-  name: "ノックバックアタック",
-    cooldown: 3,
-    icon: "https://placehold.co/20x20",
-
-    generateActions(unit, ctx) {
-      const target = getFrontTarget(unit, ctx);
-      if (!target) return null;
-      if (target.team === unit.team) return null;
-
-      const cell = ctx.getKnockbackCell(unit, target, ctx.units);
-      const actions = [];
-
-      actions.push({
-        type: "damage",
-        source: unit.id,
-        target: target.id,
-        power: 2,
-        damageType: "normal"
-      });
-
-      if (cell) {
-        actions.push({
-          type: "move",
-          source: unit.id,
-          target: target.id,
-          x: cell.x,
-          y: cell.y,
-          forced: true
-        });
-      }
-
-      let x = unit.x;
-      let y = unit.y;
-
-      if (unit.facing === "N") y -= 1;
-      if (unit.facing === "S") y += 1;
-      if (unit.facing === "E") x += 1;
-      if (unit.facing === "W") x -= 1;
-
-      return {
-        preview: {
-          cells: [{ x, y }],
-          style: "attack"
-        },
-        actions
       };
     }
   },
