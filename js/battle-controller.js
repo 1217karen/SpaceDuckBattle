@@ -4,9 +4,12 @@ import { simulateBattle } from "./new-battle-engine.js";
 import { STAGES } from "./stages.js";
 import { buildBattleUnit } from "./unit-builder.js";
 import { NPCS } from "./battle-npcs.js";
-import { testUnits } from "./battle-test-ducks.js";
 
-const units = structuredClone(testUnits);
+const units = structuredClone([
+  NPCS.npcHealer.unitData,
+  NPCS.npcAttacker.unitData,
+  NPCS.npcSupporter.unitData
+]);
 
 const savedUnit = localStorage.getItem("unit");
 if (savedUnit) {
@@ -238,8 +241,46 @@ startBtn.addEventListener("click", () => {
   const snapshot = {
     board: stage.board,
     maxTurns: stage.maxTurns,
-    units: [...stage.enemies]
+    units: []
   };
+
+  (stage.npcs || []).forEach((entry, index) => {
+    const pattern =
+      entry.unitData?.patterns?.[0] || { skills: [] };
+
+    const unit = buildBattleUnit(
+      entry.unitData,
+      entry.characterData,
+      pattern,
+      entry.team,
+      entry.x,
+      entry.y,
+      entry.facing,
+      1000 + index,
+      entry.id
+    );
+
+    snapshot.units.push(unit);
+  });
+
+  (stage.enemies || []).forEach((entry, index) => {
+    const pattern =
+      entry.unitData?.patterns?.[0] || { skills: [] };
+
+    const unit = buildBattleUnit(
+      entry.unitData,
+      entry.characterData,
+      pattern,
+      entry.team,
+      entry.x,
+      entry.y,
+      entry.facing,
+      2000 + index,
+      entry.id
+    );
+
+    snapshot.units.push(unit);
+  });
 
   /* プレイヤーユニット追加 */
   for (let slot = 0; slot < 4; slot++) {
