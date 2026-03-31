@@ -321,7 +321,7 @@ export const ENEMIES = {
           { text: "「…………。」" }
         ],
         critical: [
-          { text: "「…………。」 }
+          { text: "「…………。」"  }
         ],
         kill: [
           { text: "「…………。」" }
