@@ -89,7 +89,7 @@ function createCommRowElement(typeKey, rowData = {}) {
 
   const nameInput = document.createElement("input");
   nameInput.className = "commNameInput";
-  nameInput.placeholder = "名前（未入力ならデフォルト名）";
+  nameInput.placeholder = "発言者名";
   nameInput.value = rowData.name || "";
 
   const input = document.createElement("input");
