@@ -43,7 +43,7 @@ export function resolveCharacterDisplayName({
 // ユニット表示名
 // 優先順位:
 // 1. 明示指定名
-// 2. ユニットのデフォルト名
+// 2. ユニット名
 // 3. fallback
 // ========================================
 
