@@ -31,32 +31,47 @@ function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
   const unitSnapshot =
     unitId ? getUnitSnapshot(snapshot, unitId) : null;
 
-const iconUrl =
-  event.comm.iconUrl ||
-  unitSnapshot?.icon ||
-  getFallbackIcon();
-
-  const hasExplicitCommText =
-    typeof event.comm.text === "string" &&
-    event.comm.text.trim() !== "";
-
   const hasExplicitCommIcon =
     typeof event.comm.iconUrl === "string" &&
     event.comm.iconUrl.trim() !== "";
 
-const name = resolveCommDisplayName({
-  manualName: event.comm.name,
-  iconUrl,
-  commIcons: unitSnapshot?.commIcons || [],
-  defaultCharacterName:
-    unitSnapshot?.defaultCharacterName || "",
-  unitName:
-    unitSnapshot?.name || "",
-  fallback:
-    unitId || "",
-  hasExplicitCommText,
-  hasExplicitCommIcon
-});
+  const hasExplicitCommName =
+    typeof event.comm.name === "string" &&
+    event.comm.name.trim() !== "";
+
+  const shouldSwitchSpeaker =
+    hasExplicitCommIcon || hasExplicitCommName;
+
+  const iconUrl = shouldSwitchSpeaker
+    ? (
+        event.comm.iconUrl ||
+        unitSnapshot?.icon ||
+        getFallbackIcon()
+      )
+    : (
+        unitSnapshot?.icon ||
+        getFallbackIcon()
+      );
+
+  const name = shouldSwitchSpeaker
+    ? resolveCommDisplayName({
+        manualName: event.comm.name,
+        iconUrl,
+        commIcons: unitSnapshot?.commIcons || [],
+        defaultCharacterName:
+          unitSnapshot?.defaultCharacterName || "",
+        unitName:
+          unitSnapshot?.name || "",
+        fallback:
+          unitId || "",
+        hasExplicitCommText: true,
+        hasExplicitCommIcon
+      })
+    : (
+        unitSnapshot?.name ||
+        unitId ||
+        ""
+      );
 
   return {
     iconUrl,
