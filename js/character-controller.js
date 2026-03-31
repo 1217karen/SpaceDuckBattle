@@ -351,11 +351,11 @@ document.getElementById("saveCharacter")
     const oldDuck =
       oldData ? JSON.parse(oldData) : {};
 
-    const defaultCharacterName =
-      document.getElementById("defaultCharacterName").value;
+const defaultCharacterName =
+  document.getElementById("defaultCharacterName").value;
 
-    const defaultUnitName =
-      document.getElementById("defaultUnitName").value;
+const unitName =
+  document.getElementById("defaultUnitName").value;
 
     const battleStartList =
       collectDialogueList("battleStart");
@@ -381,12 +381,11 @@ const turnChangePinchList =
     const battleEndWinList =
   collectDialogueList("battleEndWin");
 
-    const duck = {
-      ...oldDuck,
-      id: oldDuck.id ?? "player_duck",
-      name: defaultCharacterName,
-      defaultCharacterName,
-      defaultUnitName,
+const duck = {
+  ...oldDuck,
+  id: oldDuck.id ?? "player_duck",
+  name: unitName,
+  defaultCharacterName,
       
 commDialogues: {
   ...(oldDuck.commDialogues || {}),
@@ -399,7 +398,7 @@ commDialogues: {
   kill: killList,
   battleEndWin: battleEndWinList
 }
-    };
+};
 
     localStorage.setItem(
       "duck",
