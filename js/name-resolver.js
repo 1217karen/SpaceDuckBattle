@@ -66,11 +66,11 @@ export function resolveUnitDisplayName({
 // 1. 個別指定名
 // 2. アイコンに紐づいた発言者名
 // 3. デフォルトキャラ名
-// 4. デフォルトユニット名
+// 4. ユニット名
 //
 // 発言テキストも発言用アイコン指定もない場合は
 // 「キャラ発言」ではなく「ユニット表示維持」とみなし、
-// デフォルトユニット名を優先する
+// ユニット名を優先する
 // ========================================
 
 function normalizeCommName(value) {
@@ -97,7 +97,7 @@ export function resolveCommDisplayName({
   iconUrl = "",
   commIcons = [],
   defaultCharacterName = "",
-  defaultUnitName = "",
+  unitName = "",
   fallback = "",
   hasExplicitCommText = false,
   hasExplicitCommIcon = false
@@ -111,8 +111,8 @@ export function resolveCommDisplayName({
   const normalizedDefaultCharacterName =
     normalizeCommName(defaultCharacterName);
 
-  const normalizedDefaultUnitName =
-    normalizeCommName(defaultUnitName);
+  const normalizedUnitName =
+    normalizeCommName(unitName);
 
   const normalizedFallback =
     normalizeCommName(fallback);
@@ -130,7 +130,7 @@ export function resolveCommDisplayName({
   }
 
   return pickFirstName(
-    normalizedDefaultUnitName,
+    normalizedUnitName,
     normalizedFallback
   );
 }
