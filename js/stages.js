@@ -1,6 +1,6 @@
 //stages.js
 
-import { ENEMIES } from "./enemies.js";
+import { ENEMIES } from "./battle-enemies.js";
 
 function makeEnemy(base, extra) {
   return {
