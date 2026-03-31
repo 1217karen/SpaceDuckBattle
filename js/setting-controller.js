@@ -2,6 +2,7 @@
 
 import { skillHandlers } from "./skills.js";
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
+import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
 
 let currentSlot = 0;
 
@@ -48,6 +49,10 @@ function normalizeDialogueList(dialogue) {
         typeof item?.text === "string"
           ? item.text
           : "",
+      name:
+        typeof item?.name === "string"
+          ? item.name
+          : "",
       iconId:
         typeof item?.iconId === "number" && item.iconId > 0
           ? item.iconId
@@ -65,6 +70,10 @@ function normalizeDialogueList(dialogue) {
         typeof dialogue.text === "string"
           ? dialogue.text
           : "",
+      name:
+        typeof dialogue.name === "string"
+          ? dialogue.name
+          : "",
       iconId:
         typeof dialogue.iconId === "number" && dialogue.iconId > 0
           ? dialogue.iconId
@@ -78,6 +87,7 @@ function normalizeDialogueList(dialogue) {
 
   return [{
     text: "",
+    name: "",
     iconId: null,
     iconUrl: ""
   }];
@@ -90,6 +100,7 @@ function normalizeSkill(skill) {
       cutinUrl: "",
       dialogue: [{
         text: "",
+        name: "",
         iconId: null,
         iconUrl: ""
       }]
@@ -112,6 +123,7 @@ function normalizeSkill(skill) {
     cutinUrl: "",
     dialogue: [{
       text: "",
+      name: "",
       iconId: null,
       iconUrl: ""
     }]
@@ -155,11 +167,31 @@ function createSkillDialogueRow(dialogueData = {}) {
     iconPicker.open(button, currentCommIcons);
   });
 
+  const inputArea = document.createElement("div");
+  inputArea.className = "skillDialogueInputArea";
+
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.className = "skillDialogueNameInput";
+  nameInput.value = dialogueData.name || "";
+
   const input = document.createElement("input");
   input.type = "text";
   input.className = "skillDialogueInput";
   input.placeholder = "スキル使用時セリフ";
   input.value = dialogueData.text || "";
+
+  inputArea.appendChild(nameInput);
+  inputArea.appendChild(input);
+
+  bindSpeakerNameSync({
+    nameInput,
+    button,
+    getIcons: () => currentCommIcons,
+    getDefaultName: () =>
+      document.getElementById("defaultCharacterName")?.value.trim() || "",
+    mode: "placeholder"
+  });
 
   const removeButton = document.createElement("button");
   removeButton.type = "button";
@@ -177,7 +209,7 @@ function createSkillDialogueRow(dialogueData = {}) {
   });
 
   row.appendChild(button);
-  row.appendChild(input);
+  row.appendChild(inputArea);
   row.appendChild(removeButton);
 
   return row;
@@ -289,6 +321,9 @@ function readSkillArea() {
         const button =
           row.querySelector(".commIconPickerButton");
 
+        const nameInput =
+          row.querySelector(".skillDialogueNameInput");
+
         const input =
           row.querySelector(".skillDialogueInput");
 
@@ -298,16 +333,24 @@ function readSkillArea() {
         const iconUrl =
           button?.dataset.selectedUrl || "";
 
+        const name =
+          nameInput?.value.trim() || "";
+
         const text =
           input?.value.trim() || "";
 
         return {
+          name,
           text,
           iconId: iconId || null,
           iconUrl
         };
       })
-      .filter(item => item.text !== "" || item.iconUrl !== "");
+      .filter(item =>
+        item.name !== "" ||
+        item.text !== "" ||
+        item.iconUrl !== ""
+      );
 
     if (!type) {
       return { type: "" };
@@ -375,6 +418,35 @@ function loadDuck() {
 
   const duck =
     JSON.parse(data);
+
+    const defaultCharacterNameInput =
+    document.getElementById("defaultCharacterName");
+
+  if (defaultCharacterNameInput) {
+    defaultCharacterNameInput.value =
+      duck.defaultCharacterName ?? duck.name ?? "";
+
+    defaultCharacterNameInput.addEventListener("input", () => {
+      const rows = document.querySelectorAll(".skillDialogueRow");
+
+      rows.forEach(row => {
+        const button =
+          row.querySelector(".commIconPickerButton");
+
+        const nameInput =
+          row.querySelector(".skillDialogueNameInput");
+
+        updateSpeakerNameField({
+          nameInput,
+          button,
+          icons: currentCommIcons,
+          getDefaultName: () =>
+            document.getElementById("defaultCharacterName")?.value.trim() || "",
+          mode: "placeholder"
+        });
+      });
+    });
+  }
 
   currentCommIcons =
     normalizeCommIcons(duck.commIcons);
