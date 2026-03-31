@@ -12,6 +12,10 @@ function normalizeCommIcons(commIcons) {
       url:
         typeof item?.url === "string"
           ? item.url
+          : "",
+      name:
+        typeof item?.name === "string"
+          ? item.name
           : ""
     }));
 }
@@ -25,11 +29,19 @@ function createCommIconRow(item) {
   label.textContent = `ID ${item.id} `;
   row.appendChild(label);
 
-  const input = document.createElement("input");
-  input.type = "text";
-  input.className = "commIconUrlInput";
-  input.value = item.url ?? "";
-  row.appendChild(input);
+  const urlInput = document.createElement("input");
+  urlInput.type = "text";
+  urlInput.className = "commIconUrlInput";
+  urlInput.value = item.url ?? "";
+  urlInput.placeholder = "アイコンURL";
+  row.appendChild(urlInput);
+
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.className = "commIconNameInput";
+  nameInput.value = item.name ?? "";
+  nameInput.placeholder = "発言者名（未入力ならデフォルト名）";
+  row.appendChild(nameInput);
 
   return row;
 }
@@ -57,9 +69,13 @@ function readCommIconArea() {
     const url =
       row.querySelector(".commIconUrlInput")?.value ?? "";
 
+    const name =
+      row.querySelector(".commIconNameInput")?.value ?? "";
+
     return {
       id,
-      url
+      url,
+      name
     };
   });
 }
@@ -109,7 +125,8 @@ document.getElementById("addCommIcon")
 
     current.push({
       id: nextId,
-      url: ""
+      url: "",
+      name: ""
     });
 
     renderCommIconArea(current);
