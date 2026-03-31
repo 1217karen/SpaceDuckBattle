@@ -424,7 +424,7 @@ function loadDuck() {
 
   if (defaultCharacterNameInput) {
     defaultCharacterNameInput.value =
-      duck.defaultCharacterName ?? duck.name ?? "";
+      duck.defaultCharacterName ?? duck.unitName ?? "";
 
     defaultCharacterNameInput.addEventListener("input", () => {
       const rows = document.querySelectorAll(".skillDialogueRow");
