@@ -21,7 +21,7 @@ const playerCharacter = savedCharacter
   ? JSON.parse(savedCharacter)
   : null;
 
-const duckListDiv = document.getElementById("duckList");
+const unitListDiv = document.getElementById("unitList");
 const boardDiv = document.getElementById("board");
 const ptSlots = document.querySelectorAll(".pt-slot");
 const startBtn = document.getElementById("startBtn");
@@ -75,8 +75,8 @@ function renderParty() {
   });
 }
 
-function renderDuckList() {
-  duckListDiv.innerHTML = "";
+function renderUnitList() {
+  unitListDiv.innerHTML = "";
 
   units.forEach((unitData, i) => {
     if (i === 0) return;
@@ -115,7 +115,7 @@ function renderDuckList() {
 
         partySlots[existingSlot] = null;
         renderParty();
-        renderDuckList();
+        renderUnitList();
         return;
       }
 
@@ -124,13 +124,13 @@ function renderDuckList() {
         if (partySlots[s] === null) {
           partySlots[s] = i;
           renderParty();
-          renderDuckList();
+          renderUnitList();
           break;
         }
       }
     });
 
-    duckListDiv.appendChild(item);
+    unitListDiv.appendChild(item);
   });
 }
 
@@ -347,4 +347,4 @@ resetPlacement();
 });
 
 renderParty();
-renderDuckList();
+renderUnitList();
