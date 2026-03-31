@@ -497,7 +497,7 @@ if (unit.patterns) {
   }
 }
 
-document.getElementById("duckType").value =
+document.getElementById("unitType").value =
   unit.type ?? "attack";
 
 document.getElementById("statAT").value =
@@ -522,13 +522,13 @@ document.getElementById("statAT").value =
 }
 
 const saveBtn =
-  document.getElementById("saveDuck");
+  document.getElementById("saveUnit");
 
 saveBtn.addEventListener("click", () => {
   saveCurrentPattern();
 
   const type =
-    document.getElementById("duckType").value;
+    document.getElementById("unitType").value;
 
   const stats = {
     atk: Number(document.getElementById("statAT").value),
