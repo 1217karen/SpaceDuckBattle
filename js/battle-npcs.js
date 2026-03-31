@@ -157,12 +157,12 @@ export const NPCS = {
     characterData: {
       fullName: "防衛隊員・戦闘担当",
       defaultName: "防衛隊戦闘員",
-      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp",
+      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp",
 
       commIcons: [
         {
           name: "防衛隊戦闘員",
-          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp"
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
         }
       ],
 
