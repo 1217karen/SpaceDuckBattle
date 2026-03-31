@@ -77,7 +77,7 @@ export const ENEMIES = {
 
   normalEnemyA: {
     unitData: {
-      name: "侵攻体・突撃型",
+      name: "突撃型宇宙アヒル",
       type: "attack",
 
       icon: {
@@ -126,8 +126,8 @@ export const ENEMIES = {
     },
 
     characterData: {
-      fullName: "侵攻体・突撃型",
-      defaultName: "突撃型",
+      fullName: "突撃型宇宙アヒル",
+      defaultName: "突撃型宇宙アヒル",
       defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp",
 
       commIcons: [],
@@ -163,7 +163,7 @@ export const ENEMIES = {
 
   normalEnemyB: {
     unitData: {
-      name: "侵攻体・防壁型",
+      name: "防壁型宇宙アヒル",
       type: "defense",
 
       icon: {
@@ -212,8 +212,8 @@ export const ENEMIES = {
     },
 
     characterData: {
-      fullName: "侵攻体・防壁型",
-      defaultName: "防壁型",
+      fullName: "防壁型宇宙アヒル",
+      defaultName: "防壁型宇宙アヒル",
       defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp",
 
       commIcons: [],
@@ -249,7 +249,7 @@ export const ENEMIES = {
 
   normalEnemyC: {
     unitData: {
-      name: "侵攻体・支援型",
+      name: "支援型宇宙アヒル",
       type: "support",
 
       icon: {
@@ -298,8 +298,8 @@ export const ENEMIES = {
     },
 
     characterData: {
-      fullName: "侵攻体・支援型",
-      defaultName: "支援型",
+      fullName: "支援型宇宙アヒル",
+      defaultName: "支援型宇宙アヒル",
       defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp",
 
       commIcons: [],
