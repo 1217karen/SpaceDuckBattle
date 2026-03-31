@@ -230,9 +230,9 @@ export const NPCS = {
               }
             },
             {
-              type: "pull_farthest_enemy",
+              type: "corrosion_wave",
               dialogue: {
-                text: "後方目標を引き寄せます、警戒してください。"
+                text: "相手基盤に直接ダメージを与えます。"
               }
             },
             {
