@@ -6,6 +6,7 @@
 
 import {moveUnit,updateFacing,highlightCell,highlightCells,removeUnit} from "./board.js";
 import { EFFECTS } from "./effects-config.js";
+import { getSkillDisplayName } from "./skills.js";
 import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,
         applyEffectRemoved,applyEffectApplied,applyMove,applyDeath,applyFacing} from "./new-battlelog-state-updater.js";
 import { battleState } from "./new-battlelog-state.js";
@@ -503,8 +504,8 @@ else if (event.type === "turnUnit") {
 
     div.classList.add("logSkill");
 
-    div.textContent =
-      `${displayName(event.unit, nameMap)} の ${event.skill}`;
+div.textContent =
+  `${displayName(event.unit, nameMap)} の ${getSkillDisplayName(event.skill)}`;
 
       spawnFloatingNumber(
         event.unit,
@@ -545,8 +546,8 @@ else if (event.type === "cooldownChange") {
       ? "CT が 1 増加"
       : "CT が 1 減少";
 
-  div.textContent =
-    `${event.skill} の ${text}`;
+div.textContent =
+  `${getSkillDisplayName(event.skill)} の ${text}`;
 
   spawnFloatingNumber(
     event.unit,
