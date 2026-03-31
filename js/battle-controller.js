@@ -2,17 +2,24 @@
 
 import { simulateBattle } from "./new-battle-engine.js";
 import { STAGES } from "./stages.js";
-import { buildUnitFromDuck } from "./unit-builder.js";
+import { buildBattleUnit } from "./unit-builder.js";
 import { testDucks } from "./battle-test-ducks.js";
 
-const ducks = structuredClone(testDucks);
+const units = structuredClone(testDucks);
 
-/* settingで作成した自分アヒルを読み込む */
-const savedDuck = localStorage.getItem("duck");
-if (savedDuck) {
-  const playerDuck = JSON.parse(savedDuck);
-  ducks[0] = playerDuck;
+const savedUnit = localStorage.getItem("unit");
+if (savedUnit) {
+  const playerUnit = JSON.parse(savedUnit);
+  units[0] = {
+    ...units[0],
+    ...playerUnit
+  };
 }
+
+const savedCharacter = localStorage.getItem("character");
+const playerCharacter = savedCharacter
+  ? JSON.parse(savedCharacter)
+  : null;
 
 const duckListDiv = document.getElementById("duckList");
 const boardDiv = document.getElementById("board");
@@ -54,13 +61,13 @@ function renderParty() {
   ptSlots.forEach((slot, i) => {
     slot.innerHTML = "";
 
-    const duckIndex = partySlots[i];
-    if (duckIndex === null) return;
+    const unitIndex = partySlots[i];
+    if (unitIndex === null) return;
 
-    const duck = ducks[duckIndex];
+    const unitData = units[unitIndex];
 
     const img = document.createElement("img");
-    img.src = duck.icon?.default || "";
+    img.src = unitData.icon?.default || "";
     img.style.width = "64px";
     img.style.height = "64px";
 
@@ -71,7 +78,7 @@ function renderParty() {
 function renderDuckList() {
   duckListDiv.innerHTML = "";
 
-  ducks.forEach((duck, i) => {
+  units.forEach((unitData, i) => {
     if (i === 0) return;
 
     const item = document.createElement("div");
@@ -82,10 +89,10 @@ function renderDuckList() {
     }
 
     const img = document.createElement("img");
-    img.src = duck.icon?.default || "";
+    img.src = unitData.icon?.default || "";
 
     const name = document.createElement("span");
-    name.textContent = duck.unitName;
+    name.textContent = unitData.name;
 
     item.appendChild(img);
     item.appendChild(name);
@@ -152,9 +159,9 @@ function createBoard(stage) {
         if (!placeable) return;
         if (selectedSlot === null) return;
 
-        const duckIndex = partySlots[selectedSlot];
-        const duck = ducks[duckIndex];
-        if (!duck) return;
+        const unitIndex = partySlots[selectedSlot];
+        const unitData = units[unitIndex];
+        if (!unitData) return;
 
         if (placedSlots[selectedSlot]) {
           const prev = placedSlots[selectedSlot];
@@ -176,7 +183,7 @@ function createBoard(stage) {
         cell.innerHTML = "";
 
         const img = document.createElement("img");
-        img.src = duck.icon?.default || "";
+        img.src = unitData.icon?.default || "";
         img.style.width = "40px";
         img.style.height = "40px";
 
@@ -213,8 +220,8 @@ ptSlots.forEach((slot) => {
 startBtn.addEventListener("click", () => {
   /* 未配置PTチェック */
   for (let slot = 0; slot < 4; slot++) {
-    const duckIndex = partySlots[slot];
-    if (duckIndex === null) continue;
+    const unitIndex = partySlots[slot];
+    if (unitIndex === null) continue;
 
     if (!placedSlots[slot]) {
       alert("PTに編成されているアヒルがまだ配置されていません");
@@ -235,29 +242,30 @@ startBtn.addEventListener("click", () => {
 
   /* プレイヤーユニット追加 */
   for (let slot = 0; slot < 4; slot++) {
-    const duckIndex = partySlots[slot];
-    if (duckIndex === null) continue;
+    const unitIndex = partySlots[slot];
+    if (unitIndex === null) continue;
 
     const placement = placedSlots[slot];
     if (!placement) continue;
 
-const duck = ducks[duckIndex];
+const unitData = units[unitIndex];
 
-if (!Array.isArray(duck.patterns) || !duck.patterns[0]) {
-  alert("アヒルの戦闘設定が保存されていません");
+if (!Array.isArray(unitData.patterns) || !unitData.patterns[0]) {
+  alert("ユニットの戦闘設定が保存されていません");
   return;
 }
 
-const pattern = duck.patterns[0];
+const pattern = unitData.patterns[0];
 
-const unit = buildUnitFromDuck(
-  duck,
+const unit = buildBattleUnit(
+  unitData,
+  playerCharacter,
   pattern,
   1,
   placement.x,
   placement.y,
   "E",
-  duckIndex
+  unitIndex
 );
 
     snapshot.units.push(unit);
@@ -279,13 +287,13 @@ const unit = buildUnitFromDuck(
   };
 
   const partyMembers = partySlots
-    .filter((duckIndex) => duckIndex !== null)
-    .map((duckIndex) => ducks[duckIndex]);
+    .filter((unitIndex) => unitIndex !== null)
+    .map((unitIndex) => units[unitIndex]);
 
   const party = {
-    leaderName: partyMembers[0]?.unitName || "",
-    memberNames: partyMembers.map((duck) => duck.unitName),
-    memberIcons: partyMembers.map((duck) => duck.icon?.default || "")
+    leaderName: partyMembers[0]?.name || "",
+    memberNames: partyMembers.map((unit) => unit.name),
+    memberIcons: partyMembers.map((unit) => unit.icon?.default || "")
   };
 
   const battleRecord = {
