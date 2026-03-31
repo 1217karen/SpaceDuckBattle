@@ -10,6 +10,10 @@ function normalizeDialogueList(dialogue) {
         typeof item?.text === "string"
           ? item.text
           : "",
+      name:
+        typeof item?.name === "string"
+          ? item.name
+          : "",
       iconId:
         typeof item?.iconId === "number" && item.iconId > 0
           ? item.iconId
@@ -27,6 +31,10 @@ function normalizeDialogueList(dialogue) {
         typeof dialogue.text === "string"
           ? dialogue.text
           : "",
+      name:
+        typeof dialogue.name === "string"
+          ? dialogue.name
+          : "",
       iconId:
         typeof dialogue.iconId === "number" && dialogue.iconId > 0
           ? dialogue.iconId
@@ -40,6 +48,7 @@ function normalizeDialogueList(dialogue) {
 
   return [{
     text: "",
+    name: "",
     iconId: null,
     iconUrl: ""
   }];
@@ -78,6 +87,11 @@ function createCommRowElement(typeKey, rowData = {}) {
   const inputArea = document.createElement("div");
   inputArea.className = "commInputArea";
 
+  const nameInput = document.createElement("input");
+  nameInput.className = "commNameInput";
+  nameInput.placeholder = "名前（未入力ならデフォルト名）";
+  nameInput.value = rowData.name || "";
+
   const input = document.createElement("input");
   input.className = "commTextInput";
   input.value = rowData.text || "";
@@ -86,6 +100,7 @@ function createCommRowElement(typeKey, rowData = {}) {
   preview.className = "commTextPreview";
   preview.dataset.previewFor = String(rowId);
 
+  inputArea.appendChild(nameInput);
   inputArea.appendChild(input);
   inputArea.appendChild(preview);
 
@@ -162,6 +177,9 @@ function collectDialogueList(typeKey) {
       const button =
         row.querySelector(".commIconPickerButton");
 
+      const nameInput =
+        row.querySelector(".commNameInput");
+
       const input =
         row.querySelector(".commTextInput");
 
@@ -171,16 +189,24 @@ function collectDialogueList(typeKey) {
       const iconUrl =
         button?.dataset.selectedUrl || "";
 
+      const name =
+        nameInput?.value.trim() || "";
+
       const text =
         input?.value.trim() || "";
 
       return {
+        name,
         text,
         iconId: iconId || null,
         iconUrl
       };
     })
-    .filter(item => item.text !== "" || item.iconUrl !== "");
+    .filter(item =>
+      item.name !== "" ||
+      item.text !== "" ||
+      item.iconUrl !== ""
+    );
 }
 
 function renderCommList(typeKey, dialogues) {
