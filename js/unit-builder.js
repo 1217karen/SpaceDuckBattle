@@ -25,7 +25,7 @@ const unit = {
 
   id: "duck_" + duckIndex,
 
-  name: duck.name,
+  name: duck.name || "",
   defaultCharacterName:
     duck.defaultCharacterName ?? duck.name ?? "",
   defaultUnitName:
