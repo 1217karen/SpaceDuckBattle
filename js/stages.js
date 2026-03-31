@@ -1,6 +1,7 @@
 //stages.js
 
 import { ENEMIES } from "./battle-enemies.js";
+import { NPCS } from "./battle-npcs.js";
 
 function makeEnemy(base, extra) {
   return {
