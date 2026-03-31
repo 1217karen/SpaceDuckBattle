@@ -277,19 +277,19 @@ export const ENEMIES = {
             {
               type: "debuff_wave",
               dialogue: [
+                { text: "（嫌な音波を響かせている）" }
+              ]
+            },
+            {
+              type: "skill_009",
+              dialogue: [
+                { text: "（周囲の個体を強化している）" }
+              ]
+            },
+            {
+              type: "corrosion_wave",
+              dialogue: [
                 { text: "（濁った波動が広がった）" }
-              ]
-            },
-            {
-              type: "buff_wave",
-              dialogue: [
-                { text: "（周囲の個体を強化しているようだ）" }
-              ]
-            },
-            {
-              type: "pull_farthest_enemy",
-              dialogue: [
-                { text: "（後方の対象を無理やり引き寄せた）" }
               ]
             }
           ]
