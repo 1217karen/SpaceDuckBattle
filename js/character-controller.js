@@ -232,30 +232,29 @@ function renderCommList(typeKey, dialogues) {
 }
 
 function loadCharacter() {
-  const data =
+  const characterData =
     localStorage.getItem("character");
 
-  if (!data) {
-    currentCommIcons = [];
-    renderCommList("battleStart", null);
-    renderCommList("turnChangeAdvantage", null);
-    renderCommList("turnChangeNeutral", null);
-    renderCommList("turnChangeDisadvantage", null);
-    renderCommList("turnChangePinch", null);
-    renderCommList("critical", null);
-    renderCommList("kill", null);
-    renderCommList("battleEndWin", null);
-    return;
-  }
+  const unitData =
+    localStorage.getItem("unit");
 
   const character =
-    JSON.parse(data);
+    characterData ? JSON.parse(characterData) : null;
+
+  const unit =
+    unitData ? JSON.parse(unitData) : null;
+
+  document.getElementById("characterFullName").value =
+    character?.fullName ?? "";
 
   document.getElementById("defaultCharacterName").value =
-    character.defaultName ?? "";
+    character?.defaultName ?? "";
+
+  document.getElementById("unitName").value =
+    unit?.name ?? "";
 
   currentCommIcons =
-    normalizeCommIcons(character.commIcons);
+    normalizeCommIcons(character?.commIcons);
 
   renderCommList(
     "battleStart",
@@ -342,14 +341,26 @@ document.getElementById("addBattleEndWinLine")
 
 document.getElementById("saveCharacter")
   .addEventListener("click", () => {
-    const oldData =
+    const oldCharacterData =
       localStorage.getItem("character");
 
+    const oldUnitData =
+      localStorage.getItem("unit");
+
     const oldCharacter =
-      oldData ? JSON.parse(oldData) : {};
+      oldCharacterData ? JSON.parse(oldCharacterData) : {};
+
+    const oldUnit =
+      oldUnitData ? JSON.parse(oldUnitData) : {};
+
+const fullName =
+  document.getElementById("characterFullName").value;
 
 const defaultName =
   document.getElementById("defaultCharacterName").value;
+
+const unitName =
+  document.getElementById("unitName").value;
 
     const battleStartList =
       collectDialogueList("battleStart");
@@ -377,6 +388,7 @@ const turnChangePinchList =
 
 const character = {
   ...oldCharacter,
+  fullName,
   defaultName,
   commIcons: currentCommIcons,
 
@@ -393,9 +405,20 @@ const character = {
   }
 };
 
+const unit = {
+  ...oldUnit,
+  id: oldUnit.id ?? "player_unit",
+  name: unitName
+};
+
 localStorage.setItem(
   "character",
   JSON.stringify(character)
+);
+
+localStorage.setItem(
+  "unit",
+  JSON.stringify(unit)
 );
 
     alert("キャラ設定を保存しました");
