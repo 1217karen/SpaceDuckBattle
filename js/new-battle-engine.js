@@ -95,6 +95,7 @@ function buildCommPayload(unit, dialogue) {
   if (!unit || !dialogue?.text) return null;
 
   return {
+    unitId: unit.id,
     iconUrl:
       dialogue.iconUrl ||
       unit.defaultCharacterIcon ||
