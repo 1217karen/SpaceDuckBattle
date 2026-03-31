@@ -233,7 +233,7 @@ function renderCommList(typeKey, dialogues) {
 
 function loadCharacter() {
   const data =
-    localStorage.getItem("duck");
+    localStorage.getItem("character");
 
   if (!data) {
     currentCommIcons = [];
@@ -248,60 +248,19 @@ function loadCharacter() {
     return;
   }
 
-  const duck =
+  const character =
     JSON.parse(data);
 
-document.getElementById("defaultCharacterName").value =
-  duck.defaultCharacterName ?? "";
-
-document.getElementById("unitName").value =
-  duck.unitName ?? "";
+  document.getElementById("defaultCharacterName").value =
+    character.defaultName ?? "";
 
   currentCommIcons =
-    normalizeCommIcons(duck.commIcons);
+    normalizeCommIcons(character.commIcons);
 
   renderCommList(
     "battleStart",
-    duck.commDialogues?.battleStart
+    character.commDialogues?.battleStart
   );
-
-renderCommList(
-  "turnChangeAdvantage",
-  duck.commDialogues?.turnChangeAdvantage
-);
-
-renderCommList(
-  "turnChangeNeutral",
-  duck.commDialogues?.turnChangeNeutral
-);
-
-renderCommList(
-  "turnChangeDisadvantage",
-  duck.commDialogues?.turnChangeDisadvantage
-);
-
-renderCommList(
-  "turnChangePinch",
-  duck.commDialogues?.turnChangePinch
-);
-
-  renderCommList(
-    "critical",
-    duck.commDialogues?.critical
-  );
-
-  renderCommList(
-    "kill",
-    duck.commDialogues?.kill
-  );
-
-  renderCommList(
-  "battleEndWin",
-  duck.commDialogues?.battleEndWin
-);
-
-  
-}
 
 document.getElementById("addBattleStartLine")
   .addEventListener("click", () => {
