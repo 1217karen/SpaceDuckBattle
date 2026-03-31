@@ -370,7 +370,7 @@ skill_003: {
   skill_007: {
   name: "フロートリンク",
   cooldown: 4,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
 
   generateActions(unit, ctx) {
     const nearbyAllies = ctx
@@ -420,7 +420,7 @@ skill_003: {
   debuff_wave: {
   name: "ノイズウェーブ",
   cooldown: 5,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_6.webp",
 
   generateActions(unit, ctx) {
     const enemies = ctx
@@ -456,7 +456,7 @@ skill_003: {
   attack_front_knockback: {
   name: "ノックバックアタック",
     cooldown: 3,
-    icon: "https://placehold.co/20x20",
+    icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_1.webp",
 
     generateActions(unit, ctx) {
       const target = getFrontTarget(unit, ctx);
@@ -506,7 +506,7 @@ skill_003: {
   skill_008: {
   name: "ガードフィールド",
   cooldown: 4,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_7.webp",
 
   generateActions(unit, ctx) {
     const inRangeUnits = ctx.getUnitsInManhattanRange(unit, ctx.units, 1);
@@ -555,7 +555,7 @@ skill_003: {
   skill_009: {
   name: "アタックフィールド",
   cooldown: 4,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
 
   generateActions(unit, ctx) {
     const inRangeUnits = ctx.getUnitsInManhattanRange(unit, ctx.units, 1);
