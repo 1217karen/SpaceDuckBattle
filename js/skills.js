@@ -6,7 +6,7 @@ export const skillHandlers = {
 attack_front1: {
   name: "フロントアタック",
   cooldown: 2,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_1.webp",
 
   generateActions(unit, ctx) {
     const target = getFrontTarget(unit, ctx);
@@ -36,7 +36,7 @@ attack_front1: {
   skill_001: {
   name: "グラビティ",
   cooldown: 5,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_6.webp",
 
   generateActions(unit, ctx) {
     const targets = ctx
@@ -71,7 +71,7 @@ attack_front1: {
   skill_002: {
   name: "サテライト",
   cooldown: 4,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
 
   generateActions(unit, ctx) {
     const targets = ctx.units.filter(
@@ -110,7 +110,7 @@ attack_front1: {
 skill_003: {
   name: "アクセルライン",
   cooldown: 5,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
 
   generateActions(unit, ctx) {
     const targets = ctx
@@ -142,11 +142,52 @@ skill_003: {
     };
   }
 },
+  heal_cross2: {
+  name: "リペアライト",
+  cooldown: 4,
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_4.webp",
+
+  generateActions(unit, ctx) {
+    const alliesInRange = ctx.units.filter(
+      (u) =>
+        u.hp > 0 &&
+        u.team === unit.team &&
+        ctx.getChebyshevDistance(unit, u) <= 2
+    );
+
+    const otherAllies = alliesInRange.filter(
+      (u) => u.id !== unit.id
+    );
+
+    if (otherAllies.length === 0) return null;
+
+    const actions = [];
+
+    for (const t of alliesInRange) {
+      actions.push({
+        type: "heal",
+        source: unit.id,
+        target: t.id,
+        power: 5,
+        healType: "scale"
+      });
+    }
+
+    return {
+      preview: {
+        cells: alliesInRange.map((t) => ({ x: t.x, y: t.y })),
+        style: "heal"
+      },
+      actions
+    };
+  }
+},
+
 
   skill_004: {
   name: "ヒールビーム",
   cooldown: 6,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_4.webp",
 
   generateActions(unit, ctx) {
     const allies = ctx.units.filter(
@@ -203,7 +244,7 @@ skill_003: {
   skill_005: {
   name: "オービットヒール",
   cooldown: 4,
-  icon: "https://placehold.co/20x20",
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
 
   generateActions(unit, ctx) {
     const targets = ctx.units.filter(
@@ -250,13 +291,50 @@ skill_003: {
     };
   }
 },
+
+  buff_def50_self: {
+  name: "ディフェンスフィールド",
+  cooldown: 6,
+  icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_7.webp",
+
+  generateActions(unit, ctx) {
+    const nearbyEnemies = ctx.units.filter(
+      (u) =>
+        u.hp > 0 &&
+        u.team !== unit.team &&
+        ctx.getChebyshevDistance(unit, u) <= 1
+    );
+
+    if (nearbyEnemies.length < 2) return null;
+
+    return {
+      preview: {
+        cells: [{ x: unit.x, y: unit.y }],
+        style: "buff"
+      },
+      actions: [
+        {
+          type: "applyEffect",
+          source: unit.id,
+          target: unit.id,
+          effect: {
+            stat: "def",
+            mode: "rate",
+            value: 0.5,
+            duration: 3
+          }
+        }
+      ]
+    };
+  }
+},
   // =========================
   // 前方1マス攻撃　５回
   // =========================
  attack_front1_5: {
   name: "ガトリング",
     cooldown: 2,
-    icon: "https://placehold.co/20x20",
+    icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_2.webp",
 
     generateActions(unit, ctx) {
       const target = getFrontTarget(unit, ctx);
@@ -545,50 +623,6 @@ attack_nearest: {
   },
 
   // =========================
-  // 縦横2マス回復
-  // =========================
-heal_cross2: {
-  name: "リペアライト",
-  cooldown: 4,
-  icon: "https://placehold.co/20x20",
-
-  generateActions(unit, ctx) {
-    const alliesInRange = ctx.units.filter(
-      (u) =>
-        u.hp > 0 &&
-        u.team === unit.team &&
-        ctx.getChebyshevDistance(unit, u) <= 2
-    );
-
-    const otherAllies = alliesInRange.filter(
-      (u) => u.id !== unit.id
-    );
-
-    if (otherAllies.length === 0) return null;
-
-    const actions = [];
-
-    for (const t of alliesInRange) {
-      actions.push({
-        type: "heal",
-        source: unit.id,
-        target: t.id,
-        power: 5,
-        healType: "scale"
-      });
-    }
-
-    return {
-      preview: {
-        cells: alliesInRange.map((t) => ({ x: t.x, y: t.y })),
-        style: "heal"
-      },
-      actions
-    };
-  }
-},
-
-  // =========================
   // 周囲2マス 敵全体攻撃（減衰なし）
   // =========================
 attack_around2_all: {
@@ -873,46 +907,8 @@ repair_wave: {
       };
     }
   },
+}
 
-  // =========================
-  // 自分DF50%バフ（3T）
-  // =========================
-buff_def50_self: {
-  name: "ディフェンスフィールド",
-  cooldown: 6,
-  icon: "https://placehold.co/20x20",
-
-  generateActions(unit, ctx) {
-    const nearbyEnemies = ctx.units.filter(
-      (u) =>
-        u.hp > 0 &&
-        u.team !== unit.team &&
-        ctx.getChebyshevDistance(unit, u) <= 1
-    );
-
-    if (nearbyEnemies.length < 2) return null;
-
-    return {
-      preview: {
-        cells: [{ x: unit.x, y: unit.y }],
-        style: "buff"
-      },
-      actions: [
-        {
-          type: "applyEffect",
-          source: unit.id,
-          target: unit.id,
-          effect: {
-            stat: "def",
-            mode: "rate",
-            value: 0.5,
-            duration: 3
-          }
-        }
-      ]
-    };
-  }
-},
 
 
 function getFrontCell(unit) {
