@@ -71,7 +71,7 @@ export const STAGES = {
         id: "P1",
         team: 1,
         x: 1,
-        y: 0,
+        y: 4,
         facing: "E"
       }),
       makeStageUnit(NPCS.npcAttacker, {
@@ -85,7 +85,7 @@ export const STAGES = {
         id: "P3",
         team: 1,
         x: 1,
-        y: 4,
+        y: 0,
         facing: "E"
       })
     ],
