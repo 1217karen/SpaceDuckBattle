@@ -85,7 +85,7 @@ function renderDuckList() {
     img.src = duck.icon?.default || "";
 
     const name = document.createElement("span");
-    name.textContent = duck.name;
+    name.textContent = duck.unitName;
 
     item.appendChild(img);
     item.appendChild(name);
@@ -283,8 +283,8 @@ const unit = buildUnitFromDuck(
     .map((duckIndex) => ducks[duckIndex]);
 
   const party = {
-    leaderName: partyMembers[0]?.name || "",
-    memberNames: partyMembers.map((duck) => duck.name),
+    leaderName: partyMembers[0]?.unitName || "",
+    memberNames: partyMembers.map((duck) => duck.unitName),
     memberIcons: partyMembers.map((duck) => duck.icon?.default || "")
   };
 
