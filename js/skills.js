@@ -3,7 +3,8 @@ export const skillHandlers = {
   // =========================
   // 前方1マス攻撃
   // =========================
-  attack_front1: {
+attack_front1: {
+  name: "フロントアタック",
     cooldown: 2,
     icon: "https://placehold.co/20x20",
 
@@ -41,7 +42,8 @@ export const skillHandlers = {
   // =========================
   // 前方1マス攻撃　５回
   // =========================
-  attack_front1_5: {
+ attack_front1_5: {
+  name: "ガトリング",
     cooldown: 2,
     icon: "https://placehold.co/20x20",
 
@@ -83,7 +85,8 @@ export const skillHandlers = {
   // =========================
   // DF3
   // =========================
-  buff_def20: {
+buff_def20: {
+  name: "バリア",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -113,7 +116,8 @@ export const skillHandlers = {
   // =========================
   // DF
   // =========================
-  buff_def10: {
+buff_def10: {
+  name: "ミニバリア",
     cooldown: 2,
     icon: "https://placehold.co/20x20",
 
@@ -143,7 +147,8 @@ export const skillHandlers = {
   // =========================
   // 衛星流星展開
   // =========================
-  satellite_meteor_field: {
+satellite_meteor_field: {
+  name: "サテライト",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -194,7 +199,8 @@ export const skillHandlers = {
   // =========================
   // 周囲デバフ波
   // =========================
-  debuff_wave: {
+debuff_wave: {
+  name: "ノイズウェーブ",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -245,7 +251,8 @@ export const skillHandlers = {
   // =========================
   // 周囲バフ波
   // =========================
-  buff_wave: {
+buff_wave: {
+  name: "パワーウェーブ",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -296,7 +303,8 @@ export const skillHandlers = {
   // =========================
   // 最寄り敵攻撃
   // =========================
-  attack_nearest: {
+attack_nearest: {
+  name: "スイング",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -328,7 +336,8 @@ export const skillHandlers = {
   // =========================
   // 縦横2マス回復
   // =========================
-  heal_cross2: {
+heal_cross2: {
+  name: "エリアヒール",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -367,7 +376,8 @@ export const skillHandlers = {
   // =========================
   // 周囲2マス 敵全体攻撃（減衰なし）
   // =========================
-  attack_around2_all: {
+attack_around2_all: {
+  name: "ストンプ",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -403,7 +413,8 @@ export const skillHandlers = {
   // =========================
   // 自分にバフ
   // =========================
-  buff_self_if_alone: {
+buff_self_if_alone: {
+  name: "アローン",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -432,7 +443,8 @@ export const skillHandlers = {
   // =========================
   // ランダム敵単体攻撃（減衰あり）
   // =========================
-  attack_random_falloff: {
+attack_random_falloff: {
+  name: "デブリ",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -465,7 +477,8 @@ export const skillHandlers = {
   // =========================
   // 前方攻撃＋ノックバック
   // =========================
-  attack_front_knockback: {
+attack_front_knockback: {
+  name: "ノックバックアタック",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -517,7 +530,8 @@ export const skillHandlers = {
   // =========================
   // 最遠敵引き寄せ
   // =========================
-  pull_farthest_enemy: {
+pull_farthest_enemy: {
+  name: "アトラクション",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -561,7 +575,8 @@ export const skillHandlers = {
   // =========================
   // 腐食波
   // =========================
-  corrosion_wave: {
+corrosion_wave: {
+  name: "コロージョン",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -599,7 +614,8 @@ export const skillHandlers = {
   // =========================
   // 修復の波
   // =========================
-  repair_wave: {
+repair_wave: {
+  name: "リペア",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -646,7 +662,8 @@ export const skillHandlers = {
   // =========================
   // 自分DF50%バフ（3T）
   // =========================
-  buff_def50_self: {
+buff_def50_self: {
+  name: "スーパーバリア",
     cooldown: 3,
     icon: "https://placehold.co/20x20",
 
@@ -712,4 +729,10 @@ function getFrontTarget(unit, ctx) {
   }
 
   return null;
+}
+
+export function getSkillDisplayName(skillType) {
+  const handler = skillHandlers[skillType];
+  if (!handler) return skillType || "";
+  return handler.name || skillType || "";
 }
