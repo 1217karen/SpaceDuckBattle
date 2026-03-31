@@ -2,6 +2,7 @@
 
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 import { bindTextPreview } from "./text-preview.js";
+import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
 
 function normalizeDialogueList(dialogue) {
   if (Array.isArray(dialogue)) {
@@ -59,43 +60,6 @@ let nextCommRowId = 1;
 
 const iconPicker = createIconPicker();
 
-function getDefaultCharacterName() {
-  return (
-    document.getElementById("defaultCharacterName")?.value.trim() ||
-    ""
-  );
-}
-
-function findCommIconById(iconId) {
-  if (!iconId) return null;
-
-  return currentCommIcons.find(item => item.id === iconId) || null;
-}
-
-function resolveCommSpeakerPlaceholderName(button) {
-  const selectedId =
-    Number(button?.dataset.selectedId || 0);
-
-  const selectedIcon =
-    findCommIconById(selectedId);
-
-  if (selectedIcon?.name?.trim()) {
-    return selectedIcon.name.trim();
-  }
-
-  return getDefaultCharacterName();
-}
-
-function updateCommNamePlaceholder(nameInput, button) {
-  if (!nameInput) return;
-
-  const resolvedName =
-    resolveCommSpeakerPlaceholderName(button);
-
-  nameInput.placeholder =
-    resolvedName || "発言者名";
-}
-
 function createCommRowElement(typeKey, rowData = {}) {
   const rowId = nextCommRowId++;
   const row = document.createElement("div");
@@ -121,10 +85,6 @@ function createCommRowElement(typeKey, rowData = {}) {
     iconPicker.open(button, currentCommIcons);
   });
 
-  button.addEventListener("iconchange", () => {
-    updateCommNamePlaceholder(nameInput, button);
-  });
-
   const inputArea = document.createElement("div");
   inputArea.className = "commInputArea";
 
@@ -146,7 +106,15 @@ function createCommRowElement(typeKey, rowData = {}) {
 
   bindTextPreview(input, preview, { preset: "message" });
 
-
+  bindSpeakerNameSync({
+    nameInput,
+    button,
+    getIcons: () => currentCommIcons,
+    getDefaultName: () =>
+      document.getElementById("defaultCharacterName")?.value.trim() || "",
+    mode: "placeholder"
+  });
+  
   const removeButton = document.createElement("button");
   removeButton.type = "button";
   removeButton.textContent = "×";
@@ -452,7 +420,14 @@ document.getElementById("defaultCharacterName")
       const nameInput =
         row.querySelector(".commNameInput");
 
-      updateCommNamePlaceholder(nameInput, button);
+      updateSpeakerNameField({
+        nameInput,
+        button,
+        icons: currentCommIcons,
+        getDefaultName: () =>
+          document.getElementById("defaultCharacterName")?.value.trim() || "",
+        mode: "placeholder"
+      });
     });
   });
 
