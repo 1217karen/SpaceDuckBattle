@@ -16,6 +16,10 @@ export function normalizeCommIcons(commIcons) {
       url:
         typeof item?.url === "string"
           ? item.url
+          : "",
+      name:
+        typeof item?.name === "string"
+          ? item.name
           : ""
     }))
     .filter(item => item.url.trim() !== "");
@@ -44,6 +48,14 @@ export function setButtonPreview(button, iconId, iconUrl) {
   if (img) {
     img.src = safeUrl || getNoImageUrl();
   }
+
+    button.dispatchEvent(new CustomEvent("iconchange", {
+    detail: {
+      iconId: safeId,
+      iconUrl: safeUrl
+    }
+  }));
+  
 }
 
 export function createIconPicker({
