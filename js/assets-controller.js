@@ -91,7 +91,10 @@ function loadManagement() {
     unitData ? JSON.parse(unitData) : null;
 
   const character =
-    characterData ? JSON.parse(characterData) : null;
+  characterData ? JSON.parse(characterData) : null;
+
+  document.getElementById("characterDefaultIcon").value =
+  character?.defaultIcon ?? "";
 
   document.getElementById("iconDefault").value =
     unit?.icon?.default ?? "";
@@ -166,10 +169,11 @@ saveBtn.addEventListener("click", () => {
     icon
   };
 
-  const character = {
-    ...oldCharacter,
-    commIcons
-  };
+const character = {
+  ...oldCharacter,
+  defaultIcon: document.getElementById("characterDefaultIcon").value,
+  commIcons
+};
 
   localStorage.setItem(
     "unit",
