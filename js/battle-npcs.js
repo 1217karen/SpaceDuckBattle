@@ -29,6 +29,12 @@ export const NPCS = {
           public: true,
           skills: [
             {
+              type: "skill_008",
+              dialogue: {
+                text: "防護補助を付与、前線を支えます。"
+              }
+            },
+            {
               type: "heal_cross2",
               dialogue: {
                 text: "修復波を展開、隊列を維持してください。"
@@ -40,12 +46,7 @@ export const NPCS = {
                 text: "負傷者を確認、回復ラインを接続します。"
               }
             },
-            {
-              type: "skill_008",
-              dialogue: {
-                text: "防護補助を付与、前線を支えます。"
-              }
-            },
+
             {
               type: "skill_007",
               dialogue: {
