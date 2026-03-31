@@ -1,6 +1,16 @@
 //unit-builder.js
 
-export function buildBattleUnit(unitData, characterData, pattern, team, x, y, facing, unitIndex){
+export function buildBattleUnit(
+  unitData,
+  characterData,
+  pattern,
+  team,
+  x,
+  y,
+  facing,
+  unitIndex,
+  unitId = null
+){
 
   const stats = unitData.stats || {};
 
@@ -21,7 +31,7 @@ export function buildBattleUnit(unitData, characterData, pattern, team, x, y, fa
     speed * 0;
 
   const unit = {
-    id: "unit_" + unitIndex,
+    id: unitId || ("unit_" + unitIndex),
     name: unitData.name || "",
     defaultCharacterName:
       characterData?.defaultName ?? "",
