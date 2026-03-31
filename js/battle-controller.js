@@ -241,18 +241,24 @@ startBtn.addEventListener("click", () => {
     const placement = placedSlots[slot];
     if (!placement) continue;
 
-    const duck = ducks[duckIndex];
-    const pattern = duck.patterns[0];
+const duck = ducks[duckIndex];
 
-    const unit = buildUnitFromDuck(
-      duck,
-      pattern,
-      1,
-      placement.x,
-      placement.y,
-      "E",
-      duckIndex
-    );
+if (!Array.isArray(duck.patterns) || !duck.patterns[0]) {
+  alert("アヒルの戦闘設定が保存されていません");
+  return;
+}
+
+const pattern = duck.patterns[0];
+
+const unit = buildUnitFromDuck(
+  duck,
+  pattern,
+  1,
+  placement.x,
+  placement.y,
+  "E",
+  duckIndex
+);
 
     snapshot.units.push(unit);
   }
