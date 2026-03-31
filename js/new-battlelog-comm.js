@@ -1,5 +1,7 @@
 // new-battlelog-comm.js
 
+import { renderRichText } from "./rich-text.js";
+
 function getFallbackIcon() {
   return "https://placehold.co/60x60?text=NO+IMG";
 }
@@ -7,6 +9,7 @@ function getFallbackIcon() {
 function getCommElements() {
   return {
     icon: document.getElementById("commIcon"),
+    name: document.getElementById("commName"),
     message: document.getElementById("commMessage")
   };
 }
@@ -15,23 +18,47 @@ function getUnitSnapshot(snapshot, unitId) {
   return snapshot?.units?.find(u => u.id === unitId) || null;
 }
 
-function buildCommPayloadFromEvent(event) {
+function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
   if (!event?.comm) return null;
   if (typeof event.comm.text !== "string") return null;
 
+  const unitId =
+    event.comm.unitId ||
+    fallbackUnitId ||
+    null;
+
+  const unitSnapshot =
+    unitId ? getUnitSnapshot(snapshot, unitId) : null;
+
+  const iconUrl =
+    event.comm.iconUrl ||
+    unitSnapshot?.defaultCommIconUrl ||
+    unitSnapshot?.icon ||
+    getFallbackIcon();
+
+  const name =
+    typeof event.comm.name === "string" && event.comm.name.trim() !== ""
+      ? event.comm.name.trim()
+      : typeof unitSnapshot?.name === "string" && unitSnapshot.name.trim() !== ""
+        ? unitSnapshot.name.trim()
+        : unitId || "";
+
   return {
-    iconUrl:
-      event.comm.iconUrl ||
-      getFallbackIcon(),
+    iconUrl,
+    name,
     text: event.comm.text
   };
 }
 
 export function resetCommPanel() {
-  const { icon, message } = getCommElements();
+  const { icon, name, message } = getCommElements();
 
   if (icon) {
     icon.src = getFallbackIcon();
+  }
+
+  if (name) {
+    name.textContent = "";
   }
 
   if (message) {
@@ -39,15 +66,19 @@ export function resetCommPanel() {
   }
 }
 
-export function showCommPanel({ iconUrl, text }) {
-  const { icon, message } = getCommElements();
+export function showCommPanel({ iconUrl, name, text }) {
+  const { icon, name: nameEl, message } = getCommElements();
 
   if (icon) {
     icon.src = iconUrl || getFallbackIcon();
   }
 
+  if (nameEl) {
+    nameEl.textContent = name || "";
+  }
+
   if (message) {
-    message.textContent = text || "";
+    renderRichText(message, text || "", { preset: "message" });
   }
 }
 
@@ -60,8 +91,12 @@ export function showUnitDefaultComm(unitId, snapshot) {
     unitSnapshot.icon ||
     getFallbackIcon();
 
+  const name =
+    unitSnapshot.name || unitId || "";
+
   showCommPanel({
     iconUrl,
+    name,
     text: ""
   });
 }
@@ -70,7 +105,7 @@ export function updateCommByEvent(event, snapshot, fallbackUnitId = null) {
   if (!event) return;
 
   const payload =
-    buildCommPayloadFromEvent(event);
+    buildCommPayloadFromEvent(event, snapshot, fallbackUnitId);
 
   if (!payload) return;
 
