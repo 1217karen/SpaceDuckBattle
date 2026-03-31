@@ -1,6 +1,7 @@
 // new-battlelog-comm.js
 
 import { renderRichText } from "./rich-text.js";
+import { resolveCommDisplayName } from "./name-resolver.js";
 
 function getFallbackIcon() {
   return "https://placehold.co/60x60?text=NO+IMG";
@@ -36,12 +37,27 @@ function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
     unitSnapshot?.icon ||
     getFallbackIcon();
 
-  const name =
-    typeof event.comm.name === "string" && event.comm.name.trim() !== ""
-      ? event.comm.name.trim()
-      : typeof unitSnapshot?.name === "string" && unitSnapshot.name.trim() !== ""
-        ? unitSnapshot.name.trim()
-        : unitId || "";
+  const hasExplicitCommText =
+    typeof event.comm.text === "string" &&
+    event.comm.text.trim() !== "";
+
+  const hasExplicitCommIcon =
+    typeof event.comm.iconUrl === "string" &&
+    event.comm.iconUrl.trim() !== "";
+
+  const name = resolveCommDisplayName({
+    manualName: event.comm.name,
+    iconUrl,
+    commIcons: unitSnapshot?.commIcons || [],
+    defaultCharacterName:
+      unitSnapshot?.defaultCharacterName || "",
+    defaultUnitName:
+      unitSnapshot?.defaultUnitName || "",
+    fallback:
+      unitSnapshot?.name || unitId || "",
+    hasExplicitCommText,
+    hasExplicitCommIcon
+  });
 
   return {
     iconUrl,
