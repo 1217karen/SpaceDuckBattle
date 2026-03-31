@@ -31,23 +31,23 @@ export const NPCS = {
             {
               type: "heal_cross2",
               dialogue: {
-                text: "負傷者を確認、回復ラインを接続します。"
-              }
-            },
-            {
-              type: "repair_wave",
-              dialogue: {
                 text: "修復波を展開、隊列を維持してください。"
               }
             },
             {
-              type: "buff_wave",
+              type: "skill_005",
+              dialogue: {
+                text: "負傷者を確認、回復ラインを接続します。"
+              }
+            },
+            {
+              type: "skill_008",
               dialogue: {
                 text: "防護補助を付与、前線を支えます。"
               }
             },
             {
-              type: "heal_cross2",
+              type: "skill_007",
               dialogue: {
                 text: "損耗拡大を防ぎます、立て直します。"
               }
@@ -144,9 +144,9 @@ export const NPCS = {
               }
             },
             {
-              type: "attack_front1",
+              type: "skill_009",
               dialogue: {
-                text: "突破口を作ります、続いてください。"
+                text: "迎撃準備に入ります、続いてください。"
               }
             }
           ]
@@ -223,15 +223,15 @@ export const NPCS = {
           public: true,
           skills: [
             {
-              type: "debuff_wave",
+              type: "skill_001",
               dialogue: {
-                text: "妨害波を送信、敵の動きを鈍らせます。"
+                text: "妨害波を送信、敵を弱らせます。"
               }
             },
             {
-              type: "buff_wave",
+              type: "skill_007",
               dialogue: {
-                text: "支援波を展開、各員の能力を補強します。"
+                text: "出力を１段階上昇、回転を速めます。"
               }
             },
             {
@@ -241,9 +241,9 @@ export const NPCS = {
               }
             },
             {
-              type: "debuff_wave",
+              type: "skill_001",
               dialogue: {
-                text: "敵編成を乱します、攻撃を合わせてください。"
+                text: "敵の動きを鈍らせます、攻撃を合わせてください。"
               }
             }
           ]
