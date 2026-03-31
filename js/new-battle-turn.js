@@ -423,6 +423,8 @@ if (context.battleState.finished) break;
 
 for (let u of units) {
 
+    if (u.hp <= 0) continue;
+
   context.beginGroup(
     context.attachCommToEvent({
       type: "turnUnit",
