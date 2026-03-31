@@ -97,7 +97,7 @@ function buildCommPayload(unit, dialogue) {
   return {
     iconUrl:
       dialogue.iconUrl ||
-      unit.defaultCommIconUrl ||
+      unit.defaultCharacterIcon ||
       unit.icon ||
       "https://placehold.co/60x60?text=NO+IMG",
     text: dialogue.text
@@ -314,7 +314,7 @@ if (event.type === "turnUnit") {
   if (!dialogue?.text) {
     return {
       iconUrl:
-        unit.defaultCommIconUrl ||
+        unit.defaultCharacterIcon ||
         unit.icon ||
         "https://placehold.co/60x60?text=NO+IMG",
       text: ""
