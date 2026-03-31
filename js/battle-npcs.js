@@ -1,9 +1,7 @@
 // battle-npcs.js
 
-export const battleNpcs = [
-  {
-    id: "npc_healer",
-
+export const NPCS = {
+  npcHealer: {
     unitData: {
       name: "テストヒーラー",
       type: "heal",
@@ -100,9 +98,7 @@ export const battleNpcs = [
     }
   },
 
-  {
-    id: "npc_attacker",
-
+  npcAttacker: {
     unitData: {
       name: "テストアタッカー",
       type: "attack",
@@ -199,9 +195,7 @@ export const battleNpcs = [
     }
   },
 
-  {
-    id: "npc_supporter",
-
+  npcSupporter: {
     unitData: {
       name: "テストサポーター",
       type: "support",
@@ -297,4 +291,5 @@ export const battleNpcs = [
       }
     }
   }
-];
+};
+```
