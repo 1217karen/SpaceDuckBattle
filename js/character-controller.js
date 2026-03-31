@@ -401,7 +401,7 @@ commDialogues: {
 };
 
     delete duck.name;
-delete duck.defaultUnitName;
+    delete duck.defaultUnitName;
 
     localStorage.setItem(
       "duck",
