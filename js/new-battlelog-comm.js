@@ -33,7 +33,6 @@ function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
 
 const iconUrl =
   event.comm.iconUrl ||
-  unitSnapshot?.defaultCharacterIcon ||
   unitSnapshot?.icon ||
   getFallbackIcon();
 
