@@ -78,14 +78,14 @@ export const STAGES = {
         id: "P2",
         team: 1,
         x: 1,
-        y: 2,
+        y: 1,
         facing: "E"
       }),
       makeStageUnit(NPCS.npcSupporter, {
         id: "P3",
         team: 1,
         x: 1,
-        y: 5,
+        y: 4,
         facing: "E"
       })
     ],
