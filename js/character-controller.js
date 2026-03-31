@@ -59,6 +59,43 @@ let nextCommRowId = 1;
 
 const iconPicker = createIconPicker();
 
+function getDefaultCharacterName() {
+  return (
+    document.getElementById("defaultCharacterName")?.value.trim() ||
+    ""
+  );
+}
+
+function findCommIconById(iconId) {
+  if (!iconId) return null;
+
+  return currentCommIcons.find(item => item.id === iconId) || null;
+}
+
+function resolveCommSpeakerPlaceholderName(button) {
+  const selectedId =
+    Number(button?.dataset.selectedId || 0);
+
+  const selectedIcon =
+    findCommIconById(selectedId);
+
+  if (selectedIcon?.name?.trim()) {
+    return selectedIcon.name.trim();
+  }
+
+  return getDefaultCharacterName();
+}
+
+function updateCommNamePlaceholder(nameInput, button) {
+  if (!nameInput) return;
+
+  const resolvedName =
+    resolveCommSpeakerPlaceholderName(button);
+
+  nameInput.placeholder =
+    resolvedName || "発言者名";
+}
+
 function createCommRowElement(typeKey, rowData = {}) {
   const rowId = nextCommRowId++;
   const row = document.createElement("div");
@@ -84,12 +121,15 @@ function createCommRowElement(typeKey, rowData = {}) {
     iconPicker.open(button, currentCommIcons);
   });
 
+  button.addEventListener("iconchange", () => {
+    updateCommNamePlaceholder(nameInput, button);
+  });
+
   const inputArea = document.createElement("div");
   inputArea.className = "commInputArea";
 
   const nameInput = document.createElement("input");
   nameInput.className = "commNameInput";
-  nameInput.placeholder = "発言者名";
   nameInput.value = rowData.name || "";
 
   const input = document.createElement("input");
@@ -399,6 +439,21 @@ commDialogues: {
     );
 
     alert("キャラ設定を保存しました");
+  });
+
+document.getElementById("defaultCharacterName")
+  .addEventListener("input", () => {
+    const rows = document.querySelectorAll(".commRow");
+
+    rows.forEach(row => {
+      const button =
+        row.querySelector(".commIconPickerButton");
+
+      const nameInput =
+        row.querySelector(".commNameInput");
+
+      updateCommNamePlaceholder(nameInput, button);
+    });
   });
 
 loadCharacter();
