@@ -244,7 +244,7 @@ skill_003: {
 
   skill_005: {
   name: "オービットヒール",
-  cooldown: 4,
+  cooldown: 3,
   icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
 
   generateActions(unit, ctx) {
@@ -332,7 +332,7 @@ skill_003: {
 
   skill_006: {
   name: "ノヴァ",
-  cooldown: 4,
+  cooldown: 5,
   icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_2.webp",
 
   generateActions(unit, ctx) {
@@ -419,7 +419,7 @@ skill_003: {
 
   debuff_wave: {
   name: "ノイズウェーブ",
-  cooldown: 5,
+  cooldown: 4,
   icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_6.webp",
 
   generateActions(unit, ctx) {
@@ -605,7 +605,7 @@ skill_003: {
   // =========================
  attack_front1_5: {
   name: "メテオシャワー",
-    cooldown: 2,
+    cooldown: 5,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_2.webp",
 
     generateActions(unit, ctx) {
