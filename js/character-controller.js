@@ -252,7 +252,7 @@ function loadCharacter() {
     JSON.parse(data);
 
 document.getElementById("defaultCharacterName").value =
-  duck.defaultCharacterName ?? duck.unitName ?? "";
+  duck.defaultCharacterName ?? "";
 
 document.getElementById("unitName").value =
   duck.unitName ?? "";
