@@ -254,8 +254,8 @@ function loadCharacter() {
   document.getElementById("defaultCharacterName").value =
     duck.defaultCharacterName ?? duck.name ?? "";
 
-  document.getElementById("defaultUnitName").value =
-    duck.defaultUnitName ?? duck.name ?? "";
+  document.getElementById("unitName").value =
+    duck.name ?? "";
 
   currentCommIcons =
     normalizeCommIcons(duck.commIcons);
@@ -355,7 +355,7 @@ const defaultCharacterName =
   document.getElementById("defaultCharacterName").value;
 
 const unitName =
-  document.getElementById("defaultUnitName").value;
+  document.getElementById("unitName").value;
 
     const battleStartList =
       collectDialogueList("battleStart");
