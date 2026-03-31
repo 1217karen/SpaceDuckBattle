@@ -28,6 +28,13 @@ export const NPCS = {
           name: "基本",
           public: true,
           skills: [
+            
+            {
+              type: "skill_005",
+              dialogue: {
+                text: "損耗拡大を防ぎます、立て直します。"
+              }
+            },
             {
               type: "skill_008",
               dialogue: {
@@ -44,13 +51,6 @@ export const NPCS = {
               type: "skill_005",
               dialogue: {
                 text: "負傷者を確認、回復ラインを接続します。"
-              }
-            },
-
-            {
-              type: "skill_007",
-              dialogue: {
-                text: "損耗拡大を防ぎます、立て直します。"
               }
             }
           ]
@@ -230,12 +230,6 @@ export const NPCS = {
               }
             },
             {
-              type: "skill_007",
-              dialogue: {
-                text: "出力を１段階上昇、回転を速めます。"
-              }
-            },
-            {
               type: "pull_farthest_enemy",
               dialogue: {
                 text: "後方目標を引き寄せます、警戒してください。"
@@ -245,6 +239,12 @@ export const NPCS = {
               type: "skill_001",
               dialogue: {
                 text: "敵の動きを鈍らせます、攻撃を合わせてください。"
+              } 
+            },
+            {
+              type: "skill_007",
+              dialogue: {
+                text: "出力を１段階上昇、回転を速めます。"
               }
             }
           ]
