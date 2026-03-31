@@ -1,4 +1,4 @@
-変更後を送っていくので、確認//character-controller.js
+//character-controller.js
 
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 import { bindTextPreview } from "./text-preview.js";
