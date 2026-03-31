@@ -3,11 +3,11 @@
 export const NPCS = {
   npcHealer: {
     unitData: {
-      name: "テストヒーラー",
+      name: "ヒールアヒル",
       type: "heal",
 
       icon: {
-        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
+        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp",
         N: "",
         E: "",
         S: "",
@@ -15,12 +15,12 @@ export const NPCS = {
       },
 
       stats: {
-        atk: 1,
-        def: 2,
-        heal: 10,
+        atk: 2,
+        def: 4,
+        heal: 11,
         speed: 5,
-        cri: 8,
-        tec: 4
+        cri: 4,
+        tec: 8
       },
 
       patterns: [
@@ -31,21 +31,25 @@ export const NPCS = {
             {
               type: "heal_cross2",
               dialogue: {
-                text: "回復ライン接続、まとめて立て直します。"
+                text: "負傷者を確認、回復ラインを接続します。"
               }
             },
             {
               type: "repair_wave",
               dialogue: {
-                text: "修復波を展開します、持ちこたえてください。"
+                text: "修復波を展開、隊列を維持してください。"
               }
             },
             {
-              type: "satellite_meteor_field",
+              type: "buff_wave",
               dialogue: {
-                iconUrl: "https://placehold.co/60x60?text=HEAL",
-                name: "管制支援",
-                text: "衛星管制リンク確立、迎撃フィールドを起動。"
+                text: "防護補助を付与、前線を支えます。"
+              }
+            },
+            {
+              type: "heal_cross2",
+              dialogue: {
+                text: "損耗拡大を防ぎます、立て直します。"
               }
             }
           ]
@@ -54,45 +58,41 @@ export const NPCS = {
     },
 
     characterData: {
-      fullName: "テストヒーラー・オペレーター",
-      defaultName: "ヒーラー",
-      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
+      fullName: "防衛隊員・回復担当",
+      defaultName: "防衛隊回復員",
+      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp",
 
       commIcons: [
         {
-          name: "ヒーラー",
-          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp"
-        },
-        {
-          name: "管制支援",
-          url: "https://placehold.co/60x60?text=HEAL"
+          name: "防衛隊回復員",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
         }
       ],
 
       commDialogues: {
         battleStart: [
-          { text: "戦闘支援を開始します。" }
+          { text: "防衛隊回復担当、支援を開始します。" }
         ],
         turnChangeNeutral: [
-          { text: "回復ライン、維持します。" }
+          { text: "負傷状況を監視中、回復は維持できます。" }
         ],
         turnChangeAdvantage: [
-          { text: "押し切れます、このまま前進を。" }
+          { text: "前線は安定しています、このまま維持します。" }
         ],
         turnChangeDisadvantage: [
-          { text: "損耗が大きいです、立て直します。" }
+          { text: "損耗が増えています、治療を優先します。" }
         ],
         turnChangePinch: [
-          { text: "危険です、回復を優先してください。" }
+          { text: "危険です、無理をせず回復範囲へ。" }
         ],
         critical: [
-          { text: "急所確認、効果上昇。" }
+          { text: "効果増大、処置が通りました。" }
         ],
         kill: [
           { text: "対象の無力化を確認しました。" }
         ],
         battleEndWin: [
-          { text: "任務完了です。" }
+          { text: "戦闘終了、応急対応を継続します。" }
         ]
       }
     }
@@ -100,11 +100,11 @@ export const NPCS = {
 
   npcAttacker: {
     unitData: {
-      name: "テストアタッカー",
+      name: "アタックアヒル",
       type: "attack",
 
       icon: {
-        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
+        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp",
         N: "",
         E: "",
         S: "",
@@ -112,12 +112,12 @@ export const NPCS = {
       },
 
       stats: {
-        atk: 10,
-        def: 3,
+        atk: 11,
+        def: 4,
         heal: 1,
         speed: 6,
-        cri: 5,
-        tec: 5
+        cri: 6,
+        tec: 4
       },
 
       patterns: [
@@ -128,21 +128,25 @@ export const NPCS = {
             {
               type: "attack_front1",
               dialogue: {
-                text: "正面を突破します。"
+                text: "防衛隊戦闘員、正面目標を攻撃します。"
               }
             },
             {
               type: "attack_front_knockback",
               dialogue: {
-                text: "吹き飛ばします、下がってください。"
+                text: "前方を押し返します、距離を取ってください。"
               }
             },
             {
               type: "attack_around2_all",
               dialogue: {
-                iconUrl: "https://placehold.co/60x60?text=ATK",
-                name: "突撃形態",
-                text: "周辺制圧、まとめて片づける。"
+                text: "周辺一帯を制圧、まとめて排除します。"
+              }
+            },
+            {
+              type: "attack_front1",
+              dialogue: {
+                text: "突破口を作ります、続いてください。"
               }
             }
           ]
@@ -151,45 +155,41 @@ export const NPCS = {
     },
 
     characterData: {
-      fullName: "テストアタッカー・ヴァンガード",
-      defaultName: "アタッカー",
-      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp",
+      fullName: "防衛隊員・戦闘担当",
+      defaultName: "防衛隊戦闘員",
+      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp",
 
       commIcons: [
         {
-          name: "アタッカー",
-          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D08.webp"
-        },
-        {
-          name: "突撃形態",
-          url: "https://placehold.co/60x60?text=ATK"
+          name: "防衛隊戦闘員",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp"
         }
       ],
 
       commDialogues: {
         battleStart: [
-          { text: "先陣は任せて。" }
+          { text: "防衛隊戦闘担当、これより迎撃します。" }
         ],
         turnChangeNeutral: [
-          { text: "まだ互角、ここから崩す。" }
+          { text: "まだ拮抗中です、押し返します。" }
         ],
         turnChangeAdvantage: [
-          { text: "いい流れ、このまま押し込む。" }
+          { text: "敵が崩れています、このまま制圧します。" }
         ],
         turnChangeDisadvantage: [
-          { text: "押されてるけど、まだやれる。" }
+          { text: "押されていますが、戦線は維持します。" }
         ],
         turnChangePinch: [
-          { text: "苦しいね……でも止まれない。" }
+          { text: "劣勢です、ですがまだ下がれません。" }
         ],
         critical: [
-          { text: "入った、急所だ。" }
+          { text: "有効打を確認、続けます。" }
         ],
         kill: [
-          { text: "一体撃破。" }
+          { text: "一体排除、次の目標へ移ります。" }
         ],
         battleEndWin: [
-          { text: "勝ち切ったね。" }
+          { text: "周辺の安全を確認、戦闘終了です。" }
         ]
       }
     }
@@ -197,11 +197,11 @@ export const NPCS = {
 
   npcSupporter: {
     unitData: {
-      name: "テストサポーター",
+      name: "サポートアヒル",
       type: "support",
 
       icon: {
-        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
+        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp",
         N: "",
         E: "",
         S: "",
@@ -210,10 +210,10 @@ export const NPCS = {
 
       stats: {
         atk: 4,
-        def: 3,
-        heal: 2,
-        speed: 15,
-        cri: 4,
+        def: 4,
+        heal: 3,
+        speed: 9,
+        cri: 3,
         tec: 10
       },
 
@@ -225,21 +225,25 @@ export const NPCS = {
             {
               type: "debuff_wave",
               dialogue: {
-                text: "妨害波を流します。"
+                text: "妨害波を送信、敵の動きを鈍らせます。"
               }
             },
             {
               type: "buff_wave",
               dialogue: {
-                text: "強化波を送る、合わせて。"
+                text: "支援波を展開、各員の能力を補強します。"
               }
             },
             {
               type: "pull_farthest_enemy",
               dialogue: {
-                iconUrl: "https://placehold.co/60x60?text=SUP",
-                name: "制御補助",
-                text: "距離制御、対象を引き寄せます。"
+                text: "後方目標を引き寄せます、警戒してください。"
+              }
+            },
+            {
+              type: "debuff_wave",
+              dialogue: {
+                text: "敵編成を乱します、攻撃を合わせてください。"
               }
             }
           ]
@@ -248,45 +252,41 @@ export const NPCS = {
     },
 
     characterData: {
-      fullName: "テストサポーター・リンク",
-      defaultName: "サポーター",
-      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp",
+      fullName: "防衛隊員・支援担当",
+      defaultName: "防衛隊支援員",
+      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp",
 
       commIcons: [
         {
-          name: "サポーター",
-          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D13.webp"
-        },
-        {
-          name: "制御補助",
-          url: "https://placehold.co/60x60?text=SUP"
+          name: "防衛隊支援員",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
         }
       ],
 
       commDialogues: {
         battleStart: [
-          { text: "補助リンク接続、いつでもどうぞ。" }
+          { text: "防衛隊支援担当、補助を開始します。" }
         ],
         turnChangeNeutral: [
-          { text: "状況を観測中、支援を継続します。" }
+          { text: "戦況を観測中、支援は継続可能です。" }
         ],
         turnChangeAdvantage: [
-          { text: "主導権はこちら、崩しに行けます。" }
+          { text: "こちらが主導しています、支援を重ねます。" }
         ],
         turnChangeDisadvantage: [
-          { text: "敵の圧が強い、補助を厚くします。" }
+          { text: "敵圧が強いです、妨害を優先します。" }
         ],
         turnChangePinch: [
-          { text: "危険域です、制御を優先します。" }
+          { text: "危険域です、制御支援を集中します。" }
         ],
         critical: [
-          { text: "良い連携です。" }
+          { text: "連携成功、効果が増しています。" }
         ],
         kill: [
-          { text: "排除確認、次に移ります。" }
+          { text: "対象排除を確認、次へ回します。" }
         ],
         battleEndWin: [
-          { text: "戦闘終了、支援を解除します。" }
+          { text: "支援任務を終了、各員お疲れさまでした。" }
         ]
       }
     }
