@@ -25,6 +25,8 @@ export function buildBattleUnit(unitData, characterData, pattern, team, x, y, fa
     name: unitData.name || "",
     defaultCharacterName:
       characterData?.defaultName ?? "",
+    defaultCharacterIcon:
+      characterData?.defaultIcon ?? "",
     team: team,
     role: unitData.type,
     hp: mhp,
