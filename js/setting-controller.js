@@ -409,22 +409,21 @@ loadDuck();
 
 function loadDuck() {
   const data =
-    localStorage.getItem("duck");
+    localStorage.getItem("unit");
 
   if (!data) {
     loadPattern(currentSlot);
     return;
   }
 
-  const duck =
-    JSON.parse(data);
+  const unit =
+    JSON.parse(data);;
 
     const defaultCharacterNameInput =
     document.getElementById("defaultCharacterName");
 
   if (defaultCharacterNameInput) {
-    defaultCharacterNameInput.value =
-      duck.defaultCharacterName ?? duck.unitName ?? "";
+    defaultCharacterNameInput.value = "";
 
     defaultCharacterNameInput.addEventListener("input", () => {
       const rows = document.querySelectorAll(".skillDialogueRow");
@@ -448,35 +447,34 @@ function loadDuck() {
     });
   }
 
-  currentCommIcons =
-    normalizeCommIcons(duck.commIcons);
+  currentCommIcons = [];
 
-  if (duck.patterns) {
-    for (let i = 0; i < 3; i++) {
-      patterns[i] = normalizePattern(duck.patterns[i], i === 0);
-    }
+if (unit.patterns) {
+  for (let i = 0; i < 3; i++) {
+    patterns[i] = normalizePattern(unit.patterns[i], i === 0);
   }
+}
 
-  document.getElementById("duckType").value =
-    duck.type ?? "attack";
+document.getElementById("duckType").value =
+  unit.type ?? "attack";
 
-  document.getElementById("statAT").value =
-    duck.stats?.atk ?? 0;
+document.getElementById("statAT").value =
+  unit.stats?.atk ?? 0;
 
   document.getElementById("statDF").value =
-    duck.stats?.def ?? 0;
+    unit.stats?.def ?? 0;
 
   document.getElementById("statHEAL").value =
-    duck.stats?.heal ?? 0;
+    unit.stats?.heal ?? 0;
 
   document.getElementById("statSPEED").value =
-    duck.stats?.speed ?? 0;
+    unit.stats?.speed ?? 0;
 
   document.getElementById("statCRI").value =
-    duck.stats?.cri ?? 0;
+    unit.stats?.cri ?? 0;
 
   document.getElementById("statTEC").value =
-    duck.stats?.tec ?? 0;
+    unit.stats?.tec ?? 0;
 
   loadPattern(currentSlot);
 }
@@ -499,24 +497,25 @@ saveBtn.addEventListener("click", () => {
     tec: Number(document.getElementById("statTEC").value)
   };
 
-  const oldData =
-    localStorage.getItem("duck");
+const oldData =
+  localStorage.getItem("unit");
 
-  const oldDuck =
-    oldData ? JSON.parse(oldData) : {};
+const oldUnit =
+  oldData ? JSON.parse(oldData) : {};
 
-  const duck = {
-    ...oldDuck,
-    id: oldDuck.id ?? "player_duck",
-    type,
-    stats,
-    patterns
-  };
+const unit = {
+  ...oldUnit,
+  id: oldUnit.id ?? "player_unit",
+  name: oldUnit.name ?? "",
+  type,
+  stats,
+  patterns
+};
 
-  localStorage.setItem(
-    "duck",
-    JSON.stringify(duck)
-  );
+localStorage.setItem(
+  "unit",
+  JSON.stringify(unit)
+);
 
   alert("アヒル設定を保存しました");
 });
