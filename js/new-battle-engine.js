@@ -96,6 +96,7 @@ function buildCommPayload(unit, dialogue) {
 
   return {
     unitId: unit.id,
+    name: dialogue.name || "",
     iconUrl:
       dialogue.iconUrl ||
       unit.defaultCharacterIcon ||
