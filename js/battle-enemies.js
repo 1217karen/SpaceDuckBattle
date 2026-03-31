@@ -115,7 +115,7 @@ export const ENEMIES = {
               ]
             },
             {
-              type: "attack_around2_all",
+              type: "skill_006",
               dialogue: [
                 { text: "（周囲を巻き込むように暴れた）" }
               ]
@@ -189,9 +189,9 @@ export const ENEMIES = {
           public: true,
           skills: [
             {
-              type: "attack_front1",
+              type: "skill_002",
               dialogue: [
-                { text: "（重い一撃を振り下ろしてきた）" }
+                { text: "（どこからか衛星を呼び寄せた）" }
               ]
             },
             {
@@ -201,7 +201,7 @@ export const ENEMIES = {
               ]
             },
             {
-              type: "buff_wave",
+              type: "skill_008",
               dialogue: [
                 { text: "（周囲に防護めいた波を広げた）" }
               ]
