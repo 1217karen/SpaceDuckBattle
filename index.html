@@ -1,1 +1,132 @@
-準備中
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ログイン</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 24px;
+      box-sizing: border-box;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .login-title {
+      margin: 0 0 20px;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      padding: 10px 12px;
+      font-size: 16px;
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .login-button {
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background: #4a90e2;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .login-button:hover {
+      opacity: 0.9;
+    }
+
+    .login-links {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .login-links a {
+      color: #4a90e2;
+      text-decoration: none;
+    }
+
+    .login-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main class="login-page">
+    <section class="login-box">
+      <h1 class="login-title">ログイン</h1>
+
+      <form class="login-form">
+        <div class="form-group">
+          <label for="loginId">ID</label>
+          <input
+            type="text"
+            id="loginId"
+            name="loginId"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">パスワード</label>
+          <input
+            type="password"
+            id="loginPassword"
+            name="loginPassword"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" class="login-button">ログイン</button>
+      </form>
+
+      <div class="login-links">
+        <a href="register.html">初回登録はこちら</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
