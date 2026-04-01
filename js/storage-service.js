@@ -213,3 +213,22 @@ export function createInitialUnit({
     ]
   };
 }
+
+export function createInitialUnit({
+  eno,
+  unitNo = 1,
+  name
+})
+export function requireLogin(redirectTo = "./index.html") {
+  const account = getCurrentAccount();
+
+  if (!account?.loginId) {
+    window.location.href = redirectTo;
+    return null;
+  }
+
+  return account;
+}
+
+{
+  return {
