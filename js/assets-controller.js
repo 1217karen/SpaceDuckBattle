@@ -1,5 +1,7 @@
 //assets-controller.js
 
+import {getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "./storage-service.js";
+
 function normalizeCommIcons(commIcons) {
   if (!Array.isArray(commIcons)) return [];
 
@@ -81,20 +83,23 @@ function readCommIconArea() {
 }
 
 function loadManagement() {
-  const unitData =
-    localStorage.getItem("unit");
+  const account = getCurrentAccount();
 
-  const characterData =
-    localStorage.getItem("character");
+  if (!account?.eno) {
+    alert("ログイン中のアカウント情報を確認できません");
+    return;
+  }
+
+  const eno = account.eno;
 
   const unit =
-    unitData ? JSON.parse(unitData) : null;
+    loadUnit(eno, 1);
 
   const character =
-  characterData ? JSON.parse(characterData) : null;
+    loadCharacter(eno);
 
   document.getElementById("characterDefaultIcon").value =
-  character?.defaultIcon ?? "";
+    character?.defaultIcon ?? "";
 
   document.getElementById("iconDefault").value =
     unit?.icon?.default ?? "";
@@ -140,17 +145,20 @@ const saveBtn =
   document.getElementById("saveManagement");
 
 saveBtn.addEventListener("click", () => {
-  const oldUnitData =
-    localStorage.getItem("unit");
+  const account = getCurrentAccount();
 
-  const oldCharacterData =
-    localStorage.getItem("character");
+  if (!account?.eno) {
+    alert("ログイン中のアカウント情報を確認できません");
+    return;
+  }
+
+  const eno = account.eno;
 
   const oldUnit =
-    oldUnitData ? JSON.parse(oldUnitData) : {};
+    loadUnit(eno, 1) || {};
 
   const oldCharacter =
-    oldCharacterData ? JSON.parse(oldCharacterData) : {};
+    loadCharacter(eno) || {};
 
   const icon = {
     default: document.getElementById("iconDefault").value,
@@ -165,25 +173,21 @@ saveBtn.addEventListener("click", () => {
 
   const unit = {
     ...oldUnit,
+    eno,
+    unitNo: oldUnit.unitNo ?? 1,
     id: oldUnit.id ?? "player_unit",
     icon
   };
 
-const character = {
-  ...oldCharacter,
-  defaultIcon: document.getElementById("characterDefaultIcon").value,
-  commIcons
-};
+  const character = {
+    ...oldCharacter,
+    eno,
+    defaultIcon: document.getElementById("characterDefaultIcon").value,
+    commIcons
+  };
 
-  localStorage.setItem(
-    "unit",
-    JSON.stringify(unit)
-  );
-
-  localStorage.setItem(
-    "character",
-    JSON.stringify(character)
-  );
+  saveUnit(eno, 1, unit);
+  saveCharacter(eno, character);
 
   alert("アイコン設定を保存しました");
 });
