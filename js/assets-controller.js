@@ -1,6 +1,8 @@
 //assets-controller.js
 
-import {getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "./storage-service.js";
+import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "./storage-service.js";
+
+requireLogin()
 
 function normalizeCommIcons(commIcons) {
   if (!Array.isArray(commIcons)) return [];
