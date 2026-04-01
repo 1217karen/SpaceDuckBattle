@@ -3,7 +3,9 @@
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 import { bindTextPreview } from "./text-preview.js";
 import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
-import {getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "./storage-service.js";
+import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "./storage-service.js";
+
+requireLogin();
 
 function normalizeDialogueList(dialogue) {
   if (Array.isArray(dialogue)) {
