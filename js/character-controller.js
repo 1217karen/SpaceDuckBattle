@@ -3,6 +3,7 @@
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 import { bindTextPreview } from "./text-preview.js";
 import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
+import {getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "./storage-service.js";
 
 function normalizeDialogueList(dialogue) {
   if (Array.isArray(dialogue)) {
@@ -231,18 +232,21 @@ function renderCommList(typeKey, dialogues) {
   });
 }
 
-function loadCharacter() {
-  const characterData =
-    localStorage.getItem("character");
+function loadCharacterForm() {
+  const account = getCurrentAccount();
 
-  const unitData =
-    localStorage.getItem("unit");
+  if (!account?.eno) {
+    alert("ログイン中のアカウント情報を確認できません");
+    return;
+  }
+
+  const eno = account.eno;
 
   const character =
-    characterData ? JSON.parse(characterData) : null;
+    loadCharacter(eno);
 
   const unit =
-    unitData ? JSON.parse(unitData) : null;
+    loadUnit(eno, 1);
 
   document.getElementById("characterFullName").value =
     character?.fullName ?? "";
@@ -258,45 +262,43 @@ function loadCharacter() {
 
   renderCommList(
     "battleStart",
-    character.commDialogues?.battleStart
+    character?.commDialogues?.battleStart
   );
 
-renderCommList(
-  "turnChangeAdvantage",
-  character.commDialogues?.turnChangeAdvantage
-);
+  renderCommList(
+    "turnChangeAdvantage",
+    character?.commDialogues?.turnChangeAdvantage
+  );
 
-renderCommList(
-  "turnChangeNeutral",
-  character.commDialogues?.turnChangeNeutral
-);
+  renderCommList(
+    "turnChangeNeutral",
+    character?.commDialogues?.turnChangeNeutral
+  );
 
-renderCommList(
-  "turnChangeDisadvantage",
-  character.commDialogues?.turnChangeDisadvantage
-);
+  renderCommList(
+    "turnChangeDisadvantage",
+    character?.commDialogues?.turnChangeDisadvantage
+  );
 
-renderCommList(
-  "turnChangePinch",
-  character.commDialogues?.turnChangePinch
-);
+  renderCommList(
+    "turnChangePinch",
+    character?.commDialogues?.turnChangePinch
+  );
 
   renderCommList(
     "critical",
-    character.commDialogues?.critical
+    character?.commDialogues?.critical
   );
 
   renderCommList(
     "kill",
-    character.commDialogues?.kill
+    character?.commDialogues?.kill
   );
 
   renderCommList(
-  "battleEndWin",
-  character.commDialogues?.battleEndWin
-);
-
-  
+    "battleEndWin",
+    character?.commDialogues?.battleEndWin
+  );
 }
 
 document.getElementById("addBattleStartLine")
@@ -341,41 +343,44 @@ document.getElementById("addBattleEndWinLine")
 
 document.getElementById("saveCharacter")
   .addEventListener("click", () => {
-    const oldCharacterData =
-      localStorage.getItem("character");
+    const account = getCurrentAccount();
 
-    const oldUnitData =
-      localStorage.getItem("unit");
+    if (!account?.eno) {
+      alert("ログイン中のアカウント情報を確認できません");
+      return;
+    }
+
+    const eno = account.eno;
 
     const oldCharacter =
-      oldCharacterData ? JSON.parse(oldCharacterData) : {};
+      loadCharacter(eno) || {};
 
     const oldUnit =
-      oldUnitData ? JSON.parse(oldUnitData) : {};
+      loadUnit(eno, 1) || {};
 
-const fullName =
-  document.getElementById("characterFullName").value;
+    const fullName =
+      document.getElementById("characterFullName").value;
 
-const defaultName =
-  document.getElementById("defaultCharacterName").value;
+    const defaultName =
+      document.getElementById("defaultCharacterName").value;
 
-const unitName =
-  document.getElementById("unitName").value;
+    const unitName =
+      document.getElementById("unitName").value;
 
     const battleStartList =
       collectDialogueList("battleStart");
 
-const turnChangeAdvantageList =
-  collectDialogueList("turnChangeAdvantage");
+    const turnChangeAdvantageList =
+      collectDialogueList("turnChangeAdvantage");
 
-const turnChangeNeutralList =
-  collectDialogueList("turnChangeNeutral");
+    const turnChangeNeutralList =
+      collectDialogueList("turnChangeNeutral");
 
-const turnChangeDisadvantageList =
-  collectDialogueList("turnChangeDisadvantage");
+    const turnChangeDisadvantageList =
+      collectDialogueList("turnChangeDisadvantage");
 
-const turnChangePinchList =
-  collectDialogueList("turnChangePinch");
+    const turnChangePinchList =
+      collectDialogueList("turnChangePinch");
 
     const criticalList =
       collectDialogueList("critical");
@@ -384,42 +389,37 @@ const turnChangePinchList =
       collectDialogueList("kill");
 
     const battleEndWinList =
-  collectDialogueList("battleEndWin");
+      collectDialogueList("battleEndWin");
 
-const character = {
-  ...oldCharacter,
-  fullName,
-  defaultName,
-  commIcons: currentCommIcons,
+    const character = {
+      ...oldCharacter,
+      eno,
+      fullName,
+      defaultName,
+      commIcons: currentCommIcons,
 
-  commDialogues: {
-    ...(oldCharacter.commDialogues || {}),
-    battleStart: battleStartList,
-    turnChangeAdvantage: turnChangeAdvantageList,
-    turnChangeNeutral: turnChangeNeutralList,
-    turnChangeDisadvantage: turnChangeDisadvantageList,
-    turnChangePinch: turnChangePinchList,
-    critical: criticalList,
-    kill: killList,
-    battleEndWin: battleEndWinList
-  }
-};
+      commDialogues: {
+        ...(oldCharacter.commDialogues || {}),
+        battleStart: battleStartList,
+        turnChangeAdvantage: turnChangeAdvantageList,
+        turnChangeNeutral: turnChangeNeutralList,
+        turnChangeDisadvantage: turnChangeDisadvantageList,
+        turnChangePinch: turnChangePinchList,
+        critical: criticalList,
+        kill: killList,
+        battleEndWin: battleEndWinList
+      }
+    };
 
-const unit = {
-  ...oldUnit,
-  id: oldUnit.id ?? "player_unit",
-  name: unitName
-};
+    const unit = {
+      ...oldUnit,
+      eno,
+      unitNo: oldUnit.unitNo ?? 1,
+      name: unitName
+    };
 
-localStorage.setItem(
-  "character",
-  JSON.stringify(character)
-);
-
-localStorage.setItem(
-  "unit",
-  JSON.stringify(unit)
-);
+    saveCharacter(eno, character);
+    saveUnit(eno, 1, unit);
 
     alert("キャラ設定を保存しました");
   });
@@ -446,4 +446,4 @@ document.getElementById("defaultCharacterName")
     });
   });
 
-loadCharacter();
+loadCharacterForm();
