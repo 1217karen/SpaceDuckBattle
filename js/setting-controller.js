@@ -3,6 +3,7 @@
 import { skillHandlers } from "./skills.js";
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
+import {getCurrentAccount,loadCharacter,loadUnit,saveUnit} from "./storage-service.js";
 
 let currentSlot = 0;
 
@@ -408,18 +409,20 @@ function saveCurrentPattern() {
 loadDuck();
 
 function loadDuck() {
-const data =
-  localStorage.getItem("unit");
+  const account = getCurrentAccount();
 
-const characterData =
-  localStorage.getItem("character");
+  if (!account?.eno) {
+    alert("ログイン中のアカウント情報を確認できません");
+    return;
+  }
 
-if (!data) {
+  const eno = account.eno;
+
+  const unit = loadUnit(eno, 1);
+  const character = loadCharacter(eno);
+
   const defaultCharacterNameInput =
     document.getElementById("defaultCharacterName");
-
-  const character =
-    characterData ? JSON.parse(characterData) : null;
 
   if (defaultCharacterNameInput) {
     defaultCharacterNameInput.value =
@@ -450,73 +453,32 @@ if (!data) {
   currentCommIcons =
     normalizeCommIcons(character?.commIcons);
 
-  loadPattern(currentSlot);
-  return;
-}
-
-const unit =
-  JSON.parse(data);
-
-const character =
-  characterData ? JSON.parse(characterData) : null;
-
-const defaultCharacterNameInput =
-  document.getElementById("defaultCharacterName");
-
-if (defaultCharacterNameInput) {
-  defaultCharacterNameInput.value =
-    character?.defaultName ?? "";
-
-  defaultCharacterNameInput.addEventListener("input", () => {
-    const rows = document.querySelectorAll(".skillDialogueRow");
-
-    rows.forEach(row => {
-      const button =
-        row.querySelector(".commIconPickerButton");
-
-      const nameInput =
-        row.querySelector(".skillDialogueNameInput");
-
-      updateSpeakerNameField({
-        nameInput,
-        button,
-        icons: currentCommIcons,
-        getDefaultName: () =>
-          document.getElementById("defaultCharacterName")?.value.trim() || "",
-        mode: "placeholder"
-      });
-    });
-  });
-}
-
-currentCommIcons =
-  normalizeCommIcons(character?.commIcons);
-if (unit.patterns) {
-  for (let i = 0; i < 3; i++) {
-    patterns[i] = normalizePattern(unit.patterns[i], i === 0);
+  if (unit?.patterns) {
+    for (let i = 0; i < 3; i++) {
+      patterns[i] = normalizePattern(unit.patterns[i], i === 0);
+    }
   }
-}
 
-document.getElementById("unitType").value =
-  unit.type ?? "attack";
+  document.getElementById("unitType").value =
+    unit?.type ?? "attack";
 
-document.getElementById("statAT").value =
-  unit.stats?.atk ?? 0;
+  document.getElementById("statAT").value =
+    unit?.stats?.atk ?? 0;
 
   document.getElementById("statDF").value =
-    unit.stats?.def ?? 0;
+    unit?.stats?.def ?? 0;
 
   document.getElementById("statHEAL").value =
-    unit.stats?.heal ?? 0;
+    unit?.stats?.heal ?? 0;
 
   document.getElementById("statSPEED").value =
-    unit.stats?.speed ?? 0;
+    unit?.stats?.speed ?? 0;
 
   document.getElementById("statCRI").value =
-    unit.stats?.cri ?? 0;
+    unit?.stats?.cri ?? 0;
 
   document.getElementById("statTEC").value =
-    unit.stats?.tec ?? 0;
+    unit?.stats?.tec ?? 0;
 
   loadPattern(currentSlot);
 }
@@ -525,6 +487,15 @@ const saveBtn =
   document.getElementById("saveUnit");
 
 saveBtn.addEventListener("click", () => {
+  const account = getCurrentAccount();
+
+  if (!account?.eno) {
+    alert("ログイン中のアカウント情報を確認できません");
+    return;
+  }
+
+  const eno = account.eno;
+
   saveCurrentPattern();
 
   const type =
@@ -539,25 +510,21 @@ saveBtn.addEventListener("click", () => {
     tec: Number(document.getElementById("statTEC").value)
   };
 
-const oldData =
-  localStorage.getItem("unit");
+  const oldUnit =
+    loadUnit(eno, 1) || {};
 
-const oldUnit =
-  oldData ? JSON.parse(oldData) : {};
+  const unit = {
+    ...oldUnit,
+    eno,
+    unitNo: oldUnit.unitNo ?? 1,
+    id: oldUnit.id ?? "player_unit",
+    name: oldUnit.name ?? "",
+    type,
+    stats,
+    patterns
+  };
 
-const unit = {
-  ...oldUnit,
-  id: oldUnit.id ?? "player_unit",
-  name: oldUnit.name ?? "",
-  type,
-  stats,
-  patterns
-};
-
-localStorage.setItem(
-  "unit",
-  JSON.stringify(unit)
-);
+  saveUnit(eno, 1, unit);
 
   alert("アヒル設定を保存しました");
 });
