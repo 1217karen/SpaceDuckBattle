@@ -155,6 +155,20 @@ export function createInitialCharacter({
   };
 }
 
+export function createInitialCharacter({
+  eno,
+  fullName,
+  defaultName
+}) {
+  return {
+    eno,
+    fullName: fullName ?? "",
+    defaultName: defaultName ?? "",
+    commIcons: [],
+    commDialogues: {}
+  };
+}
+
 export function createInitialUnit({
   eno,
   unitNo = 1,
@@ -214,11 +228,6 @@ export function createInitialUnit({
   };
 }
 
-export function createInitialUnit({
-  eno,
-  unitNo = 1,
-  name
-})
 export function requireLogin(redirectTo = "./index.html") {
   const account = getCurrentAccount();
 
@@ -229,6 +238,3 @@ export function requireLogin(redirectTo = "./index.html") {
 
   return account;
 }
-
-{
-  return {
