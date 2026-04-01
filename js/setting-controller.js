@@ -3,7 +3,9 @@
 import { skillHandlers } from "./skills.js";
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
-import {getCurrentAccount,loadCharacter,loadUnit,saveUnit} from "./storage-service.js";
+import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveUnit} from "./storage-service.js";
+
+requireLogin();
 
 let currentSlot = 0;
 
