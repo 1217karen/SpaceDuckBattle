@@ -4,6 +4,7 @@ import { simulateBattle } from "./new-battle-engine.js";
 import { STAGES } from "./stages.js";
 import { buildBattleUnit } from "./unit-builder.js";
 import { NPCS } from "./battle-npcs.js";
+import {getCurrentAccount,loadCharacter,loadUnit} from "./storage-service.js";
 
 const units = structuredClone([
   NPCS.npcHealer.unitData,
@@ -11,19 +12,21 @@ const units = structuredClone([
   NPCS.npcSupporter.unitData
 ]);
 
-const savedUnit = localStorage.getItem("unit");
-if (savedUnit) {
-  const playerUnit = JSON.parse(savedUnit);
+const currentAccount = getCurrentAccount();
+const currentEno = currentAccount?.eno ?? null;
+
+const playerUnit =
+  currentEno ? loadUnit(currentEno, 1) : null;
+
+if (playerUnit) {
   units[0] = {
     ...units[0],
     ...playerUnit
   };
 }
 
-const savedCharacter = localStorage.getItem("character");
-const playerCharacter = savedCharacter
-  ? JSON.parse(savedCharacter)
-  : null;
+const playerCharacter =
+  currentEno ? loadCharacter(currentEno) : null;
 
 const unitListDiv = document.getElementById("unitList");
 const boardDiv = document.getElementById("board");
@@ -222,6 +225,14 @@ ptSlots.forEach((slot) => {
 });
 
 startBtn.addEventListener("click", () => {
+
+    const account = getCurrentAccount();
+
+  if (!account?.eno) {
+    alert("ログイン中のアカウント情報を確認できません");
+    return;
+  }
+  
   /* 未配置PTチェック */
   for (let slot = 0; slot < 4; slot++) {
     const unitIndex = partySlots[slot];
