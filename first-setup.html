@@ -84,6 +84,15 @@
     .setup-button:hover {
       opacity: 0.9;
     }
+
+    .setup-eno {
+  margin: 0 0 20px;
+  padding: 10px 12px;
+  background: #f0f7ff;
+  border: 1px solid #bcd8f2;
+  border-radius: 8px;
+  font-size: 14px;
+}
   </style>
 </head>
 <body>
@@ -94,6 +103,7 @@
         キャラクター名とユニット名を登録してください。<br>
         このページは仮の初期設定画面です。
       </p>
+      <p class="setup-eno" id="setupEnoText"></p>
 
       <form class="setup-form">
         <div class="form-group">
@@ -127,5 +137,22 @@
       </form>
     </section>
   </main>
+
+
+  <script type="module">
+  import { getCurrentAccount } from "./storage-service.js";
+
+  const enoText = document.getElementById("setupEnoText");
+  const account = getCurrentAccount();
+
+  if (enoText) {
+    if (account?.eno) {
+      enoText.textContent = `あなたのEnoは ${account.eno} です`;
+    } else {
+      enoText.textContent = "Enoを確認できません";
+    }
+  }
+</script>
+  
 </body>
 </html>
