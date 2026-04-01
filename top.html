@@ -1,121 +1,31 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top</title>
+<meta charset="UTF-8">
+<title>トップ</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap" rel="stylesheet">
-
-  <style>
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: #0f1117;
-      color: #e8ecf1;
-      font-family: 'DotGothic16', sans-serif;
-    }
-
-    #topLayout {
-      min-height: 100vh;
-      display: flex;
-      background: #0f1117;
-    }
-
-    #leftSide,
-    #rightSide {
-      width: 280px;
-      min-width: 280px;
-      background: #161a22;
-      box-sizing: border-box;
-      border-right: 1px solid #2a3140;
-      border-left: 1px solid #2a3140;
-      padding: 16px;
-    }
-
-    #leftSide {
-      border-left: none;
-    }
-
-    #rightSide {
-      border-right: none;
-    }
-
-    #centerArea {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      padding: 16px;
-      box-sizing: border-box;
-    }
-
-    #centerContent {
-      width: 100%;
-      max-width: 1100px;
-      min-height: calc(100vh - 32px);
-      background: #151924;
-      border: 1px solid #2a3140;
-      box-sizing: border-box;
-      padding: 24px;
-    }
-
-    .sideTitle {
-      margin: 0 0 12px;
-      font-size: 18px;
-      font-family: 'Iceberg', sans-serif;
-      letter-spacing: 1px;
-    }
-
-    .sideBox {
-      min-height: 120px;
-      border: 1px solid #2a3140;
-      background: #10141d;
-      padding: 12px;
-      box-sizing: border-box;
-    }
-
-    .centerTitle {
-      margin: 0 0 16px;
-      font-size: 24px;
-      font-family: 'Iceberg', sans-serif;
-      letter-spacing: 1px;
-    }
-
-    .centerBox {
-      min-height: 400px;
-      border: 1px solid #2a3140;
-      background: #10141d;
-      padding: 16px;
-      box-sizing: border-box;
-    }
-  </style>
+<link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/common.css">
 </head>
+
 <body>
-  <div id="topLayout">
+<div class="layout">
 
-    <div id="leftSide">
-      <h2 class="sideTitle">LEFT</h2>
-      <div class="sideBox"></div>
-    </div>
+  <aside class="left-panel">
+    <div id="commonMenu"></div>
+  </aside>
 
-    <div id="centerArea">
-      <div id="centerContent">
-        <h1 class="centerTitle">TOP</h1>
-        <div class="centerBox"></div>
-      </div>
-    </div>
+<main class="center-panel">
+  <h1>トップ</h1>
 
-    <div id="rightSide">
-      <h2 class="sideTitle">RIGHT</h2>
-      <div class="sideBox"></div>
-    </div>
+</main>
 
-  </div>
+  <aside class="right-panel">
+    補助エリア
+  </aside>
+
+</div>
+
+<script type="module" src="./js/include-menu.js"></script>
 </body>
 </html>
