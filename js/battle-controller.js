@@ -4,7 +4,9 @@ import { simulateBattle } from "./new-battle-engine.js";
 import { STAGES } from "./stages.js";
 import { buildBattleUnit } from "./unit-builder.js";
 import { NPCS } from "./battle-npcs.js";
-import {getCurrentAccount,loadCharacter,loadUnit} from "./storage-service.js";
+import {requireLogin,getCurrentAccount,loadCharacter,loadUnit} from "./storage-service.js";
+
+requireLogin();
 
 const units = structuredClone([
   NPCS.npcHealer.unitData,
