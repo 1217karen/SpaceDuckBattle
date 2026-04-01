@@ -155,19 +155,6 @@ export function createInitialCharacter({
   };
 }
 
-export function createInitialCharacter({
-  eno,
-  fullName,
-  defaultName
-}) {
-  return {
-    eno,
-    fullName: fullName ?? "",
-    defaultName: defaultName ?? "",
-    commIcons: [],
-    commDialogues: {}
-  };
-}
 
 export function createInitialUnit({
   eno,
