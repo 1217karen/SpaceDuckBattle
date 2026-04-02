@@ -6,6 +6,7 @@ import { buildBattleUnit } from "./unit-builder.js";
 import { NPCS } from "./battle-npcs.js";
 import {requireLogin,getCurrentAccount,loadCharacter,loadUnit} from "./storage-service.js";
 import { initUnitList } from "./unitlist-controller.js";
+import { loadPublicBattleEntries } from "./public-unit-source.js";
 
 requireLogin();
 
