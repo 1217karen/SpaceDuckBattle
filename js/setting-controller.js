@@ -133,14 +133,14 @@ function normalizeSkill(skill) {
   };
 }
 
-function normalizePattern(pattern, isFirstSlot = false) {
+function normalizePattern(pattern) {
   const normalizedSkills = Array.from({ length: 6 }, (_, i) =>
     normalizeSkill(pattern?.skills?.[i])
   );
 
   return {
     name: pattern?.name ?? "",
-    public: isFirstSlot ? true : !!pattern?.public,
+    public: !!pattern?.public,
     skills: normalizedSkills
   };
 }
@@ -384,12 +384,7 @@ function loadPattern(slot) {
     document.getElementById("patternPublic");
 
   publicCheck.checked = p.public;
-
-  if (slot === 0) {
-    publicCheck.disabled = true;
-  } else {
-    publicCheck.disabled = false;
-  }
+  publicCheck.disabled = false;
 
   renderSkillArea(p.skills);
 }
@@ -401,9 +396,7 @@ function saveCurrentPattern() {
     document.getElementById("patternName").value;
 
   p.public =
-    currentSlot === 0
-      ? true
-      : document.getElementById("patternPublic").checked;
+    document.getElementById("patternPublic").checked;
 
   p.skills = readSkillArea();
 }
@@ -455,11 +448,11 @@ function loadDuck() {
   currentCommIcons =
     normalizeCommIcons(character?.commIcons);
 
-  if (unit?.patterns) {
-    for (let i = 0; i < 3; i++) {
-      patterns[i] = normalizePattern(unit.patterns[i], i === 0);
-    }
+if (unit?.patterns) {
+  for (let i = 0; i < 3; i++) {
+    patterns[i] = normalizePattern(unit.patterns[i]);
   }
+}
 
   document.getElementById("unitType").value =
     unit?.type ?? "attack";
