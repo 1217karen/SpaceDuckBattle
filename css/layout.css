@@ -6,7 +6,7 @@ html, body{
 
 .layout{
   display:grid;
-  grid-template-columns:220px 1fr 260px;
+  grid-template-columns:220px 1fr 400px;
   height:100vh;
 }
 
