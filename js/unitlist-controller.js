@@ -3,64 +3,68 @@
 export function initUnitList(options) {
   const {
     unitListDiv,
-    units,
-    partySlots,
-    placedSlots,
-    renderParty,
-    clearPlacedSlot
+    entries
   } = options;
 
   function renderUnitList() {
     unitListDiv.innerHTML = "";
 
-    units.forEach((unitData, i) => {
-      if (i === 0) return;
+    if (!Array.isArray(entries) || entries.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "unitlist-empty";
+      empty.textContent = "公開ユニットはありません";
+      unitListDiv.appendChild(empty);
+      return;
+    }
 
-      const item = document.createElement("div");
-      item.className = "duck-item";
+    entries.forEach((entry) => {
+      const row = document.createElement("div");
+      row.className = "eno-unit-row";
 
-      if (partySlots.includes(i)) {
-        item.classList.add("selected");
-      }
+      const left = document.createElement("div");
+      left.className = "eno-character-area";
 
-      const img = document.createElement("img");
-      img.src = unitData.icon?.default || "";
+      const charImg = document.createElement("img");
+      charImg.className = "eno-character-icon";
+      charImg.src = entry.characterData?.defaultIcon || "";
+      charImg.alt = `Eno.${entry.eno}`;
 
-      const name = document.createElement("span");
-      name.textContent = unitData.name;
+      const charName = document.createElement("div");
+      charName.className = "eno-character-name";
+      charName.textContent =
+        entry.characterData?.defaultName ||
+        entry.characterData?.fullName ||
+        `Eno.${entry.eno}`;
 
-      item.appendChild(img);
-      item.appendChild(name);
+      left.appendChild(charImg);
+      left.appendChild(charName);
 
-      item.addEventListener("click", () => {
-        const existingSlot = partySlots.indexOf(i);
+      const right = document.createElement("div");
+      right.className = "eno-pattern-list";
 
-        /* すでにPTにいる → 解除 */
-        if (existingSlot !== -1) {
-          if (existingSlot === 0) return;
+      entry.publicPatterns.forEach((patternEntry) => {
+        const item = document.createElement("div");
+        item.className = "eno-pattern-item";
 
-          if (placedSlots[existingSlot]) {
-            clearPlacedSlot(existingSlot);
-          }
+        const unitImg = document.createElement("img");
+        unitImg.className = "eno-pattern-icon";
+        unitImg.src = entry.unitData?.icon?.default || "";
+        unitImg.alt = entry.unitData?.name || "unit";
 
-          partySlots[existingSlot] = null;
-          renderParty();
-          renderUnitList();
-          return;
-        }
+        const label = document.createElement("div");
+        label.className = "eno-pattern-name";
+        label.textContent =
+          patternEntry.pattern?.name?.trim() ||
+          `パターン${patternEntry.patternIndex + 1}`;
 
-        /* 空きスロットを探す */
-        for (let s = 1; s < 4; s++) {
-          if (partySlots[s] === null) {
-            partySlots[s] = i;
-            renderParty();
-            renderUnitList();
-            break;
-          }
-        }
+        item.appendChild(unitImg);
+        item.appendChild(label);
+        right.appendChild(item);
       });
 
-      unitListDiv.appendChild(item);
+      row.appendChild(left);
+      row.appendChild(right);
+      unitListDiv.appendChild(row);
     });
   }
 
