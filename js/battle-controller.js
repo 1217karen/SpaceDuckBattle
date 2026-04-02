@@ -166,13 +166,11 @@ function resetPlacement() {
   selectedCell = null;
 }
 
+const publicUnitEntries = loadPublicBattleEntries();
+
 const unitListController = initUnitList({
   unitListDiv,
-  units,
-  partySlots,
-  placedSlots,
-  renderParty,
-  clearPlacedSlot
+  entries: publicUnitEntries
 });
 
 const renderUnitList = unitListController.renderUnitList;
