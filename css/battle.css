@@ -75,3 +75,72 @@
 .duck-item.selected{
   background:#ddd;
 }
+
+#unitList{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.eno-unit-row{
+  border:1px solid #888;
+  padding:8px;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.eno-character-area{
+  width:84px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  flex-shrink:0;
+}
+
+.eno-character-icon{
+  width:48px;
+  height:48px;
+  object-fit:cover;
+  border:1px solid #888;
+}
+
+.eno-character-name{
+  font-size:12px;
+  text-align:center;
+  word-break:break-all;
+}
+
+.eno-pattern-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.eno-pattern-item{
+  width:64px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  cursor:default;
+}
+
+.eno-pattern-icon{
+  width:40px;
+  height:40px;
+  object-fit:cover;
+  border:1px solid #888;
+}
+
+.eno-pattern-name{
+  font-size:11px;
+  text-align:center;
+  word-break:break-all;
+}
+
+.unitlist-empty{
+  color:#666;
+  font-size:14px;
+}
