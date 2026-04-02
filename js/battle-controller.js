@@ -67,6 +67,16 @@ function isPlaceableCell(stage, x, y) {
 
 let selectedCell = null;
 
+function clearPlacedSlot(slotIndex) {
+  if (!placedSlots[slotIndex]) return;
+
+  const p = placedSlots[slotIndex];
+  const prevCell = document.querySelector(`.cell[data-x="${p.x}"][data-y="${p.y}"]`);
+  if (prevCell) prevCell.innerHTML = "";
+
+  delete placedSlots[slotIndex];
+}
+
 function renderParty() {
   ptSlots.forEach((slot, i) => {
     slot.innerHTML = "";
@@ -82,65 +92,6 @@ function renderParty() {
     img.style.height = "64px";
 
     slot.appendChild(img);
-  });
-}
-
-function renderUnitList() {
-  unitListDiv.innerHTML = "";
-
-  units.forEach((unitData, i) => {
-    if (i === 0) return;
-
-    const item = document.createElement("div");
-    item.className = "duck-item";
-
-    if (partySlots.includes(i)) {
-      item.classList.add("selected");
-    }
-
-    const img = document.createElement("img");
-    img.src = unitData.icon?.default || "";
-
-    const name = document.createElement("span");
-    name.textContent = unitData.name;
-
-    item.appendChild(img);
-    item.appendChild(name);
-
-    item.addEventListener("click", () => {
-      const existingSlot = partySlots.indexOf(i);
-
-      /* すでにPTにいる → 解除 */
-      if (existingSlot !== -1) {
-        if (existingSlot === 0) return;
-
-        /* 盤面配置を削除 */
-        if (placedSlots[existingSlot]) {
-          const p = placedSlots[existingSlot];
-          const prevCell = document.querySelector(`.cell[data-x="${p.x}"][data-y="${p.y}"]`);
-          if (prevCell) prevCell.innerHTML = "";
-
-          delete placedSlots[existingSlot];
-        }
-
-        partySlots[existingSlot] = null;
-        renderParty();
-        renderUnitList();
-        return;
-      }
-
-      /* 空きスロットを探す */
-      for (let s = 1; s < 4; s++) {
-        if (partySlots[s] === null) {
-          partySlots[s] = i;
-          renderParty();
-          renderUnitList();
-          break;
-        }
-      }
-    });
-
-    unitListDiv.appendChild(item);
   });
 }
 
@@ -213,6 +164,17 @@ function createBoard(stage) {
 function resetPlacement() {
   selectedCell = null;
 }
+
+const unitListController = initUnitList({
+  unitListDiv,
+  units,
+  partySlots,
+  placedSlots,
+  renderParty,
+  clearPlacedSlot
+});
+
+const renderUnitList = unitListController.renderUnitList;
 
 ptSlots.forEach((slot) => {
   slot.addEventListener("click", () => {
