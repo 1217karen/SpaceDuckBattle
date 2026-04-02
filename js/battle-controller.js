@@ -38,7 +38,20 @@ const ptSlots = document.querySelectorAll(".pt-slot");
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
 
-const partySlots = [0, null, null, null];
+const selfPattern =
+  Array.isArray(units[0].patterns) && units[0].patterns[0]
+    ? units[0].patterns[0]
+    : { skills: [] };
+
+const selfPartyEntry = {
+  eno: currentEno,
+  characterData: playerCharacter,
+  unitData: units[0],
+  patternIndex: 0,
+  pattern: selfPattern
+};
+
+const partySlots = [selfPartyEntry, null, null, null];
 const placedSlots = {};
 
 let selectedSlot = null;
@@ -82,10 +95,11 @@ function renderParty() {
   ptSlots.forEach((slot, i) => {
     slot.innerHTML = "";
 
-    const unitIndex = partySlots[i];
-    if (unitIndex === null) return;
+    const slotEntry = partySlots[i];
+    if (slotEntry === null) return;
 
-    const unitData = units[unitIndex];
+    const unitData = slotEntry.unitData;
+    if (!unitData) return;
 
     const img = document.createElement("img");
     img.src = unitData.icon?.default || "";
@@ -121,8 +135,8 @@ function createBoard(stage) {
         if (!placeable) return;
         if (selectedSlot === null) return;
 
-        const unitIndex = partySlots[selectedSlot];
-        const unitData = units[unitIndex];
+        const slotEntry = partySlots[selectedSlot];
+        const unitData = slotEntry?.unitData;
         if (!unitData) return;
 
         if (placedSlots[selectedSlot]) {
@@ -166,11 +180,33 @@ function resetPlacement() {
   selectedCell = null;
 }
 
-const publicUnitEntries = loadPublicBattleEntries();
+const publicUnitEntries = loadPublicBattleEntries()
+  .filter((entry) => entry.eno !== currentEno);
 
 const unitListController = initUnitList({
   unitListDiv,
-  entries: publicUnitEntries
+  entries: publicUnitEntries,
+  onPatternConfirm: (selectedEntry) => {
+    const alreadyInParty = partySlots.some((slotEntry) => {
+      return (
+        slotEntry &&
+        slotEntry.eno === selectedEntry.eno &&
+        slotEntry.patternIndex === selectedEntry.patternIndex
+      );
+    });
+
+    if (alreadyInParty) {
+      return;
+    }
+
+    for (let s = 1; s < 4; s++) {
+      if (partySlots[s] === null) {
+        partySlots[s] = selectedEntry;
+        renderParty();
+        return;
+      }
+    }
+  }
 });
 
 const renderUnitList = unitListController.renderUnitList;
@@ -259,31 +295,31 @@ startBtn.addEventListener("click", () => {
 
   /* プレイヤーユニット追加 */
   for (let slot = 0; slot < 4; slot++) {
-    const unitIndex = partySlots[slot];
-    if (unitIndex === null) continue;
+    const slotEntry = partySlots[slot];
+    if (slotEntry === null) continue;
 
     const placement = placedSlots[slot];
     if (!placement) continue;
 
-const unitData = units[unitIndex];
+    const unitData = slotEntry.unitData;
+    const characterData = slotEntry.characterData;
+    const pattern = slotEntry.pattern;
 
-if (!Array.isArray(unitData.patterns) || !unitData.patterns[0]) {
-  alert("ユニットの戦闘設定が保存されていません");
-  return;
-}
+    if (!unitData || !pattern) {
+      alert("ユニットの戦闘設定が保存されていません");
+      return;
+    }
 
-const pattern = unitData.patterns[0];
-
-const unit = buildBattleUnit(
-  unitData,
-  playerCharacter,
-  pattern,
-  1,
-  placement.x,
-  placement.y,
-  "E",
-  unitIndex
-);
+    const unit = buildBattleUnit(
+      unitData,
+      characterData,
+      pattern,
+      1,
+      placement.x,
+      placement.y,
+      "E",
+      slot
+    );
 
     snapshot.units.push(unit);
   }
@@ -304,8 +340,8 @@ const unit = buildBattleUnit(
   };
 
   const partyMembers = partySlots
-    .filter((unitIndex) => unitIndex !== null)
-    .map((unitIndex) => units[unitIndex]);
+    .filter((slotEntry) => slotEntry !== null)
+    .map((slotEntry) => slotEntry.unitData);
 
   const party = {
     leaderName: partyMembers[0]?.name || "",
