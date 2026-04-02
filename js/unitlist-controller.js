@@ -3,8 +3,16 @@
 export function initUnitList(options) {
   const {
     unitListDiv,
-    entries
+    entries,
+    onPatternConfirm
   } = options;
+
+  let selectedEno = null;
+  let selectedPatternIndex = null;
+
+  function isSelected(eno, patternIndex) {
+    return selectedEno === eno && selectedPatternIndex === patternIndex;
+  }
 
   function renderUnitList() {
     unitListDiv.innerHTML = "";
@@ -46,6 +54,10 @@ export function initUnitList(options) {
         const item = document.createElement("div");
         item.className = "eno-pattern-item";
 
+        if (isSelected(entry.eno, patternEntry.patternIndex)) {
+          item.classList.add("selected");
+        }
+
         const unitImg = document.createElement("img");
         unitImg.className = "eno-pattern-icon";
         unitImg.src = entry.unitData?.icon?.default || "";
@@ -59,6 +71,33 @@ export function initUnitList(options) {
 
         item.appendChild(unitImg);
         item.appendChild(label);
+
+        item.addEventListener("click", () => {
+          const alreadySelected =
+            isSelected(entry.eno, patternEntry.patternIndex);
+
+          if (!alreadySelected) {
+            selectedEno = entry.eno;
+            selectedPatternIndex = patternEntry.patternIndex;
+            renderUnitList();
+            return;
+          }
+
+          if (typeof onPatternConfirm === "function") {
+            onPatternConfirm({
+              eno: entry.eno,
+              characterData: entry.characterData,
+              unitData: entry.unitData,
+              patternIndex: patternEntry.patternIndex,
+              pattern: patternEntry.pattern
+            });
+          }
+
+          selectedEno = null;
+          selectedPatternIndex = null;
+          renderUnitList();
+        });
+
         right.appendChild(item);
       });
 
