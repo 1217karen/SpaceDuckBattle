@@ -39,6 +39,10 @@ export function getNextEno() {
   return nextEno;
 }
 
+export function getRegisteredEnoMax() {
+  return Number(localStorage.getItem(ENO_COUNTER_KEY) || 0);
+}
+
 export function saveAccount(account) {
   if (!account || !account.loginId) {
     throw new Error("account.loginId が必要です");
