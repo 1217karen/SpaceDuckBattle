@@ -144,3 +144,15 @@
   color:#666;
   font-size:14px;
 }
+.eno-pattern-item{
+  cursor:pointer;
+}
+
+.eno-pattern-item.selected{
+  background:#fff3d6;
+}
+
+.eno-pattern-item.selected .eno-pattern-icon{
+  border:2px solid #ff9900;
+  box-shadow:0 0 6px #ff9900;
+}
