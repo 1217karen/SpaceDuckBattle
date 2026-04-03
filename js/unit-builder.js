@@ -1,5 +1,11 @@
 //unit-builder.js
 
+function getAvailableSkillSlotCount(tec) {
+  const safeTec = Math.max(0, Number(tec) || 0);
+
+  return Math.min(8, 3 + Math.floor(safeTec / 10));
+}
+
 export function buildBattleUnit(
   unitData,
   characterData,
@@ -54,7 +60,9 @@ export function buildBattleUnit(
     patterns: unitData.patterns || [],
     commIcons: characterData?.commIcons || [],
     commDialogues: characterData?.commDialogues || {},
+    
   skills: (pattern.skills || [])
+    .slice(0, getAvailableSkillSlotCount(tec))
     .filter(s => {
       if (typeof s === "string") {
         return s !== "";
