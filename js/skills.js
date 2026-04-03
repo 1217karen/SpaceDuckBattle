@@ -10,6 +10,9 @@ export const skillHandlers = {
   ATK_01: {
     name: "ショートアタック",
     description: "前方1マスの敵1体に通常攻撃（威力4）",
+    unlock: {
+    atk: 5
+    },
     cooldown: 2,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_1.webp",
 
@@ -45,6 +48,9 @@ export const skillHandlers = {
   DEF_01: {
     name: "ガードアップ",
     description: "自分のDEFを20%上げる（2行動）",
+    unlock: {
+    def: 5
+    },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_7.webp",
 
@@ -79,6 +85,9 @@ export const skillHandlers = {
   HEAL_01: {
     name: "ミニヒール",
     description: "周囲1マスの味方1体を回復（威力4）",
+    unlock: {
+    heal: 5
+    },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_4.webp",
 
@@ -130,6 +139,9 @@ export const skillHandlers = {
   SPD_01: {
     name: "クイック",
     description: "自分に加速を1段階付与する",
+    unlock: {
+    spd: 5
+    },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
 
@@ -162,6 +174,9 @@ export const skillHandlers = {
   CRI_01: {
     name: "フォーカス",
     description: "自分のCRIを20%上げる（2行動）",
+    unlock: {
+    cri: 5
+    },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_2.webp",
 
@@ -196,6 +211,9 @@ export const skillHandlers = {
   TEC_01: {
     name: "ジャミング",
     description: "周囲1マスの敵1体に妨害を2付与する",
+    unlock: {
+    tec: 5
+    },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_6.webp",
 
