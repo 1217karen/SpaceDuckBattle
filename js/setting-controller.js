@@ -421,6 +421,58 @@ function refreshSkillAreaByTec() {
   loadPattern(currentSlot);
 }
 
+function buildSaveWarnings() {
+  const warnings = [];
+
+  const tecValue =
+    Number(document.getElementById("statTEC")?.value) || 0;
+
+  const visibleCount =
+    getAvailableSkillSlotCount(tecValue);
+
+  const publicPatterns =
+    patterns
+      .map((pattern, index) => ({ pattern, index }))
+      .filter(item => item.pattern.public);
+
+  if (publicPatterns.length === 0) {
+    warnings.push("・公開されている設定がありません");
+  }
+
+  const publicButEmptyPatterns = publicPatterns
+    .filter(({ pattern }) =>
+      !(pattern.skills || []).some(skill => skill?.type)
+    )
+    .map(({ index }) => `設定${index + 1}`);
+
+  if (publicButEmptyPatterns.length > 0) {
+    warnings.push(
+      `・スキルが1つも設定されていない公開設定があります（${publicButEmptyPatterns.join("、")}）`
+    );
+  }
+
+  const overTecPatterns = patterns
+    .map((pattern, index) => {
+      const hasOverSkill = (pattern.skills || [])
+        .slice(visibleCount)
+        .some(skill => skill?.type);
+
+      return hasOverSkill ? `設定${index + 1}` : null;
+    })
+    .filter(Boolean);
+
+  if (overTecPatterns.length > 0) {
+    warnings.push(
+      `・現在のTECでは使用できない枠にスキルが設定されています（${overTecPatterns.join("、")}）`
+    );
+    warnings.push(
+      "  超過分の設定は保存されますが、戦闘では使用されません"
+    );
+  }
+
+  return warnings;
+}
+
 function loadPattern(slot) {
   const p = patterns[slot];
 
@@ -565,6 +617,24 @@ saveBtn.addEventListener("click", () => {
   const eno = account.eno;
 
   saveCurrentPattern();
+
+  const warnings = buildSaveWarnings();
+
+  if (warnings.length > 0) {
+    const message = [
+      "以下の内容を確認してください。",
+      "",
+      ...warnings,
+      "",
+      "このまま保存しますか？"
+    ].join("\n");
+
+    const shouldSave = confirm(message);
+
+    if (!shouldSave) {
+      return;
+    }
+  }
 
   const type =
     document.getElementById("unitType").value;
