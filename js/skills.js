@@ -140,7 +140,7 @@ export const skillHandlers = {
     name: "クイック",
     description: "自分に加速を1段階付与する",
     unlock: {
-    spd: 5
+    speed: 5
     },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
