@@ -9,8 +9,21 @@ requireLogin();
 
 let currentSlot = 0;
 
+const MAX_SKILL_SLOTS = 8;
+const BASE_SKILL_SLOTS = 3;
+const TEC_PER_EXTRA_SLOT = 10;
+
 const skillList = Object.keys(skillHandlers);
 const skillArea = document.getElementById("skillArea");
+
+function getAvailableSkillSlotCount(tec) {
+  const safeTec = Math.max(0, Number(tec) || 0);
+
+  return Math.min(
+    MAX_SKILL_SLOTS,
+    BASE_SKILL_SLOTS + Math.floor(safeTec / TEC_PER_EXTRA_SLOT)
+  );
+}
 
 let currentCommIcons = [];
 let nextDialogueRowId = 1;
@@ -143,7 +156,7 @@ function normalizeSkill(skill) {
 }
 
 function normalizePattern(pattern) {
-const normalizedSkills = Array.from({ length: 8 }, (_, i) =>
+const normalizedSkills = Array.from({ length: MAX_SKILL_SLOTS }, (_, i) =>
   normalizeSkill(pattern?.skills?.[i])
 );
 
@@ -299,14 +312,16 @@ wrapper.appendChild(dialogueList);
   return wrapper;
 }
 
-function renderSkillArea(skills) {
+function renderSkillArea(skills, visibleCount = skills.length) {
   skillArea.innerHTML = "";
 
-  skills.forEach((skillData, index) => {
+  const visibleSkills = skills.slice(0, visibleCount);
+
+  visibleSkills.forEach((skillData, index) => {
     const block = createSkillBlock(skillData, index);
     skillArea.appendChild(block);
 
-    if (index < skills.length - 1) {
+    if (index < visibleSkills.length - 1) {
       skillArea.appendChild(document.createElement("br"));
     }
   });
@@ -384,6 +399,11 @@ function readSkillArea() {
   });
 }
 
+function refreshSkillAreaByTec() {
+  saveCurrentPattern();
+  loadPattern(currentSlot);
+}
+
 function loadPattern(slot) {
   const p = patterns[slot];
 
@@ -395,7 +415,13 @@ function loadPattern(slot) {
   publicCheck.checked = p.public;
   publicCheck.disabled = false;
 
-  renderSkillArea(p.skills);
+  const tecValue =
+    Number(document.getElementById("statTEC")?.value) || 0;
+
+  const visibleCount =
+    getAvailableSkillSlotCount(tecValue);
+
+  renderSkillArea(p.skills, visibleCount);
 }
 
 function saveCurrentPattern() {
@@ -407,7 +433,21 @@ function saveCurrentPattern() {
   p.public =
     document.getElementById("patternPublic").checked;
 
-  p.skills = readSkillArea();
+  const tecValue =
+    Number(document.getElementById("statTEC")?.value) || 0;
+
+  const visibleCount =
+    getAvailableSkillSlotCount(tecValue);
+
+  const visibleSkills = readSkillArea();
+
+  p.skills = Array.from({ length: MAX_SKILL_SLOTS }, (_, i) => {
+    if (i < visibleCount) {
+      return normalizeSkill(visibleSkills[i]);
+    }
+
+    return normalizeSkill(p.skills[i]);
+  });
 }
 
 loadDuck();
@@ -481,8 +521,15 @@ if (unit?.patterns) {
   document.getElementById("statCRI").value =
     unit?.stats?.cri ?? 0;
 
-  document.getElementById("statTEC").value =
+  const statTecInput =
+    document.getElementById("statTEC");
+
+  statTecInput.value =
     unit?.stats?.tec ?? 0;
+
+  statTecInput.addEventListener("input", () => {
+    refreshSkillAreaByTec();
+  });
 
   loadPattern(currentSlot);
 }
