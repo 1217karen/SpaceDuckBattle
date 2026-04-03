@@ -21,17 +21,26 @@ const patterns = [
   {
     name: "",
     public: true,
-    skills: [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
+    skills: [
+      { type: "" }, { type: "" }, { type: "" }, { type: "" },
+      { type: "" }, { type: "" }, { type: "" }, { type: "" }
+    ]
   },
   {
     name: "",
     public: false,
-    skills: [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
+    skills: [
+      { type: "" }, { type: "" }, { type: "" }, { type: "" },
+      { type: "" }, { type: "" }, { type: "" }, { type: "" }
+    ]
   },
   {
     name: "",
     public: false,
-    skills: [{ type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }, { type: "" }]
+    skills: [
+      { type: "" }, { type: "" }, { type: "" }, { type: "" },
+      { type: "" }, { type: "" }, { type: "" }, { type: "" }
+    ]
   }
 ];
 
@@ -134,9 +143,9 @@ function normalizeSkill(skill) {
 }
 
 function normalizePattern(pattern) {
-  const normalizedSkills = Array.from({ length: 6 }, (_, i) =>
-    normalizeSkill(pattern?.skills?.[i])
-  );
+const normalizedSkills = Array.from({ length: 8 }, (_, i) =>
+  normalizeSkill(pattern?.skills?.[i])
+);
 
   return {
     name: pattern?.name ?? "",
