@@ -289,25 +289,42 @@ function createSkillBlock(skillData, index) {
 
   select.value = skillData?.type ?? "";
 
-const cutinLabel = document.createElement("div");
-cutinLabel.textContent = "カットインURL";
+  const detailArea = document.createElement("div");
+  detailArea.className = "skillDetailArea";
 
-const cutinInput = document.createElement("input");
-cutinInput.type = "text";
-cutinInput.className = "cutinUrlInput";
-cutinInput.placeholder = "https://...";
-cutinInput.value = skillData?.cutinUrl || "";
+  const cutinLabel = document.createElement("div");
+  cutinLabel.textContent = "カットインURL";
+
+  const cutinInput = document.createElement("input");
+  cutinInput.type = "text";
+  cutinInput.className = "cutinUrlInput";
+  cutinInput.placeholder = "https://...";
+  cutinInput.value = skillData?.cutinUrl || "";
 
   const dialogueList = createSkillDialogueList(
     skillData?.dialogue
   );
 
-wrapper.appendChild(select);
-wrapper.appendChild(document.createElement("br"));
-wrapper.appendChild(cutinLabel);
-wrapper.appendChild(cutinInput);
-wrapper.appendChild(document.createElement("br"));
-wrapper.appendChild(dialogueList);
+  detailArea.appendChild(document.createElement("br"));
+  detailArea.appendChild(cutinLabel);
+  detailArea.appendChild(cutinInput);
+  detailArea.appendChild(document.createElement("br"));
+  detailArea.appendChild(dialogueList);
+
+  const updateDetailVisibility = () => {
+    if (select.value) {
+      detailArea.style.display = "";
+    } else {
+      detailArea.style.display = "none";
+    }
+  };
+
+  select.addEventListener("change", updateDetailVisibility);
+
+  wrapper.appendChild(select);
+  wrapper.appendChild(detailArea);
+
+  updateDetailVisibility();
 
   return wrapper;
 }
