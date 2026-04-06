@@ -57,3 +57,18 @@
 .skillGuideValue {
   display: inline;
 }
+
+.skillInfoBox {
+  margin: 6px 0 8px;
+  padding: 6px 8px;
+  border: 1px dashed #999;
+}
+
+.skillInfoRange {
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.skillInfoDescription {
+  line-height: 1.4;
+}
