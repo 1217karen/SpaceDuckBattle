@@ -9,7 +9,8 @@ export const skillHandlers = {
   // =========================
   ATK_01: {
     name: "ショートアタック",
-    description: "前方1マスの敵1体に通常攻撃（威力4）",
+    description: "敵1体に通常攻撃（威力4）",
+    rangeText: "前方1マス",
     unlock: {
     atk: 5
     },
@@ -47,7 +48,8 @@ export const skillHandlers = {
   // =========================
   DEF_01: {
     name: "ガードアップ",
-    description: "自分のDEFを20%上げる（2行動）",
+    description: "DEFを20%増（2T）",
+    rangeText: "自分",
     unlock: {
     def: 5
     },
@@ -84,7 +86,8 @@ export const skillHandlers = {
   // =========================
   HEAL_01: {
     name: "ミニヒール",
-    description: "周囲1マスの味方1体を回復（威力4）",
+    description: "味方1体を回復（威力4）",
+    rangeText: "周囲1マス",
     unlock: {
     heal: 5
     },
@@ -138,7 +141,8 @@ export const skillHandlers = {
   // =========================
   SPD_01: {
     name: "クイック",
-    description: "自分に加速を1段階付与する",
+    description: "加速を1段階上昇",
+    rangeText: "自分",
     unlock: {
     speed: 5
     },
@@ -173,7 +177,8 @@ export const skillHandlers = {
   // =========================
   CRI_01: {
     name: "フォーカス",
-    description: "自分のCRIを20%上げる（2行動）",
+    description: "CRIを20%上げる（2T）",
+    rangeText: "自分",
     unlock: {
     cri: 5
     },
@@ -210,7 +215,8 @@ export const skillHandlers = {
   // =========================
   TEC_01: {
     name: "ジャミング",
-    description: "周囲1マスの敵1体に妨害を2付与する",
+    description: "敵1体に妨害を2付与",
+    rangeText: "周囲1マス",
     unlock: {
     tec: 5
     },
