@@ -28,3 +28,32 @@
 .addSkillDialogueLine {
   align-self: flex-start;
 }
+
+#skillGuide {
+  display: block;
+}
+
+.skillGuideItem {
+  padding: 8px 0;
+  border-bottom: 1px dashed #999;
+}
+
+.skillGuideTitle {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.skillGuideRow {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.skillGuideLabel {
+  display: inline-block;
+  min-width: 72px;
+  font-weight: bold;
+}
+
+.skillGuideValue {
+  display: inline;
+}
