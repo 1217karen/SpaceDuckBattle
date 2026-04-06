@@ -34,11 +34,6 @@ function createSkillGuideItem(skillId, skill, unlocked) {
   title.className = "skillGuideTitle";
   title.textContent = `${skill.name || skillId}`;
 
-  const statusRow = createRow(
-    "状態",
-    unlocked ? "解放済み" : "未解放"
-  );
-
   const idRow = createRow("ID", skillId);
   const cooldownRow = createRow("CT", String(skill.cooldown ?? 0));
   const rangeRow = createRow("範囲", skill.rangeText || "未設定");
