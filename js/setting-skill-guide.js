@@ -1,10 +1,8 @@
-//setting-skill-guide.js
-
 import { skillHandlers } from "./skills.js";
 
 function formatUnlock(unlock) {
   if (!unlock || typeof unlock !== "object") {
-    return "条件なし";
+    return "なし";
   }
 
   const parts = [];
@@ -33,11 +31,25 @@ function formatUnlock(unlock) {
     parts.push(`TEC ${unlock.tec}以上`);
   }
 
-  if (parts.length === 0) {
-    return "条件なし";
-  }
+  return parts.length > 0 ? parts.join(" / ") : "なし";
+}
 
-  return parts.join(" / ");
+function createRow(labelText, valueText) {
+  const row = document.createElement("div");
+  row.className = "skillGuideRow";
+
+  const label = document.createElement("span");
+  label.className = "skillGuideLabel";
+  label.textContent = labelText;
+
+  const value = document.createElement("span");
+  value.className = "skillGuideValue";
+  value.textContent = valueText;
+
+  row.appendChild(label);
+  row.appendChild(value);
+
+  return row;
 }
 
 function createSkillGuideItem(skillId, skill) {
@@ -46,27 +58,20 @@ function createSkillGuideItem(skillId, skill) {
 
   const title = document.createElement("div");
   title.className = "skillGuideTitle";
-  title.textContent = `${skill.name || skillId} [${skillId}]`;
+  title.textContent = `${skill.name || skillId}`;
 
-  const description = document.createElement("div");
-  description.className = "skillGuideDescription";
-  description.textContent =
-    skill.description || "説明文なし";
-
-  const cooldown = document.createElement("div");
-  cooldown.className = "skillGuideCooldown";
-  cooldown.textContent =
-    `CT: ${skill.cooldown ?? 0}`;
-
-  const unlock = document.createElement("div");
-  unlock.className = "skillGuideUnlock";
-  unlock.textContent =
-    `解放条件: ${formatUnlock(skill.unlock)}`;
+  const idRow = createRow("ID", skillId);
+  const cooldownRow = createRow("CT", String(skill.cooldown ?? 0));
+  const rangeRow = createRow("範囲", skill.rangeText || "未設定");
+  const descRow = createRow("説明", skill.description || "未設定");
+  const unlockRow = createRow("解放条件", formatUnlock(skill.unlock));
 
   item.appendChild(title);
-  item.appendChild(description);
-  item.appendChild(cooldown);
-  item.appendChild(unlock);
+  item.appendChild(idRow);
+  item.appendChild(cooldownRow);
+  item.appendChild(rangeRow);
+  item.appendChild(descRow);
+  item.appendChild(unlockRow);
 
   return item;
 }
@@ -77,10 +82,9 @@ function renderSkillGuide() {
 
   container.innerHTML = "";
 
-  const skillIds = Object.keys(skillHandlers);
+  const entries = Object.entries(skillHandlers);
 
-  skillIds.forEach(skillId => {
-    const skill = skillHandlers[skillId];
+  entries.forEach(([skillId, skill]) => {
     container.appendChild(createSkillGuideItem(skillId, skill));
   });
 }
