@@ -310,6 +310,7 @@ function createSkillBlock(skillData, index) {
     lockedOption.textContent =
       `${skillHandlers[currentSkillType]?.name || currentSkillType}（使用不可）`;
     select.appendChild(lockedOption);
+  }
 
   select.value = currentSkillType;
 
