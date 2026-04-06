@@ -43,7 +43,6 @@ function createSkillGuideItem(skillId, skill, unlocked) {
   );
 
   item.appendChild(title);
-  item.appendChild(statusRow);
   item.appendChild(cooldownRow);
   item.appendChild(rangeRow);
   item.appendChild(descRow);
