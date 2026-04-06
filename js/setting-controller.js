@@ -294,7 +294,8 @@ function createSkillBlock(skillData, index) {
   for (const skillId of unlockedSkillList) {
     const option = document.createElement("option");
     option.value = skillId;
-    option.textContent = skillId;
+    option.textContent =
+      skillHandlers[skillId]?.name || skillId;
     select.appendChild(option);
   }
 
@@ -306,9 +307,9 @@ function createSkillBlock(skillData, index) {
   ) {
     const lockedOption = document.createElement("option");
     lockedOption.value = currentSkillType;
-    lockedOption.textContent = `${currentSkillType}（未解放）`;
+    lockedOption.textContent =
+      `${skillHandlers[currentSkillType]?.name || currentSkillType}（使用不可）`;
     select.appendChild(lockedOption);
-  }
 
   select.value = currentSkillType;
 
