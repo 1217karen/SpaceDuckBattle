@@ -76,23 +76,4 @@ function renderSkillGuide() {
   });
 }
 
-function bindSkillGuideEvents() {
-  const statIds = [
-    "statAT",
-    "statDF",
-    "statHEAL",
-    "statSPEED",
-    "statCRI",
-    "statTEC"
-  ];
-
-  statIds.forEach(id => {
-    const input = document.getElementById(id);
-    if (!input) return;
-
-    input.addEventListener("input", renderSkillGuide);
-  });
-}
-
-bindSkillGuideEvents();
 renderSkillGuide();
