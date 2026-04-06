@@ -34,7 +34,6 @@ function createSkillGuideItem(skillId, skill, unlocked) {
   title.className = "skillGuideTitle";
   title.textContent = `${skill.name || skillId}`;
 
-  const idRow = createRow("ID", skillId);
   const cooldownRow = createRow("CT", String(skill.cooldown ?? 0));
   const rangeRow = createRow("範囲", skill.rangeText || "未設定");
   const descRow = createRow("説明", skill.description || "未設定");
@@ -45,7 +44,6 @@ function createSkillGuideItem(skillId, skill, unlocked) {
 
   item.appendChild(title);
   item.appendChild(statusRow);
-  item.appendChild(idRow);
   item.appendChild(cooldownRow);
   item.appendChild(rangeRow);
   item.appendChild(descRow);
