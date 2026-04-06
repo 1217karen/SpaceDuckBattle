@@ -4,6 +4,7 @@ import { skillHandlers } from "./skills.js";
 import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
 import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
 import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveUnit} from "./storage-service.js";
+import { getCurrentStats, isSkillUnlocked } from "./skill-unlock.js";
 
 requireLogin();
 
@@ -22,6 +23,14 @@ function getAvailableSkillSlotCount(tec) {
   return Math.min(
     MAX_SKILL_SLOTS,
     BASE_SKILL_SLOTS + Math.floor(safeTec / TEC_PER_EXTRA_SLOT)
+  );
+}
+
+function getUnlockedSkillList() {
+  const stats = getCurrentStats();
+
+  return skillList.filter(skillId =>
+    isSkillUnlocked(skillHandlers[skillId], stats)
   );
 }
 
@@ -280,17 +289,40 @@ function createSkillBlock(skillData, index) {
   emptyOption.textContent = "なし";
   select.appendChild(emptyOption);
 
-  for (const skillId of skillList) {
+  const unlockedSkillList = getUnlockedSkillList();
+
+  for (const skillId of unlockedSkillList) {
     const option = document.createElement("option");
     option.value = skillId;
     option.textContent = skillId;
     select.appendChild(option);
   }
 
-  select.value = skillData?.type ?? "";
+    const currentSkillType = skillData?.type ?? "";
+
+  if (
+    currentSkillType &&
+    !unlockedSkillList.includes(currentSkillType)
+  ) {
+    const lockedOption = document.createElement("option");
+    lockedOption.value = currentSkillType;
+    lockedOption.textContent = `${currentSkillType}（未解放）`;
+    select.appendChild(lockedOption);
+  }
+
+  select.value = currentSkillType;
 
   const detailArea = document.createElement("div");
   detailArea.className = "skillDetailArea";
+
+  const skillInfo = document.createElement("div");
+  skillInfo.className = "skillInfoBox";
+
+  const skillRange = document.createElement("div");
+  skillRange.className = "skillInfoRange";
+
+  const skillDescription = document.createElement("div");
+  skillDescription.className = "skillInfoDescription";
 
   const cutinLabel = document.createElement("div");
   cutinLabel.textContent = "カットインURL";
@@ -305,11 +337,30 @@ function createSkillBlock(skillData, index) {
     skillData?.dialogue
   );
 
+  detailArea.appendChild(skillInfo);
+  skillInfo.appendChild(skillRange);
+  skillInfo.appendChild(skillDescription);
   detailArea.appendChild(document.createElement("br"));
   detailArea.appendChild(cutinLabel);
   detailArea.appendChild(cutinInput);
   detailArea.appendChild(document.createElement("br"));
   detailArea.appendChild(dialogueList);
+
+  const updateSkillInfo = () => {
+    const selectedSkill = skillHandlers[select.value];
+
+    if (!selectedSkill) {
+      skillRange.textContent = "";
+      skillDescription.textContent = "";
+      return;
+    }
+
+    skillRange.textContent =
+      `範囲: ${selectedSkill.rangeText || "未設定"}`;
+
+    skillDescription.textContent =
+      `説明: ${selectedSkill.description || "未設定"}`;
+  };
 
   const updateDetailVisibility = () => {
     if (select.value) {
@@ -317,6 +368,8 @@ function createSkillBlock(skillData, index) {
     } else {
       detailArea.style.display = "none";
     }
+
+    updateSkillInfo();
   };
 
   select.addEventListener("change", updateDetailVisibility);
