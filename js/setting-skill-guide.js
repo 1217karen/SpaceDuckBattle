@@ -1,38 +1,12 @@
+//setting-skill-guide.js
+
+
 import { skillHandlers } from "./skills.js";
-
-function formatUnlock(unlock) {
-  if (!unlock || typeof unlock !== "object") {
-    return "なし";
-  }
-
-  const parts = [];
-
-  if (unlock.atk !== undefined) {
-    parts.push(`ATK ${unlock.atk}以上`);
-  }
-
-  if (unlock.def !== undefined) {
-    parts.push(`DEF ${unlock.def}以上`);
-  }
-
-  if (unlock.heal !== undefined) {
-    parts.push(`HEAL ${unlock.heal}以上`);
-  }
-
-  if (unlock.speed !== undefined) {
-    parts.push(`SPEED ${unlock.speed}以上`);
-  }
-
-  if (unlock.cri !== undefined) {
-    parts.push(`CRI ${unlock.cri}以上`);
-  }
-
-  if (unlock.tec !== undefined) {
-    parts.push(`TEC ${unlock.tec}以上`);
-  }
-
-  return parts.length > 0 ? parts.join(" / ") : "なし";
-}
+import {
+  getCurrentStats,
+  isSkillUnlocked,
+  formatUnlockText
+} from "./skill-unlock.js";
 
 function createRow(labelText, valueText) {
   const row = document.createElement("div");
@@ -52,7 +26,7 @@ function createRow(labelText, valueText) {
   return row;
 }
 
-function createSkillGuideItem(skillId, skill) {
+function createSkillGuideItem(skillId, skill, unlocked) {
   const item = document.createElement("div");
   item.className = "skillGuideItem";
 
@@ -60,18 +34,31 @@ function createSkillGuideItem(skillId, skill) {
   title.className = "skillGuideTitle";
   title.textContent = `${skill.name || skillId}`;
 
+  const statusRow = createRow(
+    "状態",
+    unlocked ? "解放済み" : "未解放"
+  );
+
   const idRow = createRow("ID", skillId);
   const cooldownRow = createRow("CT", String(skill.cooldown ?? 0));
   const rangeRow = createRow("範囲", skill.rangeText || "未設定");
   const descRow = createRow("説明", skill.description || "未設定");
-  const unlockRow = createRow("解放条件", formatUnlock(skill.unlock));
+  const unlockRow = createRow(
+    "解放条件",
+    formatUnlockText(skill.unlock)
+  );
 
   item.appendChild(title);
+  item.appendChild(statusRow);
   item.appendChild(idRow);
   item.appendChild(cooldownRow);
   item.appendChild(rangeRow);
   item.appendChild(descRow);
   item.appendChild(unlockRow);
+
+  if (!unlocked) {
+    item.classList.add("is-locked");
+  }
 
   return item;
 }
@@ -80,13 +67,35 @@ function renderSkillGuide() {
   const container = document.getElementById("skillGuide");
   if (!container) return;
 
+  const stats = getCurrentStats();
+
   container.innerHTML = "";
 
   const entries = Object.entries(skillHandlers);
 
   entries.forEach(([skillId, skill]) => {
-    container.appendChild(createSkillGuideItem(skillId, skill));
+    const unlocked = isSkillUnlocked(skill, stats);
+    container.appendChild(createSkillGuideItem(skillId, skill, unlocked));
   });
 }
 
+function bindSkillGuideEvents() {
+  const statIds = [
+    "statAT",
+    "statDF",
+    "statHEAL",
+    "statSPEED",
+    "statCRI",
+    "statTEC"
+  ];
+
+  statIds.forEach(id => {
+    const input = document.getElementById(id);
+    if (!input) return;
+
+    input.addEventListener("input", renderSkillGuide);
+  });
+}
+
+bindSkillGuideEvents();
 renderSkillGuide();
