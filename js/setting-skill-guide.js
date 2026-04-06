@@ -75,7 +75,12 @@ function renderSkillGuide() {
 
   entries.forEach(([skillId, skill]) => {
     const unlocked = isSkillUnlocked(skill, stats);
-    container.appendChild(createSkillGuideItem(skillId, skill, unlocked));
+
+    if (!unlocked) {
+      return;
+    }
+
+    container.appendChild(createSkillGuideItem(skillId, skill, true));
   });
 }
 
