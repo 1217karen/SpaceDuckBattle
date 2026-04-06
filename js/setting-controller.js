@@ -720,6 +720,7 @@ saveBtn.addEventListener("click", () => {
   saveUnit(eno, 1, unit);
 
   alert("アヒル設定を保存しました");
+  location.reload();
 });
 
 loadPattern(currentSlot);
