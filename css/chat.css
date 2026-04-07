@@ -9,3 +9,63 @@
 .chatPostCardPreview {
   opacity: 0.65;
 }
+
+.chatPostCard {
+  display: flex;
+  gap: 12px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #fff;
+}
+
+.chatPostCardPreview {
+  opacity: 0.65;
+}
+
+.chatPostCardLeft {
+  width: 56px;
+  flex: 0 0 56px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.chatPostIcon {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatPostCardRight {
+  flex: 1;
+  min-width: 0;
+}
+
+.chatPostHeader {
+  margin-bottom: 6px;
+}
+
+.chatPostName {
+  font-weight: bold;
+}
+
+.chatPostDivider {
+  border-top: 1px solid #999;
+  margin-bottom: 8px;
+}
+
+.chatPostBody {
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+.chatPostFooter {
+  font-size: 12px;
+  text-align: right;
+  color: #666;
+}
