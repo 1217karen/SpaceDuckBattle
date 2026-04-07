@@ -1,6 +1,7 @@
 //map-controller.js
 
 import { places } from "./places-data.js";
+import {getCurrentAccount,loadCharacter,saveCharacter} from "./storage-service.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
@@ -20,11 +21,31 @@ function createPlaceLink(place) {
   const wrapper = document.createElement("div");
   wrapper.className = "mapPlaceRow";
 
-  const link = document.createElement("a");
-  link.href = `./chat.html?placeId=${encodeURIComponent(place.placeId)}`;
-  link.textContent = `${place.placeId} : ${place.name}`;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = `${place.placeId} : ${place.name}`;
 
-  wrapper.appendChild(link);
+  button.addEventListener("click", () => {
+    const account = getCurrentAccount();
+
+    if (!account?.eno) {
+      alert("ログイン中のアカウント情報を確認できません");
+      return;
+    }
+
+    const eno = account.eno;
+    const character = loadCharacter(eno) || {};
+
+    saveCharacter(eno, {
+      ...character,
+      currentPlaceId: place.placeId
+    });
+
+    window.location.href =
+      `./chat.html?placeId=${encodeURIComponent(place.placeId)}`;
+  });
+
+  wrapper.appendChild(button);
 
   return wrapper;
 }
