@@ -149,16 +149,6 @@ function getMainAreaPreviewPosts(currentPlace) {
     previewPosts.push(...getPostsByPlaceId(parentMainField.placeId));
   }
 
-  const sideArea = places.find(place =>
-    place.kind === "area" &&
-    place.groupId === currentPlace.groupId &&
-    place.layer === "side"
-  );
-
-  if (sideArea) {
-    previewPosts.push(...getPostsByPlaceId(sideArea.placeId));
-  }
-
   return previewPosts;
 }
 
