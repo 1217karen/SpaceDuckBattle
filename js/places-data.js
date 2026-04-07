@@ -2,7 +2,7 @@
 
 export const places = [
   {
-    placeId: "F1",
+    placeId: "F1-1",
     groupId: "F1",
     parentId: null,
     kind: "field",
@@ -30,7 +30,7 @@ export const places = [
   },
 
   {
-    placeId: "E1",
+    placeId: "E1-1",
     groupId: "E1",
     parentId: "F1",
     kind: "area",
@@ -58,7 +58,7 @@ export const places = [
   },
 
   {
-    placeId: "E2",
+    placeId: "E2-1",
     groupId: "E2",
     parentId: "F1",
     kind: "area",
