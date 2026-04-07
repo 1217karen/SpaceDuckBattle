@@ -73,14 +73,23 @@ function getPlaceLabel(placeId) {
   return place?.name || placeId;
 }
 
-function getPreviewText(text, maxLength = 20) {
-  const value = String(text ?? "");
+function stripRichTextTags(text) {
+  return String(text ?? "").replace(/<\/?(b|i|u|s|br|rb|rt|f1|f2|f3|f4|f5|f6|f7)>/g, "");
+}
 
-  if (value.length <= maxLength) {
-    return value;
+function getPreviewText(text) {
+  const plainText = stripRichTextTags(text);
+  const length = plainText.length;
+
+  if (length <= 5) {
+    return plainText;
   }
 
-  return value.slice(0, maxLength) + "……";
+  if (length <= 24) {
+    return plainText.slice(0, length - 5) + "……";
+  }
+
+  return plainText.slice(0, 20) + "……";
 }
 
 function getSideFieldPreviewPosts(currentPlace) {
