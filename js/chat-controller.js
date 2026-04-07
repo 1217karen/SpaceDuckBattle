@@ -1,6 +1,7 @@
 //chat-controller.js
 
 import { places } from "./places-data.js";
+import { posts } from "./posts-data.js";
 import {getCurrentAccount,loadCharacter,saveCharacter} from "./storage-service.js";
 
 const centerPanel = document.querySelector(".center-panel");
@@ -61,6 +62,10 @@ function moveToPlace(placeId) {
 
   window.location.href =
     `./chat.html?placeId=${encodeURIComponent(placeId)}`;
+}
+
+function getPostsByPlaceId(placeId) {
+  return posts.filter(post => post.placeId === placeId);
 }
 
 function renderChatPlaceInfo() {
@@ -149,6 +154,34 @@ function renderChatPlaceInfo() {
       }
 
       centerPanel.appendChild(button);
+    });
+  }
+
+    const postsHeading = document.createElement("h2");
+  postsHeading.textContent = "発言一覧";
+  centerPanel.appendChild(postsHeading);
+
+  const currentPosts = getPostsByPlaceId(place.placeId);
+
+  if (currentPosts.length === 0) {
+    const emptyPosts = document.createElement("p");
+    emptyPosts.textContent = "発言はありません";
+    centerPanel.appendChild(emptyPosts);
+  } else {
+    currentPosts.forEach(post => {
+      const postBox = document.createElement("div");
+
+      const meta = document.createElement("p");
+      meta.textContent =
+        `${post.speakerName} / ${post.createdAt} / ${post.placeId}`;
+
+      const body = document.createElement("p");
+      body.textContent = post.body;
+
+      postBox.appendChild(meta);
+      postBox.appendChild(body);
+
+      centerPanel.appendChild(postBox);
     });
   }
 }
