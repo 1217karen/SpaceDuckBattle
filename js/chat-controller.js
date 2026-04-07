@@ -1,4 +1,4 @@
-//js/chat-controller.js
+//chat-controller.js
 
 import { places } from "./places-data.js";
 
