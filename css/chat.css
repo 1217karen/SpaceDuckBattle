@@ -1,16 +1,4 @@
 .chatPostCard {
-  border: 1px solid #999;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  background: #fff;
-}
-
-.chatPostCardPreview {
-  opacity: 0.65;
-}
-
-.chatPostCard {
   display: flex;
   gap: 12px;
   border: 1px solid #999;
@@ -44,11 +32,29 @@
 }
 
 .chatPostHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 6px;
+}
+
+.chatPostHeaderLeft {
+  min-width: 0;
+}
+
+.chatPostHeaderRight {
+  flex: 0 0 auto;
 }
 
 .chatPostName {
   font-weight: bold;
+}
+
+.chatPostNo {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
 }
 
 .chatPostDivider {
