@@ -26,8 +26,9 @@
   margin-bottom: 8px;
 }
 
-.chatPostActionButton {
-  padding: 4px 10px;
-  font-size: 12px;
-  cursor: pointer;
+.chatPostActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 8px;
 }
