@@ -6,7 +6,7 @@ export const posts = [
     placeId: "F1",
     speakerName: "テスト",
     iconId: null,
-    body: "ここはF1です。<b>テスト</b>ああああああ<rt>テスト</rt><rb>テスト</rb>",
+    body: "ここはF1です。<b>テスト</b>ああああああ<rb>テスト</rb><rt>てすと</rt>",
     createdAt: "2026-04-07 10:00",
     authorEno: 0
   },
