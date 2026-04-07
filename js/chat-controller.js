@@ -263,7 +263,7 @@ function renderChatPlaceInfo() {
   const placeId =
     getPlaceIdFromQuery() ||
     character?.currentPlaceId ||
-    "F1";
+    "F1-1";
 
   const place = getPlaceById(placeId);
 
