@@ -19,3 +19,15 @@
   margin-bottom: 6px;
   font-weight: bold;
 }
+
+.chatPostActions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chatPostActionButton {
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
