@@ -188,6 +188,24 @@ function createPostCard(post, options = {}) {
     renderRichText(body, post.body, { preset: "message" });
   }
 
+  const actions = document.createElement("div");
+  actions.className = "chatPostActions";
+
+  if (!isPreview) {
+    const replyButton = document.createElement("button");
+    replyButton.type = "button";
+    replyButton.className = "chatPostActionButton";
+    replyButton.textContent = "返信";
+
+    const quoteButton = document.createElement("button");
+    quoteButton.type = "button";
+    quoteButton.className = "chatPostActionButton";
+    quoteButton.textContent = "引用";
+
+    actions.appendChild(replyButton);
+    actions.appendChild(quoteButton);
+  }
+
   const footer = document.createElement("div");
   footer.className = "chatPostFooter";
   footer.textContent = `${post.createdAt} / ${getPlaceLabel(post.placeId)}`;
@@ -195,6 +213,7 @@ function createPostCard(post, options = {}) {
   right.appendChild(header);
   right.appendChild(divider);
   right.appendChild(body);
+  right.appendChild(actions);
   right.appendChild(footer);
 
   postBox.appendChild(left);
