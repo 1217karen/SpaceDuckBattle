@@ -155,12 +155,26 @@ function createPostCard(post, options = {}) {
   const header = document.createElement("div");
   header.className = "chatPostHeader";
 
+  const headerLeft = document.createElement("div");
+  headerLeft.className = "chatPostHeaderLeft";
+
+  const headerRight = document.createElement("div");
+  headerRight.className = "chatPostHeaderRight";
+
   if (!isPreview) {
     const name = document.createElement("div");
     name.className = "chatPostName";
     name.textContent = `${post.speakerName} / Eno:${post.authorEno}`;
-    header.appendChild(name);
+    headerLeft.appendChild(name);
   }
+
+  const postNo = document.createElement("div");
+  postNo.className = "chatPostNo";
+  postNo.textContent = `No.${post.postId}`;
+
+  headerRight.appendChild(postNo);
+  header.appendChild(headerLeft);
+  header.appendChild(headerRight);
 
   const divider = document.createElement("div");
   divider.className = "chatPostDivider";
