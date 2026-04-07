@@ -1,7 +1,7 @@
 //chat-controller.js
 
 import { places } from "./places-data.js";
-import {getCurrentAccount,loadCharacter} from "./storage-service.js";
+import {getCurrentAccount,loadCharacter,saveCharacter} from "./storage-service.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
@@ -26,6 +26,41 @@ function getLayerLabel(layer) {
   if (layer === "side") return "サイド";
   if (layer === "local") return "ローカル";
   return "なし";
+}
+
+function getPlacesInSameGroup(place) {
+  if (!place?.groupId) return [];
+
+  return places.filter(item =>
+    item.groupId === place.groupId
+  );
+}
+
+function getLayerSortValue(layer) {
+  if (layer === "main") return 1;
+  if (layer === "side") return 2;
+  if (layer === "local") return 3;
+  return 999;
+}
+
+function moveToPlace(placeId) {
+  const account = getCurrentAccount();
+
+  if (!account?.eno) {
+    alert("ログイン中のアカウント情報を確認できません");
+    return;
+  }
+
+  const eno = account.eno;
+  const character = loadCharacter(eno) || {};
+
+  saveCharacter(eno, {
+    ...character,
+    currentPlaceId: placeId
+  });
+
+  window.location.href =
+    `./chat.html?placeId=${encodeURIComponent(placeId)}`;
 }
 
 function renderChatPlaceInfo() {
@@ -83,6 +118,39 @@ function renderChatPlaceInfo() {
   currentPlaceRow.textContent =
     `保存中の現在地: ${character?.currentPlaceId ?? "なし"}`;
   centerPanel.appendChild(currentPlaceRow);
+
+    if (place.kind !== "room") {
+    const switchHeading = document.createElement("h2");
+    switchHeading.textContent = "場所切替";
+    centerPanel.appendChild(switchHeading);
+
+    const sameGroupPlaces =
+      getPlacesInSameGroup(place)
+        .slice()
+        .sort((a, b) =>
+          getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
+        );
+
+    sameGroupPlaces.forEach(item => {
+      const button = document.createElement("button");
+      button.type = "button";
+
+      const label =
+        `${getLayerLabel(item.layer)} : ${item.name}`;
+
+      button.textContent = label;
+
+      if (item.placeId === place.placeId) {
+        button.disabled = true;
+      } else {
+        button.addEventListener("click", () => {
+          moveToPlace(item.placeId);
+        });
+      }
+
+      centerPanel.appendChild(button);
+    });
+  }
 }
 
 renderChatPlaceInfo();
