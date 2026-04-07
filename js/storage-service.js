@@ -154,7 +154,7 @@ return {
   eno,
   fullName: fullName ?? "",
   defaultName: defaultName ?? "",
-  currentPlaceId: "F1",
+  currentPlaceId: "F1-1",
   commIcons: [],
   commDialogues: {}
 };
