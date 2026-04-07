@@ -139,17 +139,34 @@ function createPostCard(post, options = {}) {
     ? "chatPostCard chatPostCardPreview"
     : "chatPostCard";
 
-  const meta = document.createElement("p");
+  const left = document.createElement("div");
+  left.className = "chatPostCardLeft";
 
-  if (isPreview) {
-    meta.textContent =
-      `${post.createdAt} / ${getPlaceLabel(post.placeId)}`;
-  } else {
-    meta.textContent =
-      `${post.speakerName} / ${post.createdAt} / ${getPlaceLabel(post.placeId)}`;
+  const right = document.createElement("div");
+  right.className = "chatPostCardRight";
+
+  if (!isPreview) {
+    const iconBox = document.createElement("div");
+    iconBox.className = "chatPostIcon";
+    iconBox.textContent = "□";
+    left.appendChild(iconBox);
   }
 
+  const header = document.createElement("div");
+  header.className = "chatPostHeader";
+
+  if (!isPreview) {
+    const name = document.createElement("div");
+    name.className = "chatPostName";
+    name.textContent = `${post.speakerName} / Eno:${post.authorEno}`;
+    header.appendChild(name);
+  }
+
+  const divider = document.createElement("div");
+  divider.className = "chatPostDivider";
+
   const body = document.createElement("div");
+  body.className = "chatPostBody";
 
   if (isPreview) {
     body.textContent = getPreviewText(post.body);
@@ -157,8 +174,17 @@ function createPostCard(post, options = {}) {
     renderRichText(body, post.body, { preset: "message" });
   }
 
-  postBox.appendChild(meta);
-  postBox.appendChild(body);
+  const footer = document.createElement("div");
+  footer.className = "chatPostFooter";
+  footer.textContent = `${post.createdAt} / ${getPlaceLabel(post.placeId)}`;
+
+  right.appendChild(header);
+  right.appendChild(divider);
+  right.appendChild(body);
+  right.appendChild(footer);
+
+  postBox.appendChild(left);
+  postBox.appendChild(right);
 
   return postBox;
 }
