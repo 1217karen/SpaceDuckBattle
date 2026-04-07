@@ -131,6 +131,37 @@ function getSideFieldPreviewPosts(currentPlace) {
   return getPostsByPlaceId(mainField.placeId);
 }
 
+function getMainAreaPreviewPosts(currentPlace) {
+  if (!currentPlace) return [];
+
+  if (currentPlace.kind !== "area") return [];
+  if (currentPlace.layer !== "main") return [];
+
+  const previewPosts = [];
+
+  const parentMainField = places.find(place =>
+    place.kind === "field" &&
+    place.layer === "main" &&
+    place.placeId === currentPlace.parentId
+  );
+
+  if (parentMainField) {
+    previewPosts.push(...getPostsByPlaceId(parentMainField.placeId));
+  }
+
+  const sideArea = places.find(place =>
+    place.kind === "area" &&
+    place.groupId === currentPlace.groupId &&
+    place.layer === "side"
+  );
+
+  if (sideArea) {
+    previewPosts.push(...getPostsByPlaceId(sideArea.placeId));
+  }
+
+  return previewPosts;
+}
+
 function getDisplayPosts(currentPlace) {
   const normalPosts =
     getPostsByPlaceId(currentPlace.placeId)
@@ -153,10 +184,18 @@ function getDisplayPosts(currentPlace) {
         displayType: "preview"
       }));
 
+  const mainAreaPreviewPosts =
+    getMainAreaPreviewPosts(currentPlace)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
   return [
     ...normalPosts,
     ...sideFieldPreviewPosts,
-    ...mainFieldPreviewPosts
+    ...mainFieldPreviewPosts,
+    ...mainAreaPreviewPosts
   ].sort((a, b) => b.postId - a.postId);
 }
 
