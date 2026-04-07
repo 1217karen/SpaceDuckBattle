@@ -32,7 +32,7 @@ export const places = [
   {
     placeId: "E1-1",
     groupId: "E1",
-    parentId: "F1",
+    parentId: "F1-1",
     kind: "area",
     layer: "main",
     name: "テストエリア1",
@@ -50,7 +50,7 @@ export const places = [
   {
     placeId: "E1-3",
     groupId: "E1",
-    parentId: "F1",
+    parentId: "F1-1",
     kind: "area",
     layer: "local",
     name: "テストエリア1 ローカル",
@@ -69,7 +69,7 @@ export const places = [
   {
     placeId: "E2-2",
     groupId: "E2",
-    parentId: "F1",
+    parentId: "F1-1",
     kind: "area",
     layer: "side",
     name: "テストエリア2 サイド",
