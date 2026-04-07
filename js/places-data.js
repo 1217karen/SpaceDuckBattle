@@ -41,7 +41,7 @@ export const places = [
   {
     placeId: "E1-2",
     groupId: "E1",
-    parentId: "F1",
+    parentId: "F1-1",
     kind: "area",
     layer: "side",
     name: "テストエリア1 サイド",
@@ -60,7 +60,7 @@ export const places = [
   {
     placeId: "E2-1",
     groupId: "E2",
-    parentId: "F1",
+    parentId: "F1-1",
     kind: "area",
     layer: "main",
     name: "テストエリア2",
@@ -78,7 +78,7 @@ export const places = [
   {
     placeId: "E2-3",
     groupId: "E2",
-    parentId: "F1",
+    parentId: "F1-1",
     kind: "area",
     layer: "local",
     name: "テストエリア2 ローカル",
@@ -88,7 +88,7 @@ export const places = [
   {
     placeId: "R1",
     groupId: "R1",
-    parentId: "E1",
+    parentId: "E1-1",
     kind: "room",
     layer: null,
     name: "テストルーム1",
@@ -97,7 +97,7 @@ export const places = [
   {
     placeId: "R2",
     groupId: "R2",
-    parentId: "E1",
+    parentId: "E1-1",
     kind: "room",
     layer: null,
     name: "テストルーム2",
@@ -106,7 +106,7 @@ export const places = [
   {
     placeId: "R3",
     groupId: "R3",
-    parentId: "E2",
+    parentId: "E2-1",
     kind: "room",
     layer: null,
     name: "テストルーム3",
