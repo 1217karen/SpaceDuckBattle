@@ -68,6 +68,69 @@ function getPostsByPlaceId(placeId) {
   return posts.filter(post => post.placeId === placeId);
 }
 
+function getPlaceLabel(placeId) {
+  const place = getPlaceById(placeId);
+  return place?.name || placeId;
+}
+
+function getPreviewText(text, maxLength = 20) {
+  const value = String(text ?? "");
+
+  if (value.length <= maxLength) {
+    return value;
+  }
+
+  return value.slice(0, maxLength) + "……";
+}
+
+function getSideFieldPreviewPosts(currentPlace) {
+  if (!currentPlace) return [];
+
+  if (currentPlace.kind !== "field") return [];
+  if (currentPlace.layer !== "side") return [];
+
+  const mainField = places.find(place =>
+    place.kind === "field" &&
+    place.groupId === currentPlace.groupId &&
+    place.layer === "main"
+  );
+
+  if (!mainField) return [];
+
+  return getPostsByPlaceId(mainField.placeId);
+}
+
+function createPostCard(post, options = {}) {
+  const {
+    isPreview = false
+  } = options;
+
+  const postBox = document.createElement("div");
+  postBox.className = isPreview
+    ? "chatPostCard chatPostCardPreview"
+    : "chatPostCard";
+
+  const meta = document.createElement("p");
+
+  if (isPreview) {
+    meta.textContent =
+      `${post.createdAt} / ${getPlaceLabel(post.placeId)}`;
+  } else {
+    meta.textContent =
+      `${post.speakerName} / ${post.createdAt} / ${getPlaceLabel(post.placeId)}`;
+  }
+
+  const body = document.createElement("p");
+  body.textContent = isPreview
+    ? getPreviewText(post.body, 20)
+    : post.body;
+
+  postBox.appendChild(meta);
+  postBox.appendChild(body);
+
+  return postBox;
+}
+
 function renderChatPlaceInfo() {
   if (!centerPanel) return;
 
@@ -157,7 +220,7 @@ function renderChatPlaceInfo() {
     });
   }
 
-    const postsHeading = document.createElement("h2");
+  const postsHeading = document.createElement("h2");
   postsHeading.textContent = "発言一覧";
   centerPanel.appendChild(postsHeading);
 
@@ -169,19 +232,24 @@ function renderChatPlaceInfo() {
     centerPanel.appendChild(emptyPosts);
   } else {
     currentPosts.forEach(post => {
-      const postBox = document.createElement("div");
+      centerPanel.appendChild(
+        createPostCard(post)
+      );
+    });
+  }
 
-      const meta = document.createElement("p");
-      meta.textContent =
-        `${post.speakerName} / ${post.createdAt} / ${post.placeId}`;
+  const previewPosts =
+    getSideFieldPreviewPosts(place);
 
-      const body = document.createElement("p");
-      body.textContent = post.body;
+  if (previewPosts.length > 0) {
+    const previewHeading = document.createElement("h2");
+    previewHeading.textContent = "一部見える発言";
+    centerPanel.appendChild(previewHeading);
 
-      postBox.appendChild(meta);
-      postBox.appendChild(body);
-
-      centerPanel.appendChild(postBox);
+    previewPosts.forEach(post => {
+      centerPanel.appendChild(
+        createPostCard(post, { isPreview: true })
+      );
     });
   }
 }
