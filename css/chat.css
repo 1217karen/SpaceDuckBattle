@@ -1,0 +1,11 @@
+.chatPostCard {
+  border: 1px solid #999;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.chatPostCardPreview {
+  opacity: 0.65;
+}
