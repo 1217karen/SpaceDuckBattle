@@ -3,10 +3,10 @@
 export const posts = [
   {
     postId: 1,
-    placeId: "F1",
+    placeId: "F1-1",
     speakerName: "テスト",
     iconId: null,
-    body: "ここはF1です。<b>テスト</b>ああああああ<rb>テスト</rb><rt>てすと</rt>",
+    body: "ここはF1-1です。<b>テスト</b>ああああああ<rb>テスト</rb><rt>てすと</rt>",
     createdAt: "2026-04-07 10:00",
     authorEno: 0
   },
@@ -31,10 +31,10 @@ export const posts = [
 
   {
     postId: 4,
-    placeId: "E1",
+    placeId: "E1-1",
     speakerName: "テスト",
     iconId: null,
-    body: "ここはE1です",
+    body: "ここはE1-1です",
     createdAt: "2026-04-07 10:03",
     authorEno: 0
   },
@@ -59,10 +59,10 @@ export const posts = [
 
   {
     postId: 7,
-    placeId: "E2",
+    placeId: "E2-1",
     speakerName: "テスト",
     iconId: null,
-    body: "ここはE2です",
+    body: "ここはE2-1です",
     createdAt: "2026-04-07 10:06",
     authorEno: 0
   },
