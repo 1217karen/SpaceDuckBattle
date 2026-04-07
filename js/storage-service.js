@@ -150,13 +150,14 @@ export function createInitialCharacter({
   fullName,
   defaultName
 }) {
-  return {
-    eno,
-    fullName: fullName ?? "",
-    defaultName: defaultName ?? "",
-    commIcons: [],
-    commDialogues: {}
-  };
+return {
+  eno,
+  fullName: fullName ?? "",
+  defaultName: defaultName ?? "",
+  currentPlaceId: "F1",
+  commIcons: [],
+  commDialogues: {}
+};
 }
 
 
