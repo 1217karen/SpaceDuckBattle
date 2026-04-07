@@ -93,6 +93,27 @@ function getPreviewText(text) {
   return plainText.slice(0, 20) + "……";
 }
 
+function getMainFieldPreviewPosts(currentPlace) {
+  if (!currentPlace) return [];
+
+  if (currentPlace.kind !== "field") return [];
+  if (currentPlace.layer !== "main") return [];
+
+  const childMainAreas = places.filter(place =>
+    place.kind === "area" &&
+    place.layer === "main" &&
+    place.parentId === currentPlace.placeId
+  );
+
+  const previewPosts = [];
+
+  childMainAreas.forEach(areaPlace => {
+    previewPosts.push(...getPostsByPlaceId(areaPlace.placeId));
+  });
+
+  return previewPosts;
+}
+
 function getSideFieldPreviewPosts(currentPlace) {
   if (!currentPlace) return [];
 
@@ -118,15 +139,25 @@ function getDisplayPosts(currentPlace) {
         displayType: "normal"
       }));
 
-  const previewPosts =
+  const sideFieldPreviewPosts =
     getSideFieldPreviewPosts(currentPlace)
       .map(post => ({
         ...post,
         displayType: "preview"
       }));
 
-  return [...normalPosts, ...previewPosts]
-    .sort((a, b) => b.postId - a.postId);
+  const mainFieldPreviewPosts =
+    getMainFieldPreviewPosts(currentPlace)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
+  return [
+    ...normalPosts,
+    ...sideFieldPreviewPosts,
+    ...mainFieldPreviewPosts
+  ].sort((a, b) => b.postId - a.postId);
 }
 
 function createPostCard(post, options = {}) {
