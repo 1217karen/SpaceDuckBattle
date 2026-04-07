@@ -1,12 +1,13 @@
 //chat-controller.js
 
 import { places } from "./places-data.js";
+import {getCurrentAccount,loadCharacter} from "./storage-service.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
 function getPlaceIdFromQuery() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("placeId") || "F1";
+  return params.get("placeId");
 }
 
 function getPlaceById(placeId) {
@@ -30,7 +31,15 @@ function getLayerLabel(layer) {
 function renderChatPlaceInfo() {
   if (!centerPanel) return;
 
-  const placeId = getPlaceIdFromQuery();
+  const account = getCurrentAccount();
+  const eno = account?.eno ?? null;
+  const character = eno ? loadCharacter(eno) : null;
+
+  const placeId =
+    getPlaceIdFromQuery() ||
+    character?.currentPlaceId ||
+    "F1";
+
   const place = getPlaceById(placeId);
 
   centerPanel.innerHTML = "";
@@ -69,6 +78,11 @@ function renderChatPlaceInfo() {
   const groupRow = document.createElement("p");
   groupRow.textContent = `グループID: ${place.groupId}`;
   centerPanel.appendChild(groupRow);
+
+  const currentPlaceRow = document.createElement("p");
+  currentPlaceRow.textContent =
+    `保存中の現在地: ${character?.currentPlaceId ?? "なし"}`;
+  centerPanel.appendChild(currentPlaceRow);
 }
 
 renderChatPlaceInfo();
