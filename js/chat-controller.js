@@ -110,6 +110,25 @@ function getSideFieldPreviewPosts(currentPlace) {
   return getPostsByPlaceId(mainField.placeId);
 }
 
+function getDisplayPosts(currentPlace) {
+  const normalPosts =
+    getPostsByPlaceId(currentPlace.placeId)
+      .map(post => ({
+        ...post,
+        displayType: "normal"
+      }));
+
+  const previewPosts =
+    getSideFieldPreviewPosts(currentPlace)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
+  return [...normalPosts, ...previewPosts]
+    .sort((a, b) => b.postId - a.postId);
+}
+
 function createPostCard(post, options = {}) {
   const {
     isPreview = false
@@ -233,35 +252,22 @@ function renderChatPlaceInfo() {
     });
   }
 
-  const postsHeading = document.createElement("h2");
+   const postsHeading = document.createElement("h2");
   postsHeading.textContent = "発言一覧";
   centerPanel.appendChild(postsHeading);
 
-  const currentPosts = getPostsByPlaceId(place.placeId);
+  const displayPosts = getDisplayPosts(place);
 
-  if (currentPosts.length === 0) {
+  if (displayPosts.length === 0) {
     const emptyPosts = document.createElement("p");
     emptyPosts.textContent = "発言はありません";
     centerPanel.appendChild(emptyPosts);
   } else {
-    currentPosts.forEach(post => {
+    displayPosts.forEach(post => {
       centerPanel.appendChild(
-        createPostCard(post)
-      );
-    });
-  }
-
-  const previewPosts =
-    getSideFieldPreviewPosts(place);
-
-  if (previewPosts.length > 0) {
-    const previewHeading = document.createElement("h2");
-    previewHeading.textContent = "一部見える発言";
-    centerPanel.appendChild(previewHeading);
-
-    previewPosts.forEach(post => {
-      centerPanel.appendChild(
-        createPostCard(post, { isPreview: true })
+        createPostCard(post, {
+          isPreview: post.displayType === "preview"
+        })
       );
     });
   }
