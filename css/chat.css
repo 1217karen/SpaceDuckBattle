@@ -72,3 +72,15 @@
   text-align: right;
   color: #666;
 }
+
+.chatPostActions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chatPostActionButton {
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
