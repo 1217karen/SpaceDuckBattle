@@ -2,6 +2,7 @@
 
 import { places } from "./places-data.js";
 import { posts } from "./posts-data.js";
+import { renderRichText } from "./rich-text.js";
 import {getCurrentAccount,loadCharacter,saveCharacter} from "./storage-service.js";
 
 const centerPanel = document.querySelector(".center-panel");
@@ -129,10 +130,13 @@ function createPostCard(post, options = {}) {
       `${post.speakerName} / ${post.createdAt} / ${getPlaceLabel(post.placeId)}`;
   }
 
-  const body = document.createElement("p");
-  body.textContent = isPreview
-    ? getPreviewText(post.body, 20)
-    : post.body;
+  const body = document.createElement("div");
+
+  if (isPreview) {
+    body.textContent = getPreviewText(post.body);
+  } else {
+    renderRichText(body, post.body, { preset: "message" });
+  }
 
   postBox.appendChild(meta);
   postBox.appendChild(body);
