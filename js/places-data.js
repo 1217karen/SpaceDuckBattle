@@ -88,28 +88,31 @@ export const places = [
   {
     placeId: "R1",
     groupId: "R1",
-    parentId: "E1-1",
+    parentId: "E1",
     kind: "room",
     layer: null,
     name: "テストルーム1",
-    accessType: "public"
+    accessType: "public",
+    showParentMainAreaPreview: true
   },
   {
     placeId: "R2",
     groupId: "R2",
-    parentId: "E1-1",
+    parentId: "E1",
     kind: "room",
     layer: null,
     name: "テストルーム2",
-    accessType: "password"
+    accessType: "password",
+    showParentMainAreaPreview: false
   },
   {
     placeId: "R3",
     groupId: "R3",
-    parentId: "E2-1",
+    parentId: "E2",
     kind: "room",
     layer: null,
     name: "テストルーム3",
-    accessType: "private"
+    accessType: "private",
+    showParentMainAreaPreview: true
   }
 ];
