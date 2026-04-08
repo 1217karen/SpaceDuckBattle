@@ -88,7 +88,7 @@ export const places = [
   {
     placeId: "R1",
     groupId: "R1",
-    parentId: "E1",
+    parentId: "E1-1",
     kind: "room",
     layer: null,
     name: "テストルーム1",
@@ -98,7 +98,7 @@ export const places = [
   {
     placeId: "R2",
     groupId: "R2",
-    parentId: "E1",
+    parentId: "E1-1",
     kind: "room",
     layer: null,
     name: "テストルーム2",
@@ -108,7 +108,7 @@ export const places = [
   {
     placeId: "R3",
     groupId: "R3",
-    parentId: "E2",
+    parentId: "E2-1",
     kind: "room",
     layer: null,
     name: "テストルーム3",
