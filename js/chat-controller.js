@@ -171,6 +171,28 @@ function getSideAreaPreviewPosts(currentPlace) {
   return getPostsByPlaceId(mainArea.placeId);
 }
 
+function getRoomPreviewPosts(currentPlace) {
+  if (!currentPlace) return [];
+
+  if (currentPlace.kind !== "room") return [];
+
+  if (!currentPlace.showParentMainAreaPreview) {
+    return [];
+  }
+
+  const parentMainArea = places.find(place =>
+    place.kind === "area" &&
+    place.layer === "main" &&
+    place.placeId === currentPlace.parentId
+  );
+
+  if (!parentMainArea) {
+    return [];
+  }
+
+  return getPostsByPlaceId(parentMainArea.placeId);
+}
+
 function getDisplayPosts(currentPlace) {
   const normalPosts =
     getPostsByPlaceId(currentPlace.placeId)
@@ -207,12 +229,20 @@ function getDisplayPosts(currentPlace) {
         displayType: "preview"
       }));
 
+  const roomPreviewPosts =
+    getRoomPreviewPosts(currentPlace)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
   return [
     ...normalPosts,
     ...sideFieldPreviewPosts,
     ...mainFieldPreviewPosts,
     ...mainAreaPreviewPosts,
-    ...sideAreaPreviewPosts
+    ...sideAreaPreviewPosts,
+    ...roomPreviewPosts
   ].sort((a, b) => b.postId - a.postId);
 }
 
