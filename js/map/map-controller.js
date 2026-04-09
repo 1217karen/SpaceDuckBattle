@@ -1,7 +1,7 @@
 //map-controller.js
 
-import { places } from "./places-data.js";
-import {getCurrentAccount,loadCharacter,saveCharacter} from "./storage-service.js";
+import { places } from "../data/places-data.js";
+import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
