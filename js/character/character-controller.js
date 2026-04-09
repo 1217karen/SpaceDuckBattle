@@ -1,9 +1,9 @@
 //character-controller.js
 
-import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
-import { bindTextPreview } from "./text-preview.js";
-import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
-import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "./storage-service.js";
+import { createIconPicker, getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
+import { bindTextPreview } from "../common/text-preview.js";
+import { bindSpeakerNameSync, updateSpeakerNameField } from "../common/speaker-name-sync.js";
+import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveCharacter, saveUnit } from "../services/storage-service.js";
 
 requireLogin();
 
