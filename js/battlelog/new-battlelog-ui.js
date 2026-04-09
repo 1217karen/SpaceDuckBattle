@@ -4,9 +4,9 @@
 // import
 // =====================
 
-import {moveUnit,updateFacing,highlightCell,highlightCells,removeUnit} from "./board.js";
-import { EFFECTS } from "./effects-config.js";
-import { getSkillDisplayName } from "./skills.js";
+import { moveUnit, updateFacing, highlightCell, highlightCells, removeUnit } from "../common/board.js";
+import { EFFECTS } from "../battle/effects-config.js";
+import { getSkillDisplayName } from "../data/skills.js";
 import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,
         applyEffectRemoved,applyEffectApplied,applyMove,applyDeath,applyFacing} from "./new-battlelog-state-updater.js";
 import { battleState } from "./new-battlelog-state.js";
