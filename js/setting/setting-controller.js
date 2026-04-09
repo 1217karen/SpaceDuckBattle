@@ -1,9 +1,9 @@
 //setting-controller.js
 
-import { skillHandlers } from "./skills.js";
-import {createIconPicker,getNoImageUrl,normalizeCommIcons} from "./icon-picker.js";
-import { bindSpeakerNameSync, updateSpeakerNameField } from "./speaker-name-sync.js";
-import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveUnit} from "./storage-service.js";
+import { skillHandlers } from "../data/skills.js";
+import { createIconPicker, getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
+import { bindSpeakerNameSync, updateSpeakerNameField } from "../common/speaker-name-sync.js";
+import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveUnit } from "../services/storage-service.js";
 import { getCurrentStats, isSkillUnlocked } from "./skill-unlock.js";
 
 requireLogin();
