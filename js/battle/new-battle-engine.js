@@ -1,6 +1,6 @@
 //new-battle-engine.js
 
-import { skillHandlers } from "./skills.js";
+import { skillHandlers } from "../data/skills.js";
 import { facingFromDelta, getKnockbackCell, getPullCell } from "./new-movement.js";
 import { applyEffect } from "./new-battle-effects.js";
 import { getEffectiveStat } from "./new-battle-stats.js";
