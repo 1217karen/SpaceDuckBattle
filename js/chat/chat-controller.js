@@ -1,9 +1,9 @@
 //chat-controller.js
 
-import { places } from "./places-data.js";
-import { posts } from "./posts-data.js";
-import { renderRichText } from "./rich-text.js";
-import {getCurrentAccount,loadCharacter,saveCharacter} from "./storage-service.js";
+import { places } from "../data/places-data.js";
+import { posts } from "../data/posts-data.js";
+import { renderRichText } from "../common/rich-text.js";
+import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
