@@ -1,6 +1,6 @@
 // new-battlelog-comm.js
 
-import { renderRichText } from "./rich-text.js";
+import { renderRichText } from "../common/rich-text.js";
 import { resolveCommDisplayName } from "./name-resolver.js";
 
 function getFallbackIcon() {
