@@ -5,7 +5,7 @@
 // import
 // =====================
 
-import { skillHandlers } from "./skills.js";
+import { skillHandlers } from "../data/skills.js";
 import { updateUnitStatUI } from "./new-battlelog-ui.js";
 
 
