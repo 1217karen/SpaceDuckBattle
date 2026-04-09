@@ -1,6 +1,6 @@
 // new-battle-skill.js
 
-import { skillHandlers } from "./skills.js";
+import { skillHandlers } from "../data/skills.js";
 import { applyDamage } from "./new-battle-damage.js";
 import { applyHeal } from "./new-battle-heal.js";
 import { applyMove } from "./new-battle-move.js";
