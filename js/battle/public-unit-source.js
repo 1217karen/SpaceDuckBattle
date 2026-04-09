@@ -4,7 +4,7 @@ import {
   getRegisteredEnoMax,
   loadCharacter,
   loadUnit
-} from "./storage-service.js";
+} from "../services/storage-service.js";
 
 export function loadPublicBattleEntries() {
   const maxEno = getRegisteredEnoMax();
