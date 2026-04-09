@@ -1,6 +1,6 @@
 //include-menu.js
 
-import { clearCurrentLoginId } from "../js/service/storage-service.js";
+import { clearCurrentLoginId } from "../services/storage-service.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("commonMenu");
