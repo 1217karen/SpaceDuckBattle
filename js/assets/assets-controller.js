@@ -1,6 +1,6 @@
 //assets-controller.js
 
-import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "./storage-service.js";
+import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "../services/storage-service.js";
 
 requireLogin()
 
