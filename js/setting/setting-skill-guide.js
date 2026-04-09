@@ -1,12 +1,7 @@
 //setting-skill-guide.js
 
-
-import { skillHandlers } from "./skills.js";
-import {
-  getCurrentStats,
-  isSkillUnlocked,
-  formatUnlockText
-} from "./skill-unlock.js";
+import { skillHandlers } from "../data/skills.js";
+import { getCurrentStats, isSkillUnlocked, formatUnlockText } from "./skill-unlock.js";
 
 function createRow(labelText, valueText) {
   const row = document.createElement("div");
