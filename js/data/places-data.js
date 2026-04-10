@@ -1,15 +1,17 @@
 //places-data.js
 
 export const places = [
-  {
-    placeId: "F1-1",
-    groupId: "F1",
-    parentId: null,
-    kind: "field",
-    layer: "main",
-    name: "テストフィールド",
-    accessType: null
-  },
+{
+  placeId: "F1-1",
+  groupId: "F1",
+  parentId: null,
+  kind: "field",
+  layer: "main",
+  name: "テストフィールド",
+  shortDescription: "ここはテスト用のフィールドです。",
+  longDescription: "ここには詳細説明文が入ります。あとで場所ごとの案内や特徴を書けるようにします。",
+  accessType: null
+},
   {
     placeId: "F1-2",
     groupId: "F1",
