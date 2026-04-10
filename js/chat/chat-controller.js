@@ -71,6 +71,26 @@ function getPlaceLabel(placeId) {
   return place?.name || placeId;
 }
 
+function getAroundBasePlace(place) {
+  if (!place) {
+    return null;
+  }
+
+  if (place.kind === "room") {
+    return place;
+  }
+
+  if (place.layer === "main") {
+    return place;
+  }
+
+  return places.find(item =>
+    item.groupId === place.groupId &&
+    item.kind === place.kind &&
+    item.layer === "main"
+  ) || place;
+}
+
 function buildPlaceTabs(place) {
   if (!place) {
     return [];
@@ -166,11 +186,13 @@ function renderChatPlaceInfo() {
     "F1-1";
 
 const place = getPlaceById(placeId);
+  const aroundBasePlace = getAroundBasePlace(place);
 
 centerPanel.innerHTML = "";
 
 renderPlaceInfoSection(centerPanel, {
   place,
+  aroundBasePlace,
   places,
   onMoveToPlace: moveToPlace
 });
