@@ -366,8 +366,15 @@
   margin-bottom: 8px;
 }
 
-.chatComposerName {
-  font-weight: bold;
+.chatComposerNameInput {
+  min-width: 0;
+  width: 240px;
+  max-width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font: inherit;
 }
 
 .chatComposerReplyTarget {
