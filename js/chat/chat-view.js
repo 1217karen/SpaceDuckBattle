@@ -141,3 +141,39 @@ export function renderPostListSection(container, options = {}) {
     );
   });
 }
+export function renderPlaceSwitchSection(container, options = {}) {
+  const {
+    currentPlace,
+    sameGroupPlaces = [],
+    getLayerLabel,
+    onMoveToPlace
+  } = options;
+
+  if (!currentPlace) {
+    return;
+  }
+
+  if (currentPlace.kind === "room") {
+    return;
+  }
+
+  const switchHeading = document.createElement("h2");
+  switchHeading.textContent = "場所切替";
+  container.appendChild(switchHeading);
+
+  sameGroupPlaces.forEach(place => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = `${getLayerLabel(place.layer)} : ${place.name}`;
+
+    if (place.placeId === currentPlace.placeId) {
+      button.disabled = true;
+    } else {
+      button.addEventListener("click", () => {
+        onMoveToPlace(place.placeId);
+      });
+    }
+
+    container.appendChild(button);
+  });
+}
