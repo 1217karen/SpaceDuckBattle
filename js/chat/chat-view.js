@@ -181,6 +181,7 @@ export function renderPlaceSwitchSection(container, options = {}) {
 export function renderPlaceInfoSection(container, options = {}) {
   const {
     place,
+    aroundBasePlace,
     places = [],
     onMoveToPlace
   } = options;
@@ -226,7 +227,7 @@ const divider = document.createElement("div");
 divider.className = "chatHeaderDivider";
 
 renderAroundTree(aroundPanel, {
-  place,
+  place: aroundBasePlace ?? place,
   places,
   onMoveToPlace
 });
