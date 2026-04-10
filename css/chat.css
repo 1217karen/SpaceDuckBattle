@@ -248,3 +248,51 @@
   text-align: right;
   color: #666;
 }
+
+/* ========================================
+   チャットページ：タブ
+   ======================================== */
+
+.chatTabsSection {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.chatTabsInner {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chatTabRow {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chatTabRow:last-child {
+  margin-bottom: 0;
+}
+
+.chatTabButton {
+  min-width: 88px;
+  padding: 8px 14px;
+  border: 1px solid #999;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.chatTabButtonActive {
+  border-color: #333;
+  font-weight: bold;
+}
+
+.chatTabButtonDisabled {
+  opacity: 0.45;
+  cursor: default;
+}
