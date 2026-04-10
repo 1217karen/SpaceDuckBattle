@@ -356,15 +356,17 @@ export function renderChatComposerSection(container, options = {}) {
   const metaRow = document.createElement("div");
   metaRow.className = "chatComposerMetaRow";
 
-  const name = document.createElement("div");
-  name.className = "chatComposerName";
-  name.textContent = speakerName;
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.className = "chatComposerNameInput";
+  nameInput.value = speakerName;
+  nameInput.placeholder = "発言者名";
 
   const replyTarget = document.createElement("div");
   replyTarget.className = "chatComposerReplyTarget";
   replyTarget.textContent = replyTargetLabel;
 
-  metaRow.appendChild(name);
+  metaRow.appendChild(nameInput);
   metaRow.appendChild(replyTarget);
 
   const textarea = document.createElement("textarea");
@@ -415,6 +417,7 @@ export function renderChatComposerSection(container, options = {}) {
     section,
     iconButton,
     iconImg,
+    nameInput,
     textarea,
     submitButton
   };
