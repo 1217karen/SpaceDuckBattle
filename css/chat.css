@@ -340,6 +340,13 @@
   cursor: pointer;
 }
 
+.chatComposerIconImage {
+  width: 60px;
+  height: 60px;
+  display: block;
+  object-fit: cover;
+}
+
 .chatComposerRight {
   flex: 1;
   min-width: 0;
