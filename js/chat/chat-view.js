@@ -392,6 +392,56 @@ export function renderChatComposerSection(container, options = {}) {
   underlineButton.className = "chatComposerToolButton";
   underlineButton.textContent = "U";
 
+  const strikeButton = document.createElement("button");
+  strikeButton.type = "button";
+  strikeButton.className = "chatComposerToolButton";
+  strikeButton.textContent = "S";
+
+  const rubyButton = document.createElement("button");
+  rubyButton.type = "button";
+  rubyButton.className = "chatComposerToolButton";
+  rubyButton.textContent = "ルビ";
+
+  const brButton = document.createElement("button");
+  brButton.type = "button";
+  brButton.className = "chatComposerToolButton";
+  brButton.textContent = "改行";
+
+  const f1Button = document.createElement("button");
+  f1Button.type = "button";
+  f1Button.className = "chatComposerToolButton";
+  f1Button.textContent = "F1";
+
+  const f2Button = document.createElement("button");
+  f2Button.type = "button";
+  f2Button.className = "chatComposerToolButton";
+  f2Button.textContent = "F2";
+
+  const f3Button = document.createElement("button");
+  f3Button.type = "button";
+  f3Button.className = "chatComposerToolButton";
+  f3Button.textContent = "F3";
+
+  const f4Button = document.createElement("button");
+  f4Button.type = "button";
+  f4Button.className = "chatComposerToolButton";
+  f4Button.textContent = "F4";
+
+  const f5Button = document.createElement("button");
+  f5Button.type = "button";
+  f5Button.className = "chatComposerToolButton";
+  f5Button.textContent = "F5";
+
+  const f6Button = document.createElement("button");
+  f6Button.type = "button";
+  f6Button.className = "chatComposerToolButton";
+  f6Button.textContent = "F6";
+
+  const f7Button = document.createElement("button");
+  f7Button.type = "button";
+  f7Button.className = "chatComposerToolButton";
+  f7Button.textContent = "F7";
+
   const submitButton = document.createElement("button");
   submitButton.type = "button";
   submitButton.className = "chatComposerSubmitButton";
@@ -400,6 +450,16 @@ export function renderChatComposerSection(container, options = {}) {
   toolbar.appendChild(boldButton);
   toolbar.appendChild(italicButton);
   toolbar.appendChild(underlineButton);
+  toolbar.appendChild(strikeButton);
+  toolbar.appendChild(rubyButton);
+  toolbar.appendChild(brButton);
+  toolbar.appendChild(f1Button);
+  toolbar.appendChild(f2Button);
+  toolbar.appendChild(f3Button);
+  toolbar.appendChild(f4Button);
+  toolbar.appendChild(f5Button);
+  toolbar.appendChild(f6Button);
+  toolbar.appendChild(f7Button);
   toolbar.appendChild(submitButton);
 
   right.appendChild(metaRow);
