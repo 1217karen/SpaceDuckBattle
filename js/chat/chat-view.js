@@ -177,3 +177,50 @@ export function renderPlaceSwitchSection(container, options = {}) {
     container.appendChild(button);
   });
 }
+export function renderPlaceInfoSection(container, options = {}) {
+  const {
+    place,
+    currentPlaceId,
+    getKindLabel,
+    getLayerLabel
+  } = options;
+
+  const heading = document.createElement("h1");
+  heading.textContent = "チャット";
+  container.appendChild(heading);
+
+  if (!place) {
+    const error = document.createElement("p");
+    error.textContent = "場所が見つかりません";
+    container.appendChild(error);
+    return;
+  }
+
+  const placeIdRow = document.createElement("p");
+  placeIdRow.textContent = `場所ID: ${place.placeId}`;
+  container.appendChild(placeIdRow);
+
+  const nameRow = document.createElement("p");
+  nameRow.textContent = `場所名: ${place.name}`;
+  container.appendChild(nameRow);
+
+  const kindRow = document.createElement("p");
+  kindRow.textContent = `種別: ${getKindLabel(place.kind)}`;
+  container.appendChild(kindRow);
+
+  const layerRow = document.createElement("p");
+  layerRow.textContent = `区分: ${getLayerLabel(place.layer)}`;
+  container.appendChild(layerRow);
+
+  const parentRow = document.createElement("p");
+  parentRow.textContent = `親ID: ${place.parentId ?? "なし"}`;
+  container.appendChild(parentRow);
+
+  const groupRow = document.createElement("p");
+  groupRow.textContent = `グループID: ${place.groupId}`;
+  container.appendChild(groupRow);
+
+  const currentPlaceRow = document.createElement("p");
+  currentPlaceRow.textContent = `保存中の現在地: ${currentPlaceId ?? "なし"}`;
+  container.appendChild(currentPlaceRow);
+}
