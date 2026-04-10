@@ -108,6 +108,11 @@
   box-sizing: border-box;
 }
 
+.chatAroundRow {
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
 /* ツリー記号側 */
 .chatAroundPrefix {
   color: #666;
