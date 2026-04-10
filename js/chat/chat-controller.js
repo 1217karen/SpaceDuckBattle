@@ -3,6 +3,7 @@
 import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
+import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
 import { getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,renderViewTabsSection,renderPostListSection } from "./chat-view.js";
@@ -202,6 +203,29 @@ function getInitialComposerIcon(character) {
   };
 }
 
+function getInitialComposerSpeakerName(character, initialIcon) {
+  const defaultName =
+    typeof character?.defaultName === "string"
+      ? character.defaultName.trim()
+      : "";
+
+  const commIcons = normalizeCommIcons(character?.commIcons);
+
+  if (initialIcon?.iconId) {
+    const matchedIcon = commIcons.find(item => item.id === initialIcon.iconId) || null;
+    const iconName =
+      typeof matchedIcon?.name === "string"
+        ? matchedIcon.name.trim()
+        : "";
+
+    if (iconName !== "") {
+      return iconName;
+    }
+  }
+
+  return defaultName;
+}
+
 function setupComposerIconPicker(composerRefs, character) {
   if (!composerRefs?.iconButton) {
     return;
@@ -209,12 +233,29 @@ function setupComposerIconPicker(composerRefs, character) {
 
   const commIcons = normalizeCommIcons(character?.commIcons);
   const initialIcon = getInitialComposerIcon(character);
+  const initialSpeakerName =
+    getInitialComposerSpeakerName(character, initialIcon);
 
   setButtonPreview(
     composerRefs.iconButton,
     initialIcon.iconId,
     initialIcon.iconUrl
   );
+
+  if (composerRefs.nameInput) {
+    composerRefs.nameInput.value = initialSpeakerName;
+  }
+
+  bindSpeakerNameSync({
+    nameInput: composerRefs.nameInput,
+    button: composerRefs.iconButton,
+    getIcons: () => commIcons,
+    getDefaultName: () =>
+      typeof character?.defaultName === "string"
+        ? character.defaultName.trim()
+        : "",
+    mode: "value"
+  });
 
   composerRefs.iconButton.addEventListener("click", () => {
     chatIconPicker.open(composerRefs.iconButton, commIcons);
