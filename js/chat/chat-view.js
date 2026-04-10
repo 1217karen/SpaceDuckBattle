@@ -181,7 +181,8 @@ export function renderPlaceSwitchSection(container, options = {}) {
 export function renderPlaceInfoSection(container, options = {}) {
   const {
     place,
-    places = []
+    places = [],
+    onMoveToPlace
   } = options;
 
   const section = document.createElement("section");
@@ -224,10 +225,11 @@ aroundPanel.hidden = true;
 const divider = document.createElement("div");
 divider.className = "chatHeaderDivider";
 
-  renderAroundTree(aroundPanel, {
-    place,
-    places
-  });
+renderAroundTree(aroundPanel, {
+  place,
+  places,
+  onMoveToPlace
+});
 
   const body = document.createElement("div");
   body.className = "chatHeaderBody";
@@ -299,7 +301,8 @@ inner.appendChild(body);
 function renderAroundTree(container, options = {}) {
   const {
     place,
-    places = []
+    places = [],
+    onMoveToPlace
   } = options;
 
   container.innerHTML = "";
@@ -314,7 +317,28 @@ function renderAroundTree(container, options = {}) {
       row.style.paddingLeft = `${line.depth * 1.5}em`;
     }
 
-    row.textContent = line.text;
+    const prefix = document.createElement("span");
+    prefix.className = "chatAroundPrefix";
+    prefix.textContent = line.prefix ?? "";
+
+    row.appendChild(prefix);
+
+    if (line.isCurrentPlace || !line.placeId) {
+      const text = document.createElement("span");
+      text.className = "chatAroundCurrent";
+      text.textContent = line.label;
+      row.appendChild(text);
+    } else {
+      const linkButton = document.createElement("button");
+      linkButton.type = "button";
+      linkButton.className = "chatAroundLinkButton";
+      linkButton.textContent = line.label;
+      linkButton.addEventListener("click", () => {
+        onMoveToPlace(line.placeId);
+      });
+      row.appendChild(linkButton);
+    }
+
     container.appendChild(row);
   });
 }
@@ -334,11 +358,17 @@ function buildAroundTreeLines(place, places) {
     return [
       {
         depth: 0,
-        text: `${place.name}（現在地）`
+        prefix: "",
+        label: `${place.name}（現在地）`,
+        placeId: place.placeId,
+        isCurrentPlace: true
       },
       ...childMainAreas.map((child, index) => ({
         depth: 1,
-        text: `${getTreeBranch(index, childMainAreas.length)}${child.name}`
+        prefix: getTreeBranch(index, childMainAreas.length),
+        label: child.name,
+        placeId: child.placeId,
+        isCurrentPlace: false
       }))
     ];
   }
@@ -360,19 +390,28 @@ function buildAroundTreeLines(place, places) {
     if (parentMainField) {
       lines.push({
         depth: 0,
-        text: parentMainField.name
+        prefix: "",
+        label: parentMainField.name,
+        placeId: parentMainField.placeId,
+        isCurrentPlace: false
       });
     }
 
     lines.push({
       depth: 1,
-      text: `└${place.name}（現在地）`
+      prefix: "└",
+      label: `${place.name}（現在地）`,
+      placeId: place.placeId,
+      isCurrentPlace: true
     });
 
     childRooms.forEach((child, index) => {
       lines.push({
         depth: 2,
-        text: `${getTreeBranch(index, childRooms.length)}${child.name}`
+        prefix: getTreeBranch(index, childRooms.length),
+        label: child.name,
+        placeId: child.placeId,
+        isCurrentPlace: false
       });
     });
 
@@ -391,13 +430,19 @@ function buildAroundTreeLines(place, places) {
     if (parentMainArea) {
       lines.push({
         depth: 0,
-        text: parentMainArea.name
+        prefix: "",
+        label: parentMainArea.name,
+        placeId: parentMainArea.placeId,
+        isCurrentPlace: false
       });
     }
 
     lines.push({
       depth: 1,
-      text: `└${place.name}（現在地）`
+      prefix: "└",
+      label: `${place.name}（現在地）`,
+      placeId: place.placeId,
+      isCurrentPlace: true
     });
 
     return lines;
