@@ -128,6 +128,10 @@
   margin-bottom: 10px;
 }
 
+.chatHeaderBody {
+  padding-left: 1em;
+}
+
 .chatHeaderShortDescription {
   margin: 0 0 8px;
   line-height: 1.7;
@@ -135,4 +139,18 @@
 
 .chatHeaderDetailToggle {
   display: inline-block;
+  margin-bottom: 8px;
+}
+
+.chatHeaderDetailContent {
+  padding-left: 1em;
+}
+
+.chatHeaderLongDescription {
+  margin: 0 0 8px;
+  line-height: 1.8;
+}
+
+.chatHeaderLongDescription:last-child {
+  margin-bottom: 0;
 }
