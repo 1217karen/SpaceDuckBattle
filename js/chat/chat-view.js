@@ -418,35 +418,53 @@ function buildAroundTreeLines(place, places) {
     return lines;
   }
 
-  if (place.kind === "room") {
-    const parentMainArea = places.find(item =>
-      item.kind === "area" &&
-      item.layer === "main" &&
-      item.placeId === place.parentId
-    );
+if (place.kind === "room") {
+  const parentMainArea = places.find(item =>
+    item.kind === "area" &&
+    item.layer === "main" &&
+    item.placeId === place.parentId
+  );
 
-    const lines = [];
+  const parentMainField = parentMainArea
+    ? places.find(item =>
+        item.kind === "field" &&
+        item.layer === "main" &&
+        item.placeId === parentMainArea.parentId
+      )
+    : null;
 
-    if (parentMainArea) {
-      lines.push({
-        depth: 0,
-        prefix: "",
-        label: parentMainArea.name,
-        placeId: parentMainArea.placeId,
-        isCurrentPlace: false
-      });
-    }
+  const lines = [];
 
+  if (parentMainField) {
+    lines.push({
+      depth: 0,
+      prefix: "",
+      label: parentMainField.name,
+      placeId: parentMainField.placeId,
+      isCurrentPlace: false
+    });
+  }
+
+  if (parentMainArea) {
     lines.push({
       depth: 1,
       prefix: "└",
-      label: `${place.name}（現在地）`,
-      placeId: place.placeId,
-      isCurrentPlace: true
+      label: parentMainArea.name,
+      placeId: parentMainArea.placeId,
+      isCurrentPlace: false
     });
-
-    return lines;
   }
+
+  lines.push({
+    depth: 2,
+    prefix: "└",
+    label: `${place.name}（現在地）`,
+    placeId: place.placeId,
+    isCurrentPlace: true
+  });
+
+  return lines;
+}
 
   return [];
 }
