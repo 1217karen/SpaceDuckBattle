@@ -177,6 +177,7 @@ export function renderPlaceSwitchSection(container, options = {}) {
     container.appendChild(button);
   });
 }
+
 export function renderPlaceInfoSection(container, options = {}) {
   const {
     place
@@ -195,31 +196,78 @@ export function renderPlaceInfoSection(container, options = {}) {
   title.className = "chatHeaderTitle";
   title.textContent = place?.name ?? "場所が見つかりません";
 
+  topRow.appendChild(title);
+
+  if (!place) {
+    inner.appendChild(topRow);
+    section.appendChild(inner);
+    container.appendChild(section);
+    return;
+  }
+
   const aroundToggle = document.createElement("button");
   aroundToggle.type = "button";
   aroundToggle.className = "chatHeaderLinkButton";
   aroundToggle.textContent = "▼周辺を表示";
 
-  topRow.appendChild(title);
   topRow.appendChild(aroundToggle);
 
   const divider = document.createElement("div");
   divider.className = "chatHeaderDivider";
 
+  const body = document.createElement("div");
+  body.className = "chatHeaderBody";
+
   const shortDescription = document.createElement("p");
   shortDescription.className = "chatHeaderShortDescription";
   shortDescription.textContent =
-    place?.shortDescription ?? "説明文は未設定です。";
+    place.shortDescription ?? "説明文は未設定です。";
 
   const detailToggle = document.createElement("button");
   detailToggle.type = "button";
   detailToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle";
   detailToggle.textContent = "▼詳細を表示";
 
+  const detailContent = document.createElement("div");
+  detailContent.className = "chatHeaderDetailContent";
+  detailContent.hidden = true;
+
+  const longDescription =
+    String(place.longDescription ?? "").trim();
+
+  if (longDescription) {
+    longDescription
+      .split(/\n+/)
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .forEach(line => {
+        const paragraph = document.createElement("p");
+        paragraph.className = "chatHeaderLongDescription";
+        paragraph.textContent = line;
+        detailContent.appendChild(paragraph);
+      });
+  } else {
+    const emptyDetail = document.createElement("p");
+    emptyDetail.className = "chatHeaderLongDescription";
+    emptyDetail.textContent = "詳細説明は未設定です。";
+    detailContent.appendChild(emptyDetail);
+  }
+
+  detailToggle.addEventListener("click", () => {
+    const isOpen = !detailContent.hidden;
+    detailContent.hidden = isOpen;
+    detailToggle.textContent = isOpen
+      ? "▼詳細を表示"
+      : "▲詳細を閉じる";
+  });
+
+  body.appendChild(shortDescription);
+  body.appendChild(detailToggle);
+  body.appendChild(detailContent);
+
   inner.appendChild(topRow);
   inner.appendChild(divider);
-  inner.appendChild(shortDescription);
-  inner.appendChild(detailToggle);
+  inner.appendChild(body);
 
   section.appendChild(inner);
   container.appendChild(section);
