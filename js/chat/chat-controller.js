@@ -4,7 +4,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPlaceInfoSection,renderChatTabsSection,renderPostListSection } from "./chat-view.js";
+import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,renderViewTabsSection,renderPostListSection } from "./chat-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
@@ -204,9 +204,17 @@ if (!place) {
 const placeTabs = buildPlaceTabs(place);
 const viewTabs = buildViewTabs();
 
-renderChatTabsSection(centerPanel, {
-  placeTabs,
-  viewTabs
+renderPlaceTabsSection(centerPanel, {
+  tabs: placeTabs
+});
+
+renderChatComposerSection(centerPanel, {
+  speakerName: "テストネーム",
+  replyTargetLabel: "返信先なし"
+});
+
+renderViewTabsSection(centerPanel, {
+  tabs: viewTabs
 });
 
 const allPosts = getAllPosts();
