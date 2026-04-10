@@ -298,6 +298,64 @@ inner.appendChild(body);
   container.appendChild(section);
 }
 
+export function renderChatTabsSection(container, options = {}) {
+  const {
+    placeTabs = [],
+    viewTabs = []
+  } = options;
+
+  const section = document.createElement("section");
+  section.className = "chatTabsSection";
+
+  const inner = document.createElement("div");
+  inner.className = "chatTabsInner";
+
+  const placeTabRow = document.createElement("div");
+  placeTabRow.className = "chatTabRow";
+
+  placeTabs.forEach(tab => {
+    placeTabRow.appendChild(createChatTabButton(tab));
+  });
+
+  const viewTabRow = document.createElement("div");
+  viewTabRow.className = "chatTabRow";
+
+  viewTabs.forEach(tab => {
+    viewTabRow.appendChild(createChatTabButton(tab));
+  });
+
+  inner.appendChild(placeTabRow);
+  inner.appendChild(viewTabRow);
+
+  section.appendChild(inner);
+  container.appendChild(section);
+}
+
+function createChatTabButton(tab = {}) {
+  const button = document.createElement("button");
+  button.type = "button";
+
+  const classNames = ["chatTabButton"];
+
+  if (tab.isActive) {
+    classNames.push("chatTabButtonActive");
+  }
+
+  if (tab.isDisabled) {
+    classNames.push("chatTabButtonDisabled");
+    button.disabled = true;
+  }
+
+  button.className = classNames.join(" ");
+  button.textContent = tab.label ?? "";
+
+  if (!tab.isDisabled && typeof tab.onClick === "function") {
+    button.addEventListener("click", tab.onClick);
+  }
+
+  return button;
+}
+
 function renderAroundTree(container, options = {}) {
   const {
     place,
