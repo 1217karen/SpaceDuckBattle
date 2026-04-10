@@ -4,7 +4,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPlaceInfoSection,renderPlaceSwitchSection,renderPostListSection } from "./chat-view.js";
+import { renderPlaceInfoSection,renderChatTabsSection,renderPostListSection } from "./chat-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
@@ -71,6 +71,88 @@ function getPlaceLabel(placeId) {
   return place?.name || placeId;
 }
 
+function buildPlaceTabs(place) {
+  if (!place) {
+    return [];
+  }
+
+  if (place.kind === "room") {
+    const tabs = [];
+
+    if (place.accessType === "public" || place.accessType === "password" || place.accessType === "private") {
+      tabs.push({
+        key: "shop",
+        label: "SHOP",
+        isActive: false,
+        isDisabled: true
+      });
+    }
+
+    return tabs;
+  }
+
+  const sameGroupPlaces =
+    getPlacesInSameGroup(place)
+      .slice()
+      .sort((a, b) =>
+        getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
+      );
+
+  const tabs = sameGroupPlaces.map(item => ({
+    key: `layer-${item.layer}`,
+    label: String(item.layer ?? "").toUpperCase(),
+    isActive: item.placeId === place.placeId,
+    isDisabled: item.placeId === place.placeId,
+    onClick: () => {
+      moveToPlace(item.placeId);
+    }
+  }));
+
+  tabs.push({
+    key: "shop",
+    label: "SHOP",
+    isActive: false,
+    isDisabled: true
+  });
+
+  return tabs;
+}
+
+function buildViewTabs() {
+  return [
+    {
+      key: "chat",
+      label: "CHAT",
+      isActive: true,
+      isDisabled: true
+    },
+    {
+      key: "reply",
+      label: "REPLY",
+      isActive: false,
+      isDisabled: true
+    },
+    {
+      key: "message",
+      label: "MESSAGE",
+      isActive: false,
+      isDisabled: true
+    },
+    {
+      key: "favorite",
+      label: "FAVORITE",
+      isActive: false,
+      isDisabled: true
+    },
+    {
+      key: "self",
+      label: "SELF",
+      isActive: false,
+      isDisabled: true
+    }
+  ];
+}
+
 function renderChatPlaceInfo() {
   if (!centerPanel) return;
 
@@ -97,18 +179,12 @@ if (!place) {
   return;
 }
 
-  const sameGroupPlaces =
-  getPlacesInSameGroup(place)
-    .slice()
-    .sort((a, b) =>
-      getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
-    );
+const placeTabs = buildPlaceTabs(place);
+const viewTabs = buildViewTabs();
 
-renderPlaceSwitchSection(centerPanel, {
-  currentPlace: place,
-  sameGroupPlaces,
-  getLayerLabel,
-  onMoveToPlace: moveToPlace
+renderChatTabsSection(centerPanel, {
+  placeTabs,
+  viewTabs
 });
 
 const allPosts = getAllPosts();
