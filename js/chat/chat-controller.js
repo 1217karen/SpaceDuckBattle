@@ -4,7 +4,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPlaceSwitchSection, renderPostListSection } from "./chat-view.js";
+import { renderPlaceInfoSection,renderPlaceSwitchSection,renderPostListSection } from "./chat-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
@@ -83,49 +83,20 @@ function renderChatPlaceInfo() {
     character?.currentPlaceId ||
     "F1-1";
 
-  const place = getPlaceById(placeId);
+const place = getPlaceById(placeId);
 
-  centerPanel.innerHTML = "";
+centerPanel.innerHTML = "";
 
-  const heading = document.createElement("h1");
-  heading.textContent = "チャット";
-  centerPanel.appendChild(heading);
+renderPlaceInfoSection(centerPanel, {
+  place,
+  currentPlaceId: character?.currentPlaceId ?? null,
+  getKindLabel,
+  getLayerLabel
+});
 
-  if (!place) {
-    const error = document.createElement("p");
-    error.textContent = "場所が見つかりません";
-    centerPanel.appendChild(error);
-    return;
-  }
-
-  const placeIdRow = document.createElement("p");
-  placeIdRow.textContent = `場所ID: ${place.placeId}`;
-  centerPanel.appendChild(placeIdRow);
-
-  const nameRow = document.createElement("p");
-  nameRow.textContent = `場所名: ${place.name}`;
-  centerPanel.appendChild(nameRow);
-
-  const kindRow = document.createElement("p");
-  kindRow.textContent = `種別: ${getKindLabel(place.kind)}`;
-  centerPanel.appendChild(kindRow);
-
-  const layerRow = document.createElement("p");
-  layerRow.textContent = `区分: ${getLayerLabel(place.layer)}`;
-  centerPanel.appendChild(layerRow);
-
-  const parentRow = document.createElement("p");
-  parentRow.textContent = `親ID: ${place.parentId ?? "なし"}`;
-  centerPanel.appendChild(parentRow);
-
-  const groupRow = document.createElement("p");
-  groupRow.textContent = `グループID: ${place.groupId}`;
-  centerPanel.appendChild(groupRow);
-
-  const currentPlaceRow = document.createElement("p");
-  currentPlaceRow.textContent =
-    `保存中の現在地: ${character?.currentPlaceId ?? "なし"}`;
-  centerPanel.appendChild(currentPlaceRow);
+if (!place) {
+  return;
+}
 
   const sameGroupPlaces =
   getPlacesInSameGroup(place)
