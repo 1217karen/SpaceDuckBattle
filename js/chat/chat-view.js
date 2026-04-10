@@ -114,3 +114,30 @@ export function createPostCard(post, options = {}) {
 
   return postBox;
 }
+
+export function renderPostListSection(container, options = {}) {
+  const {
+    posts = [],
+    getPlaceLabel
+  } = options;
+
+  const postsHeading = document.createElement("h2");
+  postsHeading.textContent = "発言一覧";
+  container.appendChild(postsHeading);
+
+  if (posts.length === 0) {
+    const emptyPosts = document.createElement("p");
+    emptyPosts.textContent = "発言はありません";
+    container.appendChild(emptyPosts);
+    return;
+  }
+
+  posts.forEach(post => {
+    container.appendChild(
+      createPostCard(post, {
+        isPreview: post.displayType === "preview",
+        getPlaceLabel
+      })
+    );
+  });
+}
