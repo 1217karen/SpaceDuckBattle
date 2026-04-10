@@ -4,7 +4,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPostListSection } from "./chat-view.js";
+import { renderPlaceSwitchSection, renderPostListSection } from "./chat-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
@@ -127,38 +127,19 @@ function renderChatPlaceInfo() {
     `保存中の現在地: ${character?.currentPlaceId ?? "なし"}`;
   centerPanel.appendChild(currentPlaceRow);
 
-    if (place.kind !== "room") {
-    const switchHeading = document.createElement("h2");
-    switchHeading.textContent = "場所切替";
-    centerPanel.appendChild(switchHeading);
+  const sameGroupPlaces =
+  getPlacesInSameGroup(place)
+    .slice()
+    .sort((a, b) =>
+      getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
+    );
 
-    const sameGroupPlaces =
-      getPlacesInSameGroup(place)
-        .slice()
-        .sort((a, b) =>
-          getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
-        );
-
-    sameGroupPlaces.forEach(item => {
-      const button = document.createElement("button");
-      button.type = "button";
-
-      const label =
-        `${getLayerLabel(item.layer)} : ${item.name}`;
-
-      button.textContent = label;
-
-      if (item.placeId === place.placeId) {
-        button.disabled = true;
-      } else {
-        button.addEventListener("click", () => {
-          moveToPlace(item.placeId);
-        });
-      }
-
-      centerPanel.appendChild(button);
-    });
-  }
+renderPlaceSwitchSection(centerPanel, {
+  currentPlace: place,
+  sameGroupPlaces,
+  getLayerLabel,
+  onMoveToPlace: moveToPlace
+});
 
 const allPosts = getAllPosts();
 
