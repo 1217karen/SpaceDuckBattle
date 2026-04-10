@@ -3,7 +3,8 @@
 import { places } from "../data/places-data.js";
 import { renderRichText } from "../common/rich-text.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
-import { getPostsByPlaceId } from "../services/post-service.js";
+import { getAllPosts } from "../services/post-service.js";
+import { getDisplayPosts } from "./chat-display-rules.js";
 
 
 const centerPanel = document.querySelector(".center-panel");
@@ -88,159 +89,6 @@ function getPreviewText(text) {
   }
 
   return plainText.slice(0, 20) + "……";
-}
-
-function getMainFieldPreviewPosts(currentPlace) {
-  if (!currentPlace) return [];
-
-  if (currentPlace.kind !== "field") return [];
-  if (currentPlace.layer !== "main") return [];
-
-  const childMainAreas = places.filter(place =>
-    place.kind === "area" &&
-    place.layer === "main" &&
-    place.parentId === currentPlace.placeId
-  );
-
-  const previewPosts = [];
-
-  childMainAreas.forEach(areaPlace => {
-    previewPosts.push(...getPostsByPlaceId(areaPlace.placeId));
-  });
-
-  return previewPosts;
-}
-
-function getSideFieldPreviewPosts(currentPlace) {
-  if (!currentPlace) return [];
-
-  if (currentPlace.kind !== "field") return [];
-  if (currentPlace.layer !== "side") return [];
-
-  const mainField = places.find(place =>
-    place.kind === "field" &&
-    place.groupId === currentPlace.groupId &&
-    place.layer === "main"
-  );
-
-  if (!mainField) return [];
-
-  return getPostsByPlaceId(mainField.placeId);
-}
-
-function getMainAreaPreviewPosts(currentPlace) {
-  if (!currentPlace) return [];
-
-  if (currentPlace.kind !== "area") return [];
-  if (currentPlace.layer !== "main") return [];
-
-  const previewPosts = [];
-
-  const parentMainField = places.find(place =>
-    place.kind === "field" &&
-    place.layer === "main" &&
-    place.placeId === currentPlace.parentId
-  );
-
-  if (parentMainField) {
-    previewPosts.push(...getPostsByPlaceId(parentMainField.placeId));
-  }
-
-  return previewPosts;
-}
-
-function getSideAreaPreviewPosts(currentPlace) {
-  if (!currentPlace) return [];
-
-  if (currentPlace.kind !== "area") return [];
-  if (currentPlace.layer !== "side") return [];
-
-  const mainArea = places.find(place =>
-    place.kind === "area" &&
-    place.groupId === currentPlace.groupId &&
-    place.layer === "main"
-  );
-
-  if (!mainArea) {
-    return [];
-  }
-
-  return getPostsByPlaceId(mainArea.placeId);
-}
-
-function getRoomPreviewPosts(currentPlace) {
-  if (!currentPlace) return [];
-
-  if (currentPlace.kind !== "room") return [];
-
-  if (!currentPlace.showParentMainAreaPreview) {
-    return [];
-  }
-
-  const parentMainArea = places.find(place =>
-    place.kind === "area" &&
-    place.layer === "main" &&
-    place.placeId === currentPlace.parentId
-  );
-
-  if (!parentMainArea) {
-    return [];
-  }
-
-  return getPostsByPlaceId(parentMainArea.placeId);
-}
-
-function getDisplayPosts(currentPlace) {
-  const normalPosts =
-    getPostsByPlaceId(currentPlace.placeId)
-      .map(post => ({
-        ...post,
-        displayType: "normal"
-      }));
-
-  const sideFieldPreviewPosts =
-    getSideFieldPreviewPosts(currentPlace)
-      .map(post => ({
-        ...post,
-        displayType: "preview"
-      }));
-
-  const mainFieldPreviewPosts =
-    getMainFieldPreviewPosts(currentPlace)
-      .map(post => ({
-        ...post,
-        displayType: "preview"
-      }));
-
-  const mainAreaPreviewPosts =
-    getMainAreaPreviewPosts(currentPlace)
-      .map(post => ({
-        ...post,
-        displayType: "preview"
-      }));
-
-  const sideAreaPreviewPosts =
-    getSideAreaPreviewPosts(currentPlace)
-      .map(post => ({
-        ...post,
-        displayType: "preview"
-      }));
-
-  const roomPreviewPosts =
-    getRoomPreviewPosts(currentPlace)
-      .map(post => ({
-        ...post,
-        displayType: "preview"
-      }));
-
-  return [
-    ...normalPosts,
-    ...sideFieldPreviewPosts,
-    ...mainFieldPreviewPosts,
-    ...mainAreaPreviewPosts,
-    ...sideAreaPreviewPosts,
-    ...roomPreviewPosts
-  ].sort((a, b) => b.postId - a.postId);
 }
 
 function createPostCard(post, options = {}) {
@@ -425,11 +273,17 @@ function renderChatPlaceInfo() {
     });
   }
 
-   const postsHeading = document.createElement("h2");
-  postsHeading.textContent = "発言一覧";
-  centerPanel.appendChild(postsHeading);
+const postsHeading = document.createElement("h2");
+postsHeading.textContent = "発言一覧";
+centerPanel.appendChild(postsHeading);
 
-  const displayPosts = getDisplayPosts(place);
+const allPosts = getAllPosts();
+
+const displayPosts = getDisplayPosts({
+  currentPlace: place,
+  allPosts,
+  places
+});
 
   if (displayPosts.length === 0) {
     const emptyPosts = document.createElement("p");
