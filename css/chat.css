@@ -296,3 +296,94 @@
   opacity: 0.45;
   cursor: default;
 }
+
+/* ========================================
+   入力欄
+   ======================================== */
+
+.chatComposerSection {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.chatComposerInner {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chatComposerCard {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.chatComposerLeft {
+  width: 60px;
+  flex: 0 0 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.chatComposerIconButton {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #999;
+  background: #fff;
+  cursor: pointer;
+}
+
+.chatComposerRight {
+  flex: 1;
+  min-width: 0;
+}
+
+.chatComposerMetaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.chatComposerName {
+  font-weight: bold;
+}
+
+.chatComposerReplyTarget {
+  font-size: 12px;
+  color: #666;
+}
+
+.chatComposerTextarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  box-sizing: border-box;
+  resize: vertical;
+  font: inherit;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.chatComposerToolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.chatComposerToolButton,
+.chatComposerSubmitButton {
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
