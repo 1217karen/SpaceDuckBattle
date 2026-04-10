@@ -402,11 +402,6 @@ export function renderChatComposerSection(container, options = {}) {
   rubyButton.className = "chatComposerToolButton";
   rubyButton.textContent = "ルビ";
 
-  const brButton = document.createElement("button");
-  brButton.type = "button";
-  brButton.className = "chatComposerToolButton";
-  brButton.textContent = "改行";
-
   const f1Button = document.createElement("button");
   f1Button.type = "button";
   f1Button.className = "chatComposerToolButton";
@@ -452,7 +447,6 @@ export function renderChatComposerSection(container, options = {}) {
   toolbar.appendChild(underlineButton);
   toolbar.appendChild(strikeButton);
   toolbar.appendChild(rubyButton);
-  toolbar.appendChild(brButton);
   toolbar.appendChild(f1Button);
   toolbar.appendChild(f2Button);
   toolbar.appendChild(f3Button);
