@@ -342,8 +342,12 @@ export function renderChatComposerSection(container, options = {}) {
   const iconButton = document.createElement("button");
   iconButton.type = "button";
   iconButton.className = "chatComposerIconButton";
-  iconButton.textContent = "□";
 
+  const iconImg = document.createElement("img");
+  iconImg.className = "chatComposerIconImage";
+  iconImg.alt = "speaker icon";
+
+  iconButton.appendChild(iconImg);
   left.appendChild(iconButton);
 
   const right = document.createElement("div");
@@ -406,6 +410,14 @@ export function renderChatComposerSection(container, options = {}) {
   inner.appendChild(card);
   section.appendChild(inner);
   container.appendChild(section);
+
+  return {
+    section,
+    iconButton,
+    iconImg,
+    textarea,
+    submitButton
+  };
 }
 
 function renderChatTabSection(container, options = {}) {
