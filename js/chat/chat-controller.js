@@ -89,7 +89,8 @@ centerPanel.innerHTML = "";
 
 renderPlaceInfoSection(centerPanel, {
   place,
-  places
+  places,
+  onMoveToPlace: moveToPlace
 });
 
 if (!place) {
