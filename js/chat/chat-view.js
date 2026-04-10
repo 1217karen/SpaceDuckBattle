@@ -299,35 +299,135 @@ inner.appendChild(body);
   container.appendChild(section);
 }
 
-export function renderChatTabsSection(container, options = {}) {
+export function renderPlaceTabsSection(container, options = {}) {
   const {
-    placeTabs = [],
-    viewTabs = []
+    tabs = []
+  } = options;
+
+  renderChatTabSection(container, {
+    sectionClassName: "chatPlaceTabsSection",
+    tabs
+  });
+}
+
+export function renderViewTabsSection(container, options = {}) {
+  const {
+    tabs = []
+  } = options;
+
+  renderChatTabSection(container, {
+    sectionClassName: "chatViewTabsSection",
+    tabs
+  });
+}
+
+export function renderChatComposerSection(container, options = {}) {
+  const {
+    speakerName = "名前未設定",
+    replyTargetLabel = "返信先なし"
   } = options;
 
   const section = document.createElement("section");
-  section.className = "chatTabsSection";
+  section.className = "chatComposerSection";
+
+  const inner = document.createElement("div");
+  inner.className = "chatComposerInner";
+
+  const card = document.createElement("div");
+  card.className = "chatComposerCard";
+
+  const left = document.createElement("div");
+  left.className = "chatComposerLeft";
+
+  const iconButton = document.createElement("button");
+  iconButton.type = "button";
+  iconButton.className = "chatComposerIconButton";
+  iconButton.textContent = "□";
+
+  left.appendChild(iconButton);
+
+  const right = document.createElement("div");
+  right.className = "chatComposerRight";
+
+  const metaRow = document.createElement("div");
+  metaRow.className = "chatComposerMetaRow";
+
+  const name = document.createElement("div");
+  name.className = "chatComposerName";
+  name.textContent = speakerName;
+
+  const replyTarget = document.createElement("div");
+  replyTarget.className = "chatComposerReplyTarget";
+  replyTarget.textContent = replyTargetLabel;
+
+  metaRow.appendChild(name);
+  metaRow.appendChild(replyTarget);
+
+  const textarea = document.createElement("textarea");
+  textarea.className = "chatComposerTextarea";
+  textarea.rows = 5;
+  textarea.placeholder = "ここに発言を入力";
+
+  const toolbar = document.createElement("div");
+  toolbar.className = "chatComposerToolbar";
+
+  const boldButton = document.createElement("button");
+  boldButton.type = "button";
+  boldButton.className = "chatComposerToolButton";
+  boldButton.textContent = "B";
+
+  const italicButton = document.createElement("button");
+  italicButton.type = "button";
+  italicButton.className = "chatComposerToolButton";
+  italicButton.textContent = "I";
+
+  const underlineButton = document.createElement("button");
+  underlineButton.type = "button";
+  underlineButton.className = "chatComposerToolButton";
+  underlineButton.textContent = "U";
+
+  const submitButton = document.createElement("button");
+  submitButton.type = "button";
+  submitButton.className = "chatComposerSubmitButton";
+  submitButton.textContent = "投稿";
+
+  toolbar.appendChild(boldButton);
+  toolbar.appendChild(italicButton);
+  toolbar.appendChild(underlineButton);
+  toolbar.appendChild(submitButton);
+
+  right.appendChild(metaRow);
+  right.appendChild(textarea);
+  right.appendChild(toolbar);
+
+  card.appendChild(left);
+  card.appendChild(right);
+
+  inner.appendChild(card);
+  section.appendChild(inner);
+  container.appendChild(section);
+}
+
+function renderChatTabSection(container, options = {}) {
+  const {
+    sectionClassName = "",
+    tabs = []
+  } = options;
+
+  const section = document.createElement("section");
+  section.className = `chatTabsSection ${sectionClassName}`.trim();
 
   const inner = document.createElement("div");
   inner.className = "chatTabsInner";
 
-  const placeTabRow = document.createElement("div");
-  placeTabRow.className = "chatTabRow";
+  const row = document.createElement("div");
+  row.className = "chatTabRow";
 
-  placeTabs.forEach(tab => {
-    placeTabRow.appendChild(createChatTabButton(tab));
+  tabs.forEach(tab => {
+    row.appendChild(createChatTabButton(tab));
   });
 
-  const viewTabRow = document.createElement("div");
-  viewTabRow.className = "chatTabRow";
-
-  viewTabs.forEach(tab => {
-    viewTabRow.appendChild(createChatTabButton(tab));
-  });
-
-  inner.appendChild(placeTabRow);
-  inner.appendChild(viewTabRow);
-
+  inner.appendChild(row);
   section.appendChild(inner);
   container.appendChild(section);
 }
