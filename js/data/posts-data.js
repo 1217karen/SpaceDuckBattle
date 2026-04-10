@@ -102,14 +102,5 @@ export const posts = [
     body: "ここはR2です",
     createdAt: "2026-04-07 10:10",
     authorEno: 0
-  },
-  {
-    postId: 12,
-    placeId: "R3",
-    speakerName: "テスト",
-    iconId: null,
-    body: "ここはR3です",
-    createdAt: "2026-04-07 10:11",
-    authorEno: 0
   }
 ];
