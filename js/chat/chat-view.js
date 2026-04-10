@@ -179,48 +179,48 @@ export function renderPlaceSwitchSection(container, options = {}) {
 }
 export function renderPlaceInfoSection(container, options = {}) {
   const {
-    place,
-    currentPlaceId,
-    getKindLabel,
-    getLayerLabel
+    place
   } = options;
 
-  const heading = document.createElement("h1");
-  heading.textContent = "チャット";
-  container.appendChild(heading);
+  const section = document.createElement("section");
+  section.className = "chatHeader";
 
-  if (!place) {
-    const error = document.createElement("p");
-    error.textContent = "場所が見つかりません";
-    container.appendChild(error);
-    return;
-  }
+  const inner = document.createElement("div");
+  inner.className = "chatHeaderInner";
 
-  const placeIdRow = document.createElement("p");
-  placeIdRow.textContent = `場所ID: ${place.placeId}`;
-  container.appendChild(placeIdRow);
+  const topRow = document.createElement("div");
+  topRow.className = "chatHeaderTopRow";
 
-  const nameRow = document.createElement("p");
-  nameRow.textContent = `場所名: ${place.name}`;
-  container.appendChild(nameRow);
+  const title = document.createElement("h1");
+  title.className = "chatHeaderTitle";
+  title.textContent = place?.name ?? "場所が見つかりません";
 
-  const kindRow = document.createElement("p");
-  kindRow.textContent = `種別: ${getKindLabel(place.kind)}`;
-  container.appendChild(kindRow);
+  const aroundToggle = document.createElement("button");
+  aroundToggle.type = "button";
+  aroundToggle.className = "chatHeaderLinkButton";
+  aroundToggle.textContent = "▼周辺を表示";
 
-  const layerRow = document.createElement("p");
-  layerRow.textContent = `区分: ${getLayerLabel(place.layer)}`;
-  container.appendChild(layerRow);
+  topRow.appendChild(title);
+  topRow.appendChild(aroundToggle);
 
-  const parentRow = document.createElement("p");
-  parentRow.textContent = `親ID: ${place.parentId ?? "なし"}`;
-  container.appendChild(parentRow);
+  const divider = document.createElement("div");
+  divider.className = "chatHeaderDivider";
 
-  const groupRow = document.createElement("p");
-  groupRow.textContent = `グループID: ${place.groupId}`;
-  container.appendChild(groupRow);
+  const shortDescription = document.createElement("p");
+  shortDescription.className = "chatHeaderShortDescription";
+  shortDescription.textContent =
+    place?.shortDescription ?? "説明文は未設定です。";
 
-  const currentPlaceRow = document.createElement("p");
-  currentPlaceRow.textContent = `保存中の現在地: ${currentPlaceId ?? "なし"}`;
-  container.appendChild(currentPlaceRow);
+  const detailToggle = document.createElement("button");
+  detailToggle.type = "button";
+  detailToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle";
+  detailToggle.textContent = "▼詳細を表示";
+
+  inner.appendChild(topRow);
+  inner.appendChild(divider);
+  inner.appendChild(shortDescription);
+  inner.appendChild(detailToggle);
+
+  section.appendChild(inner);
+  container.appendChild(section);
 }
