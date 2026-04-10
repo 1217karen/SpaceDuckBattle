@@ -190,35 +190,39 @@ export function renderPlaceInfoSection(container, options = {}) {
   const inner = document.createElement("div");
   inner.className = "chatHeaderInner";
 
-  const topRow = document.createElement("div");
-  topRow.className = "chatHeaderTopRow";
+const topRow = document.createElement("div");
+topRow.className = "chatHeaderTopRow";
 
-  const title = document.createElement("h1");
-  title.className = "chatHeaderTitle";
-  title.textContent = place?.name ?? "場所が見つかりません";
+const titleGroup = document.createElement("div");
+titleGroup.className = "chatHeaderTitleGroup";
 
-  topRow.appendChild(title);
+const title = document.createElement("h1");
+title.className = "chatHeaderTitle";
+title.textContent = place?.name ?? "場所が見つかりません";
 
-  if (!place) {
-    inner.appendChild(topRow);
-    section.appendChild(inner);
-    container.appendChild(section);
-    return;
-  }
+titleGroup.appendChild(title);
+topRow.appendChild(titleGroup);
 
-  const aroundToggle = document.createElement("button");
-  aroundToggle.type = "button";
-  aroundToggle.className = "chatHeaderLinkButton";
-  aroundToggle.textContent = "▼周辺を表示";
+if (!place) {
+  inner.appendChild(topRow);
+  section.appendChild(inner);
+  container.appendChild(section);
+  return;
+}
 
-  topRow.appendChild(aroundToggle);
+const aroundToggle = document.createElement("button");
+aroundToggle.type = "button";
+aroundToggle.className = "chatHeaderLinkButton chatHeaderAroundToggle";
+aroundToggle.textContent = "▼周辺を表示";
 
-  const divider = document.createElement("div");
-  divider.className = "chatHeaderDivider";
+titleGroup.appendChild(aroundToggle);
 
-  const aroundPanel = document.createElement("div");
-  aroundPanel.className = "chatAroundPanel";
-  aroundPanel.hidden = true;
+const aroundPanel = document.createElement("div");
+aroundPanel.className = "chatAroundPanel";
+aroundPanel.hidden = true;
+
+const divider = document.createElement("div");
+divider.className = "chatHeaderDivider";
 
   renderAroundTree(aroundPanel, {
     place,
@@ -283,10 +287,10 @@ export function renderPlaceInfoSection(container, options = {}) {
   body.appendChild(detailToggle);
   body.appendChild(detailContent);
 
-  inner.appendChild(topRow);
-  inner.appendChild(divider);
-  inner.appendChild(aroundPanel);
-  inner.appendChild(body);
+inner.appendChild(topRow);
+inner.appendChild(aroundPanel);
+inner.appendChild(divider);
+inner.appendChild(body);
 
   section.appendChild(inner);
   container.appendChild(section);
