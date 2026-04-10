@@ -1,9 +1,10 @@
 //chat-controller.js
 
 import { places } from "../data/places-data.js";
-import { posts } from "../data/posts-data.js";
 import { renderRichText } from "../common/rich-text.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
+import { getPostsByPlaceId } from "../services/post-service.js";
+
 
 const centerPanel = document.querySelector(".center-panel");
 
@@ -63,10 +64,6 @@ function moveToPlace(placeId) {
 
   window.location.href =
     `./chat.html?placeId=${encodeURIComponent(placeId)}`;
-}
-
-function getPostsByPlaceId(placeId) {
-  return posts.filter(post => post.placeId === placeId);
 }
 
 function getPlaceLabel(placeId) {
