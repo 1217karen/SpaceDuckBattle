@@ -103,9 +103,14 @@
 .chatHeaderTopRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
   margin-bottom: 8px;
+}
+
+.chatHeaderTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
 .chatHeaderTitle {
@@ -153,4 +158,18 @@
 
 .chatHeaderLongDescription:last-child {
   margin-bottom: 0;
+}
+
+.chatHeaderAroundToggle {
+  flex: 0 0 auto;
+}
+
+.chatAroundPanel {
+  margin: 0 0 12px 0;
+  padding: 10px 12px;
+  max-width: 480px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  background: #fafafa;
+  box-sizing: border-box;
 }
