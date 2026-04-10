@@ -4,7 +4,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { createPostCard } from "./chat-view.js";
+import { renderPostListSection } from "./chat-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
 
@@ -160,10 +160,6 @@ function renderChatPlaceInfo() {
     });
   }
 
-const postsHeading = document.createElement("h2");
-postsHeading.textContent = "発言一覧";
-centerPanel.appendChild(postsHeading);
-
 const allPosts = getAllPosts();
 
 const displayPosts = getDisplayPosts({
@@ -172,20 +168,10 @@ const displayPosts = getDisplayPosts({
   places
 });
 
-  if (displayPosts.length === 0) {
-    const emptyPosts = document.createElement("p");
-    emptyPosts.textContent = "発言はありません";
-    centerPanel.appendChild(emptyPosts);
-  } else {
-    displayPosts.forEach(post => {
-      centerPanel.appendChild(
-        createPostCard(post, {
-          isPreview: post.displayType === "preview",
-          getPlaceLabel
-        })
-      );
-    });
-  }
+renderPostListSection(centerPanel, {
+  posts: displayPosts,
+  getPlaceLabel
+});
 }
 
 renderChatPlaceInfo();
