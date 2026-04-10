@@ -1,98 +1,14 @@
-.chatPostCard {
-  display: flex;
-  gap: 12px;
-  width: 100%;
-  max-width: 800px;
-  border: 1px solid #999;
-  border-radius: 6px;
-  padding: 10px;
-  margin: 0 auto 8px;
-  background: #fff;
-  box-sizing: border-box;
-}
+/* ========================================
+   チャットページ：ヘッダー
+   ======================================== */
 
-.chatPostCardPreview {
-  opacity: 0.65;
-}
-
-.chatPostCardLeft {
-  width: 60px;
-  flex: 0 0 60px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.chatPostIcon {
-  width: 60px;
-  height: 60px;
-  display: block;
-}
-
-.chatPostCardRight {
-  flex: 1;
-  min-width: 0;
-}
-
-.chatPostHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 6px;
-}
-
-.chatPostHeaderLeft {
-  min-width: 0;
-}
-
-.chatPostHeaderRight {
-  flex: 0 0 auto;
-}
-
-.chatPostName {
-  font-weight: bold;
-}
-
-.chatPostNo {
-  font-size: 12px;
-  color: #666;
-  white-space: nowrap;
-}
-
-.chatPostDivider {
-  border-top: 1px solid #999;
-  margin-bottom: 8px;
-}
-
-.chatPostBody {
-  margin-bottom: 8px;
-  word-break: break-word;
-}
-
-.chatPostFooter {
-  font-size: 12px;
-  text-align: right;
-  color: #666;
-}
-
-.chatPostActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.chatPostActionButton {
-  padding: 4px 10px;
-  font-size: 12px;
-  cursor: pointer;
-}
+/* ヘッダー全体の外枠 */
 .chatHeader {
   width: 100%;
   margin-bottom: 20px;
 }
 
+/* ヘッダー内側の最大幅と中央寄せ */
 .chatHeaderInner {
   width: 100%;
   max-width: 1000px;
@@ -100,12 +16,14 @@
   box-sizing: border-box;
 }
 
+/* タイトル行 */
 .chatHeaderTopRow {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
 }
 
+/* 現在地名と「周辺を表示」ボタンのまとまり */
 .chatHeaderTitleGroup {
   display: flex;
   align-items: center;
@@ -113,12 +31,14 @@
   min-width: 0;
 }
 
+/* 現在地名 */
 .chatHeaderTitle {
   margin: 0;
   font-size: 28px;
   line-height: 1.3;
 }
 
+/* ヘッダー内のリンク風ボタン共通 */
 .chatHeaderLinkButton {
   padding: 0;
   border: none;
@@ -128,42 +48,56 @@
   cursor: pointer;
 }
 
+/* 「周辺を表示」ボタン */
+.chatHeaderAroundToggle {
+  flex: 0 0 auto;
+}
+
+/* タイトル下の点線 */
 .chatHeaderDivider {
   border-top: 1px dotted #999;
   margin-bottom: 10px;
 }
 
+/* 説明文エリア全体 */
 .chatHeaderBody {
   padding-left: 1em;
 }
 
+/* 簡易説明文 */
 .chatHeaderShortDescription {
   margin: 0 0 8px;
   line-height: 1.7;
 }
 
+/* 「詳細を表示」ボタン */
 .chatHeaderDetailToggle {
   display: inline-block;
   margin-bottom: 8px;
 }
 
+/* 詳細説明の入れ物 */
 .chatHeaderDetailContent {
   padding-left: 1em;
 }
 
+/* 詳細説明の各段落 */
 .chatHeaderLongDescription {
   margin: 0 0 8px;
   line-height: 1.8;
 }
 
+/* 詳細説明の最後の段落だけ下余白を消す */
 .chatHeaderLongDescription:last-child {
   margin-bottom: 0;
 }
 
-.chatHeaderAroundToggle {
-  flex: 0 0 auto;
-}
 
+/* ========================================
+   チャットページ：周辺表示パネル
+   ======================================== */
+
+/* 周辺構造を出す小パネル */
 .chatAroundPanel {
   margin: 0 0 12px 0;
   padding: 10px 12px;
@@ -172,4 +106,140 @@
   border-radius: 6px;
   background: #fafafa;
   box-sizing: border-box;
+}
+
+/* ツリー記号側 */
+.chatAroundPrefix {
+  color: #666;
+}
+
+/* 現在地の文字 */
+.chatAroundCurrent {
+  color: #000;
+}
+
+/* 周辺パネル内の移動リンク風ボタン */
+.chatAroundLinkButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: #2a5db0;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* ホバー時 */
+.chatAroundLinkButton:hover {
+  text-decoration: underline;
+}
+
+
+/* ========================================
+   チャットページ：発言カード
+   ======================================== */
+
+/* 発言カード全体 */
+.chatPostCard {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 8px;
+  padding: 10px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/* 一部表示カード */
+.chatPostCardPreview {
+  opacity: 0.65;
+}
+
+/* 左側のアイコン欄 */
+.chatPostCardLeft {
+  width: 60px;
+  flex: 0 0 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* アイコン本体 */
+.chatPostIcon {
+  width: 60px;
+  height: 60px;
+  display: block;
+}
+
+/* 右側の本文エリア */
+.chatPostCardRight {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ヘッダー行（名前とNo.） */
+.chatPostHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+/* 名前側 */
+.chatPostHeaderLeft {
+  min-width: 0;
+}
+
+/* No.側 */
+.chatPostHeaderRight {
+  flex: 0 0 auto;
+}
+
+/* 名前表示 */
+.chatPostName {
+  font-weight: bold;
+}
+
+/* 投稿番号 */
+.chatPostNo {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+}
+
+/* ヘッダー下の罫線 */
+.chatPostDivider {
+  border-top: 1px solid #999;
+  margin-bottom: 8px;
+}
+
+/* 本文 */
+.chatPostBody {
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+/* 操作ボタン列 */
+.chatPostActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* 返信・引用ボタン */
+.chatPostActionButton {
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* フッター（日付と場所） */
+.chatPostFooter {
+  font-size: 12px;
+  text-align: right;
+  color: #666;
 }
