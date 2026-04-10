@@ -2,11 +2,13 @@
 
 import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
+import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,renderViewTabsSection,renderPostListSection } from "./chat-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
+const chatIconPicker = createIconPicker();
 
 function getPlaceIdFromQuery() {
   const params = new URLSearchParams(window.location.search);
@@ -173,6 +175,52 @@ function buildViewTabs() {
   ];
 }
 
+function getInitialComposerIcon(character) {
+  const commIcons = normalizeCommIcons(character?.commIcons);
+  const defaultIconUrl =
+    typeof character?.defaultIcon === "string"
+      ? character.defaultIcon.trim()
+      : "";
+
+  if (defaultIconUrl !== "") {
+    return {
+      iconId: null,
+      iconUrl: defaultIconUrl
+    };
+  }
+
+  if (commIcons.length > 0) {
+    return {
+      iconId: commIcons[0].id,
+      iconUrl: commIcons[0].url
+    };
+  }
+
+  return {
+    iconId: null,
+    iconUrl: getNoImageUrl()
+  };
+}
+
+function setupComposerIconPicker(composerRefs, character) {
+  if (!composerRefs?.iconButton) {
+    return;
+  }
+
+  const commIcons = normalizeCommIcons(character?.commIcons);
+  const initialIcon = getInitialComposerIcon(character);
+
+  setButtonPreview(
+    composerRefs.iconButton,
+    initialIcon.iconId,
+    initialIcon.iconUrl
+  );
+
+  composerRefs.iconButton.addEventListener("click", () => {
+    chatIconPicker.open(composerRefs.iconButton, commIcons);
+  });
+}
+
 function renderChatPlaceInfo() {
   if (!centerPanel) return;
 
@@ -208,10 +256,12 @@ renderPlaceTabsSection(centerPanel, {
   tabs: placeTabs
 });
 
-renderChatComposerSection(centerPanel, {
+const composerRefs = renderChatComposerSection(centerPanel, {
   speakerName: "テストネーム",
   replyTargetLabel: "返信先なし"
 });
+
+setupComposerIconPicker(composerRefs, character);
 
 renderViewTabsSection(centerPanel, {
   tabs: viewTabs
