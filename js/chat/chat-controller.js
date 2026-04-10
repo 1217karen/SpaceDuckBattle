@@ -89,9 +89,7 @@ centerPanel.innerHTML = "";
 
 renderPlaceInfoSection(centerPanel, {
   place,
-  currentPlaceId: character?.currentPlaceId ?? null,
-  getKindLabel,
-  getLayerLabel
+  places
 });
 
 if (!place) {
