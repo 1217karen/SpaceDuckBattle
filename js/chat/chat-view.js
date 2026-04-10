@@ -180,7 +180,8 @@ export function renderPlaceSwitchSection(container, options = {}) {
 
 export function renderPlaceInfoSection(container, options = {}) {
   const {
-    place
+    place,
+    places = []
   } = options;
 
   const section = document.createElement("section");
@@ -214,6 +215,15 @@ export function renderPlaceInfoSection(container, options = {}) {
 
   const divider = document.createElement("div");
   divider.className = "chatHeaderDivider";
+
+  const aroundPanel = document.createElement("div");
+  aroundPanel.className = "chatAroundPanel";
+  aroundPanel.hidden = true;
+
+  renderAroundTree(aroundPanel, {
+    place,
+    places
+  });
 
   const body = document.createElement("div");
   body.className = "chatHeaderBody";
@@ -253,6 +263,14 @@ export function renderPlaceInfoSection(container, options = {}) {
     detailContent.appendChild(emptyDetail);
   }
 
+  aroundToggle.addEventListener("click", () => {
+    const isOpen = !aroundPanel.hidden;
+    aroundPanel.hidden = isOpen;
+    aroundToggle.textContent = isOpen
+      ? "▼周辺を表示"
+      : "▲周辺を閉じる";
+  });
+
   detailToggle.addEventListener("click", () => {
     const isOpen = !detailContent.hidden;
     detailContent.hidden = isOpen;
@@ -267,8 +285,127 @@ export function renderPlaceInfoSection(container, options = {}) {
 
   inner.appendChild(topRow);
   inner.appendChild(divider);
+  inner.appendChild(aroundPanel);
   inner.appendChild(body);
 
   section.appendChild(inner);
   container.appendChild(section);
+}
+
+function renderAroundTree(container, options = {}) {
+  const {
+    place,
+    places = []
+  } = options;
+
+  container.innerHTML = "";
+
+  const lines = buildAroundTreeLines(place, places);
+
+  lines.forEach(line => {
+    const row = document.createElement("div");
+    row.className = "chatAroundRow";
+
+    if (line.depth > 0) {
+      row.style.paddingLeft = `${line.depth * 1.5}em`;
+    }
+
+    row.textContent = line.text;
+    container.appendChild(row);
+  });
+}
+
+function buildAroundTreeLines(place, places) {
+  if (!place) {
+    return [];
+  }
+
+  if (place.kind === "field") {
+    const childMainAreas = places.filter(item =>
+      item.kind === "area" &&
+      item.layer === "main" &&
+      item.parentId === place.placeId
+    );
+
+    return [
+      {
+        depth: 0,
+        text: `${place.name}（現在地）`
+      },
+      ...childMainAreas.map((child, index) => ({
+        depth: 1,
+        text: `${getTreeBranch(index, childMainAreas.length)}${child.name}`
+      }))
+    ];
+  }
+
+  if (place.kind === "area") {
+    const parentMainField = places.find(item =>
+      item.kind === "field" &&
+      item.layer === "main" &&
+      item.placeId === place.parentId
+    );
+
+    const childRooms = places.filter(item =>
+      item.kind === "room" &&
+      item.parentId === place.placeId
+    );
+
+    const lines = [];
+
+    if (parentMainField) {
+      lines.push({
+        depth: 0,
+        text: parentMainField.name
+      });
+    }
+
+    lines.push({
+      depth: 1,
+      text: `└${place.name}（現在地）`
+    });
+
+    childRooms.forEach((child, index) => {
+      lines.push({
+        depth: 2,
+        text: `${getTreeBranch(index, childRooms.length)}${child.name}`
+      });
+    });
+
+    return lines;
+  }
+
+  if (place.kind === "room") {
+    const parentMainArea = places.find(item =>
+      item.kind === "area" &&
+      item.layer === "main" &&
+      item.placeId === place.parentId
+    );
+
+    const lines = [];
+
+    if (parentMainArea) {
+      lines.push({
+        depth: 0,
+        text: parentMainArea.name
+      });
+    }
+
+    lines.push({
+      depth: 1,
+      text: `└${place.name}（現在地）`
+    });
+
+    return lines;
+  }
+
+  return [];
+}
+
+function getTreeBranch(index, length) {
+  if (index === length - 1) {
+    return "└";
+  }
+
+  return "├";
 }
