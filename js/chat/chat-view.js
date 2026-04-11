@@ -543,6 +543,10 @@ function createChatTabButton(tab = {}) {
     button.disabled = true;
   }
 
+  if (tab.isCurrent) {
+    classNames.push("chatTabButtonCurrent");
+  }
+
   button.className = classNames.join(" ");
   button.textContent = tab.label ?? "";
 
