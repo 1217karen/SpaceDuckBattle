@@ -461,7 +461,7 @@
 }
 
 .chatTabButtonCurrent::after {
-  content: "現在地";
+  content: "(現在地)";
   display: inline-block;
   margin-left: 8px;
   font-size: 11px;
