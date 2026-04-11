@@ -302,6 +302,24 @@
   font-weight: bold;
 }
 
+
+.chatTabButtonCurrent {
+  border-width: 2px;
+  border-color: var(--theme-border-strong);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 0 10px rgba(120, 180, 255, 0.45);
+  position: relative;
+}
+
+.chatTabButtonCurrent::after {
+  content: "(現在地)";
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 11px;
+  color: var(--theme-text-subtle);
+}
+
 .chatTabButtonDisabled {
   opacity: 0.82;
   cursor: default;
@@ -451,19 +469,3 @@
   border: 1px solid var(--theme-border-main);
 }
 
-.chatTabButtonCurrent {
-  border-width: 2px;
-  border-color: var(--theme-border-strong);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-    0 0 10px rgba(120, 180, 255, 0.45);
-  position: relative;
-}
-
-.chatTabButtonCurrent::after {
-  content: "(現在地)";
-  display: inline-block;
-  margin-left: 8px;
-  font-size: 11px;
-  color: var(--theme-text-subtle);
-}
