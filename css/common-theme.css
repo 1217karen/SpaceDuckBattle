@@ -1,0 +1,43 @@
+:root {
+  /* 背景・文字 */
+  --theme-text-main: #e6f4ff;
+  --theme-text-strong: #ffffff;
+  --theme-text-accent: #aee0ff;
+  --theme-text-subtle: #8fd3ff;
+  --theme-text-muted: #9fb3c8;
+
+  /* 線・枠 */
+  --theme-border-soft: rgba(120, 180, 255, 0.45);
+  --theme-border-main: rgba(120, 180, 255, 0.72);
+  --theme-border-strong: rgba(120, 180, 255, 0.9);
+
+  /* 面 */
+  --theme-surface-1: rgba(10, 15, 30, 0.9);
+  --theme-surface-2: rgba(20, 40, 70, 0.92);
+  --theme-surface-3: rgba(10, 20, 40, 0.92);
+  --theme-surface-overlay: rgba(0, 0, 0, 0.45);
+
+  /* ボタン */
+  --theme-button-bg: rgba(10, 20, 40, 0.92);
+  --theme-button-bg-hover: rgba(70, 100, 145, 0.96);
+  --theme-button-text: #aee0ff;
+
+  /* 補助 */
+  --theme-radius-sm: 4px;
+  --theme-radius-md: 6px;
+  --theme-radius-lg: 8px;
+
+  --theme-shadow-soft:
+    0 0 8px rgba(80, 140, 255, 0.25);
+
+  --theme-shadow-panel:
+    0 0 10px rgba(80, 140, 255, 0.35),
+    inset 0 0 10px rgba(120, 200, 255, 0.15);
+
+  --theme-shadow-panel-strong:
+    0 0 10px rgba(80, 140, 255, 0.6),
+    inset 0 0 6px rgba(80, 140, 255, 0.3);
+
+  --theme-preview-opacity: 0.65;
+  --theme-disabled-opacity: 0.45;
+}
