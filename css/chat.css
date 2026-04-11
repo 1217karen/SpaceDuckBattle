@@ -102,9 +102,11 @@
   margin: 0 0 12px 0;
   padding: 10px 12px;
   max-width: 480px;
-  border: 1px solid #bbb;
-  border-radius: 6px;
-  background: #fafafa;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: var(--theme-surface-1);
+  box-shadow: var(--theme-shadow-soft);
+  color: var(--theme-text-main);
   box-sizing: border-box;
 }
 
@@ -115,12 +117,12 @@
 
 /* ツリー記号側 */
 .chatAroundPrefix {
-  color: #666;
+  color: var(--theme-text-muted);
 }
 
 /* 現在地の文字 */
 .chatAroundCurrent {
-  color: #000;
+  color: var(--theme-text-main);
 }
 
 /* 周辺パネル内の移動リンク風ボタン */
@@ -128,7 +130,7 @@
   padding: 0;
   border: none;
   background: none;
-  color: #2a5db0;
+  color: var(--theme-text-accent);
   text-align: left;
   cursor: pointer;
 }
@@ -151,15 +153,21 @@
   max-width: 800px;
   margin: 0 auto 8px;
   padding: 10px;
-  border: 1px solid #999;
-  border-radius: 6px;
-  background: #fff;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: linear-gradient(
+    to right,
+    var(--theme-surface-2),
+    var(--theme-surface-3)
+  );
+  box-shadow: var(--theme-shadow-panel);
+  color: var(--theme-text-main);
   box-sizing: border-box;
 }
 
 /* 一部表示カード */
 .chatPostCardPreview {
-  opacity: 0.65;
+  opacity: var(--theme-preview-opacity);
 }
 
 /* 左側のアイコン欄 */
@@ -211,13 +219,13 @@
 /* 投稿番号 */
 .chatPostNo {
   font-size: 12px;
-  color: #666;
+  color: var(--theme-text-muted);
   white-space: nowrap;
 }
 
 /* ヘッダー下の罫線 */
 .chatPostDivider {
-  border-top: 1px solid #999;
+  border-top: 1px solid var(--theme-border-soft);
   margin-bottom: 8px;
 }
 
@@ -246,7 +254,7 @@
 .chatPostFooter {
   font-size: 12px;
   text-align: right;
-  color: #666;
+  color: var(--theme-text-muted);
 }
 
 /* ========================================
@@ -280,20 +288,22 @@
 .chatTabButton {
   min-width: 88px;
   padding: 8px 14px;
-  border: 1px solid #999;
+  border: 1px solid var(--theme-border-main);
   border-radius: 999px;
-  background: #fff;
+  background: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  box-shadow: var(--theme-shadow-soft);
   font-size: 13px;
   cursor: pointer;
 }
 
 .chatTabButtonActive {
-  border-color: #333;
+  border-color: var(--theme-border-strong);
   font-weight: bold;
 }
 
 .chatTabButtonDisabled {
-  opacity: 0.45;
+  opacity: var(--theme-disabled-opacity);
   cursor: default;
 }
 
@@ -318,9 +328,15 @@
   gap: 12px;
   width: 100%;
   padding: 12px;
-  border: 1px solid #999;
-  border-radius: 6px;
-  background: #fff;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: linear-gradient(
+    to right,
+    var(--theme-surface-2),
+    var(--theme-surface-3)
+  );
+  box-shadow: var(--theme-shadow-panel);
+  color: var(--theme-text-main);
   box-sizing: border-box;
 }
 
@@ -336,8 +352,9 @@
   width: 60px;
   height: 60px;
   padding: 0;
-  border: 1px solid #999;
-  background: #fff;
+  border: 1px solid var(--theme-border-main);
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: var(--theme-shadow-soft);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -379,15 +396,17 @@
 
 .chatComposerReplyTarget {
   font-size: 12px;
-  color: #666;
+  color: var(--theme-text-muted);
 }
 
 .chatComposerTextarea {
   width: 100%;
   min-height: 120px;
   padding: 10px;
-  border: 1px solid #999;
-  border-radius: 6px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
   box-sizing: border-box;
   resize: vertical;
   font: inherit;
@@ -405,6 +424,29 @@
 .chatComposerToolButton,
 .chatComposerSubmitButton {
   padding: 6px 12px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  box-shadow: var(--theme-shadow-soft);
   font-size: 12px;
   cursor: pointer;
+}
+
+.chatTabButton:hover,
+.chatComposerIconButton:hover,
+.chatComposerToolButton:hover,
+.chatComposerSubmitButton:hover {
+  background: var(--theme-button-bg-hover);
+}
+
+.chatComposerTextarea::placeholder,
+.chatComposerNameInput::placeholder {
+  color: var(--theme-text-muted);
+}
+
+.chatComposerNameInput {
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
+  border: 1px solid var(--theme-border-main);
 }
