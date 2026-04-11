@@ -1,6 +1,7 @@
 //chat-view.js
 
 import { renderRichText } from "../common/rich-text.js";
+import { bindRichTextToolbar } from "../common/rich-text-toolbar.js";
 
 function stripRichTextTags(text) {
   return String(text ?? "").replace(/<\/?(b|i|u|s|br|rb|rt|f1|f2|f3|f4|f5|f6|f7)>/g, "");
