@@ -1,32 +1,76 @@
 //rich-text-toolbar.js
 
-function getSafeSelectionRange(textarea) {
-  if (!textarea) {
-    return { start: 0, end: 0 };
-  }
-
-  const value = textarea.value ?? "";
-  const hasSelection =
-    typeof textarea.selectionStart === "number" &&
-    typeof textarea.selectionEnd === "number";
-
-  if (!hasSelection) {
-    const end = value.length;
-    return { start: end, end };
-  }
-
-  if (document.activeElement !== textarea) {
-    const end = value.length;
-    return { start: end, end };
-  }
+function clampRange(value, start, end) {
+  const length = value.length;
+  const safeStart = Math.max(0, Math.min(start, length));
+  const safeEnd = Math.max(safeStart, Math.min(end, length));
 
   return {
-    start: textarea.selectionStart,
-    end: textarea.selectionEnd
+    start: safeStart,
+    end: safeEnd
   };
 }
 
-function replaceTextareaRange(textarea, start, end, insertedText, caretStart, caretEnd = caretStart) {
+function createSelectionMemory(textarea) {
+  let lastRange = {
+    start: (textarea?.value ?? "").length,
+    end: (textarea?.value ?? "").length
+  };
+
+  function saveCurrentSelection() {
+    if (!textarea) return;
+
+    const value = textarea.value ?? "";
+    const hasSelection =
+      typeof textarea.selectionStart === "number" &&
+      typeof textarea.selectionEnd === "number";
+
+    if (!hasSelection) {
+      const end = value.length;
+      lastRange = { start: end, end };
+      return;
+    }
+
+    lastRange = clampRange(
+      value,
+      textarea.selectionStart,
+      textarea.selectionEnd
+    );
+  }
+
+  textarea.addEventListener("select", saveCurrentSelection);
+  textarea.addEventListener("click", saveCurrentSelection);
+  textarea.addEventListener("keyup", saveCurrentSelection);
+  textarea.addEventListener("focus", saveCurrentSelection);
+  textarea.addEventListener("input", saveCurrentSelection);
+
+  saveCurrentSelection();
+
+  return {
+    get() {
+      return clampRange(
+        textarea?.value ?? "",
+        lastRange.start,
+        lastRange.end
+      );
+    },
+    set(start, end) {
+      const value = textarea?.value ?? "";
+      lastRange = clampRange(value, start, end);
+    },
+    saveCurrentSelection
+  };
+}
+
+function replaceTextareaRange(
+  textarea,
+  selectionMemory,
+  start,
+  end,
+  insertedText,
+  caretStart,
+  caretEnd = caretStart
+) {
   const value = textarea.value ?? "";
 
   textarea.value =
@@ -36,13 +80,14 @@ function replaceTextareaRange(textarea, start, end, insertedText, caretStart, ca
 
   textarea.focus();
   textarea.setSelectionRange(caretStart, caretEnd);
+  selectionMemory.set(caretStart, caretEnd);
 }
 
-function insertPairTag(textarea, openTag, closeTag) {
+function insertPairTag(textarea, selectionMemory, openTag, closeTag) {
   if (!textarea) return;
 
   const value = textarea.value ?? "";
-  const { start, end } = getSafeSelectionRange(textarea);
+  const { start, end } = selectionMemory.get();
   const selectedText = value.slice(start, end);
   const insertedText = `${openTag}${selectedText}${closeTag}`;
 
@@ -53,6 +98,7 @@ function insertPairTag(textarea, openTag, closeTag) {
 
   replaceTextareaRange(
     textarea,
+    selectionMemory,
     start,
     end,
     insertedText,
@@ -60,10 +106,10 @@ function insertPairTag(textarea, openTag, closeTag) {
   );
 }
 
-function insertCustomText(textarea, insertText, caretOffset) {
+function insertCustomText(textarea, selectionMemory, insertText, caretOffset) {
   if (!textarea) return;
 
-  const { start, end } = getSafeSelectionRange(textarea);
+  const { start, end } = selectionMemory.get();
   const safeText = String(insertText ?? "");
   const safeOffset =
     typeof caretOffset === "number"
@@ -72,6 +118,7 @@ function insertCustomText(textarea, insertText, caretOffset) {
 
   replaceTextareaRange(
     textarea,
+    selectionMemory,
     start,
     end,
     safeText,
@@ -79,7 +126,7 @@ function insertCustomText(textarea, insertText, caretOffset) {
   );
 }
 
-function bindToolbarButton(textarea, button) {
+function bindToolbarButton(textarea, selectionMemory, button) {
   if (!textarea || !button) return;
 
   const openTag = button.dataset.insertOpenTag;
@@ -87,15 +134,20 @@ function bindToolbarButton(textarea, button) {
   const insertText = button.dataset.insertText;
   const caretOffset = Number(button.dataset.caretOffset);
 
+  button.addEventListener("mousedown", e => {
+    e.preventDefault();
+  });
+
   button.addEventListener("click", () => {
     if (typeof openTag === "string" && typeof closeTag === "string") {
-      insertPairTag(textarea, openTag, closeTag);
+      insertPairTag(textarea, selectionMemory, openTag, closeTag);
       return;
     }
 
     if (typeof insertText === "string") {
       insertCustomText(
         textarea,
+        selectionMemory,
         insertText,
         Number.isNaN(caretOffset) ? undefined : caretOffset
       );
@@ -106,9 +158,13 @@ function bindToolbarButton(textarea, button) {
 export function bindRichTextToolbar(root, textarea) {
   if (!root || !textarea) return;
 
-  const buttons = root.querySelectorAll("[data-insert-open-tag], [data-insert-text]");
+  const selectionMemory = createSelectionMemory(textarea);
+
+  const buttons = root.querySelectorAll(
+    "[data-insert-open-tag], [data-insert-text]"
+  );
 
   buttons.forEach(button => {
-    bindToolbarButton(textarea, button);
+    bindToolbarButton(textarea, selectionMemory, button);
   });
 }
