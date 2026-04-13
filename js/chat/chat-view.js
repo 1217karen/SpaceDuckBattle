@@ -497,7 +497,7 @@ export function renderChatComposerSection(container, options = {}) {
   const rubyButton = document.createElement("button");
   rubyButton.type = "button";
   rubyButton.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonRuby";
-  rubyButton.textContent = "ルビ";
+  rubyButton.textContent = "rb";
   rubyButton.dataset.insertText = "<rb></rb><rt></rt>";
   rubyButton.dataset.caretOffset = "4";
 
