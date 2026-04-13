@@ -450,7 +450,7 @@ export function renderViewTabsSection(container, options = {}) {
 export function renderChatComposerSection(container, options = {}) {
   const {
     speakerName = "名前未設定",
-    replyTargetLabel = "返信先なし"
+    replyTargetValue = ""
   } = options;
 
   const section = document.createElement("section");
@@ -488,12 +488,14 @@ export function renderChatComposerSection(container, options = {}) {
   nameInput.value = speakerName;
   nameInput.placeholder = "発言者名";
 
-  const replyTarget = document.createElement("div");
-  replyTarget.className = "chatComposerReplyTarget";
-  replyTarget.textContent = replyTargetLabel;
+  const replyTargetInput = document.createElement("input");
+  replyTargetInput.type = "text";
+  replyTargetInput.className = "chatComposerReplyTargetInput";
+  replyTargetInput.value = replyTargetValue;
+  replyTargetInput.placeholder = "返信先Eno（例: 12,34,56）";
 
   metaRow.appendChild(nameInput);
-  metaRow.appendChild(replyTarget);
+  metaRow.appendChild(replyTargetInput);
 
   const textarea = document.createElement("textarea");
   textarea.className = "chatComposerTextarea";
@@ -624,6 +626,7 @@ export function renderChatComposerSection(container, options = {}) {
     iconButton,
     iconImg,
     nameInput,
+    replyTargetInput,
     textarea,
     submitButton
   };
