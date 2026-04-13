@@ -243,11 +243,31 @@
   margin-bottom: 8px;
 }
 
-/* 返信・引用ボタン */
+/* 操作ボタン */
 .chatPostActionButton {
-  padding: 4px 10px;
-  font-size: 12px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  box-shadow: var(--theme-shadow-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+}
+
+.chatPostActionIcon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+}
+
+.chatPostActionButton:hover {
+  background: var(--theme-button-bg-hover);
 }
 
 /* フッター（日付と場所） */
