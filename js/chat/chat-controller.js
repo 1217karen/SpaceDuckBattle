@@ -287,6 +287,7 @@ function setupDraftPreview({
   allPosts,
   getPlaceLabel,
   onMoveToPlace,
+  onReply,
   currentEno
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
@@ -314,7 +315,7 @@ function setupDraftPreview({
       posts: postsForRender,
       getPlaceLabel,
       onMoveToPlace,
-      onReply: null,
+      onReply,
       currentEno
     });
   }
@@ -444,6 +445,8 @@ function setupComposerIconPicker(composerRefs, character) {
   });
 }
 
+let currentReplySourcePost = null;
+
 function renderChatPlaceInfo() {
   if (!centerPanel) return;
 
@@ -481,10 +484,17 @@ renderPlaceTabsSection(centerPanel, {
 
 const composerRefs = renderChatComposerSection(centerPanel, {
   speakerName: "テストネーム",
-  replyTargetValue: ""
+  replyTargetValue: "",
+  replySourcePost: currentReplySourcePost,
+  getPlaceLabel
 });
 
 setupComposerIconPicker(composerRefs, character);
+
+const handleReply = (post) => {
+  currentReplySourcePost = post || null;
+  renderChatPlaceInfo();
+};
 
 renderViewTabsSection(centerPanel, {
   tabs: viewTabs
@@ -502,7 +512,7 @@ const postListRefs = renderPostListSection(centerPanel, {
   posts: displayPosts,
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
-  onReply: null,
+  onReply: handleReply,
   currentEno: eno
 });
 
@@ -514,6 +524,7 @@ setupDraftPreview({
   allPosts,
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
+  onReply: handleReply,
   currentEno: eno
 });
 
