@@ -349,6 +349,9 @@ function setupComposerSubmit({
     createPost(postInput);
 
     composerRefs.textarea.value = "";
+    if (composerRefs.replyTargetInput) {
+      composerRefs.replyTargetInput.value = "";
+    }
 
     renderChatPlaceInfo();
   });
