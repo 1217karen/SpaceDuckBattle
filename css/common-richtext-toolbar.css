@@ -1,3 +1,27 @@
+.richTextToolButtonIconLike {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--theme-text-accent);
+  box-shadow: none;
+  min-width: auto;
+  width: 28px;
+  height: 28px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.richTextToolButtonIconLike:hover {
+  color: var(--theme-text-strong);
+  background: transparent;
+}
+
 .richTextToolButtonBold {
   font-weight: 700;
 }
@@ -13,4 +37,14 @@
 
 .richTextToolButtonStrike {
   text-decoration: line-through;
+}
+
+.richTextToolButtonFont {
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+
+.richTextToolButtonRuby {
+  font-size: 12px;
+  letter-spacing: 0.2px;
 }
