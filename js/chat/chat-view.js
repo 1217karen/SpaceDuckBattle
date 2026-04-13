@@ -117,7 +117,7 @@ export function createPostCard(post, options = {}) {
 
     const replyIcon = document.createElement("img");
     replyIcon.className = "chatPostActionIcon";
-    replyIcon.src = "./assets/icons/reply.svg";
+    replyIcon.src = "../assets/icons/reply.svg";
     replyIcon.alt = "返信";
     replyButton.appendChild(replyIcon);
 
@@ -128,7 +128,7 @@ export function createPostCard(post, options = {}) {
 
     const quoteIcon = document.createElement("img");
     quoteIcon.className = "chatPostActionIcon";
-    quoteIcon.src = "./assets/icons/quote.svg";
+    quoteIcon.src = "../assets/icons/quote.svg";
     quoteIcon.alt = "引用";
     quoteButton.appendChild(quoteIcon);
 
@@ -139,7 +139,7 @@ export function createPostCard(post, options = {}) {
 
     const deleteIcon = document.createElement("img");
     deleteIcon.className = "chatPostActionIcon";
-    deleteIcon.src = "./assets/icons/delete.svg";
+    deleteIcon.src = "../assets/icons/delete.svg";
     deleteIcon.alt = "削除";
     deleteButton.appendChild(deleteIcon);
 
@@ -150,7 +150,7 @@ export function createPostCard(post, options = {}) {
 
     const hideIcon = document.createElement("img");
     hideIcon.className = "chatPostActionIcon";
-    hideIcon.src = "./assets/icons/hide.svg";
+    hideIcon.src = "../assets/icons/hide.svg";
     hideIcon.alt = "非表示";
     hideButton.appendChild(hideIcon);
 
