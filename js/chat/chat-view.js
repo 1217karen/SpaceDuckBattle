@@ -109,7 +109,7 @@ export function createPostCard(post, options = {}) {
   const actions = document.createElement("div");
   actions.className = "chatPostActions";
 
-  if (!isPreview) {
+  if (!isPreview && !post.isDraftPreview) {
     const replyButton = document.createElement("button");
     replyButton.type = "button";
     replyButton.className = "chatPostActionButton chatPostActionButtonReply";
