@@ -134,10 +134,6 @@ export function createPostCard(post, options = {}) {
     replyIcon.className = "chatPostActionIcon chatPostActionIconReply";
     replyButton.appendChild(replyIcon);
 
-    const replyIcon = document.createElement("span");
-    replyIcon.className = "chatPostActionIcon chatPostActionIconReply";
-    replyButton.appendChild(replyIcon);
-
     const quoteButton = document.createElement("button");
     quoteButton.type = "button";
     quoteButton.className = "chatPostActionButton chatPostActionButtonQuote";
@@ -507,7 +503,7 @@ export function renderChatComposerSection(container, options = {}) {
   replyTargetInput.type = "text";
   replyTargetInput.className = "chatComposerReplyTargetInput";
   replyTargetInput.value = replyTargetValue;
-  replyTargetInput.placeholder = "返信先Eno（,区切りで複数指定）";
+  replyTargetInput.placeholder = "追加返信先Eno（,区切りで複数指定）";
 
   metaRow.appendChild(nameInput);
   metaRow.appendChild(replyTargetInput);
