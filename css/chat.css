@@ -1,3 +1,20 @@
+:root {
+  --chat-font-base: 13px;
+  --chat-font-scale-title: 2;
+  --chat-font-scale-body: 1;
+  --chat-font-scale-small: 0.86;
+  --chat-font-scale-xs: 0.79;
+}
+
+.chatAroundRow,
+.chatPostBody,
+.chatComposerTextarea,
+.chatComposerNameInput,
+.chatHeaderShortDescription,
+.chatHeaderLongDescription {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-body));
+}
+
 /* ========================================
    チャットページ：ヘッダー
    ======================================== */
@@ -34,7 +51,7 @@
 /* 現在地名 */
 .chatHeaderTitle {
   margin: 0;
-  font-size: 28px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-title));
   line-height: 1.3;
 }
 
@@ -43,7 +60,7 @@
   padding: 0;
   border: none;
   background: none;
-  font-size: 13px;
+  font-size: calc(var(--chat-font-base) * 0.93);
   color: #666;
   cursor: pointer;
 }
@@ -218,7 +235,7 @@
 
 /* 投稿番号 */
 .chatPostNo {
-  font-size: 12px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   color: var(--theme-text-muted);
   white-space: nowrap;
 }
@@ -300,7 +317,7 @@
 
 /* フッター（日付と場所） */
 .chatPostFooter {
-  font-size: 12px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   text-align: right;
   color: var(--theme-text-muted);
 }
@@ -341,7 +358,7 @@
   background: var(--theme-button-bg);
   color: var(--theme-button-text);
   box-shadow: var(--theme-shadow-soft);
-  font-size: 13px;
+  font-size: calc(var(--chat-font-base) * 0.93);
   cursor: pointer;
 }
 
@@ -364,7 +381,7 @@
   content: "(現在地)";
   display: inline-block;
   margin-left: 8px;
-  font-size: 11px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-xs));
   color: var(--theme-text-subtle);
 }
 
@@ -461,7 +478,7 @@
 }
 
 .chatComposerReplyTarget {
-  font-size: 12px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   color: var(--theme-text-muted);
 }
 
@@ -495,7 +512,7 @@
   background: var(--theme-button-bg);
   color: var(--theme-button-text);
   box-shadow: var(--theme-shadow-soft);
-  font-size: 12px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   cursor: pointer;
 }
 
