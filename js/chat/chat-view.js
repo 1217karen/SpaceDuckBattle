@@ -27,6 +27,7 @@ export function createPostCard(post, options = {}) {
     isPreview = false,
     getPlaceLabel,
     onMoveToPlace,
+    onReply = null,
     currentEno = null
   } = options;
 
@@ -123,6 +124,16 @@ export function createPostCard(post, options = {}) {
     replyButton.title = "返信";
     replyButton.setAttribute("aria-label", "返信");
 
+    if (typeof onReply === "function") {
+      replyButton.addEventListener("click", () => {
+        onReply(post);
+      });
+    }
+
+    const replyIcon = document.createElement("span");
+    replyIcon.className = "chatPostActionIcon chatPostActionIconReply";
+    replyButton.appendChild(replyIcon);
+
     const replyIcon = document.createElement("span");
     replyIcon.className = "chatPostActionIcon chatPostActionIconReply";
     replyButton.appendChild(replyIcon);
@@ -206,6 +217,7 @@ export function renderPostListSection(container, options = {}) {
     posts = [],
     getPlaceLabel,
     onMoveToPlace,
+    onReply,
     currentEno = null
   } = options;
 
@@ -226,6 +238,7 @@ export function renderPostListSection(container, options = {}) {
     posts,
     getPlaceLabel,
     onMoveToPlace,
+    onReply,
     currentEno
   });
 
@@ -240,6 +253,7 @@ export function renderPostListContent(listContainer, options = {}) {
     posts = [],
     getPlaceLabel,
     onMoveToPlace,
+    onReply,
     currentEno = null
   } = options;
 
@@ -262,6 +276,7 @@ export function renderPostListContent(listContainer, options = {}) {
         isPreview: post.displayType === "preview",
         getPlaceLabel,
         onMoveToPlace,
+        onReply,
         currentEno
       })
     );
