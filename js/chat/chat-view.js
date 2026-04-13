@@ -492,7 +492,7 @@ export function renderChatComposerSection(container, options = {}) {
   replyTargetInput.type = "text";
   replyTargetInput.className = "chatComposerReplyTargetInput";
   replyTargetInput.value = replyTargetValue;
-  replyTargetInput.placeholder = "返信先Eno（例: 12,34,56）";
+  replyTargetInput.placeholder = "返信先Eno（,区切りで複数指定）";
 
   metaRow.appendChild(nameInput);
   metaRow.appendChild(replyTargetInput);
