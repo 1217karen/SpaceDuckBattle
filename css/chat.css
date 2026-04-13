@@ -489,7 +489,7 @@
 
 .chatComposerToolButton:not(.richTextToolButtonIconLike),
 .chatComposerSubmitButton {
-  padding: 6px 12px;
+  padding: 4px 12px;
   border: 1px solid var(--theme-border-main);
   border-radius: var(--theme-radius-sm);
   background: var(--theme-button-bg);
