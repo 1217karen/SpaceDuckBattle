@@ -1,0 +1,16 @@
+.richTextToolButtonBold {
+  font-weight: 700;
+}
+
+.richTextToolButtonItalic {
+  font-style: italic;
+}
+
+.richTextToolButtonUnderline {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.richTextToolButtonStrike {
+  text-decoration: line-through;
+}
