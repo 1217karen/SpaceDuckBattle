@@ -271,23 +271,23 @@
 }
 
 .chatPostActionIconReply {
-  mask-image: url("./assets/icons/reply.svg");
-  -webkit-mask-image: url("./assets/icons/reply.svg");
+  mask-image: url("../assets/icons/reply.svg");
+  -webkit-mask-image: url("../assets/icons/reply.svg");
 }
 
 .chatPostActionIconQuote {
-  mask-image: url("./assets/icons/quote.svg");
-  -webkit-mask-image: url("./assets/icons/quote.svg");
+  mask-image: url("../assets/icons/quote.svg");
+  -webkit-mask-image: url("../assets/icons/quote.svg");
 }
 
 .chatPostActionIconDelete {
-  mask-image: url("./assets/icons/delete.svg");
-  -webkit-mask-image: url("./assets/icons/delete.svg");
+  mask-image: url("../assets/icons/delete.svg");
+  -webkit-mask-image: url("../assets/icons/delete.svg");
 }
 
 .chatPostActionIconHide {
-  mask-image: url("./assets/icons/hide.svg");
-  -webkit-mask-image: url("./assets/icons/hide.svg");
+  mask-image: url("../assets/icons/hide.svg");
+  -webkit-mask-image: url("../assets/icons/hide.svg");
 }
 
 .chatPostActionButton:hover {
