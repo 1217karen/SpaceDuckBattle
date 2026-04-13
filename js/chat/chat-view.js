@@ -114,44 +114,40 @@ export function createPostCard(post, options = {}) {
     replyButton.type = "button";
     replyButton.className = "chatPostActionButton chatPostActionButtonReply";
     replyButton.title = "返信";
+    replyButton.setAttribute("aria-label", "返信");
 
-    const replyIcon = document.createElement("img");
-    replyIcon.className = "chatPostActionIcon";
-    replyIcon.src = "../assets/icons/reply.svg";
-    replyIcon.alt = "返信";
+    const replyIcon = document.createElement("span");
+    replyIcon.className = "chatPostActionIcon chatPostActionIconReply";
     replyButton.appendChild(replyIcon);
 
     const quoteButton = document.createElement("button");
     quoteButton.type = "button";
     quoteButton.className = "chatPostActionButton chatPostActionButtonQuote";
     quoteButton.title = "引用";
+    quoteButton.setAttribute("aria-label", "引用");
 
-    const quoteIcon = document.createElement("img");
-    quoteIcon.className = "chatPostActionIcon";
-    quoteIcon.src = "../assets/icons/quote.svg";
-    quoteIcon.alt = "引用";
+    const quoteIcon = document.createElement("span");
+    quoteIcon.className = "chatPostActionIcon chatPostActionIconQuote";
     quoteButton.appendChild(quoteIcon);
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.className = "chatPostActionButton chatPostActionButtonDelete";
     deleteButton.title = "削除";
+    deleteButton.setAttribute("aria-label", "削除");
 
-    const deleteIcon = document.createElement("img");
-    deleteIcon.className = "chatPostActionIcon";
-    deleteIcon.src = "../assets/icons/delete.svg";
-    deleteIcon.alt = "削除";
+    const deleteIcon = document.createElement("span");
+    deleteIcon.className = "chatPostActionIcon chatPostActionIconDelete";
     deleteButton.appendChild(deleteIcon);
 
     const hideButton = document.createElement("button");
     hideButton.type = "button";
     hideButton.className = "chatPostActionButton chatPostActionButtonHide";
     hideButton.title = "非表示";
+    hideButton.setAttribute("aria-label", "非表示");
 
-    const hideIcon = document.createElement("img");
-    hideIcon.className = "chatPostActionIcon";
-    hideIcon.src = "../assets/icons/hide.svg";
-    hideIcon.alt = "非表示";
+    const hideIcon = document.createElement("span");
+    hideIcon.className = "chatPostActionIcon chatPostActionIconHide";
     hideButton.appendChild(hideIcon);
 
     actions.appendChild(replyButton);
