@@ -471,6 +471,21 @@
   min-width: 0;
 }
 
+.chatComposerReplyPreview {
+  margin-bottom: 10px;
+}
+
+.chatComposerReplyPreviewHeader {
+  margin-bottom: 6px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+}
+
+.chatComposerReplyPreviewCard {
+  opacity: 0.72;
+  margin-bottom: 0;
+}
+
 .chatComposerMetaRow {
   display: flex;
   justify-content: space-between;
