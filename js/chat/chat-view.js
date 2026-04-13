@@ -29,9 +29,18 @@ export function createPostCard(post, options = {}) {
   } = options;
 
   const postBox = document.createElement("div");
-  postBox.className = isPreview
-    ? "chatPostCard chatPostCardPreview"
-    : "chatPostCard";
+
+  const classNames = ["chatPostCard"];
+
+  if (isPreview) {
+    classNames.push("chatPostCardPreview");
+  }
+
+  if (post.isDraftPreview) {
+    classNames.push("chatPostCardDraftPreview");
+  }
+
+  postBox.className = classNames.join(" ");
 
   const left = document.createElement("div");
   left.className = "chatPostCardLeft";
@@ -122,19 +131,51 @@ export function renderPostListSection(container, options = {}) {
     getPlaceLabel
   } = options;
 
+  const section = document.createElement("section");
+  section.className = "chatPostListSection";
+
   const postsHeading = document.createElement("h2");
   postsHeading.textContent = "発言一覧";
-  container.appendChild(postsHeading);
+  section.appendChild(postsHeading);
+
+  const list = document.createElement("div");
+  list.className = "chatPostList";
+  section.appendChild(list);
+
+  container.appendChild(section);
+
+  renderPostListContent(list, {
+    posts,
+    getPlaceLabel
+  });
+
+  return {
+    section,
+    list
+  };
+}
+
+export function renderPostListContent(listContainer, options = {}) {
+  const {
+    posts = [],
+    getPlaceLabel
+  } = options;
+
+  if (!listContainer) {
+    return;
+  }
+
+  listContainer.innerHTML = "";
 
   if (posts.length === 0) {
     const emptyPosts = document.createElement("p");
     emptyPosts.textContent = "発言はありません";
-    container.appendChild(emptyPosts);
+    listContainer.appendChild(emptyPosts);
     return;
   }
 
   posts.forEach(post => {
-    container.appendChild(
+    listContainer.appendChild(
       createPostCard(post, {
         isPreview: post.displayType === "preview",
         getPlaceLabel
