@@ -245,14 +245,12 @@
 
 /* 操作ボタン */
 .chatPostActionButton {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   padding: 0;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-sm);
-  background: var(--theme-button-bg);
-  color: var(--theme-button-text);
-  box-shadow: var(--theme-shadow-soft);
+  border: none;
+  background: transparent;
+  color: var(--theme-text-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -263,11 +261,41 @@
   width: 18px;
   height: 18px;
   display: block;
-  object-fit: contain;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.chatPostActionIconReply {
+  mask-image: url("./assets/icons/reply.svg");
+  -webkit-mask-image: url("./assets/icons/reply.svg");
+}
+
+.chatPostActionIconQuote {
+  mask-image: url("./assets/icons/quote.svg");
+  -webkit-mask-image: url("./assets/icons/quote.svg");
+}
+
+.chatPostActionIconDelete {
+  mask-image: url("./assets/icons/delete.svg");
+  -webkit-mask-image: url("./assets/icons/delete.svg");
+}
+
+.chatPostActionIconHide {
+  mask-image: url("./assets/icons/hide.svg");
+  -webkit-mask-image: url("./assets/icons/hide.svg");
 }
 
 .chatPostActionButton:hover {
-  background: var(--theme-button-bg-hover);
+  color: var(--theme-text-strong);
+}
+
+.chatPostActionButtonDelete:hover {
+  color: #ff8a8a;
 }
 
 /* フッター（日付と場所） */
