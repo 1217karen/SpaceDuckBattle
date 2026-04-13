@@ -469,3 +469,7 @@
   border: 1px solid var(--theme-border-main);
 }
 
+/* プレビュー */
+.chatPostCardDraftPreview {
+  opacity: 0.72;
+}
