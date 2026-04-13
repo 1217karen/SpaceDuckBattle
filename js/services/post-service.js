@@ -89,6 +89,14 @@ export function createPost(input = {}) {
   const allPosts = getSourcePosts();
   const nextPostId = getNextPostId(allPosts);
 
+  const rawTargetEnoList = Array.isArray(input.targetEnoList)
+    ? input.targetEnoList
+    : [];
+
+  const targetEnoList = rawTargetEnoList
+    .map(item => Number(item))
+    .filter(item => Number.isInteger(item) && item > 0);
+
   const post = {
     postId: nextPostId,
     placeId:
@@ -115,7 +123,8 @@ export function createPost(input = {}) {
     authorEno:
       typeof input.authorEno === "number"
         ? input.authorEno
-        : Number(input.authorEno || 0)
+        : Number(input.authorEno || 0),
+    targetEnoList
   };
 
   const nextPosts = [...allPosts, post];
