@@ -2,6 +2,7 @@
 
 import { renderRichText } from "../common/rich-text.js";
 import { bindRichTextToolbar } from "../common/rich-text-toolbar.js";
+import { getNoImageUrl } from "../common/icon-picker.js";
 
 function stripRichTextTags(text) {
   return String(text ?? "").replace(/<\/?(b|i|u|s|br|rb|rt|f1|f2|f3|f4|f5|f6|f7)>/g, "");
@@ -60,15 +61,11 @@ export function createPostCard(post, options = {}) {
         ? post.iconUrl.trim()
         : "";
 
-    if (iconUrl !== "") {
-      const iconImg = document.createElement("img");
-      iconImg.className = "chatPostIconImage";
-      iconImg.src = iconUrl;
-      iconImg.alt = "post icon";
-      iconBox.appendChild(iconImg);
-    } else {
-      iconBox.textContent = "□";
-    }
+    const iconImg = document.createElement("img");
+    iconImg.className = "chatPostIconImage";
+    iconImg.src = iconUrl || getNoImageUrl();
+    iconImg.alt = "post icon";
+    iconBox.appendChild(iconImg);
 
     left.appendChild(iconBox);
   }
@@ -461,7 +458,9 @@ export function renderViewTabsSection(container, options = {}) {
 export function renderChatComposerSection(container, options = {}) {
   const {
     speakerName = "名前未設定",
-    replyTargetValue = ""
+    replyTargetValue = "",
+    replySourcePost = null,
+    getPlaceLabel = () => ""
   } = options;
 
   const section = document.createElement("section");
@@ -489,6 +488,29 @@ export function renderChatComposerSection(container, options = {}) {
 
   const right = document.createElement("div");
   right.className = "chatComposerRight";
+
+  let replyPreviewSection = null;
+
+if (replySourcePost) {
+  replyPreviewSection = document.createElement("div");
+  replyPreviewSection.className = "chatComposerReplyPreview";
+
+  const replyPreviewHeader = document.createElement("div");
+  replyPreviewHeader.className = "chatComposerReplyPreviewHeader";
+  replyPreviewHeader.textContent = "返信元";
+
+  const replyPreviewCard = createPostCard(replySourcePost, {
+    isPreview: false,
+    getPlaceLabel,
+    onMoveToPlace: null,
+    onReply: null,
+    currentEno: null
+  });
+  replyPreviewCard.classList.add("chatComposerReplyPreviewCard");
+
+  replyPreviewSection.appendChild(replyPreviewHeader);
+  replyPreviewSection.appendChild(replyPreviewCard);
+}
 
   const metaRow = document.createElement("div");
   metaRow.className = "chatComposerMetaRow";
@@ -619,6 +641,10 @@ export function renderChatComposerSection(container, options = {}) {
   toolbar.appendChild(f7Button);
   toolbar.appendChild(submitButton);
 
+    if (replyPreviewSection) {
+    right.appendChild(replyPreviewSection);
+  }
+  
   right.appendChild(metaRow);
   right.appendChild(textarea);
   right.appendChild(toolbar);
@@ -639,7 +665,8 @@ export function renderChatComposerSection(container, options = {}) {
     nameInput,
     replyTargetInput,
     textarea,
-    submitButton
+    submitButton,
+    replySourcePost
   };
 }
 
