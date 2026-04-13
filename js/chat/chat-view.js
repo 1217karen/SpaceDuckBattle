@@ -112,16 +112,52 @@ export function createPostCard(post, options = {}) {
   if (!isPreview) {
     const replyButton = document.createElement("button");
     replyButton.type = "button";
-    replyButton.className = "chatPostActionButton";
-    replyButton.textContent = "返信";
+    replyButton.className = "chatPostActionButton chatPostActionButtonReply";
+    replyButton.title = "返信";
+
+    const replyIcon = document.createElement("img");
+    replyIcon.className = "chatPostActionIcon";
+    replyIcon.src = "./assets/icons/reply.svg";
+    replyIcon.alt = "返信";
+    replyButton.appendChild(replyIcon);
 
     const quoteButton = document.createElement("button");
     quoteButton.type = "button";
-    quoteButton.className = "chatPostActionButton";
-    quoteButton.textContent = "引用";
+    quoteButton.className = "chatPostActionButton chatPostActionButtonQuote";
+    quoteButton.title = "引用";
+
+    const quoteIcon = document.createElement("img");
+    quoteIcon.className = "chatPostActionIcon";
+    quoteIcon.src = "./assets/icons/quote.svg";
+    quoteIcon.alt = "引用";
+    quoteButton.appendChild(quoteIcon);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "chatPostActionButton chatPostActionButtonDelete";
+    deleteButton.title = "削除";
+
+    const deleteIcon = document.createElement("img");
+    deleteIcon.className = "chatPostActionIcon";
+    deleteIcon.src = "./assets/icons/delete.svg";
+    deleteIcon.alt = "削除";
+    deleteButton.appendChild(deleteIcon);
+
+    const hideButton = document.createElement("button");
+    hideButton.type = "button";
+    hideButton.className = "chatPostActionButton chatPostActionButtonHide";
+    hideButton.title = "非表示";
+
+    const hideIcon = document.createElement("img");
+    hideIcon.className = "chatPostActionIcon";
+    hideIcon.src = "./assets/icons/hide.svg";
+    hideIcon.alt = "非表示";
+    hideButton.appendChild(hideIcon);
 
     actions.appendChild(replyButton);
     actions.appendChild(quoteButton);
+    actions.appendChild(deleteButton);
+    actions.appendChild(hideButton);
   }
 
   const footer = document.createElement("div");
