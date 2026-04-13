@@ -468,28 +468,28 @@ export function renderChatComposerSection(container, options = {}) {
 
   const boldButton = document.createElement("button");
   boldButton.type = "button";
-  boldButton.className = "chatComposerToolButton chatComposerToolButtonBold";
+  boldButton.className = "chatComposerToolButton richTextToolButtonBold";
   boldButton.textContent = "B";
   boldButton.dataset.insertOpenTag = "<b>";
   boldButton.dataset.insertCloseTag = "</b>";
 
   const italicButton = document.createElement("button");
   italicButton.type = "button";
-  italicButton.className = "chatComposerToolButton chatComposerToolButtonItalic";
+  italicButton.className = "chatComposerToolButton richTextToolButtonItalic";
   italicButton.textContent = "I";
   italicButton.dataset.insertOpenTag = "<i>";
   italicButton.dataset.insertCloseTag = "</i>";
 
   const underlineButton = document.createElement("button");
   underlineButton.type = "button";
-  underlineButton.className = "chatComposerToolButton chatComposerToolButtonUnderline";
+  underlineButton.className = "chatComposerToolButton richTextToolButtonUnderline";
   underlineButton.textContent = "U";
   underlineButton.dataset.insertOpenTag = "<u>";
   underlineButton.dataset.insertCloseTag = "</u>";
 
   const strikeButton = document.createElement("button");
   strikeButton.type = "button";
-  strikeButton.className = "chatComposerToolButton chatComposerToolButtonStrike";
+  strikeButton.className = "chatComposerToolButton richTextToolButtonStrike";
   strikeButton.textContent = "S";
   strikeButton.dataset.insertOpenTag = "<s>";
   strikeButton.dataset.insertCloseTag = "</s>";
