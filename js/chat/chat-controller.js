@@ -220,7 +220,8 @@ function setupDraftPreview({
   character,
   composerRefs,
   allPosts,
-  getPlaceLabel
+  getPlaceLabel,
+  onMoveToPlace
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
     return;
@@ -245,7 +246,8 @@ function setupDraftPreview({
 
     renderPostListContent(postListRefs.list, {
       posts: postsForRender,
-      getPlaceLabel
+      getPlaceLabel,
+      onMoveToPlace
     });
   }
 
@@ -398,7 +400,8 @@ const displayPosts = getDisplayPosts({
 
 const postListRefs = renderPostListSection(centerPanel, {
   posts: displayPosts,
-  getPlaceLabel
+  getPlaceLabel,
+  onMoveToPlace: moveToPlace
 });
 
 setupDraftPreview({
@@ -407,7 +410,8 @@ setupDraftPreview({
   character,
   composerRefs,
   allPosts,
-  getPlaceLabel
+  getPlaceLabel,
+  onMoveToPlace: moveToPlace
 });
 }
 
