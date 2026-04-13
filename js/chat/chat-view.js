@@ -158,7 +158,17 @@ export function createPostCard(post, options = {}) {
 
   const footer = document.createElement("div");
   footer.className = "chatPostFooter";
-  footer.textContent = `${post.createdAt} / ${getPlaceLabel(post.placeId)}`;
+
+  const createdAtText = document.createElement("span");
+  createdAtText.textContent = `${post.createdAt} / `;
+
+  const placeLink = document.createElement("a");
+  placeLink.className = "chatPostPlaceLink";
+  placeLink.href = `./chat.html?placeId=${encodeURIComponent(post.placeId)}`;
+  placeLink.textContent = getPlaceLabel(post.placeId);
+
+  footer.appendChild(createdAtText);
+  footer.appendChild(placeLink);
 
   right.appendChild(header);
   right.appendChild(divider);
