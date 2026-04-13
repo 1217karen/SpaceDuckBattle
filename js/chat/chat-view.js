@@ -51,7 +51,22 @@ export function createPostCard(post, options = {}) {
   if (!isPreview) {
     const iconBox = document.createElement("div");
     iconBox.className = "chatPostIcon";
-    iconBox.textContent = "□";
+
+    const iconUrl =
+      typeof post.iconUrl === "string"
+        ? post.iconUrl.trim()
+        : "";
+
+    if (iconUrl !== "") {
+      const iconImg = document.createElement("img");
+      iconImg.className = "chatPostIconImage";
+      iconImg.src = iconUrl;
+      iconImg.alt = "post icon";
+      iconBox.appendChild(iconImg);
+    } else {
+      iconBox.textContent = "□";
+    }
+
     left.appendChild(iconBox);
   }
 
