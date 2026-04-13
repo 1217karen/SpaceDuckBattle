@@ -4,7 +4,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
-import { getAllPosts } from "../services/post-service.js";
+import { createPost, getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,
         renderViewTabsSection,renderPostListSection,renderPostListContent } from "./chat-view.js";
@@ -178,6 +178,44 @@ function buildViewTabs() {
   ];
 }
 
+function normalizeSubmittedBody(text) {
+  return String(text ?? "")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .replace(/\n/g, "<br>");
+}
+
+function buildComposerPostInput({ place, character, composerRefs }) {
+  const rawBody = composerRefs?.textarea?.value ?? "";
+  const trimmedBody = rawBody.trim();
+
+  if (!trimmedBody) {
+    return null;
+  }
+
+  const speakerName =
+    composerRefs?.nameInput?.value?.trim() ||
+    (typeof character?.defaultName === "string"
+      ? character.defaultName.trim()
+      : "") ||
+    "名前未設定";
+
+  const iconIdRaw =
+    Number(composerRefs?.iconButton?.dataset.selectedId || 0);
+
+  const iconUrlRaw =
+    String(composerRefs?.iconButton?.dataset.selectedUrl || "").trim();
+
+  return {
+    placeId: place.placeId,
+    speakerName,
+    iconId: iconIdRaw > 0 ? iconIdRaw : null,
+    iconUrl: iconUrlRaw,
+    body: normalizeSubmittedBody(rawBody),
+    authorEno: character?.eno ?? 0
+  };
+}
+
 function formatDraftBody(text) {
   return String(text ?? "").replace(/\n/g, "<br>");
 }
@@ -252,6 +290,42 @@ function setupDraftPreview({
       currentEno
     });
   }
+
+  composerRefs.textarea.addEventListener("input", refreshDraftPreview);
+  composerRefs.nameInput?.addEventListener("input", refreshDraftPreview);
+  composerRefs.iconButton?.addEventListener("iconchange", refreshDraftPreview);
+
+  refreshDraftPreview();
+}
+
+function setupComposerSubmit({
+  place,
+  character,
+  composerRefs
+}) {
+  if (!composerRefs?.submitButton) {
+    return;
+  }
+
+  composerRefs.submitButton.addEventListener("click", () => {
+    const postInput = buildComposerPostInput({
+      place,
+      character,
+      composerRefs
+    });
+
+    if (!postInput) {
+      alert("本文を入力してください");
+      return;
+    }
+
+    createPost(postInput);
+
+    composerRefs.textarea.value = "";
+
+    renderChatPlaceInfo();
+  });
+}
 
   composerRefs.textarea.addEventListener("input", refreshDraftPreview);
   composerRefs.nameInput?.addEventListener("input", refreshDraftPreview);
@@ -416,6 +490,12 @@ setupDraftPreview({
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
   currentEno: eno
+});
+
+setupComposerSubmit({
+  place,
+  character,
+  composerRefs
 });
 }
 
