@@ -26,7 +26,8 @@ export function createPostCard(post, options = {}) {
   const {
     isPreview = false,
     getPlaceLabel,
-    onMoveToPlace
+    onMoveToPlace,
+    currentEno = null
   } = options;
 
   const postBox = document.createElement("div");
@@ -111,6 +112,11 @@ export function createPostCard(post, options = {}) {
   actions.className = "chatPostActions";
 
   if (!isPreview && !post.isDraftPreview) {
+    const isOwnPost =
+      currentEno !== null &&
+      currentEno !== undefined &&
+      String(post.authorEno) === String(currentEno);
+
     const replyButton = document.createElement("button");
     replyButton.type = "button";
     replyButton.className = "chatPostActionButton chatPostActionButtonReply";
@@ -131,16 +137,6 @@ export function createPostCard(post, options = {}) {
     quoteIcon.className = "chatPostActionIcon chatPostActionIconQuote";
     quoteButton.appendChild(quoteIcon);
 
-    const deleteButton = document.createElement("button");
-    deleteButton.type = "button";
-    deleteButton.className = "chatPostActionButton chatPostActionButtonDelete";
-    deleteButton.title = "削除";
-    deleteButton.setAttribute("aria-label", "削除");
-
-    const deleteIcon = document.createElement("span");
-    deleteIcon.className = "chatPostActionIcon chatPostActionIconDelete";
-    deleteButton.appendChild(deleteIcon);
-
     const hideButton = document.createElement("button");
     hideButton.type = "button";
     hideButton.className = "chatPostActionButton chatPostActionButtonHide";
@@ -153,7 +149,21 @@ export function createPostCard(post, options = {}) {
 
     actions.appendChild(replyButton);
     actions.appendChild(quoteButton);
-    actions.appendChild(deleteButton);
+
+    if (isOwnPost) {
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "chatPostActionButton chatPostActionButtonDelete";
+      deleteButton.title = "削除";
+      deleteButton.setAttribute("aria-label", "削除");
+
+      const deleteIcon = document.createElement("span");
+      deleteIcon.className = "chatPostActionIcon chatPostActionIconDelete";
+      deleteButton.appendChild(deleteIcon);
+
+      actions.appendChild(deleteButton);
+    }
+
     actions.appendChild(hideButton);
   }
 
@@ -195,7 +205,8 @@ export function renderPostListSection(container, options = {}) {
   const {
     posts = [],
     getPlaceLabel,
-    onMoveToPlace
+    onMoveToPlace,
+    currentEno = null
   } = options;
 
   const section = document.createElement("section");
@@ -214,7 +225,8 @@ export function renderPostListSection(container, options = {}) {
   renderPostListContent(list, {
     posts,
     getPlaceLabel,
-    onMoveToPlace
+    onMoveToPlace,
+    currentEno
   });
 
   return {
@@ -227,7 +239,8 @@ export function renderPostListContent(listContainer, options = {}) {
   const {
     posts = [],
     getPlaceLabel,
-    onMoveToPlace
+    onMoveToPlace,
+    currentEno = null
   } = options;
 
   if (!listContainer) {
@@ -248,7 +261,8 @@ export function renderPostListContent(listContainer, options = {}) {
       createPostCard(post, {
         isPreview: post.displayType === "preview",
         getPlaceLabel,
-        onMoveToPlace
+        onMoveToPlace,
+        currentEno
       })
     );
   });
