@@ -327,13 +327,6 @@ function setupComposerSubmit({
   });
 }
 
-  composerRefs.textarea.addEventListener("input", refreshDraftPreview);
-  composerRefs.nameInput?.addEventListener("input", refreshDraftPreview);
-  composerRefs.iconButton?.addEventListener("iconchange", refreshDraftPreview);
-
-  refreshDraftPreview();
-}
-
 function getInitialComposerIcon(character) {
   const commIcons = normalizeCommIcons(character?.commIcons);
   const defaultIconUrl =
