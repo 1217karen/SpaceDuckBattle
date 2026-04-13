@@ -640,10 +640,6 @@ if (replySourcePost) {
   toolbar.appendChild(f6Button);
   toolbar.appendChild(f7Button);
   toolbar.appendChild(submitButton);
-
-    if (replyPreviewSection) {
-    right.appendChild(replyPreviewSection);
-  }
   
   right.appendChild(metaRow);
   right.appendChild(textarea);
@@ -651,6 +647,10 @@ if (replySourcePost) {
 
   card.appendChild(left);
   card.appendChild(right);
+
+  if (replyPreviewSection) {
+    inner.appendChild(replyPreviewSection);
+  }
 
   inner.appendChild(card);
   section.appendChild(inner);
