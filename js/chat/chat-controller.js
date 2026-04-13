@@ -185,6 +185,28 @@ function normalizeSubmittedBody(text) {
     .replace(/\n/g, "<br>");
 }
 
+function parseTargetEnoList(value) {
+  if (typeof value !== "string") {
+    return [];
+  }
+
+  const uniqueEnos = new Set();
+
+  value
+    .split(",")
+    .map(item => item.trim())
+    .filter(item => item !== "")
+    .forEach(item => {
+      if (!/^\d+$/.test(item)) {
+        return;
+      }
+
+      uniqueEnos.add(Number(item));
+    });
+
+  return [...uniqueEnos];
+}
+
 function buildComposerPostInput({ place, character, composerRefs }) {
   const rawBody = composerRefs?.textarea?.value ?? "";
   const trimmedBody = rawBody.trim();
@@ -206,13 +228,18 @@ function buildComposerPostInput({ place, character, composerRefs }) {
   const iconUrlRaw =
     String(composerRefs?.iconButton?.dataset.selectedUrl || "").trim();
 
+  const targetEnoList = parseTargetEnoList(
+    composerRefs?.replyTargetInput?.value ?? ""
+  );
+
   return {
     placeId: place.placeId,
     speakerName,
     iconId: iconIdRaw > 0 ? iconIdRaw : null,
     iconUrl: iconUrlRaw,
     body: normalizeSubmittedBody(rawBody),
-    authorEno: character?.eno ?? 0
+    authorEno: character?.eno ?? 0,
+    targetEnoList
   };
 }
 
@@ -450,7 +477,7 @@ renderPlaceTabsSection(centerPanel, {
 
 const composerRefs = renderChatComposerSection(centerPanel, {
   speakerName: "テストネーム",
-  replyTargetLabel: "返信先なし"
+  replyTargetValue: ""
 });
 
 setupComposerIconPicker(composerRefs, character);
