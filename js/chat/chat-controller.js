@@ -6,7 +6,8 @@ import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview }
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
 import { getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,renderViewTabsSection,renderPostListSection } from "./chat-view.js";
+import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,
+        renderViewTabsSection,renderPostListSection,renderPostListContent } from "./chat-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
@@ -177,6 +178,84 @@ function buildViewTabs() {
   ];
 }
 
+function formatDraftBody(text) {
+  return String(text ?? "").replace(/\n/g, "<br>");
+}
+
+function buildDraftPreviewPost({ place, character, composerRefs }) {
+  const rawBody = composerRefs?.textarea?.value ?? "";
+  const trimmedBody = rawBody.trim();
+
+  if (!trimmedBody) {
+    return null;
+  }
+
+  const speakerName =
+    composerRefs?.nameInput?.value?.trim() ||
+    (typeof character?.defaultName === "string"
+      ? character.defaultName.trim()
+      : "") ||
+    "名前未設定";
+
+  const iconIdRaw = Number(composerRefs?.iconButton?.dataset.selectedId || 0);
+  const iconUrlRaw = String(composerRefs?.iconButton?.dataset.selectedUrl || "").trim();
+
+  return {
+    postId: "xxx",
+    placeId: place.placeId,
+    speakerName,
+    iconId: iconIdRaw > 0 ? iconIdRaw : null,
+    iconUrl: iconUrlRaw,
+    body: formatDraftBody(rawBody),
+    createdAt: "----/--/-- --:--",
+    authorEno: character?.eno ?? "---",
+    isDraftPreview: true,
+    displayType: "normal"
+  };
+}
+
+function setupDraftPreview({
+  postListRefs,
+  place,
+  character,
+  composerRefs,
+  allPosts,
+  getPlaceLabel
+}) {
+  if (!postListRefs?.list || !composerRefs?.textarea) {
+    return;
+  }
+
+  function refreshDraftPreview() {
+    const displayPosts = getDisplayPosts({
+      currentPlace: place,
+      allPosts,
+      places
+    });
+
+    const draftPreviewPost = buildDraftPreviewPost({
+      place,
+      character,
+      composerRefs
+    });
+
+    const postsForRender = draftPreviewPost
+      ? [draftPreviewPost, ...displayPosts]
+      : displayPosts;
+
+    renderPostListContent(postListRefs.list, {
+      posts: postsForRender,
+      getPlaceLabel
+    });
+  }
+
+  composerRefs.textarea.addEventListener("input", refreshDraftPreview);
+  composerRefs.nameInput?.addEventListener("input", refreshDraftPreview);
+  composerRefs.iconButton?.addEventListener("iconchange", refreshDraftPreview);
+
+  refreshDraftPreview();
+}
+
 function getInitialComposerIcon(character) {
   const commIcons = normalizeCommIcons(character?.commIcons);
   const defaultIconUrl =
@@ -317,8 +396,17 @@ const displayPosts = getDisplayPosts({
   places
 });
 
-renderPostListSection(centerPanel, {
+const postListRefs = renderPostListSection(centerPanel, {
   posts: displayPosts,
+  getPlaceLabel
+});
+
+setupDraftPreview({
+  postListRefs,
+  place,
+  character,
+  composerRefs,
+  allPosts,
   getPlaceLabel
 });
 }
