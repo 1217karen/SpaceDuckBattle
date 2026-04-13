@@ -322,6 +322,19 @@
   color: var(--theme-text-muted);
 }
 
+.chatPostPlaceButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.chatPostPlaceButton:hover {
+  text-decoration: underline;
+}
+
 /* ========================================
    チャットページ：タブ
    ======================================== */
