@@ -207,26 +207,6 @@ function parseTargetEnoList(value) {
   return [...uniqueEnos];
 }
 
-function addReplyTargetEno(replyTargetInput, eno) {
-  if (!replyTargetInput) {
-    return;
-  }
-
-  const targetEno = Number(eno);
-
-  if (!Number.isInteger(targetEno) || targetEno <= 0) {
-    return;
-  }
-
-  const currentList = parseTargetEnoList(replyTargetInput.value);
-  const nextSet = new Set(currentList);
-
-  nextSet.add(targetEno);
-
-  replyTargetInput.value = [...nextSet].join(",");
-  replyTargetInput.focus();
-}
-
 function buildComposerPostInput({ place, character, composerRefs }) {
   const rawBody = composerRefs?.textarea?.value ?? "";
   const trimmedBody = rawBody.trim();
@@ -307,7 +287,6 @@ function setupDraftPreview({
   allPosts,
   getPlaceLabel,
   onMoveToPlace,
-  onReply,
   currentEno
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
@@ -335,7 +314,7 @@ function setupDraftPreview({
       posts: postsForRender,
       getPlaceLabel,
       onMoveToPlace,
-      onReply,
+      onReply: null,
       currentEno
     });
   }
@@ -507,10 +486,6 @@ const composerRefs = renderChatComposerSection(centerPanel, {
 
 setupComposerIconPicker(composerRefs, character);
 
-const handleReply = (post) => {
-  addReplyTargetEno(composerRefs.replyTargetInput, post?.authorEno);
-};
-
 renderViewTabsSection(centerPanel, {
   tabs: viewTabs
 });
@@ -527,7 +502,7 @@ const postListRefs = renderPostListSection(centerPanel, {
   posts: displayPosts,
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
-  onReply: handleReply,
+  onReply: null,
   currentEno: eno
 });
 
@@ -539,7 +514,6 @@ setupDraftPreview({
   allPosts,
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
-  onReply: handleReply,
   currentEno: eno
 });
 
