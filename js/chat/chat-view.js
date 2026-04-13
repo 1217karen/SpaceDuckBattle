@@ -25,7 +25,8 @@ function getPreviewText(text) {
 export function createPostCard(post, options = {}) {
   const {
     isPreview = false,
-    getPlaceLabel
+    getPlaceLabel,
+    onMoveToPlace
   } = options;
 
   const postBox = document.createElement("div");
@@ -162,13 +163,21 @@ export function createPostCard(post, options = {}) {
   const createdAtText = document.createElement("span");
   createdAtText.textContent = `${post.createdAt} / `;
 
-  const placeLink = document.createElement("a");
-  placeLink.className = "chatPostPlaceLink";
-  placeLink.href = `./chat.html?placeId=${encodeURIComponent(post.placeId)}`;
-  placeLink.textContent = getPlaceLabel(post.placeId);
+  const placeButton = document.createElement("button");
+  placeButton.type = "button";
+  placeButton.className = "chatPostPlaceButton";
+  placeButton.textContent = getPlaceLabel(post.placeId);
+
+  if (typeof onMoveToPlace === "function") {
+    placeButton.addEventListener("click", () => {
+      onMoveToPlace(post.placeId);
+    });
+  } else {
+    placeButton.disabled = true;
+  }
 
   footer.appendChild(createdAtText);
-  footer.appendChild(placeLink);
+  footer.appendChild(placeButton);
 
   right.appendChild(header);
   right.appendChild(divider);
@@ -185,7 +194,8 @@ export function createPostCard(post, options = {}) {
 export function renderPostListSection(container, options = {}) {
   const {
     posts = [],
-    getPlaceLabel
+    getPlaceLabel,
+    onMoveToPlace
   } = options;
 
   const section = document.createElement("section");
@@ -203,7 +213,8 @@ export function renderPostListSection(container, options = {}) {
 
   renderPostListContent(list, {
     posts,
-    getPlaceLabel
+    getPlaceLabel,
+    onMoveToPlace
   });
 
   return {
@@ -215,7 +226,8 @@ export function renderPostListSection(container, options = {}) {
 export function renderPostListContent(listContainer, options = {}) {
   const {
     posts = [],
-    getPlaceLabel
+    getPlaceLabel,
+    onMoveToPlace
   } = options;
 
   if (!listContainer) {
@@ -235,7 +247,8 @@ export function renderPostListContent(listContainer, options = {}) {
     listContainer.appendChild(
       createPostCard(post, {
         isPreview: post.displayType === "preview",
-        getPlaceLabel
+        getPlaceLabel,
+        onMoveToPlace
       })
     );
   });
