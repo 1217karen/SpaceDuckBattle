@@ -490,9 +490,18 @@
   font: inherit;
 }
 
-.chatComposerReplyTarget {
+.chatComposerReplyTargetInput {
+  min-width: 0;
+  width: 240px;
+  max-width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+  font: inherit;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-  color: var(--theme-text-muted);
 }
 
 .chatComposerTextarea {
