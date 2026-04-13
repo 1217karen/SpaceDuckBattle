@@ -221,7 +221,8 @@ function setupDraftPreview({
   composerRefs,
   allPosts,
   getPlaceLabel,
-  onMoveToPlace
+  onMoveToPlace,
+  currentEno
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
     return;
@@ -247,7 +248,8 @@ function setupDraftPreview({
     renderPostListContent(postListRefs.list, {
       posts: postsForRender,
       getPlaceLabel,
-      onMoveToPlace
+      onMoveToPlace,
+      currentEno
     });
   }
 
@@ -401,7 +403,8 @@ const displayPosts = getDisplayPosts({
 const postListRefs = renderPostListSection(centerPanel, {
   posts: displayPosts,
   getPlaceLabel,
-  onMoveToPlace: moveToPlace
+  onMoveToPlace: moveToPlace,
+  currentEno: eno
 });
 
 setupDraftPreview({
@@ -411,7 +414,8 @@ setupDraftPreview({
   composerRefs,
   allPosts,
   getPlaceLabel,
-  onMoveToPlace: moveToPlace
+  onMoveToPlace: moveToPlace,
+  currentEno: eno
 });
 }
 
