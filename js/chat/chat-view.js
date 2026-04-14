@@ -552,22 +552,33 @@ if (replySourcePost) {
       : "";
   nameInput.placeholder = "発言者名";
 
-    let fixedReplyTargetInput = null;
+  let fixedReplyTargetField = null;
+  let fixedReplyTargetInput = null;
 
   if (replySourcePost) {
+    fixedReplyTargetField = document.createElement("div");
+    fixedReplyTargetField.className = "chatComposerFixedReplyTargetField";
+
+    const fixedReplyTargetLabel = document.createElement("span");
+    fixedReplyTargetLabel.className = "chatComposerFixedReplyTargetLabel";
+    fixedReplyTargetLabel.textContent = "返信先";
+
     fixedReplyTargetInput = document.createElement("input");
     fixedReplyTargetInput.type = "text";
     fixedReplyTargetInput.className = "chatComposerReplyTargetInput chatComposerFixedReplyTargetInput";
     fixedReplyTargetInput.readOnly = true;
-    fixedReplyTargetInput.placeholder = "返信先";
+    fixedReplyTargetInput.placeholder = "";
     fixedReplyTargetInput.value =
       typeof fixedReplyTargetEno === "number" && fixedReplyTargetEno > 0
-        ? `Eno:${fixedReplyTargetEno}`
+        ? String(fixedReplyTargetEno)
         : "";
     fixedReplyTargetInput.dataset.eno =
       typeof fixedReplyTargetEno === "number" && fixedReplyTargetEno > 0
         ? String(fixedReplyTargetEno)
         : "";
+
+    fixedReplyTargetField.appendChild(fixedReplyTargetLabel);
+    fixedReplyTargetField.appendChild(fixedReplyTargetInput);
   }
 
   const replyTargetInput = document.createElement("input");
@@ -581,8 +592,8 @@ if (replySourcePost) {
 
   metaRow.appendChild(nameInput);
 
-  if (fixedReplyTargetInput) {
-    metaRow.appendChild(fixedReplyTargetInput);
+  if (fixedReplyTargetField) {
+    metaRow.appendChild(fixedReplyTargetField);
   }
 
   metaRow.appendChild(replyTargetInput);
