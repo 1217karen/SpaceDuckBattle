@@ -45,7 +45,8 @@ function normalizeDraft(raw = {}) {
     replyThreadRootPostId:
       typeof raw.replyThreadRootPostId === "number" && raw.replyThreadRootPostId > 0
         ? raw.replyThreadRootPostId
-        : null
+        : null,
+    useCurrentPlaceForReply: Boolean(raw.useCurrentPlaceForReply)
   };
 }
 
@@ -86,7 +87,8 @@ export function readComposerDraftFromRefs(composerRefs) {
     additionalTargetEnoText: composerRefs?.replyTargetInput?.value ?? "",
     replySourcePostId: Number(composerRefs?.section?.dataset.replySourcePostId || 0) || null,
     replyParentPostId: Number(composerRefs?.section?.dataset.replyParentPostId || 0) || null,
-    replyThreadRootPostId: Number(composerRefs?.section?.dataset.replyThreadRootPostId || 0) || null
+    replyThreadRootPostId: Number(composerRefs?.section?.dataset.replyThreadRootPostId || 0) || null,
+    useCurrentPlaceForReply: Boolean(composerRefs?.useCurrentPlaceCheckbox?.checked)
   });
 }
 
@@ -103,6 +105,11 @@ export function applyComposerDraftToRefs(composerRefs, draft = {}) {
 
   if (composerRefs?.replyTargetInput) {
     composerRefs.replyTargetInput.value = normalized.additionalTargetEnoText;
+  }
+
+    if (composerRefs?.useCurrentPlaceCheckbox) {
+    composerRefs.useCurrentPlaceCheckbox.checked =
+      Boolean(normalized.useCurrentPlaceForReply);
   }
 
   if (composerRefs?.section) {
