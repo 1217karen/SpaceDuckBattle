@@ -250,7 +250,8 @@ function setupComposerSubmit({
     const postInput = buildComposerPostInput({
       place,
       character,
-      draft: currentDraft
+      draft: currentDraft,
+      replySourcePost: findReplySourcePost(getAllPosts(), currentDraft)
     });
 
     if (!postInput) {
@@ -366,6 +367,7 @@ function setupComposerDraftPersistence(composerRefs) {
   composerRefs.textarea?.addEventListener("input", persistDraft);
   composerRefs.replyTargetInput?.addEventListener("input", persistDraft);
   composerRefs.iconButton?.addEventListener("iconchange", persistDraft);
+  composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", persistDraft);
 }
 
 function renderChatPlaceInfo() {
@@ -412,7 +414,7 @@ const composerRefs = renderChatComposerSection(centerPanel, {
   replySourcePost,
   getPlaceLabel,
   currentPlaceLabel: getPlaceLabel(place.placeId),
-  useCurrentPlaceForReply: false,
+  useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
   onClearReply: () => {
     const currentDraft = saveComposerDraft(
       readComposerDraftFromRefs(composerRefs)
