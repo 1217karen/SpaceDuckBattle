@@ -458,7 +458,7 @@ export function renderChatComposerSection(container, options = {}) {
     replySourcePost = null,
     getPlaceLabel = () => "",
     onClearReply = null,
-    postPlaceLabel = "",
+    currentPlaceLabel = "",
     useCurrentPlaceForReply = false
   } = options;
 
@@ -666,23 +666,29 @@ if (replySourcePost) {
   f7Button.dataset.insertOpenTag = "<f7>";
   f7Button.dataset.insertCloseTag = "</f7>";
 
-  const useCurrentPlaceLabel = document.createElement("label");
-  useCurrentPlaceLabel.className = "chatComposerPlaceToggleLabel";
+  let useCurrentPlaceCheckbox = null;
 
-  const useCurrentPlaceCheckbox = document.createElement("input");
-  useCurrentPlaceCheckbox.type = "checkbox";
-  useCurrentPlaceCheckbox.className = "chatComposerPlaceToggleCheckbox";
-  useCurrentPlaceCheckbox.checked = Boolean(useCurrentPlaceForReply);
+  if (replySourcePost) {
+    const useCurrentPlaceLabel = document.createElement("label");
+    useCurrentPlaceLabel.className = "chatComposerPlaceToggleLabel";
 
-  const useCurrentPlaceText = document.createElement("span");
-  useCurrentPlaceText.textContent = "発言場所を現在地にする";
+    useCurrentPlaceCheckbox = document.createElement("input");
+    useCurrentPlaceCheckbox.type = "checkbox";
+    useCurrentPlaceCheckbox.className = "chatComposerPlaceToggleCheckbox";
+    useCurrentPlaceCheckbox.checked = Boolean(useCurrentPlaceForReply);
 
-  useCurrentPlaceLabel.appendChild(useCurrentPlaceCheckbox);
-  useCurrentPlaceLabel.appendChild(useCurrentPlaceText);
+    const useCurrentPlaceText = document.createElement("span");
+    useCurrentPlaceText.textContent = "発言場所を現在地にする";
+
+    useCurrentPlaceLabel.appendChild(useCurrentPlaceCheckbox);
+    useCurrentPlaceLabel.appendChild(useCurrentPlaceText);
+
+    actionLeft.appendChild(useCurrentPlaceLabel);
+  }
 
   const postPlaceInfo = document.createElement("div");
   postPlaceInfo.className = "chatComposerPostPlaceInfo";
-  postPlaceInfo.textContent = `発言先: ${postPlaceLabel}`;
+  postPlaceInfo.textContent = `現在地: ${currentPlaceLabel}`;
 
   const submitButton = document.createElement("button");
   submitButton.type = "button";
