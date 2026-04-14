@@ -410,6 +410,8 @@ const composerRefs = renderChatComposerSection(centerPanel, {
   composerDraft,
   replySourcePost,
   getPlaceLabel,
+  currentPlaceLabel: getPlaceLabel(place.placeId),
+  useCurrentPlaceForReply: false,
   onClearReply: () => {
     const currentDraft = saveComposerDraft(
       readComposerDraftFromRefs(composerRefs)
