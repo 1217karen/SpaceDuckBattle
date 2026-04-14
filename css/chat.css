@@ -15,6 +15,19 @@
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-body));
 }
 
+/* =======================================================
+全体の背景
+======================================================= */
+body {
+  margin: 0;
+
+  background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 /* ========================================
    チャットページ：ヘッダー
    ======================================== */
