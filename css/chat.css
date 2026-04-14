@@ -570,9 +570,55 @@ body {
 
 .chatComposerToolbar {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chatComposerToolbarRow {
+  display: flex;
+  align-items: center;
+}
+
+.chatComposerToolbarRowTools {
   flex-wrap: wrap;
   gap: 2px 6px;
+}
+
+.chatComposerToolbarRowActions {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.chatComposerToolbarActionLeft {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 8px 14px;
+}
+
+.chatComposerToolbarActionRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.chatComposerPlaceToggleLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-main);
+  cursor: pointer;
+}
+
+.chatComposerPlaceToggleCheckbox {
+  margin: 0;
+}
+
+.chatComposerPostPlaceInfo {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
 }
 
 .chatComposerToolButton:not(.richTextToolButtonIconLike),
