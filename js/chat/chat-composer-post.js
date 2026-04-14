@@ -72,7 +72,34 @@ function getIconData(draft = {}) {
   };
 }
 
-export function buildComposerPostInput({ place, character, draft }) {
+function getPostPlaceId({ place, draft, replySourcePost }) {
+  const currentPlaceId =
+    typeof place?.placeId === "string"
+      ? place.placeId
+      : "";
+
+  if (!draft?.replyParentPostId) {
+    return currentPlaceId;
+  }
+
+  if (draft.useCurrentPlaceForReply) {
+    return currentPlaceId;
+  }
+
+  const replyPlaceId =
+    typeof replySourcePost?.placeId === "string"
+      ? replySourcePost.placeId
+      : "";
+
+  return replyPlaceId || currentPlaceId;
+}
+
+export function buildComposerPostInput({
+  place,
+  character,
+  draft,
+  replySourcePost = null
+}) {
   const rawBody = draft?.body ?? "";
   const trimmedBody = rawBody.trim();
 
@@ -83,7 +110,11 @@ export function buildComposerPostInput({ place, character, draft }) {
   const { iconId, iconUrl } = getIconData(draft);
 
   return {
-    placeId: place.placeId,
+    placeId: getPostPlaceId({
+      place,
+      draft,
+      replySourcePost
+    }),
     speakerName: getSpeakerName(draft, character),
     iconId,
     iconUrl,
