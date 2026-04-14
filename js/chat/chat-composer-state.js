@@ -34,6 +34,10 @@ function normalizeDraft(raw = {}) {
       typeof raw.additionalTargetEnoText === "string"
         ? raw.additionalTargetEnoText
         : "",
+    fixedReplyTargetEno:
+      typeof raw.fixedReplyTargetEno === "number" && raw.fixedReplyTargetEno > 0
+        ? raw.fixedReplyTargetEno
+        : null,
     replySourcePostId:
       typeof raw.replySourcePostId === "number" && raw.replySourcePostId > 0
         ? raw.replySourcePostId
@@ -85,6 +89,8 @@ export function readComposerDraftFromRefs(composerRefs) {
     iconId: Number(composerRefs?.iconButton?.dataset.selectedId || 0) || null,
     iconUrl: String(composerRefs?.iconButton?.dataset.selectedUrl || "").trim(),
     additionalTargetEnoText: composerRefs?.replyTargetInput?.value ?? "",
+    fixedReplyTargetEno:
+      Number(composerRefs?.fixedReplyTargetInput?.dataset.eno || 0) || null,
     replySourcePostId: Number(composerRefs?.section?.dataset.replySourcePostId || 0) || null,
     replyParentPostId: Number(composerRefs?.section?.dataset.replyParentPostId || 0) || null,
     replyThreadRootPostId: Number(composerRefs?.section?.dataset.replyThreadRootPostId || 0) || null,
@@ -107,7 +113,20 @@ export function applyComposerDraftToRefs(composerRefs, draft = {}) {
     composerRefs.replyTargetInput.value = normalized.additionalTargetEnoText;
   }
 
-    if (composerRefs?.useCurrentPlaceCheckbox) {
+  if (composerRefs?.fixedReplyTargetInput) {
+    const fixedReplyTargetEno =
+      typeof normalized.fixedReplyTargetEno === "number"
+        ? normalized.fixedReplyTargetEno
+        : null;
+
+    composerRefs.fixedReplyTargetInput.value =
+      fixedReplyTargetEno ? `Eno:${fixedReplyTargetEno}` : "";
+
+    composerRefs.fixedReplyTargetInput.dataset.eno =
+      fixedReplyTargetEno ?? "";
+  }
+
+  if (composerRefs?.useCurrentPlaceCheckbox) {
     composerRefs.useCurrentPlaceCheckbox.checked =
       Boolean(normalized.useCurrentPlaceForReply);
   }
