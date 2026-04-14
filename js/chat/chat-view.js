@@ -572,10 +572,13 @@ if (replySourcePost) {
     if (typeof fixedReplyTargetEno === "number" && fixedReplyTargetEno > 0) {
       const nameText =
         typeof fixedReplyTargetName === "string" && fixedReplyTargetName.trim() !== ""
-          ? ` ${fixedReplyTargetName.trim()}`
+          ? fixedReplyTargetName.trim()
           : "";
 
-      fixedReplyTargetValue.textContent = `Eno.${fixedReplyTargetEno}${nameText}`;
+      fixedReplyTargetValue.textContent =
+        nameText !== ""
+          ? `Eno.${fixedReplyTargetEno} / ${nameText}`
+          : `Eno.${fixedReplyTargetEno}`;
     } else {
       fixedReplyTargetValue.textContent = "未設定";
     }
