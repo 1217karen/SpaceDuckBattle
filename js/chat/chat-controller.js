@@ -403,6 +403,19 @@ const allPosts = getAllPosts();
 const composerDraft = loadComposerDraft();
 const replySourcePost = findReplySourcePost(allPosts, composerDraft);
 
+const replyTargetCharacter =
+  replySourcePost?.authorEno
+    ? loadCharacter(replySourcePost.authorEno)
+    : null;
+
+const fixedReplyTargetName =
+  typeof replyTargetCharacter?.defaultName === "string" &&
+  replyTargetCharacter.defaultName.trim() !== ""
+    ? replyTargetCharacter.defaultName.trim()
+    : (typeof replySourcePost?.speakerName === "string"
+        ? replySourcePost.speakerName
+        : "");
+
 const placeTabs = buildPlaceTabs(place);
 const viewTabs = buildViewTabs();
 
@@ -417,10 +430,7 @@ const composerRefs = renderChatComposerSection(centerPanel, {
   currentPlaceLabel: getPlaceLabel(place.placeId),
   useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
   fixedReplyTargetEno: composerDraft.fixedReplyTargetEno,
-  fixedReplyTargetName:
-    typeof replySourcePost?.speakerName === "string"
-      ? replySourcePost.speakerName
-      : "",
+  fixedReplyTargetName,
   onClearReply: () => {
     const currentDraft = saveComposerDraft(
       readComposerDraftFromRefs(composerRefs)
