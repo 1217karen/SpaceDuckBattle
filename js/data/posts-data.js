@@ -1,5 +1,3 @@
-//posts-data.js
-
 // posts-data.js
 
 export const posts = [
