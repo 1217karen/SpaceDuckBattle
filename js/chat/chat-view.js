@@ -457,7 +457,9 @@ export function renderChatComposerSection(container, options = {}) {
     composerDraft = {},
     replySourcePost = null,
     getPlaceLabel = () => "",
-    onClearReply = null
+    onClearReply = null,
+    postPlaceLabel = "",
+    useCurrentPlaceForReply = false
   } = options;
 
   const section = document.createElement("section");
@@ -568,6 +570,18 @@ if (replySourcePost) {
   const toolbar = document.createElement("div");
   toolbar.className = "chatComposerToolbar";
 
+  const toolRow = document.createElement("div");
+  toolRow.className = "chatComposerToolbarRow chatComposerToolbarRowTools";
+
+  const actionRow = document.createElement("div");
+  actionRow.className = "chatComposerToolbarRow chatComposerToolbarRowActions";
+
+  const actionLeft = document.createElement("div");
+  actionLeft.className = "chatComposerToolbarActionLeft";
+
+  const actionRight = document.createElement("div");
+  actionRight.className = "chatComposerToolbarActionRight";
+
   const boldButton = document.createElement("button");
   boldButton.type = "button";
   boldButton.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonBold";
@@ -652,25 +666,53 @@ if (replySourcePost) {
   f7Button.dataset.insertOpenTag = "<f7>";
   f7Button.dataset.insertCloseTag = "</f7>";
 
+  const useCurrentPlaceLabel = document.createElement("label");
+  useCurrentPlaceLabel.className = "chatComposerPlaceToggleLabel";
+
+  const useCurrentPlaceCheckbox = document.createElement("input");
+  useCurrentPlaceCheckbox.type = "checkbox";
+  useCurrentPlaceCheckbox.className = "chatComposerPlaceToggleCheckbox";
+  useCurrentPlaceCheckbox.checked = Boolean(useCurrentPlaceForReply);
+
+  const useCurrentPlaceText = document.createElement("span");
+  useCurrentPlaceText.textContent = "発言場所を現在地にする";
+
+  useCurrentPlaceLabel.appendChild(useCurrentPlaceCheckbox);
+  useCurrentPlaceLabel.appendChild(useCurrentPlaceText);
+
+  const postPlaceInfo = document.createElement("div");
+  postPlaceInfo.className = "chatComposerPostPlaceInfo";
+  postPlaceInfo.textContent = `発言先: ${postPlaceLabel}`;
+
   const submitButton = document.createElement("button");
   submitButton.type = "button";
   submitButton.className = "chatComposerSubmitButton";
   submitButton.textContent = "投稿";
 
-  toolbar.appendChild(boldButton);
-  toolbar.appendChild(italicButton);
-  toolbar.appendChild(underlineButton);
-  toolbar.appendChild(strikeButton);
-  toolbar.appendChild(rubyButton);
-  toolbar.appendChild(f1Button);
-  toolbar.appendChild(f2Button);
-  toolbar.appendChild(f3Button);
-  toolbar.appendChild(f4Button);
-  toolbar.appendChild(f5Button);
-  toolbar.appendChild(f6Button);
-  toolbar.appendChild(f7Button);
-  toolbar.appendChild(submitButton);
-  
+  toolRow.appendChild(boldButton);
+  toolRow.appendChild(italicButton);
+  toolRow.appendChild(underlineButton);
+  toolRow.appendChild(strikeButton);
+  toolRow.appendChild(rubyButton);
+  toolRow.appendChild(f1Button);
+  toolRow.appendChild(f2Button);
+  toolRow.appendChild(f3Button);
+  toolRow.appendChild(f4Button);
+  toolRow.appendChild(f5Button);
+  toolRow.appendChild(f6Button);
+  toolRow.appendChild(f7Button);
+
+  actionLeft.appendChild(useCurrentPlaceLabel);
+  actionLeft.appendChild(postPlaceInfo);
+
+  actionRight.appendChild(submitButton);
+
+  actionRow.appendChild(actionLeft);
+  actionRow.appendChild(actionRight);
+
+  toolbar.appendChild(toolRow);
+  toolbar.appendChild(actionRow);
+
   right.appendChild(metaRow);
   right.appendChild(textarea);
   right.appendChild(toolbar);
@@ -696,6 +738,7 @@ if (replySourcePost) {
     replyTargetInput,
     textarea,
     submitButton,
+    useCurrentPlaceCheckbox,
     replySourcePost
   };
 }
