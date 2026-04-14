@@ -522,9 +522,9 @@ body {
 
 .chatComposerMetaRow {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px 12px;
   margin-bottom: 8px;
 }
 
@@ -533,6 +533,8 @@ body {
 }
 
 .chatComposerAdditionalTargetSummary {
+  display: inline-flex;
+  align-items: center;
   list-style: none;
   cursor: pointer;
   user-select: none;
@@ -562,16 +564,18 @@ body {
   width: 240px;
   max-width: 100%;
   padding: 6px 8px;
-  border: 1px solid #999;
-  border-radius: 4px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
   box-sizing: border-box;
   font: inherit;
 }
 
 .chatComposerReplyTargetInput {
   min-width: 0;
-  width: 240px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 320px;
   padding: 6px 8px;
   border: 1px solid var(--theme-border-main);
   border-radius: var(--theme-radius-sm);
@@ -580,10 +584,6 @@ body {
   box-sizing: border-box;
   font: inherit;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-}
-
-.chatComposerMetaRow > .chatComposerReplyTargetInput {
-  flex: 1 1 240px;
 }
 
 .chatComposerFixedReplyTargetInfo {
@@ -595,10 +595,8 @@ body {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   color: var(--theme-text-subtle);
   white-space: nowrap;
-}
-
-.chatComposerFixedReplyTargetLabel {
-  color: var(--theme-text-subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chatComposerFixedReplyTargetValue {
@@ -703,11 +701,6 @@ body {
   color: var(--theme-text-muted);
 }
 
-.chatComposerNameInput {
-  background: rgba(0, 0, 0, 0.28);
-  color: var(--theme-text-main);
-  border: 1px solid var(--theme-border-main);
-}
 
 /* プレビュー */
 .chatPostCardDraftPreview {
