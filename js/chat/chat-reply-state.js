@@ -26,7 +26,8 @@ export function clearReplyState(draft = {}) {
     ...draft,
     replySourcePostId: null,
     replyParentPostId: null,
-    replyThreadRootPostId: null
+    replyThreadRootPostId: null,
+    useCurrentPlaceForReply: false
   };
 }
 
