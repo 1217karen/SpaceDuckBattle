@@ -591,12 +591,10 @@ body {
   align-items: center;
   gap: 6px;
   min-width: 0;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   color: var(--theme-text-subtle);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .chatComposerFixedReplyTargetValue {
