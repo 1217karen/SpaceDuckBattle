@@ -77,6 +77,45 @@ function getPlaceLabel(placeId) {
   return place?.name || placeId;
 }
 
+function getReplyTargetLabels(post) {
+  if (!post) {
+    return [];
+  }
+
+  const targetEnoSet = new Set();
+
+  const fixedReplyTargetEno =
+    typeof post.authorEno === "number" && post.authorEno > 0
+      ? post.authorEno
+      : null;
+
+  if (fixedReplyTargetEno) {
+    targetEnoSet.add(fixedReplyTargetEno);
+  }
+
+  if (Array.isArray(post.targetEnoList)) {
+    post.targetEnoList.forEach(item => {
+      const eno = Number(item);
+      if (Number.isInteger(eno) && eno > 0) {
+        targetEnoSet.add(eno);
+      }
+    });
+  }
+
+  return [...targetEnoSet].map(eno => {
+    const character = loadCharacter(eno);
+    const defaultName =
+      typeof character?.defaultName === "string" && character.defaultName.trim() !== ""
+        ? character.defaultName.trim()
+        : "";
+
+    return {
+      eno,
+      name: defaultName
+    };
+  });
+}
+
 function getAroundBasePlace(place) {
   if (!place) {
     return null;
@@ -221,7 +260,8 @@ function setupDraftPreview({
       getPlaceLabel,
       onMoveToPlace,
       onReply,
-      currentEno
+      currentEno,
+      getReplyTargetLabels
     });
   }
 
@@ -487,7 +527,8 @@ const postListRefs = renderPostListSection(centerPanel, {
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
   onReply: handleReply,
-  currentEno: eno
+  currentEno: eno,
+  getReplyTargetLabels
 });
 
 setupDraftPreview({
