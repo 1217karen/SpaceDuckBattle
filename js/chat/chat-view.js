@@ -461,7 +461,8 @@ export function renderChatComposerSection(container, options = {}) {
     currentPlaceLabel = "",
     useCurrentPlaceForReply = false,
     fixedReplyTargetEno = null,
-    fixedReplyTargetName = ""
+    fixedReplyTargetName = "",
+    isAdditionalTargetOpen = false
   } = options;
 
   const section = document.createElement("section");
@@ -587,22 +588,35 @@ if (replySourcePost) {
     fixedReplyTargetInfo.appendChild(fixedReplyTargetValue);
   }
 
+  const additionalTargetSection = document.createElement("details");
+  additionalTargetSection.className = "chatComposerAdditionalTargetSection";
+  additionalTargetSection.open = Boolean(isAdditionalTargetOpen);
+
+  const additionalTargetSummary = document.createElement("summary");
+  additionalTargetSummary.className = "chatComposerAdditionalTargetSummary";
+  additionalTargetSummary.textContent = "追加返信先";
+
+  const additionalTargetBody = document.createElement("div");
+  additionalTargetBody.className = "chatComposerAdditionalTargetBody";
+
   const replyTargetInput = document.createElement("input");
   replyTargetInput.type = "text";
   replyTargetInput.className = "chatComposerReplyTargetInput";
-    replyTargetInput.value =
+  replyTargetInput.value =
     typeof composerDraft.additionalTargetEnoText === "string"
       ? composerDraft.additionalTargetEnoText
       : "";
-  replyTargetInput.placeholder = "追加返信先Eno（,区切りで複数指定）";
+  replyTargetInput.placeholder = ",区切りで複数指定";
+
+  additionalTargetBody.appendChild(replyTargetInput);
+  additionalTargetSection.appendChild(additionalTargetSummary);
+  additionalTargetSection.appendChild(additionalTargetBody);
 
   metaRow.appendChild(nameInput);
 
   if (fixedReplyTargetInfo) {
     metaRow.appendChild(fixedReplyTargetInfo);
   }
-
-  metaRow.appendChild(replyTargetInput);
 
   const textarea = document.createElement("textarea");
   textarea.className = "chatComposerTextarea";
@@ -761,6 +775,7 @@ if (replySourcePost) {
   toolbar.appendChild(actionRow);
 
   right.appendChild(metaRow);
+  right.appendChild(additionalTargetSection);
   right.appendChild(textarea);
   right.appendChild(toolbar);
 
@@ -782,6 +797,7 @@ if (replySourcePost) {
     iconButton,
     iconImg,
     nameInput,
+    additionalTargetSection,
     replyTargetInput,
     textarea,
     submitButton,
