@@ -3,6 +3,8 @@
 export function createReplyStateFromPost(post) {
   if (!post || typeof post.postId !== "number") {
     return {
+      fixedReplyTargetEno: null,
+      additionalTargetEnoText: "",
       replySourcePostId: null,
       replyParentPostId: null,
       replyThreadRootPostId: null
@@ -14,7 +16,35 @@ export function createReplyStateFromPost(post) {
       ? post.threadRootPostId
       : post.postId;
 
+  const fixedReplyTargetEno =
+    typeof post.authorEno === "number" && post.authorEno > 0
+      ? post.authorEno
+      : null;
+
+  const targetEnoSet = new Set();
+
+  if (fixedReplyTargetEno) {
+    targetEnoSet.add(fixedReplyTargetEno);
+  }
+
+  if (Array.isArray(post.targetEnoList)) {
+    post.targetEnoList.forEach(item => {
+      const eno = Number(item);
+      if (Number.isInteger(eno) && eno > 0) {
+        targetEnoSet.add(eno);
+      }
+    });
+  }
+
+  if (fixedReplyTargetEno) {
+    targetEnoSet.delete(fixedReplyTargetEno);
+  }
+
+  const additionalTargetEnoText = [...targetEnoSet].join(",");
+
   return {
+    fixedReplyTargetEno,
+    additionalTargetEnoText,
     replySourcePostId: post.postId,
     replyParentPostId: post.postId,
     replyThreadRootPostId: threadRootPostId
@@ -24,6 +54,7 @@ export function createReplyStateFromPost(post) {
 export function clearReplyState(draft = {}) {
   return {
     ...draft,
+    fixedReplyTargetEno: null,
     replySourcePostId: null,
     replyParentPostId: null,
     replyThreadRootPostId: null,
@@ -34,6 +65,14 @@ export function clearReplyState(draft = {}) {
 export function applyReplyStateToDraft(draft = {}, replyState = {}) {
   return {
     ...draft,
+    fixedReplyTargetEno:
+      typeof replyState.fixedReplyTargetEno === "number"
+        ? replyState.fixedReplyTargetEno
+        : null,
+    additionalTargetEnoText:
+      typeof replyState.additionalTargetEnoText === "string"
+        ? replyState.additionalTargetEnoText
+        : "",
     replySourcePostId:
       typeof replyState.replySourcePostId === "number"
         ? replyState.replySourcePostId
