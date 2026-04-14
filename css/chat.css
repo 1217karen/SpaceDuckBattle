@@ -553,6 +553,34 @@ body {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
 }
 
+.chatComposerMetaRow > .chatComposerReplyTargetInput {
+  flex: 1 1 240px;
+}
+
+.chatComposerFixedReplyTargetField {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.chatComposerFixedReplyTargetLabel {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+  white-space: nowrap;
+}
+
+.chatComposerFixedReplyTargetInput {
+  width: 4.5em;
+  min-width: 4.5em;
+  max-width: 4.5em;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--theme-text-subtle);
+  cursor: default;
+  text-align: right;
+}
+
 .chatComposerFixedReplyTargetInput {
   background: rgba(255, 255, 255, 0.08);
   color: var(--theme-text-subtle);
