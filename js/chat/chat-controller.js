@@ -230,6 +230,7 @@ function setupDraftPreview({
   composerRefs.replyTargetInput?.addEventListener("input", refreshDraftPreview);
   composerRefs.iconButton?.addEventListener("iconchange", refreshDraftPreview);
   composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", refreshDraftPreview);
+  composerRefs.additionalTargetSection?.addEventListener("toggle", refreshDraftPreview);
 
   refreshDraftPreview();
 }
@@ -369,6 +370,7 @@ function setupComposerDraftPersistence(composerRefs) {
   composerRefs.replyTargetInput?.addEventListener("input", persistDraft);
   composerRefs.iconButton?.addEventListener("iconchange", persistDraft);
   composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", persistDraft);
+  composerRefs.additionalTargetSection?.addEventListener("toggle", persistDraft);
 }
 
 function renderChatPlaceInfo() {
@@ -431,6 +433,7 @@ const composerRefs = renderChatComposerSection(centerPanel, {
   useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
   fixedReplyTargetEno: composerDraft.fixedReplyTargetEno,
   fixedReplyTargetName,
+  isAdditionalTargetOpen: composerDraft.isAdditionalTargetOpen,
   onClearReply: () => {
     const currentDraft = saveComposerDraft(
       readComposerDraftFromRefs(composerRefs)
