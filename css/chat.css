@@ -528,6 +528,35 @@ body {
   margin-bottom: 8px;
 }
 
+.chatComposerAdditionalTargetSection {
+  margin-bottom: 8px;
+}
+
+.chatComposerAdditionalTargetSummary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+}
+
+.chatComposerAdditionalTargetSummary::-webkit-details-marker {
+  display: none;
+}
+
+.chatComposerAdditionalTargetSummary::before {
+  content: "▶ ";
+  display: inline-block;
+}
+
+.chatComposerAdditionalTargetSection[open] > .chatComposerAdditionalTargetSummary::before {
+  content: "▼ ";
+}
+
+.chatComposerAdditionalTargetBody {
+  margin-top: 6px;
+}
+
 .chatComposerNameInput {
   min-width: 0;
   width: 240px;
