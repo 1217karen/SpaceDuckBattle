@@ -246,6 +246,13 @@ body {
   font-weight: bold;
 }
 
+.chatPostReplyLabel {
+  margin-bottom: 4px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+  word-break: break-word;
+}
+
 /* 投稿番号 */
 .chatPostNo {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
