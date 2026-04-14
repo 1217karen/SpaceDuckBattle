@@ -90,7 +90,7 @@ export function readComposerDraftFromRefs(composerRefs) {
     iconUrl: String(composerRefs?.iconButton?.dataset.selectedUrl || "").trim(),
     additionalTargetEnoText: composerRefs?.replyTargetInput?.value ?? "",
     fixedReplyTargetEno:
-      Number(composerRefs?.fixedReplyTargetInput?.dataset.eno || 0) || null,
+      Number(composerRefs?.section?.dataset.fixedReplyTargetEno || 0) || null,
     replySourcePostId: Number(composerRefs?.section?.dataset.replySourcePostId || 0) || null,
     replyParentPostId: Number(composerRefs?.section?.dataset.replyParentPostId || 0) || null,
     replyThreadRootPostId: Number(composerRefs?.section?.dataset.replyThreadRootPostId || 0) || null,
@@ -113,18 +113,6 @@ export function applyComposerDraftToRefs(composerRefs, draft = {}) {
     composerRefs.replyTargetInput.value = normalized.additionalTargetEnoText;
   }
 
-  if (composerRefs?.fixedReplyTargetInput) {
-    const fixedReplyTargetEno =
-      typeof normalized.fixedReplyTargetEno === "number"
-        ? normalized.fixedReplyTargetEno
-        : null;
-
-    composerRefs.fixedReplyTargetInput.value =
-      fixedReplyTargetEno ? String(fixedReplyTargetEno) : "";
-
-    composerRefs.fixedReplyTargetInput.dataset.eno =
-      fixedReplyTargetEno ?? "";
-  }
 
   if (composerRefs?.useCurrentPlaceCheckbox) {
     composerRefs.useCurrentPlaceCheckbox.checked =
@@ -140,6 +128,9 @@ export function applyComposerDraftToRefs(composerRefs, draft = {}) {
 
     composerRefs.section.dataset.replyThreadRootPostId =
       normalized.replyThreadRootPostId ?? "";
+
+    composerRefs.section.dataset.fixedReplyTargetEno =
+      normalized.fixedReplyTargetEno ?? "";
   }
 
   return normalized;
