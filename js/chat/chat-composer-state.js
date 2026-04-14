@@ -120,7 +120,7 @@ export function applyComposerDraftToRefs(composerRefs, draft = {}) {
         : null;
 
     composerRefs.fixedReplyTargetInput.value =
-      fixedReplyTargetEno ? `Eno:${fixedReplyTargetEno}` : "";
+      fixedReplyTargetEno ? String(fixedReplyTargetEno) : "";
 
     composerRefs.fixedReplyTargetInput.dataset.eno =
       fixedReplyTargetEno ?? "";
