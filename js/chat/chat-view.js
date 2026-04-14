@@ -474,6 +474,9 @@ export function renderChatComposerSection(container, options = {}) {
 
   section.dataset.replyThreadRootPostId =
     composerDraft.replyThreadRootPostId ?? "";
+  
+  section.dataset.fixedReplyTargetEno =
+    composerDraft.fixedReplyTargetEno ?? "";
 
   const inner = document.createElement("div");
   inner.className = "chatComposerInner";
