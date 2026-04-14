@@ -460,7 +460,8 @@ export function renderChatComposerSection(container, options = {}) {
     onClearReply = null,
     currentPlaceLabel = "",
     useCurrentPlaceForReply = false,
-    fixedReplyTargetEno = null
+    fixedReplyTargetEno = null,
+    fixedReplyTargetName = ""
   } = options;
 
   const section = document.createElement("section");
@@ -552,33 +553,32 @@ if (replySourcePost) {
       : "";
   nameInput.placeholder = "発言者名";
 
-  let fixedReplyTargetField = null;
-  let fixedReplyTargetInput = null;
+    let fixedReplyTargetInfo = null;
 
   if (replySourcePost) {
-    fixedReplyTargetField = document.createElement("div");
-    fixedReplyTargetField.className = "chatComposerFixedReplyTargetField";
+    fixedReplyTargetInfo = document.createElement("div");
+    fixedReplyTargetInfo.className = "chatComposerFixedReplyTargetInfo";
 
     const fixedReplyTargetLabel = document.createElement("span");
     fixedReplyTargetLabel.className = "chatComposerFixedReplyTargetLabel";
-    fixedReplyTargetLabel.textContent = "返信先";
+    fixedReplyTargetLabel.textContent = "返信先：";
 
-    fixedReplyTargetInput = document.createElement("input");
-    fixedReplyTargetInput.type = "text";
-    fixedReplyTargetInput.className = "chatComposerReplyTargetInput chatComposerFixedReplyTargetInput";
-    fixedReplyTargetInput.readOnly = true;
-    fixedReplyTargetInput.placeholder = "";
-    fixedReplyTargetInput.value =
-      typeof fixedReplyTargetEno === "number" && fixedReplyTargetEno > 0
-        ? String(fixedReplyTargetEno)
-        : "";
-    fixedReplyTargetInput.dataset.eno =
-      typeof fixedReplyTargetEno === "number" && fixedReplyTargetEno > 0
-        ? String(fixedReplyTargetEno)
-        : "";
+    const fixedReplyTargetValue = document.createElement("span");
+    fixedReplyTargetValue.className = "chatComposerFixedReplyTargetValue";
 
-    fixedReplyTargetField.appendChild(fixedReplyTargetLabel);
-    fixedReplyTargetField.appendChild(fixedReplyTargetInput);
+    if (typeof fixedReplyTargetEno === "number" && fixedReplyTargetEno > 0) {
+      const nameText =
+        typeof fixedReplyTargetName === "string" && fixedReplyTargetName.trim() !== ""
+          ? ` ${fixedReplyTargetName.trim()}`
+          : "";
+
+      fixedReplyTargetValue.textContent = `Eno.${fixedReplyTargetEno}${nameText}`;
+    } else {
+      fixedReplyTargetValue.textContent = "未設定";
+    }
+
+    fixedReplyTargetInfo.appendChild(fixedReplyTargetLabel);
+    fixedReplyTargetInfo.appendChild(fixedReplyTargetValue);
   }
 
   const replyTargetInput = document.createElement("input");
@@ -592,8 +592,8 @@ if (replySourcePost) {
 
   metaRow.appendChild(nameInput);
 
-  if (fixedReplyTargetField) {
-    metaRow.appendChild(fixedReplyTargetField);
+  if (fixedReplyTargetInfo) {
+    metaRow.appendChild(fixedReplyTargetInfo);
   }
 
   metaRow.appendChild(replyTargetInput);
@@ -776,7 +776,6 @@ if (replySourcePost) {
     iconButton,
     iconImg,
     nameInput,
-    fixedReplyTargetInput,
     replyTargetInput,
     textarea,
     submitButton,
