@@ -132,7 +132,12 @@ export function buildComposerPostInput({
   };
 }
 
-export function buildDraftPreviewPost({ place, character, draft }) {
+export function buildDraftPreviewPost({
+  place,
+  character,
+  draft,
+  replySourcePost = null
+}) {
   const rawBody = draft?.body ?? "";
   const trimmedBody = rawBody.trim();
 
@@ -144,7 +149,11 @@ export function buildDraftPreviewPost({ place, character, draft }) {
 
   return {
     postId: "xxx",
-    placeId: place.placeId,
+    placeId: getPostPlaceId({
+      place,
+      draft,
+      replySourcePost
+    }),
     speakerName: getSpeakerName(draft, character),
     iconId,
     iconUrl,
