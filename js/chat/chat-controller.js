@@ -208,7 +208,8 @@ function setupDraftPreview({
     const draftPreviewPost = buildDraftPreviewPost({
       place,
       character,
-      draft: currentDraft
+      draft: currentDraft,
+      replySourcePost: findReplySourcePost(allPosts, currentDraft)
     });
 
     const postsForRender = draftPreviewPost
