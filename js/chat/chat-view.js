@@ -218,10 +218,6 @@ export function renderPostListSection(container, options = {}) {
   const section = document.createElement("section");
   section.className = "chatPostListSection";
 
-  const postsHeading = document.createElement("h2");
-  postsHeading.textContent = "発言一覧";
-  section.appendChild(postsHeading);
-
   const list = document.createElement("div");
   list.className = "chatPostList";
   section.appendChild(list);
