@@ -454,14 +454,20 @@ export function renderViewTabsSection(container, options = {}) {
 
 export function renderChatComposerSection(container, options = {}) {
   const {
-    speakerName = "名前未設定",
-    replyTargetValue = "",
+    composerDraft = {},
     replySourcePost = null,
     getPlaceLabel = () => ""
   } = options;
 
   const section = document.createElement("section");
-  section.className = "chatComposerSection";
+  section.dataset.replySourcePostId =
+    composerDraft.replySourcePostId ?? "";
+
+  section.dataset.replyParentPostId =
+    composerDraft.replyParentPostId ?? "";
+
+  section.dataset.replyThreadRootPostId =
+    composerDraft.replyThreadRootPostId ?? "";
 
   const inner = document.createElement("div");
   inner.className = "chatComposerInner";
@@ -516,13 +522,19 @@ if (replySourcePost) {
   const nameInput = document.createElement("input");
   nameInput.type = "text";
   nameInput.className = "chatComposerNameInput";
-  nameInput.value = speakerName;
+  nameInput.value =
+    typeof composerDraft.speakerName === "string"
+      ? composerDraft.speakerName
+      : "";
   nameInput.placeholder = "発言者名";
 
   const replyTargetInput = document.createElement("input");
   replyTargetInput.type = "text";
   replyTargetInput.className = "chatComposerReplyTargetInput";
-  replyTargetInput.value = replyTargetValue;
+    replyTargetInput.value =
+    typeof composerDraft.additionalTargetEnoText === "string"
+      ? composerDraft.additionalTargetEnoText
+      : "";
   replyTargetInput.placeholder = "追加返信先Eno（,区切りで複数指定）";
 
   metaRow.appendChild(nameInput);
