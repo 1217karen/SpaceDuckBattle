@@ -456,7 +456,8 @@ export function renderChatComposerSection(container, options = {}) {
   const {
     composerDraft = {},
     replySourcePost = null,
-    getPlaceLabel = () => ""
+    getPlaceLabel = () => "",
+    onClearReply = null
   } = options;
 
   const section = document.createElement("section");
@@ -500,7 +501,26 @@ if (replySourcePost) {
 
   const replyPreviewHeader = document.createElement("div");
   replyPreviewHeader.className = "chatComposerReplyPreviewHeader";
-  replyPreviewHeader.textContent = "返信元";
+
+  const replyPreviewHeaderLabel = document.createElement("span");
+  replyPreviewHeaderLabel.textContent = "返信元";
+
+  replyPreviewHeader.appendChild(replyPreviewHeaderLabel);
+
+  if (typeof onClearReply === "function") {
+    const clearReplyButton = document.createElement("button");
+    clearReplyButton.type = "button";
+    clearReplyButton.className = "chatComposerReplyClearButton";
+    clearReplyButton.textContent = "×";
+    clearReplyButton.title = "返信を解除";
+    clearReplyButton.setAttribute("aria-label", "返信を解除");
+
+    clearReplyButton.addEventListener("click", () => {
+      onClearReply();
+    });
+
+    replyPreviewHeader.appendChild(clearReplyButton);
+  }
 
     const replyPreviewCard = createPostCard(replySourcePost, {
       isPreview: false,
