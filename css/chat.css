@@ -553,6 +553,12 @@ body {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
 }
 
+.chatComposerFixedReplyTargetInput {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--theme-text-subtle);
+  cursor: default;
+}
+
 .chatComposerTextarea {
   width: 100%;
   min-height: 120px;
