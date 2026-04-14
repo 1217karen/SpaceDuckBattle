@@ -409,7 +409,16 @@ renderPlaceTabsSection(centerPanel, {
 const composerRefs = renderChatComposerSection(centerPanel, {
   composerDraft,
   replySourcePost,
-  getPlaceLabel
+  getPlaceLabel,
+  onClearReply: () => {
+    const currentDraft = saveComposerDraft(
+      readComposerDraftFromRefs(composerRefs)
+    );
+
+    const nextDraft = clearReplyState(currentDraft);
+    saveComposerDraft(nextDraft);
+    renderChatPlaceInfo();
+  }
 });
 
 setupComposerIconPicker(composerRefs, character);
