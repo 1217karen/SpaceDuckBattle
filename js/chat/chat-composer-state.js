@@ -34,6 +34,13 @@ function normalizeDraft(raw = {}) {
       typeof raw.additionalTargetEnoText === "string"
         ? raw.additionalTargetEnoText
         : "",
+    isAdditionalTargetOpen:
+      typeof raw.isAdditionalTargetOpen === "boolean"
+        ? raw.isAdditionalTargetOpen
+        : Boolean(
+            typeof raw.additionalTargetEnoText === "string" &&
+            raw.additionalTargetEnoText.trim() !== ""
+          ),
     fixedReplyTargetEno:
       typeof raw.fixedReplyTargetEno === "number" && raw.fixedReplyTargetEno > 0
         ? raw.fixedReplyTargetEno
@@ -89,6 +96,8 @@ export function readComposerDraftFromRefs(composerRefs) {
     iconId: Number(composerRefs?.iconButton?.dataset.selectedId || 0) || null,
     iconUrl: String(composerRefs?.iconButton?.dataset.selectedUrl || "").trim(),
     additionalTargetEnoText: composerRefs?.replyTargetInput?.value ?? "",
+    isAdditionalTargetOpen:
+      composerRefs?.additionalTargetSection?.open ?? false,
     fixedReplyTargetEno:
       Number(composerRefs?.section?.dataset.fixedReplyTargetEno || 0) || null,
     replySourcePostId: Number(composerRefs?.section?.dataset.replySourcePostId || 0) || null,
@@ -113,7 +122,11 @@ export function applyComposerDraftToRefs(composerRefs, draft = {}) {
     composerRefs.replyTargetInput.value = normalized.additionalTargetEnoText;
   }
 
-
+  if (composerRefs?.additionalTargetSection) {
+    composerRefs.additionalTargetSection.open =
+      Boolean(normalized.isAdditionalTargetOpen);
+  }
+  
   if (composerRefs?.useCurrentPlaceCheckbox) {
     composerRefs.useCurrentPlaceCheckbox.checked =
       Boolean(normalized.useCurrentPlaceForReply);
