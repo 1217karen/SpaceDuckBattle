@@ -459,7 +459,8 @@ export function renderChatComposerSection(container, options = {}) {
     getPlaceLabel = () => "",
     onClearReply = null,
     currentPlaceLabel = "",
-    useCurrentPlaceForReply = false
+    useCurrentPlaceForReply = false,
+    fixedReplyTargetEno = null
   } = options;
 
   const section = document.createElement("section");
@@ -551,6 +552,24 @@ if (replySourcePost) {
       : "";
   nameInput.placeholder = "発言者名";
 
+    let fixedReplyTargetInput = null;
+
+  if (replySourcePost) {
+    fixedReplyTargetInput = document.createElement("input");
+    fixedReplyTargetInput.type = "text";
+    fixedReplyTargetInput.className = "chatComposerReplyTargetInput chatComposerFixedReplyTargetInput";
+    fixedReplyTargetInput.readOnly = true;
+    fixedReplyTargetInput.placeholder = "返信先";
+    fixedReplyTargetInput.value =
+      typeof fixedReplyTargetEno === "number" && fixedReplyTargetEno > 0
+        ? `Eno:${fixedReplyTargetEno}`
+        : "";
+    fixedReplyTargetInput.dataset.eno =
+      typeof fixedReplyTargetEno === "number" && fixedReplyTargetEno > 0
+        ? String(fixedReplyTargetEno)
+        : "";
+  }
+
   const replyTargetInput = document.createElement("input");
   replyTargetInput.type = "text";
   replyTargetInput.className = "chatComposerReplyTargetInput";
@@ -561,6 +580,11 @@ if (replySourcePost) {
   replyTargetInput.placeholder = "追加返信先Eno（,区切りで複数指定）";
 
   metaRow.appendChild(nameInput);
+
+  if (fixedReplyTargetInput) {
+    metaRow.appendChild(fixedReplyTargetInput);
+  }
+
   metaRow.appendChild(replyTargetInput);
 
   const textarea = document.createElement("textarea");
@@ -741,6 +765,7 @@ if (replySourcePost) {
     iconButton,
     iconImg,
     nameInput,
+    fixedReplyTargetInput,
     replyTargetInput,
     textarea,
     submitButton,
