@@ -94,6 +94,23 @@ function getPostPlaceId({ place, draft, replySourcePost }) {
   return replyPlaceId || currentPlaceId;
 }
 
+function buildTargetEnoList(draft = {}) {
+  const targetEnoSet = new Set(
+    parseTargetEnoList(draft?.additionalTargetEnoText ?? "")
+  );
+
+  const fixedReplyTargetEno =
+    typeof draft?.fixedReplyTargetEno === "number" && draft.fixedReplyTargetEno > 0
+      ? draft.fixedReplyTargetEno
+      : null;
+
+  if (fixedReplyTargetEno) {
+    targetEnoSet.add(fixedReplyTargetEno);
+  }
+
+  return [...targetEnoSet];
+}
+
 export function buildComposerPostInput({
   place,
   character,
@@ -120,7 +137,7 @@ export function buildComposerPostInput({
     iconUrl,
     body: normalizeSubmittedBody(rawBody),
     authorEno: character?.eno ?? 0,
-    targetEnoList: parseTargetEnoList(draft?.additionalTargetEnoText ?? ""),
+    targetEnoList: buildTargetEnoList(draft),
     parentPostId:
       typeof draft?.replyParentPostId === "number"
         ? draft.replyParentPostId
