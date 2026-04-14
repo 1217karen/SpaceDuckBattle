@@ -463,6 +463,7 @@ export function renderChatComposerSection(container, options = {}) {
   } = options;
 
   const section = document.createElement("section");
+  section.className = "chatComposerSection";
   section.dataset.replySourcePostId =
     composerDraft.replySourcePostId ?? "";
 
@@ -708,7 +709,6 @@ if (replySourcePost) {
   toolRow.appendChild(f6Button);
   toolRow.appendChild(f7Button);
 
-  actionLeft.appendChild(useCurrentPlaceLabel);
   actionLeft.appendChild(postPlaceInfo);
 
   actionRight.appendChild(submitButton);
