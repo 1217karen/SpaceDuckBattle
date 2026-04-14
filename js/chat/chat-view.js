@@ -23,6 +23,32 @@ function getPreviewText(text) {
   return plainText.slice(0, 20) + "……";
 }
 
+function formatReplyTargetLabel(target = {}) {
+  const eno =
+    typeof target?.eno === "number" && target.eno > 0
+      ? target.eno
+      : null;
+
+  const name =
+    typeof target?.name === "string"
+      ? target.name.trim()
+      : "";
+
+  if (name && eno) {
+    return `${name}(Eno.${eno})`;
+  }
+
+  if (name) {
+    return name;
+  }
+
+  if (eno) {
+    return `Eno.${eno}`;
+  }
+
+  return "不明";
+}
+
 export function createPostCard(post, options = {}) {
   const {
     isPreview = false,
@@ -81,6 +107,23 @@ export function createPostCard(post, options = {}) {
   headerRight.className = "chatPostHeaderRight";
 
   if (!isPreview) {
+    if (
+      typeof getReplyTargetLabels === "function" &&
+      typeof post?.parentPostId === "number" &&
+      post.parentPostId > 0
+    ) {
+      const replyTargets = getReplyTargetLabels(post);
+
+      if (Array.isArray(replyTargets) && replyTargets.length > 0) {
+        const replyLabel = document.createElement("div");
+        replyLabel.className = "chatPostReplyLabel";
+        replyLabel.textContent =
+          `${replyTargets.map(formatReplyTargetLabel).join("＆")}>>`;
+
+        headerLeft.appendChild(replyLabel);
+      }
+    }
+
     const name = document.createElement("div");
     name.className = "chatPostName";
     name.textContent = `${post.speakerName} / Eno:${post.authorEno}`;
@@ -212,7 +255,8 @@ export function renderPostListSection(container, options = {}) {
     getPlaceLabel,
     onMoveToPlace,
     onReply,
-    currentEno = null
+    currentEno = null,
+    getReplyTargetLabels = null
   } = options;
 
   const section = document.createElement("section");
@@ -229,7 +273,8 @@ export function renderPostListSection(container, options = {}) {
     getPlaceLabel,
     onMoveToPlace,
     onReply,
-    currentEno
+    currentEno,
+    getReplyTargetLabels
   });
 
   return {
@@ -244,7 +289,8 @@ export function renderPostListContent(listContainer, options = {}) {
     getPlaceLabel,
     onMoveToPlace,
     onReply,
-    currentEno = null
+    currentEno = null,
+    getReplyTargetLabels = null
   } = options;
 
   if (!listContainer) {
@@ -267,7 +313,8 @@ export function renderPostListContent(listContainer, options = {}) {
         getPlaceLabel,
         onMoveToPlace,
         onReply,
-        currentEno
+        currentEno,
+        getReplyTargetLabels
       })
     );
   });
@@ -578,7 +625,7 @@ if (replySourcePost) {
 
       fixedReplyTargetValue.textContent =
         nameText !== ""
-          ? `Eno.${fixedReplyTargetEno} / ${nameText}`
+          ? `${nameText}(Eno.${fixedReplyTargetEno})`
           : `Eno.${fixedReplyTargetEno}`;
     } else {
       fixedReplyTargetValue.textContent = "未設定";
