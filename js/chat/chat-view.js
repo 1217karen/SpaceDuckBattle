@@ -29,7 +29,8 @@ export function createPostCard(post, options = {}) {
     getPlaceLabel,
     onMoveToPlace,
     onReply = null,
-    currentEno = null
+    currentEno = null,
+    hideActions = false
   } = options;
 
   const postBox = document.createElement("div");
@@ -109,7 +110,7 @@ export function createPostCard(post, options = {}) {
   const actions = document.createElement("div");
   actions.className = "chatPostActions";
 
-  if (!isPreview && !post.isDraftPreview) {
+  if (!isPreview && !post.isDraftPreview && !hideActions) {
     const isOwnPost =
       currentEno !== null &&
       currentEno !== undefined &&
@@ -499,13 +500,14 @@ if (replySourcePost) {
   replyPreviewHeader.className = "chatComposerReplyPreviewHeader";
   replyPreviewHeader.textContent = "返信元";
 
-  const replyPreviewCard = createPostCard(replySourcePost, {
-    isPreview: false,
-    getPlaceLabel,
-    onMoveToPlace: null,
-    onReply: null,
-    currentEno: null
-  });
+    const replyPreviewCard = createPostCard(replySourcePost, {
+      isPreview: false,
+      getPlaceLabel,
+      onMoveToPlace: null,
+      onReply: null,
+      currentEno: null,
+      hideActions: true
+    });
   replyPreviewCard.classList.add("chatComposerReplyPreviewCard");
 
   replyPreviewSection.appendChild(replyPreviewHeader);
