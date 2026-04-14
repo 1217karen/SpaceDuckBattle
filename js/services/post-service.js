@@ -216,6 +216,11 @@ export function createPost(input = {}) {
     isDeleted: false,
     deletedAt: null
   });
+
+  const nextPosts = [...allPosts, post];
+  saveStoredPosts(nextPosts);
+
+  return clonePost(post);
 }
 
 export function deletePost(postId, actorEno = null) {
@@ -243,10 +248,4 @@ export function deletePost(postId, actorEno = null) {
   });
 
   saveStoredPosts(nextPosts);
-}
-
-  const nextPosts = [...allPosts, post];
-  saveStoredPosts(nextPosts);
-
-  return clonePost(post);
 }
