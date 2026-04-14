@@ -6,8 +6,10 @@ import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview }
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
 import { createPost, getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,
-        renderViewTabsSection,renderPostListSection,renderPostListContent } from "./chat-view.js";
+import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,renderViewTabsSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
+import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
+import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
+import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
@@ -178,106 +180,6 @@ function buildViewTabs() {
   ];
 }
 
-function normalizeSubmittedBody(text) {
-  return String(text ?? "")
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .replace(/\n/g, "<br>");
-}
-
-function parseTargetEnoList(value) {
-  if (typeof value !== "string") {
-    return [];
-  }
-
-  const uniqueEnos = new Set();
-
-  value
-    .split(",")
-    .map(item => item.trim())
-    .filter(item => item !== "")
-    .forEach(item => {
-      if (!/^\d+$/.test(item)) {
-        return;
-      }
-
-      uniqueEnos.add(Number(item));
-    });
-
-  return [...uniqueEnos];
-}
-
-function buildComposerPostInput({ place, character, composerRefs }) {
-  const rawBody = composerRefs?.textarea?.value ?? "";
-  const trimmedBody = rawBody.trim();
-
-  if (!trimmedBody) {
-    return null;
-  }
-
-  const speakerName =
-    composerRefs?.nameInput?.value?.trim() ||
-    (typeof character?.defaultName === "string"
-      ? character.defaultName.trim()
-      : "") ||
-    "名前未設定";
-
-  const iconIdRaw =
-    Number(composerRefs?.iconButton?.dataset.selectedId || 0);
-
-  const iconUrlRaw =
-    String(composerRefs?.iconButton?.dataset.selectedUrl || "").trim();
-
-  const targetEnoList = parseTargetEnoList(
-    composerRefs?.replyTargetInput?.value ?? ""
-  );
-
-  return {
-    placeId: place.placeId,
-    speakerName,
-    iconId: iconIdRaw > 0 ? iconIdRaw : null,
-    iconUrl: iconUrlRaw,
-    body: normalizeSubmittedBody(rawBody),
-    authorEno: character?.eno ?? 0,
-    targetEnoList
-  };
-}
-
-function formatDraftBody(text) {
-  return String(text ?? "").replace(/\n/g, "<br>");
-}
-
-function buildDraftPreviewPost({ place, character, composerRefs }) {
-  const rawBody = composerRefs?.textarea?.value ?? "";
-  const trimmedBody = rawBody.trim();
-
-  if (!trimmedBody) {
-    return null;
-  }
-
-  const speakerName =
-    composerRefs?.nameInput?.value?.trim() ||
-    (typeof character?.defaultName === "string"
-      ? character.defaultName.trim()
-      : "") ||
-    "名前未設定";
-
-  const iconIdRaw = Number(composerRefs?.iconButton?.dataset.selectedId || 0);
-  const iconUrlRaw = String(composerRefs?.iconButton?.dataset.selectedUrl || "").trim();
-
-  return {
-    postId: "xxx",
-    placeId: place.placeId,
-    speakerName,
-    iconId: iconIdRaw > 0 ? iconIdRaw : null,
-    iconUrl: iconUrlRaw,
-    body: formatDraftBody(rawBody),
-    createdAt: "----/--/-- --:--",
-    authorEno: character?.eno ?? "---",
-    isDraftPreview: true,
-    displayType: "normal"
-  };
-}
 
 function setupDraftPreview({
   postListRefs,
@@ -295,6 +197,8 @@ function setupDraftPreview({
   }
 
   function refreshDraftPreview() {
+    const currentDraft = readComposerDraftFromRefs(composerRefs);
+
     const displayPosts = getDisplayPosts({
       currentPlace: place,
       allPosts,
@@ -304,7 +208,7 @@ function setupDraftPreview({
     const draftPreviewPost = buildDraftPreviewPost({
       place,
       character,
-      composerRefs
+      draft: currentDraft
     });
 
     const postsForRender = draftPreviewPost
@@ -322,6 +226,7 @@ function setupDraftPreview({
 
   composerRefs.textarea.addEventListener("input", refreshDraftPreview);
   composerRefs.nameInput?.addEventListener("input", refreshDraftPreview);
+  composerRefs.replyTargetInput?.addEventListener("input", refreshDraftPreview);
   composerRefs.iconButton?.addEventListener("iconchange", refreshDraftPreview);
 
   refreshDraftPreview();
@@ -337,10 +242,14 @@ function setupComposerSubmit({
   }
 
   composerRefs.submitButton.addEventListener("click", () => {
+    const currentDraft = saveComposerDraft(
+      readComposerDraftFromRefs(composerRefs)
+    );
+
     const postInput = buildComposerPostInput({
       place,
       character,
-      composerRefs
+      draft: currentDraft
     });
 
     if (!postInput) {
@@ -350,11 +259,13 @@ function setupComposerSubmit({
 
     createPost(postInput);
 
-    composerRefs.textarea.value = "";
-    if (composerRefs.replyTargetInput) {
-      composerRefs.replyTargetInput.value = "";
-    }
+    const clearedDraft = clearReplyState({
+      ...currentDraft,
+      body: "",
+      additionalTargetEnoText: ""
+    });
 
+    saveComposerDraft(clearedDraft);
     renderChatPlaceInfo();
   });
 }
@@ -416,18 +327,12 @@ function setupComposerIconPicker(composerRefs, character) {
 
   const commIcons = normalizeCommIcons(character?.commIcons);
   const initialIcon = getInitialComposerIcon(character);
-  const initialSpeakerName =
-    getInitialComposerSpeakerName(character, initialIcon);
 
   setButtonPreview(
     composerRefs.iconButton,
     initialIcon.iconId,
     initialIcon.iconUrl
   );
-
-  if (composerRefs.nameInput) {
-    composerRefs.nameInput.value = initialSpeakerName;
-  }
 
   bindSpeakerNameSync({
     nameInput: composerRefs.nameInput,
@@ -445,7 +350,22 @@ function setupComposerIconPicker(composerRefs, character) {
   });
 }
 
-let currentReplySourcePost = null;
+function setupComposerDraftPersistence(composerRefs) {
+  if (!composerRefs) {
+    return;
+  }
+
+  function persistDraft() {
+    saveComposerDraft(
+      readComposerDraftFromRefs(composerRefs)
+    );
+  }
+
+  composerRefs.nameInput?.addEventListener("input", persistDraft);
+  composerRefs.textarea?.addEventListener("input", persistDraft);
+  composerRefs.replyTargetInput?.addEventListener("input", persistDraft);
+  composerRefs.iconButton?.addEventListener("iconchange", persistDraft);
+}
 
 function renderChatPlaceInfo() {
   if (!centerPanel) return;
@@ -475,6 +395,10 @@ if (!place) {
   return;
 }
 
+const allPosts = getAllPosts();
+const composerDraft = loadComposerDraft();
+const replySourcePost = findReplySourcePost(allPosts, composerDraft);
+
 const placeTabs = buildPlaceTabs(place);
 const viewTabs = buildViewTabs();
 
@@ -483,16 +407,34 @@ renderPlaceTabsSection(centerPanel, {
 });
 
 const composerRefs = renderChatComposerSection(centerPanel, {
-  speakerName: "テストネーム",
-  replyTargetValue: "",
-  replySourcePost: currentReplySourcePost,
+  composerDraft,
+  replySourcePost,
   getPlaceLabel
 });
 
 setupComposerIconPicker(composerRefs, character);
 
+setupComposerDraftPersistence(composerRefs);
+
+applyComposerDraftToRefs(composerRefs, composerDraft);
+
+if (composerDraft.iconId || composerDraft.iconUrl) {
+  setButtonPreview(
+    composerRefs.iconButton,
+    composerDraft.iconId,
+    composerDraft.iconUrl || getNoImageUrl()
+  );
+}
+
 const handleReply = (post) => {
-  currentReplySourcePost = post || null;
+  const currentDraft = saveComposerDraft(
+    readComposerDraftFromRefs(composerRefs)
+  );
+
+  const replyState = createReplyStateFromPost(post);
+  const nextDraft = applyReplyStateToDraft(currentDraft, replyState);
+
+  saveComposerDraft(nextDraft);
   renderChatPlaceInfo();
 };
 
@@ -500,7 +442,6 @@ renderViewTabsSection(centerPanel, {
   tabs: viewTabs
 });
 
-const allPosts = getAllPosts();
 
 const displayPosts = getDisplayPosts({
   currentPlace: place,
