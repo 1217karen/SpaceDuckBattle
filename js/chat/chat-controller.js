@@ -228,6 +228,7 @@ function setupDraftPreview({
   composerRefs.nameInput?.addEventListener("input", refreshDraftPreview);
   composerRefs.replyTargetInput?.addEventListener("input", refreshDraftPreview);
   composerRefs.iconButton?.addEventListener("iconchange", refreshDraftPreview);
+  composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", refreshDraftPreview);
 
   refreshDraftPreview();
 }
