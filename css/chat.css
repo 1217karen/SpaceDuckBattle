@@ -36,6 +36,7 @@ body {
 .chatHeader {
   width: 100%;
   margin-bottom: 20px;
+  color: var(--theme-text-main);
 }
 
 /* ヘッダー内側の最大幅と中央寄せ */
@@ -66,6 +67,7 @@ body {
   margin: 0;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-title));
   line-height: 1.3;
+  color: var(--theme-text-main);
 }
 
 /* ヘッダー内のリンク風ボタン共通 */
@@ -74,8 +76,13 @@ body {
   border: none;
   background: none;
   font-size: calc(var(--chat-font-base) * 0.93);
-  color: #666;
+  color: var(--theme-text-subtle);
   cursor: pointer;
+}
+
+.chatHeaderLinkButton:hover {
+  color: var(--theme-text-main);
+  text-decoration: underline;
 }
 
 /* 「周辺を表示」ボタン */
@@ -85,7 +92,7 @@ body {
 
 /* タイトル下の点線 */
 .chatHeaderDivider {
-  border-top: 1px dotted #999;
+  border-top: 1px dotted var(--theme-border-soft);
   margin-bottom: 10px;
 }
 
@@ -98,6 +105,11 @@ body {
 .chatHeaderShortDescription {
   margin: 0 0 8px;
   line-height: 1.7;
+}
+
+.chatHeaderShortDescription,
+.chatHeaderLongDescription {
+  color: var(--theme-text-main);
 }
 
 /* 「詳細を表示」ボタン */
