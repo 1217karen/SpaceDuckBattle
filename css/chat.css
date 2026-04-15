@@ -44,6 +44,15 @@ body {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
+  padding: 14px 16px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.42),
+    rgba(0, 0, 0, 0.28)
+  );
+  box-shadow: var(--theme-shadow-panel);
   box-sizing: border-box;
 }
 
