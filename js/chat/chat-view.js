@@ -56,7 +56,8 @@ export function createPostCard(post, options = {}) {
     onMoveToPlace,
     onReply = null,
     currentEno = null,
-    hideActions = false
+    hideActions = false,
+    getReplyTargetLabels = null
   } = options;
 
   const postBox = document.createElement("div");
