@@ -195,6 +195,13 @@ body {
   box-sizing: border-box;
 }
 
+.chatPostCardReply {
+  border-color: rgba(243, 211, 106, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(243, 211, 106, 0.18) inset,
+    0 0 12px rgba(243, 211, 106, 0.18);
+}
+
 /* 一部表示カード */
 .chatPostCardPreview {
   opacity: var(--theme-preview-opacity);
@@ -249,7 +256,7 @@ body {
 .chatPostReplyLabel {
   margin-bottom: 4px;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-  color: var(--theme-text-subtle);
+  color: #f3d36a;
   word-break: break-word;
 }
 
