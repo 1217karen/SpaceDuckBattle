@@ -64,6 +64,13 @@ export function createPostCard(post, options = {}) {
 
   const classNames = ["chatPostCard"];
 
+    if (
+    typeof post?.parentPostId === "number" &&
+    post.parentPostId > 0
+  ) {
+    classNames.push("chatPostCardReply");
+  }
+
   if (isPreview) {
     classNames.push("chatPostCardPreview");
   }
