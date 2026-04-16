@@ -55,13 +55,17 @@ export function createPostCard(post, options = {}) {
     isPreview = false,
     getPlaceLabel,
     onMoveToPlace,
-    onReply = null,
-    onDelete = null,
+    postActions = {},
     currentEno = null,
     hideActions = false,
-    getReplyTargetLabels = null,
-    onOpenThread = null
+    getReplyTargetLabels = null
   } = options;
+
+  const {
+    onReply = null,
+    onDelete = null,
+    onOpenThread = null
+  } = postActions;
 
   const postBox = document.createElement("div");
 
@@ -284,11 +288,9 @@ export function renderPostListSection(container, options = {}) {
     posts = [],
     getPlaceLabel,
     onMoveToPlace,
-    onReply,
-    onDelete,
+    postActions = {},
     currentEno = null,
-    getReplyTargetLabels = null,
-    onOpenThread = null
+    getReplyTargetLabels = null
   } = options;
 
   const section = document.createElement("section");
@@ -304,11 +306,9 @@ export function renderPostListSection(container, options = {}) {
     posts,
     getPlaceLabel,
     onMoveToPlace,
-    onReply,
-    onDelete,
+    postActions,
     currentEno,
-    getReplyTargetLabels,
-    onOpenThread
+    getReplyTargetLabels
   });
 
   return {
@@ -322,11 +322,9 @@ export function renderPostListContent(listContainer, options = {}) {
     posts = [],
     getPlaceLabel,
     onMoveToPlace,
-    onReply,
-    onDelete,
+    postActions = {},
     currentEno = null,
-    getReplyTargetLabels = null,
-    onOpenThread = null
+    getReplyTargetLabels = null
   } = options;
 
   if (!listContainer) {
@@ -348,11 +346,9 @@ export function renderPostListContent(listContainer, options = {}) {
         isPreview: post.displayType === "preview",
         getPlaceLabel,
         onMoveToPlace,
-        onReply,
-        onDelete,
+        postActions,
         currentEno,
-        getReplyTargetLabels,
-        onOpenThread
+        getReplyTargetLabels
       })
     );
   });
