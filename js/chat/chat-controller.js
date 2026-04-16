@@ -6,7 +6,8 @@ import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview }
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
 import { createPost, getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection,renderViewTabsSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
+import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection,renderChatComposerSection,
+        renderViewTabsSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
