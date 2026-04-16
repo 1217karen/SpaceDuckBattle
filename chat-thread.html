@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>返信ツリー</title>
+
+<link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/common.css">
+<link rel="stylesheet" href="./css/common-theme.css">
+<link rel="stylesheet" href="./css/common-richtext-toolbar.css">
+<link rel="stylesheet" href="./css/chat.css">
+<link rel="stylesheet" href="./css/icon-picker.css">
+</head>
+
+<body>
+<div class="layout">
+
+  <aside class="left-panel">
+    <div id="commonMenu"></div>
+  </aside>
+
+  <main class="center-panel">
+  </main>
+
+  <aside class="right-panel">
+    補助エリア
+  </aside>
+
+</div>
+
+<div id="iconPickerModal" class="iconPickerModal hidden">
+  <div class="iconPickerWindow">
+    <div class="iconPickerHeader">
+      <button type="button" id="iconPickerClose">閉じる</button>
+    </div>
+    <div id="iconPickerList" class="iconPickerList"></div>
+  </div>
+</div>
+
+<script type="module" src="./js/common/include-menu.js"></script>
+<script type="module" src="./js/chat/chat-thread-controller.js"></script>
+</body>
+</html>
