@@ -4,7 +4,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
-import { createPost, getAllPosts } from "../services/post-service.js";
+import { createPost, deletePost, getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection,renderChatComposerSection,
         renderViewTabsSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
@@ -246,6 +246,7 @@ function setupDraftPreview({
   getPlaceLabel,
   onMoveToPlace,
   onReply,
+  onDelete,
   onOpenThread,
   threadRootPostId = null,
   currentEno
@@ -284,9 +285,10 @@ function setupDraftPreview({
       getPlaceLabel,
       onMoveToPlace,
       onReply,
+      onDelete: handleDelete,
       currentEno,
       getReplyTargetLabels,
-      onOpenThread: openThread
+      onOpenThread
     });
   }
 
@@ -548,6 +550,20 @@ const handleReply = (post) => {
   renderChatPlaceInfo();
 };
 
+const handleDelete = (post) => {
+  if (!post || typeof post.postId !== "number") {
+    return;
+  }
+
+  const ok = window.confirm("この発言を削除しますか？");
+  if (!ok) {
+    return;
+  }
+
+  deletePost(post.postId, eno);
+  renderChatPlaceInfo();
+};
+
 renderViewTabsSection(centerPanel, {
   tabs: viewTabs
 });
@@ -569,6 +585,7 @@ const postListRefs = renderPostListSection(centerPanel, {
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
   onReply: handleReply,
+  onDelete: handleDelete,
   currentEno: eno,
   getReplyTargetLabels,
   onOpenThread: openThread
@@ -583,6 +600,7 @@ setupDraftPreview({
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
   onReply: handleReply,
+  onDelete: handleDelete,
   onOpenThread: openThread,
   threadRootPostId,
   currentEno: eno
