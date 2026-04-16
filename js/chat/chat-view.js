@@ -57,7 +57,8 @@ export function createPostCard(post, options = {}) {
     onReply = null,
     currentEno = null,
     hideActions = false,
-    getReplyTargetLabels = null
+    getReplyTargetLabels = null,
+    onOpenThread = null
   } = options;
 
   const postBox = document.createElement("div");
@@ -123,12 +124,26 @@ export function createPostCard(post, options = {}) {
       const replyTargets = getReplyTargetLabels(post);
 
       if (Array.isArray(replyTargets) && replyTargets.length > 0) {
+        const replyLabelButton = document.createElement("button");
+        replyLabelButton.type = "button";
+        replyLabelButton.className = "chatPostReplyLabelButton";
+
         const replyLabel = document.createElement("div");
         replyLabel.className = "chatPostReplyLabel";
         replyLabel.textContent =
           `${replyTargets.map(formatReplyTargetLabel).join("＆")}>>`;
 
-        headerLeft.appendChild(replyLabel);
+        replyLabelButton.appendChild(replyLabel);
+
+        if (typeof onOpenThread === "function") {
+          replyLabelButton.addEventListener("click", () => {
+            onOpenThread(post);
+          });
+        } else {
+          replyLabelButton.disabled = true;
+        }
+
+        headerLeft.appendChild(replyLabelButton);
       }
     }
 
@@ -264,7 +279,8 @@ export function renderPostListSection(container, options = {}) {
     onMoveToPlace,
     onReply,
     currentEno = null,
-    getReplyTargetLabels = null
+    getReplyTargetLabels = null,
+    onOpenThread = null
   } = options;
 
   const section = document.createElement("section");
@@ -282,7 +298,8 @@ export function renderPostListSection(container, options = {}) {
     onMoveToPlace,
     onReply,
     currentEno,
-    getReplyTargetLabels
+    getReplyTargetLabels,
+    onOpenThread
   });
 
   return {
@@ -298,7 +315,8 @@ export function renderPostListContent(listContainer, options = {}) {
     onMoveToPlace,
     onReply,
     currentEno = null,
-    getReplyTargetLabels = null
+    getReplyTargetLabels = null,
+    onOpenThread = null
   } = options;
 
   if (!listContainer) {
@@ -322,7 +340,8 @@ export function renderPostListContent(listContainer, options = {}) {
         onMoveToPlace,
         onReply,
         currentEno,
-        getReplyTargetLabels
+        getReplyTargetLabels,
+        onOpenThread
       })
     );
   });
