@@ -186,6 +186,10 @@ export function buildDraftPreviewPost({
     createdAt: "----/--/-- --:--",
     authorEno: character?.eno ?? "---",
     isDraftPreview: true,
-    displayType: "normal"
+    displayType: "normal",
+    parentPostId:
+      typeof draft?.replyParentPostId === "number" && draft.replyParentPostId > 0
+        ? draft.replyParentPostId
+        : null
   };
 }
