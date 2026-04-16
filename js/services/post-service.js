@@ -148,6 +148,10 @@ export function getAllPosts() {
   return getSourcePosts();
 }
 
+export function getAllPostsIncludingDeleted() {
+  return getSourcePosts();
+}
+
 export function getPostsByPlaceId(placeId) {
   return getAllPosts().filter(post => post.placeId === placeId);
 }
