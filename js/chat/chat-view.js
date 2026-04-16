@@ -64,7 +64,8 @@ export function createPostCard(post, options = {}) {
   const {
     onReply = null,
     onDelete = null,
-    onOpenThread = null
+    onOpenThread = null,
+    onQuote = null
   } = postActions;
 
   const postBox = document.createElement("div");
@@ -213,6 +214,11 @@ export function createPostCard(post, options = {}) {
     const quoteIcon = document.createElement("span");
     quoteIcon.className = "chatPostActionIcon chatPostActionIconQuote";
     quoteButton.appendChild(quoteIcon);
+    if (typeof onQuote === "function") {
+      quoteButton.addEventListener("click", () => {
+        onQuote(post);
+      });
+    }
 
     const hideButton = document.createElement("button");
     hideButton.type = "button";
