@@ -95,9 +95,17 @@ function getPostPlaceId({ place, draft, replySourcePost }) {
 }
 
 function buildTargetEnoList(draft = {}) {
-  const targetEnoSet = new Set(
+  const targetEnoSet = new Set();
+
+  const isAdditionalTargetOpen =
+    Boolean(draft?.isAdditionalTargetOpen);
+
+  if (isAdditionalTargetOpen) {
     parseTargetEnoList(draft?.additionalTargetEnoText ?? "")
-  );
+      .forEach(eno => {
+        targetEnoSet.add(eno);
+      });
+  }
 
   const fixedReplyTargetEno =
     typeof draft?.fixedReplyTargetEno === "number" && draft.fixedReplyTargetEno > 0
