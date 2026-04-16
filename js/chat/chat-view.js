@@ -2,6 +2,7 @@
 
 import { renderRichText } from "../common/rich-text.js";
 import { bindRichTextToolbar } from "../common/rich-text-toolbar.js";
+import { createRichTextToolbarButtons } from "../common/rich-text-toolbar-ui.js";
 import { getNoImageUrl } from "../common/icon-picker.js";
 
 function stripRichTextTags(text) {
@@ -712,90 +713,6 @@ if (replySourcePost) {
   const actionRight = document.createElement("div");
   actionRight.className = "chatComposerToolbarActionRight";
 
-  const boldButton = document.createElement("button");
-  boldButton.type = "button";
-  boldButton.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonBold";
-  boldButton.textContent = "B";
-  boldButton.dataset.insertOpenTag = "<b>";
-  boldButton.dataset.insertCloseTag = "</b>";
-
-  const italicButton = document.createElement("button");
-  italicButton.type = "button";
-  italicButton.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonItalic";
-  italicButton.textContent = "I";
-  italicButton.dataset.insertOpenTag = "<i>";
-  italicButton.dataset.insertCloseTag = "</i>";
-
-  const underlineButton = document.createElement("button");
-  underlineButton.type = "button";
-  underlineButton.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonUnderline";
-  underlineButton.textContent = "U";
-  underlineButton.dataset.insertOpenTag = "<u>";
-  underlineButton.dataset.insertCloseTag = "</u>";
-
-  const strikeButton = document.createElement("button");
-  strikeButton.type = "button";
-  strikeButton.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonStrike";
-  strikeButton.textContent = "S";
-  strikeButton.dataset.insertOpenTag = "<s>";
-  strikeButton.dataset.insertCloseTag = "</s>";
-
-  const rubyButton = document.createElement("button");
-  rubyButton.type = "button";
-  rubyButton.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonRuby";
-  rubyButton.textContent = "rb";
-  rubyButton.dataset.insertText = "<rb></rb><rt></rt>";
-  rubyButton.dataset.caretOffset = "4";
-
-  const f1Button = document.createElement("button");
-  f1Button.type = "button";
-  f1Button.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont";
-  f1Button.textContent = "F1";
-  f1Button.dataset.insertOpenTag = "<f1>";
-  f1Button.dataset.insertCloseTag = "</f1>";
-
-  const f2Button = document.createElement("button");
-  f2Button.type = "button";
-  f2Button.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont";
-  f2Button.textContent = "F2";
-  f2Button.dataset.insertOpenTag = "<f2>";
-  f2Button.dataset.insertCloseTag = "</f2>";
-
-  const f3Button = document.createElement("button");
-  f3Button.type = "button";
-  f3Button.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont";
-  f3Button.textContent = "F3";
-  f3Button.dataset.insertOpenTag = "<f3>";
-  f3Button.dataset.insertCloseTag = "</f3>";
-
-  const f4Button = document.createElement("button");
-  f4Button.type = "button";
-  f4Button.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont";
-  f4Button.textContent = "F4";
-  f4Button.dataset.insertOpenTag = "<f4>";
-  f4Button.dataset.insertCloseTag = "</f4>";
-
-  const f5Button = document.createElement("button");
-  f5Button.type = "button";
-  f5Button.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont";
-  f5Button.textContent = "F5";
-  f5Button.dataset.insertOpenTag = "<f5>";
-  f5Button.dataset.insertCloseTag = "</f5>";
-
-  const f6Button = document.createElement("button");
-  f6Button.type = "button";
-  f6Button.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont";
-  f6Button.textContent = "F6";
-  f6Button.dataset.insertOpenTag = "<f6>";
-  f6Button.dataset.insertCloseTag = "</f6>";
-
-  const f7Button = document.createElement("button");
-  f7Button.type = "button";
-  f7Button.className = "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont";
-  f7Button.textContent = "F7";
-  f7Button.dataset.insertOpenTag = "<f7>";
-  f7Button.dataset.insertCloseTag = "</f7>";
-
   let useCurrentPlaceCheckbox = null;
 
   if (replySourcePost) {
@@ -825,21 +742,9 @@ if (replySourcePost) {
   submitButton.className = "chatComposerSubmitButton";
   submitButton.textContent = "投稿";
 
-  toolRow.appendChild(boldButton);
-  toolRow.appendChild(italicButton);
-  toolRow.appendChild(underlineButton);
-  toolRow.appendChild(strikeButton);
-  toolRow.appendChild(rubyButton);
-  toolRow.appendChild(f1Button);
-  toolRow.appendChild(f2Button);
-  toolRow.appendChild(f3Button);
-  toolRow.appendChild(f4Button);
-  toolRow.appendChild(f5Button);
-  toolRow.appendChild(f6Button);
-  toolRow.appendChild(f7Button);
-
+  toolRow.appendChild(createRichTextToolbarButtons());
+  
   actionLeft.appendChild(postPlaceInfo);
-
   actionRight.appendChild(submitButton);
 
   actionRow.appendChild(actionLeft);
