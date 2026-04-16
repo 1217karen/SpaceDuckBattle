@@ -247,6 +247,7 @@ function setupDraftPreview({
   onMoveToPlace,
   onReply,
   onOpenThread,
+  threadRootPostId = null,
   currentEno
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
@@ -256,11 +257,16 @@ function setupDraftPreview({
   function refreshDraftPreview() {
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
-    const displayPosts = getDisplayPosts({
-      currentPlace: place,
-      allPosts,
-      places
-    });
+    const displayPosts = threadRootPostId
+      ? getThreadPosts(allPosts, threadRootPostId).map(post => ({
+          ...post,
+          displayType: "normal"
+        }))
+      : getDisplayPosts({
+          currentPlace: place,
+          allPosts,
+          places
+        });
 
     const draftPreviewPost = buildDraftPreviewPost({
       place,
@@ -578,6 +584,7 @@ setupDraftPreview({
   onMoveToPlace: moveToPlace,
   onReply: handleReply,
   onOpenThread: openThread,
+  threadRootPostId,
   currentEno: eno
 });
 
