@@ -4,6 +4,7 @@ import { renderRichText } from "../common/rich-text.js";
 import { bindRichTextToolbar } from "../common/rich-text-toolbar.js";
 import { createRichTextToolbarButtons } from "../common/rich-text-toolbar-ui.js";
 import { getNoImageUrl } from "../common/icon-picker.js";
+import { renderPostBodyWithQuoteAnchors } from "./chat-quote-view.js";
 
 function stripRichTextTags(text) {
   return String(text ?? "").replace(/<\/?(b|i|u|s|br|rb|rt|f1|f2|f3|f4|f5|f6|f7)>/g, "");
@@ -58,7 +59,8 @@ export function createPostCard(post, options = {}) {
     postActions = {},
     currentEno = null,
     hideActions = false,
-    getReplyTargetLabels = null
+    getReplyTargetLabels = null,
+    getQuotePreviewPostById = null
   } = options;
 
   const {
@@ -177,7 +179,11 @@ export function createPostCard(post, options = {}) {
   if (isPreview) {
     body.textContent = getPreviewText(post.body);
   } else {
-    renderRichText(body, post.body, { preset: "message" });
+    renderPostBodyWithQuoteAnchors(body, post, {
+      renderRichText,
+      getQuotePreviewPostById,
+      getPlaceLabel
+    });
   }
 
   const actions = document.createElement("div");
@@ -296,7 +302,8 @@ export function renderPostListSection(container, options = {}) {
     onMoveToPlace,
     postActions = {},
     currentEno = null,
-    getReplyTargetLabels = null
+    getReplyTargetLabels = null,
+    getQuotePreviewPostById = null
   } = options;
 
   const section = document.createElement("section");
@@ -314,7 +321,8 @@ export function renderPostListSection(container, options = {}) {
     onMoveToPlace,
     postActions,
     currentEno,
-    getReplyTargetLabels
+    getReplyTargetLabels,
+    getQuotePreviewPostById
   });
 
   return {
@@ -330,7 +338,8 @@ export function renderPostListContent(listContainer, options = {}) {
     onMoveToPlace,
     postActions = {},
     currentEno = null,
-    getReplyTargetLabels = null
+    getReplyTargetLabels = null,
+    getQuotePreviewPostById = null
   } = options;
 
   if (!listContainer) {
@@ -354,7 +363,8 @@ export function renderPostListContent(listContainer, options = {}) {
         onMoveToPlace,
         postActions,
         currentEno,
-        getReplyTargetLabels
+        getReplyTargetLabels,
+        getQuotePreviewPostById
       })
     );
   });
