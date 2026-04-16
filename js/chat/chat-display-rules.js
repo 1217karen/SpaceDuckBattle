@@ -62,7 +62,10 @@ export function getDisplayPosts({
 }
 
 function getPostsByPlaceId(allPosts, placeId) {
-  return allPosts.filter(post => post.placeId === placeId);
+  return allPosts.filter(post =>
+    post.placeId === placeId &&
+    !post.isDeleted
+  );
 }
 
 function getMainFieldPreviewPosts(currentPlace, allPosts, places) {
