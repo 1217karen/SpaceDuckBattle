@@ -285,7 +285,7 @@ function setupDraftPreview({
       getPlaceLabel,
       onMoveToPlace,
       onReply,
-      onDelete: handleDelete,
+      onDelete,
       currentEno,
       getReplyTargetLabels,
       onOpenThread
