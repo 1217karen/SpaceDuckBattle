@@ -12,6 +12,7 @@ import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComp
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
+import { createPostActions } from "./chat-post-actions.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
@@ -245,9 +246,7 @@ function setupDraftPreview({
   allPosts,
   getPlaceLabel,
   onMoveToPlace,
-  onReply,
-  onDelete,
-  onOpenThread,
+  postActions,
   threadRootPostId = null,
   currentEno
 }) {
@@ -284,11 +283,9 @@ function setupDraftPreview({
       posts: postsForRender,
       getPlaceLabel,
       onMoveToPlace,
-      onReply,
-      onDelete,
+      postActions,
       currentEno,
-      getReplyTargetLabels,
-      onOpenThread
+      getReplyTargetLabels
     });
   }
 
@@ -564,6 +561,12 @@ const handleDelete = (post) => {
   renderChatPlaceInfo();
 };
 
+const postActions = createPostActions({
+  onReply: handleReply,
+  onDelete: handleDelete,
+  onOpenThread: openThread
+});
+
 renderViewTabsSection(centerPanel, {
   tabs: viewTabs
 });
@@ -584,11 +587,9 @@ const postListRefs = renderPostListSection(centerPanel, {
   posts: displayPosts,
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
-  onReply: handleReply,
-  onDelete: handleDelete,
+  postActions,
   currentEno: eno,
-  getReplyTargetLabels,
-  onOpenThread: openThread
+  getReplyTargetLabels
 });
 
 setupDraftPreview({
@@ -599,9 +600,7 @@ setupDraftPreview({
   allPosts,
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
-  onReply: handleReply,
-  onDelete: handleDelete,
-  onOpenThread: openThread,
+  postActions,
   threadRootPostId,
   currentEno: eno
 });
