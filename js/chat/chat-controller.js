@@ -11,7 +11,7 @@ import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
-import { getThreadRootPostIdFromQuery,getThreadPosts,buildThreadViewLabel} from "./chat-thread-view.js";
+import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
@@ -457,12 +457,18 @@ const threadRootPostId = getThreadRootPostIdFromQuery();
 
 centerPanel.innerHTML = "";
 
-renderPlaceInfoSection(centerPanel, {
-  place,
-  aroundBasePlace,
-  places,
-  onMoveToPlace: moveToPlace
-});
+if (threadRootPostId) {
+  renderThreadHeaderSection(centerPanel, {
+    memoText: "この欄は非公開メモ用です。"
+  });
+} else {
+  renderPlaceInfoSection(centerPanel, {
+    place,
+    aroundBasePlace,
+    places,
+    onMoveToPlace: moveToPlace
+  });
+}
 
 if (!place) {
   return;
@@ -496,12 +502,6 @@ const viewTabs = buildViewTabs();
 renderPlaceTabsSection(centerPanel, {
   tabs: placeTabs
 });
-
-  if (threadRootPostId && threadRootPost) {
-  const threadHeading = document.createElement("h2");
-  threadHeading.textContent = buildThreadViewLabel(threadRootPost);
-  centerPanel.appendChild(threadHeading);
-}
 
 const composerRefs = renderChatComposerSection(centerPanel, {
   composerDraft,
