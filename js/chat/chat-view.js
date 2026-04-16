@@ -505,6 +505,58 @@ inner.appendChild(body);
   container.appendChild(section);
 }
 
+export function renderThreadHeaderSection(container, options = {}) {
+  const {
+    memoText = "この欄は非公開メモ用です。"
+  } = options;
+
+  const section = document.createElement("section");
+  section.className = "chatHeader";
+
+  const inner = document.createElement("div");
+  inner.className = "chatHeaderInner";
+
+  const topRow = document.createElement("div");
+  topRow.className = "chatHeaderTopRow";
+
+  const titleGroup = document.createElement("div");
+  titleGroup.className = "chatHeaderTitleGroup";
+
+  const title = document.createElement("h1");
+  title.className = "chatHeaderTitle";
+  title.textContent = "返信ツリー";
+
+  titleGroup.appendChild(title);
+  topRow.appendChild(titleGroup);
+
+  const divider = document.createElement("div");
+  divider.className = "chatHeaderDivider";
+
+  const body = document.createElement("div");
+  body.className = "chatHeaderBody";
+
+  const memoLabel = document.createElement("p");
+  memoLabel.className = "chatHeaderShortDescription";
+  memoLabel.textContent = "非公開メモ";
+
+  const memoBody = document.createElement("p");
+  memoBody.className = "chatHeaderLongDescription";
+  memoBody.textContent =
+    typeof memoText === "string" && memoText.trim() !== ""
+      ? memoText
+      : "この欄は非公開メモ用です。";
+
+  body.appendChild(memoLabel);
+  body.appendChild(memoBody);
+
+  inner.appendChild(topRow);
+  inner.appendChild(divider);
+  inner.appendChild(body);
+
+  section.appendChild(inner);
+  container.appendChild(section);
+}
+
 export function renderPlaceTabsSection(container, options = {}) {
   const {
     tabs = []
