@@ -281,6 +281,22 @@ body {
   word-break: break-word;
 }
 
+.chatPostReplyLabelButton {
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chatPostReplyLabelButton:disabled {
+  cursor: default;
+}
+
+.chatPostReplyLabelButton:hover .chatPostReplyLabel {
+  text-decoration: underline;
+}
+
 /* 投稿番号 */
 .chatPostNo {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
