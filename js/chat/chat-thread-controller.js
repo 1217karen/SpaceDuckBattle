@@ -6,28 +6,10 @@ import { getCurrentAccount, loadCharacter } from "../services/storage-service.js
 import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
 import { createPost, getAllPosts } from "../services/post-service.js";
-import {
-  renderThreadHeaderSection,
-  renderChatComposerSection,
-  renderPostListSection,
-  renderPostListContent
-} from "./chat-view.js";
-import {
-  loadComposerDraft,
-  saveComposerDraft,
-  readComposerDraftFromRefs,
-  applyComposerDraftToRefs
-} from "./chat-composer-state.js";
-import {
-  createReplyStateFromPost,
-  clearReplyState,
-  applyReplyStateToDraft,
-  findReplySourcePost
-} from "./chat-reply-state.js";
-import {
-  buildComposerPostInput,
-  buildDraftPreviewPost
-} from "./chat-composer-post.js";
+import { createPostCard,renderThreadHeaderSection,renderChatComposerSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
+import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
+import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
+import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
@@ -190,14 +172,40 @@ function setupDraftPreview({
   character,
   composerRefs,
   threadPosts,
-  currentEno
+  currentEno,
+  onReply,
+  onOpenThread
 }) {
-  if (!postListRefs?.list || !composerRefs?.textarea) {
+  if (!postListRefs?.list || !composerRefs?.textarea || !composerRefs?.section) {
     return;
+  }
+
+  let draftPreviewContainer =
+    composerRefs.section.nextElementSibling &&
+    composerRefs.section.nextElementSibling.classList.contains("chatThreadDraftPreviewSection")
+      ? composerRefs.section.nextElementSibling
+      : null;
+
+  if (!draftPreviewContainer) {
+    draftPreviewContainer = document.createElement("section");
+    draftPreviewContainer.className = "chatThreadDraftPreviewSection";
+    composerRefs.section.insertAdjacentElement("afterend", draftPreviewContainer);
   }
 
   function refreshDraftPreview() {
     const currentDraft = readComposerDraftFromRefs(composerRefs);
+
+    renderPostListContent(postListRefs.list, {
+      posts: threadPosts,
+      getPlaceLabel,
+      onMoveToPlace: null,
+      onReply,
+      currentEno,
+      getReplyTargetLabels,
+      onOpenThread
+    });
+
+    draftPreviewContainer.innerHTML = "";
 
     const draftPreviewPost = buildDraftPreviewPost({
       place,
@@ -206,19 +214,29 @@ function setupDraftPreview({
       replySourcePost: findReplySourcePost(threadPosts, currentDraft)
     });
 
-    const postsForRender = draftPreviewPost
-      ? [...threadPosts, draftPreviewPost]
-      : threadPosts;
+    if (!draftPreviewPost) {
+      return;
+    }
 
-    renderPostListContent(postListRefs.list, {
-      posts: postsForRender,
+    const previewHeading = document.createElement("div");
+    previewHeading.className = "chatComposerReplyPreviewHeader";
+    previewHeading.textContent = "下書きプレビュー";
+
+    const previewCard = createPostCard(draftPreviewPost, {
+      isPreview: false,
       getPlaceLabel,
       onMoveToPlace: null,
-      onReply: handleReply,
+      onReply: null,
       currentEno,
+      hideActions: true,
       getReplyTargetLabels,
-      onOpenThread: openThread
+      onOpenThread: null
     });
+
+    previewCard.classList.add("chatComposerReplyPreviewCard");
+
+    draftPreviewContainer.appendChild(previewHeading);
+    draftPreviewContainer.appendChild(previewCard);
   }
 
   composerRefs.textarea.addEventListener("input", refreshDraftPreview);
@@ -227,18 +245,6 @@ function setupDraftPreview({
   composerRefs.iconButton?.addEventListener("iconchange", refreshDraftPreview);
   composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", refreshDraftPreview);
   composerRefs.additionalTargetSection?.addEventListener("toggle", refreshDraftPreview);
-
-  const handleReply = (post) => {
-    const currentDraft = saveComposerDraft(
-      readComposerDraftFromRefs(composerRefs)
-    );
-
-    const replyState = createReplyStateFromPost(post);
-    const nextDraft = applyReplyStateToDraft(currentDraft, replyState);
-
-    saveComposerDraft(nextDraft);
-    renderThreadPage();
-  };
 
   refreshDraftPreview();
 }
@@ -439,14 +445,16 @@ function renderThreadPage() {
 
   centerPanel.appendChild(composerRefs.section);
 
-  setupDraftPreview({
-    postListRefs,
-    place,
-    character,
-    composerRefs,
-    threadPosts,
-    currentEno: eno
-  });
+setupDraftPreview({
+  postListRefs,
+  place,
+  character,
+  composerRefs,
+  threadPosts,
+  currentEno: eno,
+  onReply: handleReply,
+  onOpenThread: openThread
+});
 
   setupComposerSubmit({
     place,
