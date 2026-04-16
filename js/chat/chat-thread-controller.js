@@ -5,7 +5,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
-import { createPost, deletePost, getAllPosts } from "../services/post-service.js";
+import { createPost,deletePost,getAllPosts,getAllPostsIncludingDeleted} from "../services/post-service.js";
 import { createPostCard,renderThreadHeaderSection,renderChatComposerSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
@@ -174,7 +174,8 @@ function setupDraftPreview({
   composerRefs,
   threadPosts,
   currentEno,
-  postActions
+  postActions,
+  getQuotePreviewPostById
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea || !composerRefs?.section) {
     return;
@@ -201,7 +202,8 @@ function setupDraftPreview({
       onMoveToPlace: null,
       postActions,
       currentEno,
-      getReplyTargetLabels
+      getReplyTargetLabels,
+      getQuotePreviewPostById
     });
 
     draftPreviewContainer.innerHTML = "";
@@ -438,6 +440,11 @@ function renderThreadPage() {
     renderThreadPage();
   };
 
+  const getQuotePreviewPostById = (postId) => {
+    const allPostsIncludingDeleted = getAllPostsIncludingDeleted();
+    return allPostsIncludingDeleted.find(post => post.postId === postId) || null;
+  };
+
     const handleQuote = (post) => {
     if (!post || !composerRefs?.textarea) {
       return;
@@ -489,7 +496,8 @@ function renderThreadPage() {
     onMoveToPlace: null,
     postActions,
     currentEno: eno,
-    getReplyTargetLabels
+    getReplyTargetLabels,
+    getQuotePreviewPostById
   });
 
   centerPanel.appendChild(composerRefs.section);
@@ -501,7 +509,8 @@ setupDraftPreview({
   composerRefs,
   threadPosts,
   currentEno: eno,
-  postActions
+  postActions,
+  getQuotePreviewPostById
 });
 
   setupComposerSubmit({
