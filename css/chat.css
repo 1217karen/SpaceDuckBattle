@@ -756,6 +756,13 @@ body {
   opacity: 0.72;
 }
 
+.chatThreadDraftPreviewSection {
+  width: 100%;
+  max-width: 800px;
+  margin: 8px auto 0;
+  box-sizing: border-box;
+}
+
 .chatPostIconImage {
   width: 100%;
   height: 100%;
