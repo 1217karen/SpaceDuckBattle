@@ -95,8 +95,6 @@ export function renderPostBodyWithQuoteAnchors(bodyElement, post, options = {}) 
 
       const quotePost = getQuotePreviewPostById(quotePostId);
 
-      previewArea.innerHTML = "";
-
       if (!quotePost) {
         previewArea.appendChild(
           buildQuotePreviewPlaceholder("引用元の発言が見つかりません。")
