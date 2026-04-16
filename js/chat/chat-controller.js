@@ -92,8 +92,7 @@ function openThread(post) {
   const placeId = getPlaceIdFromQuery() || post.placeId || "F1-1";
 
   window.location.href =
-    `./chat.html?placeId=${encodeURIComponent(placeId)}&threadRootPostId=${encodeURIComponent(threadRootPostId)}`;
-}
+    `./chat-thread.html?placeId=${encodeURIComponent(placeId)}&threadRootPostId=${encodeURIComponent(threadRootPostId)}`;}
 
 function getReplyTargetLabels(post) {
   if (!post) {
