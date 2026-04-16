@@ -561,10 +561,46 @@ const handleDelete = (post) => {
   renderChatPlaceInfo();
 };
 
+const handleQuote = (post) => {
+  if (!post || !composerRefs?.textarea) {
+    return;
+  }
+
+  const quoteText = `>>${post.postId}`;
+
+  const textarea = composerRefs.textarea;
+  const start = textarea.selectionStart ?? textarea.value.length;
+  const end = textarea.selectionEnd ?? textarea.value.length;
+  const before = textarea.value.slice(0, start);
+  const after = textarea.value.slice(end);
+
+  const needsLeadingSpace =
+    before.length > 0 &&
+    !before.endsWith("\n") &&
+    !before.endsWith(" ");
+
+  const needsTrailingSpace =
+    after.length > 0 &&
+    !after.startsWith("\n") &&
+    !after.startsWith(" ");
+
+  const insertText =
+    `${needsLeadingSpace ? " " : ""}${quoteText}${needsTrailingSpace ? " " : ""}`;
+
+  textarea.value = `${before}${insertText}${after}`;
+
+  const nextCaretPosition = before.length + insertText.length;
+  textarea.focus();
+  textarea.setSelectionRange(nextCaretPosition, nextCaretPosition);
+
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
+};
+
 const postActions = createPostActions({
   onReply: handleReply,
   onDelete: handleDelete,
-  onOpenThread: openThread
+  onOpenThread: openThread,
+  onQuote: handleQuote
 });
 
 renderViewTabsSection(centerPanel, {
