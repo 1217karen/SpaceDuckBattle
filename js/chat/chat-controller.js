@@ -10,6 +10,7 @@ import { renderPlaceInfoSection,renderPlaceTabsSection,renderChatComposerSection
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
+import { getThreadRootPostIdFromQuery,getThreadPosts,buildThreadViewLabel} from "./chat-thread-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
@@ -75,6 +76,22 @@ function moveToPlace(placeId) {
 function getPlaceLabel(placeId) {
   const place = getPlaceById(placeId);
   return place?.name || placeId;
+}
+
+function openThread(post) {
+  if (!post) {
+    return;
+  }
+
+  const threadRootPostId =
+    typeof post.threadRootPostId === "number" && post.threadRootPostId > 0
+      ? post.threadRootPostId
+      : post.postId;
+
+  const placeId = getPlaceIdFromQuery() || post.placeId || "F1-1";
+
+  window.location.href =
+    `./chat.html?placeId=${encodeURIComponent(placeId)}&threadRootPostId=${encodeURIComponent(threadRootPostId)}`;
 }
 
 function getReplyTargetLabels(post) {
@@ -229,6 +246,7 @@ function setupDraftPreview({
   getPlaceLabel,
   onMoveToPlace,
   onReply,
+  onOpenThread,
   currentEno
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
@@ -261,7 +279,8 @@ function setupDraftPreview({
       onMoveToPlace,
       onReply,
       currentEno,
-      getReplyTargetLabels
+      getReplyTargetLabels,
+      onOpenThread: openThread
     });
   }
 
@@ -426,7 +445,8 @@ function renderChatPlaceInfo() {
     "F1-1";
 
 const place = getPlaceById(placeId);
-  const aroundBasePlace = getAroundBasePlace(place);
+const aroundBasePlace = getAroundBasePlace(place);
+const threadRootPostId = getThreadRootPostIdFromQuery();
 
 centerPanel.innerHTML = "";
 
@@ -442,6 +462,11 @@ if (!place) {
 }
 
 const allPosts = getAllPosts();
+const threadPosts = getThreadPosts(allPosts, threadRootPostId);
+const threadRootPost =
+  threadRootPostId
+    ? allPosts.find(post => post.postId === threadRootPostId) || null
+    : null;
 const composerDraft = loadComposerDraft();
 const replySourcePost = findReplySourcePost(allPosts, composerDraft);
 
@@ -464,6 +489,12 @@ const viewTabs = buildViewTabs();
 renderPlaceTabsSection(centerPanel, {
   tabs: placeTabs
 });
+
+  if (threadRootPostId && threadRootPost) {
+  const threadHeading = document.createElement("h2");
+  threadHeading.textContent = buildThreadViewLabel(threadRootPost);
+  centerPanel.appendChild(threadHeading);
+}
 
 const composerRefs = renderChatComposerSection(centerPanel, {
   composerDraft,
@@ -516,11 +547,16 @@ renderViewTabsSection(centerPanel, {
 });
 
 
-const displayPosts = getDisplayPosts({
-  currentPlace: place,
-  allPosts,
-  places
-});
+const displayPosts = threadRootPostId
+  ? threadPosts.map(post => ({
+      ...post,
+      displayType: "normal"
+    }))
+  : getDisplayPosts({
+      currentPlace: place,
+      allPosts,
+      places
+    });
 
 const postListRefs = renderPostListSection(centerPanel, {
   posts: displayPosts,
@@ -528,7 +564,8 @@ const postListRefs = renderPostListSection(centerPanel, {
   onMoveToPlace: moveToPlace,
   onReply: handleReply,
   currentEno: eno,
-  getReplyTargetLabels
+  getReplyTargetLabels,
+  onOpenThread: openThread
 });
 
 setupDraftPreview({
@@ -540,6 +577,7 @@ setupDraftPreview({
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
   onReply: handleReply,
+  onOpenThread: openThread,
   currentEno: eno
 });
 
