@@ -5,7 +5,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
-import { createPost, getAllPosts } from "../services/post-service.js";
+import { createPost, deletePost, getAllPosts } from "../services/post-service.js";
 import { createPostCard,renderThreadHeaderSection,renderChatComposerSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
@@ -174,6 +174,7 @@ function setupDraftPreview({
   threadPosts,
   currentEno,
   onReply,
+  onDelete,
   onOpenThread
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea || !composerRefs?.section) {
@@ -200,6 +201,7 @@ function setupDraftPreview({
       getPlaceLabel,
       onMoveToPlace: null,
       onReply,
+      onDelete,
       currentEno,
       getReplyTargetLabels,
       onOpenThread
@@ -425,6 +427,20 @@ function renderThreadPage() {
     renderThreadPage();
   };
 
+    const handleDelete = (post) => {
+    if (!post || typeof post.postId !== "number") {
+      return;
+    }
+
+    const ok = window.confirm("この発言を削除しますか？");
+    if (!ok) {
+      return;
+    }
+
+    deletePost(post.postId, eno);
+    renderThreadPage();
+  };
+
   const postListRefs = renderPostListSection(centerPanel, {
     posts: threadPosts.map(post => ({
       ...post,
@@ -433,6 +449,7 @@ function renderThreadPage() {
     getPlaceLabel,
     onMoveToPlace: null,
     onReply: handleReply,
+    onDelete: handleDelete,
     currentEno: eno,
     getReplyTargetLabels,
     onOpenThread: openThread
@@ -448,6 +465,7 @@ setupDraftPreview({
   threadPosts,
   currentEno: eno,
   onReply: handleReply,
+  onDelete: handleDelete,
   onOpenThread: openThread
 });
 
