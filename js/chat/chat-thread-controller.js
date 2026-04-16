@@ -218,10 +218,6 @@ function setupDraftPreview({
       return;
     }
 
-    const previewHeading = document.createElement("div");
-    previewHeading.className = "chatComposerReplyPreviewHeader";
-    previewHeading.textContent = "下書きプレビュー";
-
     const previewCard = createPostCard(draftPreviewPost, {
       isPreview: false,
       getPlaceLabel,
@@ -235,7 +231,6 @@ function setupDraftPreview({
 
     previewCard.classList.add("chatComposerReplyPreviewCard");
 
-    draftPreviewContainer.appendChild(previewHeading);
     draftPreviewContainer.appendChild(previewCard);
   }
 
