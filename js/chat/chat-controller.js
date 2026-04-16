@@ -4,7 +4,7 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
-import { createPost, deletePost, getAllPosts } from "../services/post-service.js";
+import { createPost,deletePost,getAllPosts,getAllPostsIncludingDeleted} from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection,renderChatComposerSection,
         renderViewTabsSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
@@ -247,6 +247,7 @@ function setupDraftPreview({
   getPlaceLabel,
   onMoveToPlace,
   postActions,
+  getQuotePreviewPostById,
   threadRootPostId = null,
   currentEno
 }) {
@@ -285,7 +286,8 @@ function setupDraftPreview({
       onMoveToPlace,
       postActions,
       currentEno,
-      getReplyTargetLabels
+      getReplyTargetLabels,
+      getQuotePreviewPostById
     });
   }
 
@@ -561,6 +563,11 @@ const handleDelete = (post) => {
   renderChatPlaceInfo();
 };
 
+const getQuotePreviewPostById = (postId) => {
+  const allPostsIncludingDeleted = getAllPostsIncludingDeleted();
+  return allPostsIncludingDeleted.find(post => post.postId === postId) || null;
+};
+
 const handleQuote = (post) => {
   if (!post || !composerRefs?.textarea) {
     return;
@@ -625,7 +632,8 @@ const postListRefs = renderPostListSection(centerPanel, {
   onMoveToPlace: moveToPlace,
   postActions,
   currentEno: eno,
-  getReplyTargetLabels
+  getReplyTargetLabels,
+  getQuotePreviewPostById
 });
 
 setupDraftPreview({
@@ -637,6 +645,7 @@ setupDraftPreview({
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
   postActions,
+  getQuotePreviewPostById,
   threadRootPostId,
   currentEno: eno
 });
