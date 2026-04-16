@@ -56,6 +56,7 @@ export function createPostCard(post, options = {}) {
     getPlaceLabel,
     onMoveToPlace,
     onReply = null,
+    onDelete = null,
     currentEno = null,
     hideActions = false,
     getReplyTargetLabels = null,
@@ -232,6 +233,11 @@ export function createPostCard(post, options = {}) {
       const deleteIcon = document.createElement("span");
       deleteIcon.className = "chatPostActionIcon chatPostActionIconDelete";
       deleteButton.appendChild(deleteIcon);
+      if (typeof onDelete === "function") {
+        deleteButton.addEventListener("click", () => {
+          onDelete(post);
+        });
+      }
 
       actions.appendChild(deleteButton);
     }
@@ -279,6 +285,7 @@ export function renderPostListSection(container, options = {}) {
     getPlaceLabel,
     onMoveToPlace,
     onReply,
+    onDelete,
     currentEno = null,
     getReplyTargetLabels = null,
     onOpenThread = null
@@ -298,6 +305,7 @@ export function renderPostListSection(container, options = {}) {
     getPlaceLabel,
     onMoveToPlace,
     onReply,
+    onDelete,
     currentEno,
     getReplyTargetLabels,
     onOpenThread
@@ -315,6 +323,7 @@ export function renderPostListContent(listContainer, options = {}) {
     getPlaceLabel,
     onMoveToPlace,
     onReply,
+    onDelete,
     currentEno = null,
     getReplyTargetLabels = null,
     onOpenThread = null
@@ -340,6 +349,7 @@ export function renderPostListContent(listContainer, options = {}) {
         getPlaceLabel,
         onMoveToPlace,
         onReply,
+        onDelete,
         currentEno,
         getReplyTargetLabels,
         onOpenThread
