@@ -403,8 +403,8 @@ body {
 }
 
 .chatPostActionIconHide {
-  mask-image: url("../assets/icons/reply.svg");
-  -webkit-mask-image: url("../assets/icons/reply.svg");
+  mask-image: url("../assets/icons/hide.svg");
+  -webkit-mask-image: url("../assets/icons/hide.svg");
 }
 .chatPostActionButton:hover {
   color: var(--theme-text-strong);
