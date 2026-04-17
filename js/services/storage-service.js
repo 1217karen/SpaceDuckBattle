@@ -2,6 +2,7 @@
 
 const CURRENT_LOGIN_ID_KEY = "currentLoginId";
 const ENO_COUNTER_KEY = "enoCounter";
+const DEFAULT_NO_IMAGE_URL = "https://example.com/noimg.png";
 
 function makeAccountKey(loginId) {
   return `account:${loginId}`;
@@ -150,14 +151,15 @@ export function createInitialCharacter({
   fullName,
   defaultName
 }) {
-return {
-  eno,
-  fullName: fullName ?? "",
-  defaultName: defaultName ?? "",
-  currentPlaceId: "F1-1",
-  commIcons: [],
-  commDialogues: {}
-};
+  return {
+    eno,
+    fullName: fullName ?? "",
+    defaultName: defaultName ?? "",
+    currentPlaceId: "F1-1",
+    defaultIcon: DEFAULT_NO_IMAGE_URL,
+    commIcons: [],
+    commDialogues: {}
+  };
 }
 
 
@@ -171,6 +173,13 @@ export function createInitialUnit({
     unitNo,
     name: name ?? "",
     type: "attack",
+    icon: {
+      default: DEFAULT_NO_IMAGE_URL,
+      N: DEFAULT_NO_IMAGE_URL,
+      E: DEFAULT_NO_IMAGE_URL,
+      S: DEFAULT_NO_IMAGE_URL,
+      W: DEFAULT_NO_IMAGE_URL
+    },
     stats: {
       atk: 0,
       def: 0,
