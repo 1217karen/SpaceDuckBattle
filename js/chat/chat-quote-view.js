@@ -20,7 +20,9 @@ function buildQuotePreviewPlaceholder(message) {
 
 function buildQuotePreviewCard(post, options = {}) {
   const {
-    getPlaceLabel
+    getPlaceLabel,
+    getQuotePreviewPostById,
+    rootPreviewArea
   } = options;
 
   const wrapper = document.createElement("div");
@@ -33,7 +35,11 @@ function buildQuotePreviewCard(post, options = {}) {
     postActions: {},
     currentEno: null,
     hideActions: true,
-    getReplyTargetLabels: null
+    getReplyTargetLabels: null,
+    getQuotePreviewPostById: typeof getQuotePreviewPostById === "function"
+      ? getQuotePreviewPostById
+      : null,
+    quotePreviewRootArea: rootPreviewArea ?? null
   });
 
   card.classList.add("chatQuotePreviewCard");
@@ -46,7 +52,8 @@ export function renderPostBodyWithQuoteAnchors(bodyElement, post, options = {}) 
   const {
     renderRichText,
     getQuotePreviewPostById,
-    getPlaceLabel
+    getPlaceLabel,
+    rootPreviewArea = null
   } = options;
 
   if (!bodyElement) {
@@ -63,9 +70,12 @@ export function renderPostBodyWithQuoteAnchors(bodyElement, post, options = {}) 
     return;
   }
 
-  const previewArea = document.createElement("div");
-  previewArea.className = "chatQuotePreviewArea";
-  previewArea.hidden = true;
+  const previewArea = rootPreviewArea || document.createElement("div");
+
+  if (!rootPreviewArea) {
+    previewArea.className = "chatQuotePreviewArea";
+    previewArea.hidden = true;
+  }
 
   const parts = text.split(/(>>\d+)/g).filter(part => part !== "");
 
@@ -106,7 +116,9 @@ export function renderPostBodyWithQuoteAnchors(bodyElement, post, options = {}) 
       } else {
         previewArea.appendChild(
           buildQuotePreviewCard(quotePost, {
-            getPlaceLabel
+            getPlaceLabel,
+            getQuotePreviewPostById,
+            rootPreviewArea: previewArea
           })
         );
       }
@@ -117,5 +129,7 @@ export function renderPostBodyWithQuoteAnchors(bodyElement, post, options = {}) 
     bodyElement.appendChild(button);
   });
 
-  bodyElement.appendChild(previewArea);
+  if (!rootPreviewArea) {
+    bodyElement.appendChild(previewArea);
+  }
 }
