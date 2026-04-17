@@ -13,6 +13,7 @@ import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findRep
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
 import { createPostActions } from "./chat-post-actions.js";
+import { showToast } from "../common/toast.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
@@ -342,6 +343,7 @@ function setupComposerSubmit({
 
     saveComposerDraft(clearedDraft);
     renderChatPlaceInfo();
+    showToast("発言を投稿しました", { type: "success" });
   });
 }
 
