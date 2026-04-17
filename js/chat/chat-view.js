@@ -569,7 +569,8 @@ inner.appendChild(body);
 export function renderThreadHeaderSection(container, options = {}) {
   const {
     memoText = "",
-    isMemoOpen = false
+    isMemoOpen = false,
+    onCloseThread = null
   } = options;
 
   const section = document.createElement("section");
@@ -588,7 +589,20 @@ export function renderThreadHeaderSection(container, options = {}) {
   title.className = "chatHeaderTitle";
   title.textContent = "返信ツリー";
 
-  titleGroup.appendChild(title);
+  let closeThreadButton = null;
+
+  if (typeof onCloseThread === "function") {
+    closeThreadButton = document.createElement("button");
+    closeThreadButton.type = "button";
+    closeThreadButton.className = "chatHeaderLinkButton chatThreadCloseButton";
+    closeThreadButton.textContent = "×チャット画面に戻る";
+
+    closeThreadButton.addEventListener("click", () => {
+      onCloseThread();
+    });
+
+    titleGroup.appendChild(closeThreadButton);
+  }
   topRow.appendChild(titleGroup);
 
   const divider = document.createElement("div");
@@ -645,6 +659,7 @@ export function renderThreadHeaderSection(container, options = {}) {
 
   return {
     section,
+    closeThreadButton,
     memoToggle,
     memoContent,
     memoTextarea,
