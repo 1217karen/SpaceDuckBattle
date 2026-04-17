@@ -348,7 +348,8 @@ function renderThreadPage() {
     memoText: initialThreadPrivateNote,
     isMemoOpen:
       typeof initialThreadPrivateNote === "string" &&
-      initialThreadPrivateNote.trim() !== ""
+      initialThreadPrivateNote.trim() !== "",
+    onCloseThread: closeThread
   });
 
   if (threadHeaderRefs?.memoSaveButton && threadHeaderRefs?.memoTextarea) {
@@ -364,18 +365,6 @@ function renderThreadPage() {
       });
     });
   }
-  
-  const closeButtonRow = document.createElement("div");
-  closeButtonRow.style.maxWidth = "800px";
-  closeButtonRow.style.margin = "0 auto 12px";
-
-  const closeButton = document.createElement("button");
-  closeButton.type = "button";
-  closeButton.textContent = "チャット画面に戻る";
-  closeButton.addEventListener("click", closeThread);
-
-  closeButtonRow.appendChild(closeButton);
-  centerPanel.appendChild(closeButtonRow);
 
   const composerDraft = loadComposerDraft();
   const replySourcePost = findReplySourcePost(allPosts, composerDraft);
