@@ -568,7 +568,8 @@ inner.appendChild(body);
 
 export function renderThreadHeaderSection(container, options = {}) {
   const {
-    memoText = "この欄は非公開メモ用です。"
+    memoText = "",
+    isMemoOpen = false
   } = options;
 
   const section = document.createElement("section");
@@ -596,19 +597,44 @@ export function renderThreadHeaderSection(container, options = {}) {
   const body = document.createElement("div");
   body.className = "chatHeaderBody";
 
-  const memoLabel = document.createElement("p");
-  memoLabel.className = "chatHeaderShortDescription";
-  memoLabel.textContent = "非公開メモ";
+  const memoToggle = document.createElement("button");
+  memoToggle.type = "button";
+  memoToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle";
+  memoToggle.textContent = isMemoOpen
+    ? "▲非公開メモを閉じる"
+    : "▼非公開メモを表示";
 
-  const memoBody = document.createElement("p");
-  memoBody.className = "chatHeaderLongDescription";
-  memoBody.textContent =
-    typeof memoText === "string" && memoText.trim() !== ""
+  const memoContent = document.createElement("div");
+  memoContent.className = "chatHeaderDetailContent";
+  memoContent.hidden = !isMemoOpen;
+
+  const memoTextarea = document.createElement("textarea");
+  memoTextarea.className = "chatThreadPrivateNoteTextarea";
+  memoTextarea.rows = 6;
+  memoTextarea.placeholder = "この返信ツリー用の非公開メモ";
+  memoTextarea.value =
+    typeof memoText === "string"
       ? memoText
-      : "この欄は非公開メモ用です。";
+      : "";
 
-  body.appendChild(memoLabel);
-  body.appendChild(memoBody);
+  const memoSaveButton = document.createElement("button");
+  memoSaveButton.type = "button";
+  memoSaveButton.className = "chatThreadPrivateNoteSaveButton";
+  memoSaveButton.textContent = "保存";
+
+  memoToggle.addEventListener("click", () => {
+    const isOpen = !memoContent.hidden;
+    memoContent.hidden = isOpen;
+    memoToggle.textContent = isOpen
+      ? "▼非公開メモを表示"
+      : "▲非公開メモを閉じる";
+  });
+
+  memoContent.appendChild(memoTextarea);
+  memoContent.appendChild(memoSaveButton);
+
+  body.appendChild(memoToggle);
+  body.appendChild(memoContent);
 
   inner.appendChild(topRow);
   inner.appendChild(divider);
@@ -616,6 +642,14 @@ export function renderThreadHeaderSection(container, options = {}) {
 
   section.appendChild(inner);
   container.appendChild(section);
+
+  return {
+    section,
+    memoToggle,
+    memoContent,
+    memoTextarea,
+    memoSaveButton
+  };
 }
 
 export function renderPlaceTabsSection(container, options = {}) {
