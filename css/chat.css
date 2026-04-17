@@ -99,6 +99,16 @@ body {
   flex: 0 0 auto;
 }
 
+.chatThreadCloseButton {
+  flex: 0 0 auto;
+  color: var(--theme-text-subtle);
+}
+
+.chatThreadCloseButton:hover {
+  color: var(--theme-text-main);
+  text-decoration: underline;
+}
+
 /* タイトル下の点線 */
 .chatHeaderDivider {
   border-top: 1px dotted var(--theme-border-soft);
