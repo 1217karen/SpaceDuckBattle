@@ -54,11 +54,13 @@ h1,h2,h3{
 
 .commonToast {
   padding: 10px 14px;
-  border: 1px solid var(--theme-border-main);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--theme-radius-md);
-  background: rgba(18, 22, 30, 0.94);
-  color: var(--theme-text-main);
-  box-shadow: var(--theme-shadow-panel);
+  background: rgba(24, 28, 38, 0.96);
+  color: #f3f6fb;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   font-size: 13px;
   line-height: 1.5;
   opacity: 0;
@@ -79,13 +81,16 @@ h1,h2,h3{
 }
 
 .commonToast-info {
-  border-color: rgba(158, 203, 255, 0.5);
+  border-color: rgba(120, 180, 255, 0.48);
+  background: rgba(30, 48, 72, 0.95);
 }
 
 .commonToast-success {
-  border-color: rgba(140, 220, 160, 0.5);
+  border-color: rgba(120, 210, 150, 0.5);
+  background: rgba(28, 52, 40, 0.95);
 }
 
 .commonToast-warning {
-  border-color: rgba(243, 211, 106, 0.6);
+  border-color: rgba(243, 211, 106, 0.58);
+  background: rgba(60, 48, 24, 0.95);
 }
