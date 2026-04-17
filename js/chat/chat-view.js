@@ -60,7 +60,8 @@ export function createPostCard(post, options = {}) {
     currentEno = null,
     hideActions = false,
     getReplyTargetLabels = null,
-    getQuotePreviewPostById = null
+    getQuotePreviewPostById = null,
+    quotePreviewRootArea = null
   } = options;
 
   const {
@@ -182,7 +183,8 @@ export function createPostCard(post, options = {}) {
     renderPostBodyWithQuoteAnchors(body, post, {
       renderRichText,
       getQuotePreviewPostById,
-      getPlaceLabel
+      getPlaceLabel,
+      rootPreviewArea: quotePreviewRootArea
     });
   }
 
