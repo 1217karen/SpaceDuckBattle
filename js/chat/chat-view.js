@@ -157,10 +157,29 @@ export function createPostCard(post, options = {}) {
       }
     }
 
+    const nameButton = document.createElement("button");
+    nameButton.type = "button";
+    nameButton.className = "chatPostNameButton";
+
     const name = document.createElement("div");
     name.className = "chatPostName";
     name.textContent = `${post.speakerName} / Eno:${post.authorEno}`;
-    headerLeft.appendChild(name);
+
+    nameButton.appendChild(name);
+
+    if (
+      typeof post?.authorEno === "number" &&
+      post.authorEno > 0
+    ) {
+      nameButton.addEventListener("click", () => {
+        window.location.href =
+          `./profile.html?eno=${encodeURIComponent(post.authorEno)}`;
+      });
+    } else {
+      nameButton.disabled = true;
+    }
+
+    headerLeft.appendChild(nameButton);
   }
 
   const postNo = document.createElement("div");
