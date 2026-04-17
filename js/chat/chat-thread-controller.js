@@ -12,6 +12,8 @@ import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findRep
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-view.js";
 import { createPostActions } from "./chat-post-actions.js";
+import { showToast } from "../common/toast.js";
+import { loadThreadPrivateNote,saveThreadPrivateNote} from "./chat-thread-private-note.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
@@ -337,10 +339,32 @@ function renderThreadPage() {
     return;
   }
 
-  renderThreadHeaderSection(centerPanel, {
-    memoText: "この欄は非公開メモ用です。"
+  const initialThreadPrivateNote = loadThreadPrivateNote({
+    ownerEno: eno,
+    threadRootPostId
   });
 
+  const threadHeaderRefs = renderThreadHeaderSection(centerPanel, {
+    memoText: initialThreadPrivateNote,
+    isMemoOpen:
+      typeof initialThreadPrivateNote === "string" &&
+      initialThreadPrivateNote.trim() !== ""
+  });
+
+  if (threadHeaderRefs?.memoSaveButton && threadHeaderRefs?.memoTextarea) {
+    threadHeaderRefs.memoSaveButton.addEventListener("click", () => {
+      saveThreadPrivateNote({
+        ownerEno: eno,
+        threadRootPostId,
+        noteText: threadHeaderRefs.memoTextarea.value
+      });
+
+      showToast("非公開メモを保存しました", {
+        type: "success"
+      });
+    });
+  }
+  
   const closeButtonRow = document.createElement("div");
   closeButtonRow.style.maxWidth = "800px";
   closeButtonRow.style.margin = "0 auto 12px";
