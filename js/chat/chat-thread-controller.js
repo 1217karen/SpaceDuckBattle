@@ -269,7 +269,7 @@ function setupComposerSubmit({
       !currentDraft.replyParentPostId ||
       !currentDraft.replyThreadRootPostId
     ) {
-      alert("返信先を選んでから投稿してください");
+      alert("返信先が設定されていません");
       return;
     }
 
