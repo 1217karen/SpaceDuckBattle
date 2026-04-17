@@ -126,36 +126,6 @@ export function createPostCard(post, options = {}) {
   headerRight.className = "chatPostHeaderRight";
 
   if (!isPreview) {
-    if (
-      typeof getReplyTargetLabels === "function" &&
-      typeof post?.parentPostId === "number" &&
-      post.parentPostId > 0
-    ) {
-      const replyTargets = getReplyTargetLabels(post);
-
-      if (Array.isArray(replyTargets) && replyTargets.length > 0) {
-        const replyLabelButton = document.createElement("button");
-        replyLabelButton.type = "button";
-        replyLabelButton.className = "chatPostReplyLabelButton";
-
-        const replyLabel = document.createElement("div");
-        replyLabel.className = "chatPostReplyLabel";
-        replyLabel.textContent =
-          `${replyTargets.map(formatReplyTargetLabel).join("＆")}>>`;
-
-        replyLabelButton.appendChild(replyLabel);
-
-        if (typeof onOpenThread === "function") {
-          replyLabelButton.addEventListener("click", () => {
-            onOpenThread(post);
-          });
-        } else {
-          replyLabelButton.disabled = true;
-        }
-
-        headerLeft.appendChild(replyLabelButton);
-      }
-    }
 
     const nameButton = document.createElement("button");
     nameButton.type = "button";
@@ -310,8 +280,49 @@ export function createPostCard(post, options = {}) {
   right.appendChild(actions);
   right.appendChild(footer);
 
-  postBox.appendChild(left);
-  postBox.appendChild(right);
+  const contentRow = document.createElement("div");
+  contentRow.className = "chatPostCardContentRow";
+
+  contentRow.appendChild(left);
+  contentRow.appendChild(right);
+
+  if (
+    !isPreview &&
+    typeof getReplyTargetLabels === "function" &&
+    typeof post?.parentPostId === "number" &&
+    post.parentPostId > 0
+  ) {
+    const replyTargets = getReplyTargetLabels(post);
+
+    if (Array.isArray(replyTargets) && replyTargets.length > 0) {
+      const replyLabelRow = document.createElement("div");
+      replyLabelRow.className = "chatPostReplyLabelRow";
+
+      const replyLabelButton = document.createElement("button");
+      replyLabelButton.type = "button";
+      replyLabelButton.className = "chatPostReplyLabelButton";
+
+      const replyLabel = document.createElement("div");
+      replyLabel.className = "chatPostReplyLabel";
+      replyLabel.textContent =
+        `${replyTargets.map(formatReplyTargetLabel).join("＆")}>>`;
+
+      replyLabelButton.appendChild(replyLabel);
+
+      if (typeof onOpenThread === "function") {
+        replyLabelButton.addEventListener("click", () => {
+          onOpenThread(post);
+        });
+      } else {
+        replyLabelButton.disabled = true;
+      }
+
+      replyLabelRow.appendChild(replyLabelButton);
+      postBox.appendChild(replyLabelRow);
+    }
+  }
+
+  postBox.appendChild(contentRow);
 
   return postBox;
 }
