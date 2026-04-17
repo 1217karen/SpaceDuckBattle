@@ -842,3 +842,33 @@ body {
   color: var(--theme-text-subtle);
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
 }
+
+.chatThreadPrivateNoteTextarea {
+  width: 100%;
+  min-height: 120px;
+  margin-bottom: 8px;
+  padding: 10px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+  resize: vertical;
+  font: inherit;
+  line-height: 1.6;
+}
+
+.chatThreadPrivateNoteSaveButton {
+  padding: 6px 14px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  box-shadow: var(--theme-shadow-soft);
+  font: inherit;
+  cursor: pointer;
+}
+
+.chatThreadPrivateNoteSaveButton:hover {
+  background: var(--theme-button-bg-hover);
+}
