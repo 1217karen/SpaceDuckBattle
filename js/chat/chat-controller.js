@@ -16,6 +16,7 @@ import { createPostActions } from "./chat-post-actions.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
+const hiddenPostIds = new Set();
 
 function getPlaceIdFromQuery() {
   const params = new URLSearchParams(window.location.search);
@@ -258,7 +259,7 @@ function setupDraftPreview({
   function refreshDraftPreview() {
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
-    const displayPosts = threadRootPostId
+    const rawDisplayPosts = threadRootPostId
       ? getThreadPosts(allPosts, threadRootPostId).map(post => ({
           ...post,
           displayType: "normal"
@@ -268,6 +269,10 @@ function setupDraftPreview({
           allPosts,
           places
         });
+
+    const displayPosts = rawDisplayPosts.filter(post =>
+      !hiddenPostIds.has(post.postId)
+    );
 
     const draftPreviewPost = buildDraftPreviewPost({
       place,
@@ -563,6 +568,15 @@ const handleDelete = (post) => {
   renderChatPlaceInfo();
 };
 
+const handleHide = (post) => {
+  if (!post || typeof post.postId !== "number") {
+    return;
+  }
+
+  hiddenPostIds.add(post.postId);
+  renderChatPlaceInfo();
+};
+
 const getQuotePreviewPostById = (postId) => {
   const allPostsIncludingDeleted = getAllPostsIncludingDeleted();
   return allPostsIncludingDeleted.find(post => post.postId === postId) || null;
@@ -607,7 +621,8 @@ const postActions = createPostActions({
   onReply: handleReply,
   onDelete: handleDelete,
   onOpenThread: openThread,
-  onQuote: handleQuote
+  onQuote: handleQuote,
+  onHide: handleHide
 });
 
 renderViewTabsSection(centerPanel, {
@@ -615,7 +630,7 @@ renderViewTabsSection(centerPanel, {
 });
 
 
-const displayPosts = threadRootPostId
+const rawDisplayPosts = threadRootPostId
   ? threadPosts.map(post => ({
       ...post,
       displayType: "normal"
@@ -625,6 +640,10 @@ const displayPosts = threadRootPostId
       allPosts,
       places
     });
+
+const displayPosts = rawDisplayPosts.filter(post =>
+  !hiddenPostIds.has(post.postId)
+);
 
 const postListRefs = renderPostListSection(centerPanel, {
   posts: displayPosts,
