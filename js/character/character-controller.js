@@ -259,6 +259,9 @@ function loadCharacterForm() {
   document.getElementById("unitName").value =
     unit?.name ?? "";
 
+  document.getElementById("characterProfileText").value =
+  character?.profileText ?? "";
+
   currentCommIcons =
     normalizeCommIcons(character?.commIcons);
 
@@ -369,6 +372,9 @@ document.getElementById("saveCharacter")
     const unitName =
       document.getElementById("unitName").value;
 
+    const profileText =
+      document.getElementById("characterProfileText").value;
+
     const battleStartList =
       collectDialogueList("battleStart");
 
@@ -398,6 +404,7 @@ document.getElementById("saveCharacter")
       eno,
       fullName,
       defaultName,
+      profileText,
       commIcons: currentCommIcons,
 
       commDialogues: {
