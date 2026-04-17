@@ -275,6 +275,8 @@ body {
 }
 
 .chatPostNameButton {
+  display: block;
+  width: 100%;
   padding: 0;
   border: none;
   background: none;
