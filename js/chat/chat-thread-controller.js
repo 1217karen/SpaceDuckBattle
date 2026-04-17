@@ -386,17 +386,12 @@ function renderThreadPage() {
           : "");
 
   const composerRefs = renderChatComposerSection(centerPanel, {
-    composerDraft: replySourcePost
-      ? composerDraft
-      : applyReplyStateToDraft(composerDraft, createReplyStateFromPost(lastThreadPost)),
-    replySourcePost: effectiveReplySourcePost,
+    composerDraft,
+    replySourcePost,
     getPlaceLabel,
     currentPlaceLabel: getPlaceLabel(place?.placeId ?? placeId),
     useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
-    fixedReplyTargetEno:
-      replySourcePost?.authorEno ??
-      lastThreadPost?.authorEno ??
-      composerDraft.fixedReplyTargetEno,
+    fixedReplyTargetEno: composerDraft.fixedReplyTargetEno,
     fixedReplyTargetName,
     isAdditionalTargetOpen: composerDraft.isAdditionalTargetOpen,
     onClearReply: () => {
@@ -413,14 +408,7 @@ function renderThreadPage() {
   setupComposerIconPicker(composerRefs, character);
   setupComposerDraftPersistence(composerRefs);
 
-  if (replySourcePost) {
-    applyComposerDraftToRefs(composerRefs, composerDraft);
-  } else {
-    applyComposerDraftToRefs(
-      composerRefs,
-      applyReplyStateToDraft(composerDraft, createReplyStateFromPost(lastThreadPost))
-    );
-  }
+  applyComposerDraftToRefs(composerRefs, composerDraft);
 
   if (composerDraft.iconId || composerDraft.iconUrl) {
     setButtonPreview(
