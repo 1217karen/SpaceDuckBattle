@@ -15,6 +15,7 @@ import { createPostActions } from "./chat-post-actions.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
+const hiddenThreadPostIds = new Set();
 
 function getPlaceIdFromQuery() {
   const params = new URLSearchParams(window.location.search);
@@ -197,7 +198,9 @@ function setupDraftPreview({
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
     renderPostListContent(postListRefs.list, {
-      posts: threadPosts,
+      posts: threadPosts.filter(post =>
+        !hiddenThreadPostIds.has(post.postId)
+      ),
       getPlaceLabel,
       onMoveToPlace: null,
       postActions,
@@ -440,6 +443,15 @@ function renderThreadPage() {
     renderThreadPage();
   };
 
+  const handleHide = (post) => {
+    if (!post || typeof post.postId !== "number") {
+      return;
+    }
+
+    hiddenThreadPostIds.add(post.postId);
+    renderThreadPage();
+  };
+
   const getQuotePreviewPostById = (postId) => {
     const allPostsIncludingDeleted = getAllPostsIncludingDeleted();
     return allPostsIncludingDeleted.find(post => post.postId === postId) || null;
@@ -484,14 +496,17 @@ function renderThreadPage() {
     onReply: handleReply,
     onDelete: handleDelete,
     onOpenThread: openThread,
-    onQuote: handleQuote
+    onQuote: handleQuote,
+    onHide: handleHide
   });
 
   const postListRefs = renderPostListSection(centerPanel, {
-    posts: threadPosts.map(post => ({
-      ...post,
-      displayType: "normal"
-    })),
+    posts: threadPosts
+      .filter(post => !hiddenThreadPostIds.has(post.postId))
+      .map(post => ({
+        ...post,
+        displayType: "normal"
+      })),
     getPlaceLabel,
     onMoveToPlace: null,
     postActions,
