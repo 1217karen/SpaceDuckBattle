@@ -155,8 +155,8 @@ export function createInitialCharacter({
     eno,
     fullName: fullName ?? "",
     defaultName: defaultName ?? "",
+    profileText: "",
     currentPlaceId: "F1-1",
-    defaultIcon: DEFAULT_NO_IMAGE_URL,
     commIcons: [],
     commDialogues: {}
   };
