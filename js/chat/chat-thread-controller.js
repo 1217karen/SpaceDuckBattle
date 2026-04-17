@@ -368,21 +368,18 @@ function renderThreadPage() {
 
   const composerDraft = loadComposerDraft();
   const replySourcePost = findReplySourcePost(allPosts, composerDraft);
-  const lastThreadPost = threadPosts[threadPosts.length - 1] || null;
-
-  const effectiveReplySourcePost = replySourcePost || lastThreadPost;
 
   const replyTargetCharacter =
-    effectiveReplySourcePost?.authorEno
-      ? loadCharacter(effectiveReplySourcePost.authorEno)
+    replySourcePost?.authorEno
+      ? loadCharacter(replySourcePost.authorEno)
       : null;
 
   const fixedReplyTargetName =
     typeof replyTargetCharacter?.defaultName === "string" &&
     replyTargetCharacter.defaultName.trim() !== ""
       ? replyTargetCharacter.defaultName.trim()
-      : (typeof effectiveReplySourcePost?.speakerName === "string"
-          ? effectiveReplySourcePost.speakerName
+      : (typeof replySourcePost?.speakerName === "string"
+          ? replySourcePost.speakerName
           : "");
 
   const composerRefs = renderChatComposerSection(centerPanel, {
