@@ -126,12 +126,36 @@ function insertCustomText(textarea, selectionMemory, insertText, caretOffset) {
   );
 }
 
+function insertRuby(textarea, selectionMemory) {
+  if (!textarea) return;
+
+  const value = textarea.value ?? "";
+  const { start, end } = selectionMemory.get();
+  const selectedText = value.slice(start, end);
+
+  const rubyBaseText = selectedText;
+  const rubyText = "ルビ";
+  const insertedText = `<rb>${rubyBaseText}</rb><rt>${rubyText}</rt>`;
+
+  const caretPos = start + `<rb>${rubyBaseText}`.length;
+
+  replaceTextareaRange(
+    textarea,
+    selectionMemory,
+    start,
+    end,
+    insertedText,
+    caretPos
+  );
+}
+
 function bindToolbarButton(textarea, selectionMemory, button) {
   if (!textarea || !button) return;
 
   const openTag = button.dataset.insertOpenTag;
   const closeTag = button.dataset.insertCloseTag;
   const insertText = button.dataset.insertText;
+  const rubyTemplate = button.dataset.rubyTemplate;
   const caretOffset = Number(button.dataset.caretOffset);
 
   button.addEventListener("mousedown", e => {
@@ -139,6 +163,11 @@ function bindToolbarButton(textarea, selectionMemory, button) {
   });
 
   button.addEventListener("click", () => {
+    if (rubyTemplate === "true") {
+      insertRuby(textarea, selectionMemory);
+      return;
+    }
+
     if (typeof openTag === "string" && typeof closeTag === "string") {
       insertPairTag(textarea, selectionMemory, openTag, closeTag);
       return;
@@ -161,7 +190,7 @@ export function bindRichTextToolbar(root, textarea) {
   const selectionMemory = createSelectionMemory(textarea);
 
   const buttons = root.querySelectorAll(
-    "[data-insert-open-tag], [data-insert-text]"
+    "[data-insert-open-tag], [data-insert-text], [data-ruby-template]"
   );
 
   buttons.forEach(button => {
