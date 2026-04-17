@@ -846,7 +846,7 @@ if (replySourcePost) {
     typeof composerDraft.additionalTargetEnoText === "string"
       ? composerDraft.additionalTargetEnoText
       : "";
-  replyTargetInput.placeholder = ",区切りで複数指定";
+  replyTargetInput.placeholder = "返信先Enoを入力　,区切りで複数指定可能";
 
   additionalTargetBody.appendChild(replyTargetInput);
   additionalTargetSection.appendChild(additionalTargetSummary);
