@@ -31,8 +31,7 @@ export function createRichTextToolbarButtons() {
     {
       textContent: "rb",
       className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonRuby",
-      insertText: "<rb></rb><rt></rt>",
-      caretOffset: "4"
+      rubyTemplate: "true"
     },
     {
       textContent: "F1",
@@ -98,6 +97,10 @@ export function createRichTextToolbarButtons() {
 
     if (def.caretOffset) {
       button.dataset.caretOffset = def.caretOffset;
+    }
+
+    if (def.rubyTemplate) {
+      button.dataset.rubyTemplate = def.rubyTemplate;
     }
 
     fragment.appendChild(button);
