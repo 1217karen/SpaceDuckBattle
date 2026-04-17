@@ -579,31 +579,34 @@ export function renderThreadHeaderSection(container, options = {}) {
   const inner = document.createElement("div");
   inner.className = "chatHeaderInner";
 
-  const topRow = document.createElement("div");
-  topRow.className = "chatHeaderTopRow";
+const topRow = document.createElement("div");
+topRow.className = "chatHeaderTopRow";
 
-  const titleGroup = document.createElement("div");
-  titleGroup.className = "chatHeaderTitleGroup";
+const titleGroup = document.createElement("div");
+titleGroup.className = "chatHeaderTitleGroup";
 
-  const title = document.createElement("h1");
-  title.className = "chatHeaderTitle";
-  title.textContent = "返信ツリー";
+const title = document.createElement("h1");
+title.className = "chatHeaderTitle";
+title.textContent = "返信ツリー";
 
-  let closeThreadButton = null;
+titleGroup.appendChild(title);
 
-  if (typeof onCloseThread === "function") {
-    closeThreadButton = document.createElement("button");
-    closeThreadButton.type = "button";
-    closeThreadButton.className = "chatHeaderLinkButton chatThreadCloseButton";
-    closeThreadButton.textContent = "×チャット画面に戻る";
+let closeThreadButton = null;
 
-    closeThreadButton.addEventListener("click", () => {
-      onCloseThread();
-    });
+if (typeof onCloseThread === "function") {
+  closeThreadButton = document.createElement("button");
+  closeThreadButton.type = "button";
+  closeThreadButton.className = "chatHeaderLinkButton chatThreadCloseButton";
+  closeThreadButton.textContent = "×チャット画面に戻る";
 
-    titleGroup.appendChild(closeThreadButton);
-  }
-  topRow.appendChild(titleGroup);
+  closeThreadButton.addEventListener("click", () => {
+    onCloseThread();
+  });
+
+  titleGroup.appendChild(closeThreadButton);
+}
+
+topRow.appendChild(titleGroup);
 
   const divider = document.createElement("div");
   divider.className = "chatHeaderDivider";
