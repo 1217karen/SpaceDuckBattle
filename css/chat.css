@@ -415,6 +415,14 @@ body {
   color: #ff8a8a;
 }
 
+.chatPostActionButtonHide {
+  color: var(--theme-text-accent);
+}
+
+.chatPostActionButtonHide:hover {
+  color: var(--theme-text-strong);
+}
+
 /* フッター（日付と場所） */
 .chatPostFooter {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
