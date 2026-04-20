@@ -473,6 +473,23 @@ const threadRootPostId = getThreadRootPostIdFromQuery();
 
 centerPanel.innerHTML = "";
 
+  const pendingToast = sessionStorage.getItem("chatToastMessage");
+
+  if (pendingToast) {
+    sessionStorage.removeItem("chatToastMessage");
+
+    try {
+      const parsed = JSON.parse(pendingToast);
+      if (parsed?.message) {
+        showToast(parsed.message, {
+          type: parsed.type || "info"
+        });
+      }
+    } catch {
+      // 何もしない
+    }
+  }
+
 if (threadRootPostId) {
   renderThreadHeaderSection(centerPanel, {
     memoText: "この欄は非公開メモ用です。"
