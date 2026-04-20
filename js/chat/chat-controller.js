@@ -73,6 +73,15 @@ function moveToPlace(placeId) {
     currentPlaceId: placeId
   });
 
+  const placeLabel = getPlaceLabel(placeId);
+  sessionStorage.setItem(
+    "chatToastMessage",
+    JSON.stringify({
+      message: `${placeLabel}に移動しました`,
+      type: "info"
+    })
+  );
+
   window.location.href =
     `./chat.html?placeId=${encodeURIComponent(placeId)}`;
 }
@@ -568,6 +577,7 @@ const handleDelete = (post) => {
 
   deletePost(post.postId, eno);
   renderChatPlaceInfo();
+  showToast("発言を削除しました", { type: "success" });
 };
 
 const handleHide = (post) => {
@@ -577,6 +587,7 @@ const handleHide = (post) => {
 
   hiddenPostIds.add(post.postId);
   renderChatPlaceInfo();
+  showToast("発言を非表示にしました", { type: "info" });
 };
 
 const getQuotePreviewPostById = (postId) => {
