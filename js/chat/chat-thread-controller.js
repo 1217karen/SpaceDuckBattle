@@ -427,7 +427,7 @@ function renderThreadPage() {
     renderThreadPage();
   };
 
-    const handleDelete = (post) => {
+  const handleDelete = (post) => {
     if (!post || typeof post.postId !== "number") {
       return;
     }
@@ -439,6 +439,7 @@ function renderThreadPage() {
 
     deletePost(post.postId, eno);
     renderThreadPage();
+    showToast("発言を削除しました", { type: "success" });
   };
 
   const handleHide = (post) => {
@@ -448,6 +449,7 @@ function renderThreadPage() {
 
     hiddenThreadPostIds.add(post.postId);
     renderThreadPage();
+    showToast("発言を非表示にしました", { type: "info" });
   };
 
   const getQuotePreviewPostById = (postId) => {
