@@ -73,3 +73,7 @@ export function toggleFavoritePlace(placeId) {
     favoritePlaceIds: nextFavoritePlaceIds
   };
 }
+
+export function getFavoritePlaceIds() {
+  return loadFavoritePlaceIds();
+}
