@@ -125,12 +125,11 @@ export function buildComposerPostInput({
   draft,
   replySourcePost = null
 }) {
-  const rawBody = draft?.body ?? "";
-  const trimmedBody = rawBody.trim();
+const rawBody = String(draft?.body ?? "");
 
-  if (!trimmedBody) {
-    return null;
-  }
+if (rawBody.length === 0) {
+  return null;
+}
 
   const { iconId, iconUrl } = getIconData(draft);
 
@@ -163,12 +162,11 @@ export function buildDraftPreviewPost({
   draft,
   replySourcePost = null
 }) {
-  const rawBody = draft?.body ?? "";
-  const trimmedBody = rawBody.trim();
+const rawBody = String(draft?.body ?? "");
 
-  if (!trimmedBody) {
-    return null;
-  }
+if (rawBody.length === 0) {
+  return null;
+}
 
   const { iconId, iconUrl } = getIconData(draft);
 
