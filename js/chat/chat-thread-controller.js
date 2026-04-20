@@ -14,8 +14,11 @@ import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-view
 import { createPostActions } from "./chat-post-actions.js";
 import { showToast } from "../common/toast.js";
 import { loadThreadPrivateNote,saveThreadPrivateNote} from "./chat-thread-private-note.js";
+import { loadFavoritePlaceIds } from "./chat-place-favorites.js";
+import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
 
 const centerPanel = document.querySelector(".center-panel");
+const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenThreadPostIds = new Set();
 
@@ -31,6 +34,14 @@ function getPlaceById(placeId) {
 function getPlaceLabel(placeId) {
   const place = getPlaceById(placeId);
   return place?.name || placeId;
+}
+
+function getFavoritePlaces() {
+  const favoritePlaceIds = loadFavoritePlaceIds();
+
+  return favoritePlaceIds
+    .map(placeId => getPlaceById(placeId))
+    .filter(place => place !== null);
 }
 
 function openThread(post) {
@@ -307,6 +318,26 @@ function setupComposerSubmit({
   });
 }
 
+function renderRightPanel() {
+  if (!rightPanel) {
+    return;
+  }
+
+  rightPanel.innerHTML = "";
+
+  renderFavoritePlacesPanel(rightPanel, {
+    favoritePlaces: getFavoritePlaces(),
+    onMoveToPlace: (placeId) => {
+      if (!placeId) {
+        return;
+      }
+
+      window.location.href =
+        `./chat.html?placeId=${encodeURIComponent(placeId)}`;
+    }
+  });
+}
+
 function renderThreadPage() {
   if (!centerPanel) {
     return;
@@ -534,6 +565,7 @@ setupDraftPreview({
     composerRefs,
     threadPosts
   });
+    renderRightPanel();
 }
 
 renderThreadPage();
