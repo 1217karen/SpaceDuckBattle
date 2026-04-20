@@ -471,45 +471,73 @@ export function renderPlaceInfoSection(container, options = {}) {
   const inner = document.createElement("div");
   inner.className = "chatHeaderInner";
 
-const topRow = document.createElement("div");
-topRow.className = "chatHeaderTopRow";
+  const topRow = document.createElement("div");
+  topRow.className = "chatHeaderTopRow";
 
-const titleGroup = document.createElement("div");
-titleGroup.className = "chatHeaderTitleGroup";
+  const titleGroup = document.createElement("div");
+  titleGroup.className = "chatHeaderTitleGroup";
 
-const title = document.createElement("h1");
-title.className = "chatHeaderTitle";
-title.textContent = place?.name ?? "場所が見つかりません";
+  const title = document.createElement("h1");
+  title.className = "chatHeaderTitle";
+  title.textContent = place?.name ?? "場所が見つかりません";
 
-titleGroup.appendChild(title);
-topRow.appendChild(titleGroup);
+  let favoriteButton = null;
 
-if (!place) {
-  inner.appendChild(topRow);
-  section.appendChild(inner);
-  container.appendChild(section);
-  return;
-}
+  titleGroup.appendChild(title);
 
-const aroundToggle = document.createElement("button");
-aroundToggle.type = "button";
-aroundToggle.className = "chatHeaderLinkButton chatHeaderAroundToggle";
-aroundToggle.textContent = "▼周辺を表示";
+  if (place) {
+    favoriteButton = document.createElement("button");
+    favoriteButton.type = "button";
+    favoriteButton.className = "chatHeaderFavoriteButton";
+    favoriteButton.textContent = isFavorite ? "★" : "☆";
+    favoriteButton.title = isFavorite ? "お気に入り解除" : "お気に入り登録";
+    favoriteButton.setAttribute(
+      "aria-label",
+      isFavorite ? "お気に入り解除" : "お気に入り登録"
+    );
 
-titleGroup.appendChild(aroundToggle);
+    if (typeof onToggleFavorite === "function") {
+      favoriteButton.addEventListener("click", () => {
+        onToggleFavorite(place);
+      });
+    } else {
+      favoriteButton.disabled = true;
+    }
 
-const aroundPanel = document.createElement("div");
-aroundPanel.className = "chatAroundPanel";
-aroundPanel.hidden = true;
+    titleGroup.appendChild(favoriteButton);
+  }
 
-const divider = document.createElement("div");
-divider.className = "chatHeaderDivider";
+  topRow.appendChild(titleGroup);
 
-renderAroundTree(aroundPanel, {
-  place: aroundBasePlace ?? place,
-  places,
-  onMoveToPlace
-});
+  if (!place) {
+    inner.appendChild(topRow);
+    section.appendChild(inner);
+    container.appendChild(section);
+    return {
+      section,
+      favoriteButton
+    };
+  }
+
+  const aroundToggle = document.createElement("button");
+  aroundToggle.type = "button";
+  aroundToggle.className = "chatHeaderLinkButton chatHeaderAroundToggle";
+  aroundToggle.textContent = "▼周辺を表示";
+
+  titleGroup.appendChild(aroundToggle);
+
+  const aroundPanel = document.createElement("div");
+  aroundPanel.className = "chatAroundPanel";
+  aroundPanel.hidden = true;
+
+  const divider = document.createElement("div");
+  divider.className = "chatHeaderDivider";
+
+  renderAroundTree(aroundPanel, {
+    place: aroundBasePlace ?? place,
+    places,
+    onMoveToPlace
+  });
 
   const body = document.createElement("div");
   body.className = "chatHeaderBody";
@@ -569,10 +597,10 @@ renderAroundTree(aroundPanel, {
   body.appendChild(detailToggle);
   body.appendChild(detailContent);
 
-inner.appendChild(topRow);
-inner.appendChild(aroundPanel);
-inner.appendChild(divider);
-inner.appendChild(body);
+  inner.appendChild(topRow);
+  inner.appendChild(aroundPanel);
+  inner.appendChild(divider);
+  inner.appendChild(body);
 
   section.appendChild(inner);
   container.appendChild(section);
