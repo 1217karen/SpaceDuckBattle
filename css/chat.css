@@ -524,6 +524,16 @@ body {
   cursor: default;
 }
 
+.chatViewTabsSection .chatTabButtonCurrent::after {
+  content: none;
+}
+
+.chatViewTabsSection .chatTabButtonCurrent {
+  background: var(--theme-button-bg-hover);
+  color: var(--theme-text-main);
+  border-color: var(--theme-border-strong);
+}
+
 /* ========================================
    入力欄
    ======================================== */
