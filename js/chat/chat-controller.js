@@ -14,9 +14,11 @@ import { buildComposerPostInput,buildDraftPreviewPost } from "./chat-composer-po
 import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
 import { createPostActions } from "./chat-post-actions.js";
 import { showToast } from "../common/toast.js";
-import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
+import { isFavoritePlace,toggleFavoritePlace,loadFavoritePlaceIds } from "./chat-place-favorites.js";
+import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
 
 const centerPanel = document.querySelector(".center-panel");
+const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
 let currentViewMode = "chat";
@@ -94,6 +96,14 @@ function moveToPlace(placeId) {
 function getPlaceLabel(placeId) {
   const place = getPlaceById(placeId);
   return place?.name || placeId;
+}
+
+function getFavoritePlaces() {
+  const favoritePlaceIds = loadFavoritePlaceIds();
+
+  return favoritePlaceIds
+    .map(placeId => getPlaceById(placeId))
+    .filter(place => place !== null);
 }
 
 function openThread(post) {
@@ -538,6 +548,19 @@ function renderShopPlaceholderSection(container) {
   };
 }
 
+function renderRightPanel() {
+  if (!rightPanel) {
+    return;
+  }
+
+  rightPanel.innerHTML = "";
+
+  renderFavoritePlacesPanel(rightPanel, {
+    favoritePlaces: getFavoritePlaces(),
+    onMoveToPlace: moveToPlace
+  });
+}
+
 function renderChatPlaceInfo() {
   if (!centerPanel) return;
 
@@ -825,6 +848,8 @@ if (composerRefs) {
     composerRefs
   });
 }
+
+renderRightPanel();
 }
 
 renderChatPlaceInfo();
