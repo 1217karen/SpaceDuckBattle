@@ -60,7 +60,13 @@ body {
 .chatHeaderTopRow {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 8px;
+}
+
+.chatHeaderFavoriteButton {
+  flex: 0 0 auto;
 }
 
 /* 現在地名と「周辺を表示」ボタンのまとまり */
