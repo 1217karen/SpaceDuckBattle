@@ -154,6 +154,26 @@ body {
 }
 
 
+.chatHeaderFavoriteButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: #f3d36a;
+  font: inherit;
+  font-size: calc(var(--chat-font-base) * 1.2);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.chatHeaderFavoriteButton:hover {
+  color: #ffe38a;
+}
+
+.chatHeaderFavoriteButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 /* ========================================
    チャットページ：周辺表示パネル
    ======================================== */
