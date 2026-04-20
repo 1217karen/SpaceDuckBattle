@@ -6,6 +6,9 @@
   --chat-font-scale-xs: 0.79;
 }
 
+/* =======================================================
+   共通文字サイズ
+======================================================= */
 .chatAroundRow,
 .chatPostBody,
 .chatComposerTextarea,
@@ -16,11 +19,10 @@
 }
 
 /* =======================================================
-全体の背景
+   全体背景
 ======================================================= */
 body {
   margin: 0;
-
   background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG.webp");
   background-size: cover;
   background-position: center;
@@ -28,18 +30,15 @@ body {
   background-attachment: fixed;
 }
 
-/* ========================================
-   チャットページ：ヘッダー
-   ======================================== */
-
-/* ヘッダー全体の外枠 */
+/* =======================================================
+   ヘッダー
+======================================================= */
 .chatHeader {
   width: 100%;
   margin-bottom: 20px;
   color: var(--theme-text-main);
 }
 
-/* ヘッダー内側の最大幅と中央寄せ */
 .chatHeaderInner {
   width: 100%;
   max-width: 1000px;
@@ -56,7 +55,6 @@ body {
   box-sizing: border-box;
 }
 
-/* タイトル行 */
 .chatHeaderTopRow {
   display: flex;
   align-items: center;
@@ -65,11 +63,6 @@ body {
   margin-bottom: 8px;
 }
 
-.chatHeaderFavoriteButton {
-  flex: 0 0 auto;
-}
-
-/* 現在地名と「周辺を表示」ボタンのまとまり */
 .chatHeaderTitleGroup {
   display: flex;
   align-items: center;
@@ -77,7 +70,6 @@ body {
   min-width: 0;
 }
 
-/* 現在地名 */
 .chatHeaderTitle {
   margin: 0;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-title));
@@ -85,7 +77,7 @@ body {
   color: var(--theme-text-main);
 }
 
-/* ヘッダー内のリンク風ボタン共通 */
+/* ヘッダー内リンク風ボタン */
 .chatHeaderLinkButton {
   padding: 0;
   border: none;
@@ -100,66 +92,13 @@ body {
   text-decoration: underline;
 }
 
-/* 「周辺を表示」ボタン */
-.chatHeaderAroundToggle {
+.chatHeaderAroundToggle,
+.chatThreadCloseButton,
+.chatHeaderFavoriteButton {
   flex: 0 0 auto;
 }
 
-.chatThreadCloseButton {
-  flex: 0 0 auto;
-  color: var(--theme-text-subtle);
-}
-
-.chatThreadCloseButton:hover {
-  color: var(--theme-text-main);
-  text-decoration: underline;
-}
-
-/* タイトル下の点線 */
-.chatHeaderDivider {
-  border-top: 1px dotted var(--theme-border-soft);
-  margin-bottom: 10px;
-}
-
-/* 説明文エリア全体 */
-.chatHeaderBody {
-  padding-left: 1em;
-}
-
-/* 簡易説明文 */
-.chatHeaderShortDescription {
-  margin: 0 0 8px;
-  line-height: 1.7;
-}
-
-.chatHeaderShortDescription,
-.chatHeaderLongDescription {
-  color: var(--theme-text-main);
-}
-
-/* 「詳細を表示」ボタン */
-.chatHeaderDetailToggle {
-  display: inline-block;
-  margin-bottom: 8px;
-}
-
-/* 詳細説明の入れ物 */
-.chatHeaderDetailContent {
-  padding-left: 1em;
-}
-
-/* 詳細説明の各段落 */
-.chatHeaderLongDescription {
-  margin: 0 0 8px;
-  line-height: 1.8;
-}
-
-/* 詳細説明の最後の段落だけ下余白を消す */
-.chatHeaderLongDescription:last-child {
-  margin-bottom: 0;
-}
-
-
+/* お気に入りボタン */
 .chatHeaderFavoriteButton {
   padding: 0;
   border: none;
@@ -180,11 +119,46 @@ body {
   cursor: default;
 }
 
-/* ========================================
-   チャットページ：周辺表示パネル
-   ======================================== */
+.chatHeaderDivider {
+  border-top: 1px dotted var(--theme-border-soft);
+  margin-bottom: 10px;
+}
 
-/* 周辺構造を出す小パネル */
+.chatHeaderBody {
+  padding-left: 1em;
+}
+
+.chatHeaderShortDescription {
+  margin: 0 0 8px;
+  line-height: 1.7;
+}
+
+.chatHeaderLongDescription {
+  margin: 0 0 8px;
+  line-height: 1.8;
+}
+
+.chatHeaderShortDescription,
+.chatHeaderLongDescription {
+  color: var(--theme-text-main);
+}
+
+.chatHeaderLongDescription:last-child {
+  margin-bottom: 0;
+}
+
+.chatHeaderDetailToggle {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.chatHeaderDetailContent {
+  padding-left: 1em;
+}
+
+/* =======================================================
+   周辺表示パネル
+======================================================= */
 .chatAroundPanel {
   margin: 0 0 12px 0;
   padding: 10px 12px;
@@ -202,17 +176,14 @@ body {
   white-space: pre-wrap;
 }
 
-/* ツリー記号側 */
 .chatAroundPrefix {
   color: var(--theme-text-muted);
 }
 
-/* 現在地の文字 */
 .chatAroundCurrent {
   color: var(--theme-text-main);
 }
 
-/* 周辺パネル内の移動リンク風ボタン */
 .chatAroundLinkButton {
   padding: 0;
   border: none;
@@ -222,17 +193,13 @@ body {
   cursor: pointer;
 }
 
-/* ホバー時 */
 .chatAroundLinkButton:hover {
   text-decoration: underline;
 }
 
-
-/* ========================================
-   チャットページ：発言カード
-   ======================================== */
-
-/* 発言カード全体 */
+/* =======================================================
+   発言カード
+======================================================= */
 .chatPostCard {
   display: flex;
   flex-direction: column;
@@ -260,6 +227,11 @@ body {
     0 0 12px rgba(243, 211, 106, 0.18);
 }
 
+.chatPostCardPreview,
+.chatPostCardDraftPreview {
+  opacity: var(--theme-preview-opacity);
+}
+
 .chatPostCardContentRow {
   display: flex;
   gap: 12px;
@@ -272,12 +244,6 @@ body {
   min-width: 0;
 }
 
-/* 一部表示カード */
-.chatPostCardPreview {
-  opacity: var(--theme-preview-opacity);
-}
-
-/* 左側のアイコン欄 */
 .chatPostCardLeft {
   width: 60px;
   flex: 0 0 60px;
@@ -286,20 +252,25 @@ body {
   justify-content: center;
 }
 
-/* アイコン本体 */
 .chatPostIcon {
   width: 60px;
   height: 60px;
   display: block;
 }
 
-/* 右側の本文エリア */
+.chatPostIconImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 .chatPostCardRight {
   flex: 1;
   min-width: 0;
 }
 
-/* ヘッダー行（名前とNo.） */
+/* 発言ヘッダー */
 .chatPostHeader {
   display: flex;
   justify-content: space-between;
@@ -308,19 +279,12 @@ body {
   margin-bottom: 6px;
 }
 
-/* 名前側 */
 .chatPostHeaderLeft {
   min-width: 0;
 }
 
-/* No.側 */
 .chatPostHeaderRight {
   flex: 0 0 auto;
-}
-
-/* 名前表示 */
-.chatPostName {
-  font-weight: bold;
 }
 
 .chatPostNameRow {
@@ -381,26 +345,23 @@ body {
   text-decoration: underline;
 }
 
-/* 投稿番号 */
 .chatPostNo {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   color: var(--theme-text-muted);
   white-space: nowrap;
 }
 
-/* ヘッダー下の罫線 */
 .chatPostDivider {
   border-top: 1px solid var(--theme-border-soft);
   margin-bottom: 8px;
 }
 
-/* 本文 */
 .chatPostBody {
   margin-bottom: 8px;
   word-break: break-word;
 }
 
-/* 操作ボタン列 */
+/* 発言カード下部 */
 .chatPostActions {
   display: flex;
   justify-content: flex-end;
@@ -408,7 +369,26 @@ body {
   margin-bottom: 8px;
 }
 
-/* 操作ボタン */
+.chatPostFooter {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  text-align: right;
+  color: var(--theme-text-muted);
+}
+
+.chatPostPlaceButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.chatPostPlaceButton:hover {
+  text-decoration: underline;
+}
+
+/* 発言操作ボタン */
 .chatPostActionButton {
   width: 28px;
   height: 28px;
@@ -420,6 +400,14 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.chatPostActionButton:hover {
+  color: var(--theme-text-strong);
+}
+
+.chatPostActionButtonDelete:hover {
+  color: #ff8a8a;
 }
 
 .chatPostActionIcon {
@@ -454,38 +442,10 @@ body {
   mask-image: url("../assets/icons/hide.svg");
   -webkit-mask-image: url("../assets/icons/hide.svg");
 }
-.chatPostActionButton:hover {
-  color: var(--theme-text-strong);
-}
 
-.chatPostActionButtonDelete:hover {
-  color: #ff8a8a;
-}
-
-/* フッター（日付と場所） */
-.chatPostFooter {
-  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-  text-align: right;
-  color: var(--theme-text-muted);
-}
-
-.chatPostPlaceButton {
-  padding: 0;
-  border: none;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.chatPostPlaceButton:hover {
-  text-decoration: underline;
-}
-
-/* ========================================
-   チャットページ：タブ
-   ======================================== */
-
+/* =======================================================
+   タブ
+======================================================= */
 .chatTabsSection {
   width: 100%;
   margin-bottom: 16px;
@@ -522,19 +482,22 @@ body {
   cursor: pointer;
 }
 
+.chatTabButton:hover {
+  background: var(--theme-button-bg-hover);
+}
+
 .chatTabButtonActive {
   border-color: var(--theme-border-strong);
   font-weight: bold;
 }
 
-
 .chatTabButtonCurrent {
+  position: relative;
   border-width: 2px;
   border-color: var(--theme-border-strong);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.08) inset,
     0 0 10px rgba(120, 180, 255, 0.45);
-  position: relative;
 }
 
 .chatTabButtonCurrent::after {
@@ -550,6 +513,7 @@ body {
   cursor: default;
 }
 
+/* 表示切替タブだけは(現在地)を出さない */
 .chatViewTabsSection .chatTabButtonCurrent::after {
   content: none;
 }
@@ -560,10 +524,9 @@ body {
   border-color: var(--theme-border-strong);
 }
 
-/* ========================================
-   入力欄
-   ======================================== */
-
+/* =======================================================
+   投稿入力欄
+======================================================= */
 .chatComposerSection {
   width: 100%;
   margin-bottom: 16px;
@@ -616,6 +579,10 @@ body {
   box-sizing: border-box;
 }
 
+.chatComposerIconButton:hover {
+  background: var(--theme-button-bg-hover);
+}
+
 .chatComposerIconImage {
   width: 100%;
   height: 100%;
@@ -628,6 +595,7 @@ body {
   min-width: 0;
 }
 
+/* 返信プレビュー */
 .chatComposerReplyPreview {
   width: 100%;
   margin-bottom: 10px;
@@ -664,6 +632,7 @@ body {
   margin: 0;
 }
 
+/* 投稿メタ情報 */
 .chatComposerMetaRow {
   display: flex;
   flex-wrap: wrap;
@@ -672,6 +641,46 @@ body {
   margin-bottom: 8px;
 }
 
+.chatComposerNameInput {
+  min-width: 0;
+  width: 240px;
+  max-width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.chatComposerNameInput::placeholder,
+.chatComposerTextarea::placeholder {
+  color: var(--theme-text-muted);
+}
+
+.chatComposerFixedReplyTargetInfo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 0 0 auto;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+  white-space: nowrap;
+}
+
+.chatComposerFixedReplyTargetLabel {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+  white-space: nowrap;
+}
+
+.chatComposerFixedReplyTargetValue {
+  color: var(--theme-text-main);
+}
+
+/* 追加返信先 */
 .chatComposerAdditionalTargetSection {
   margin-bottom: 8px;
 }
@@ -703,19 +712,6 @@ body {
   margin-top: 6px;
 }
 
-.chatComposerNameInput {
-  min-width: 0;
-  width: 240px;
-  max-width: 100%;
-  padding: 6px 8px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-sm);
-  background: rgba(0, 0, 0, 0.28);
-  color: var(--theme-text-main);
-  box-sizing: border-box;
-  font: inherit;
-}
-
 .chatComposerReplyTargetInput {
   min-width: 0;
   width: 100%;
@@ -730,27 +726,7 @@ body {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
 }
 
-.chatComposerFixedReplyTargetInfo {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  flex: 0 0 auto;
-  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-  color: var(--theme-text-subtle);
-  white-space: nowrap;
-}
-
-.chatComposerFixedReplyTargetValue {
-  color: var(--theme-text-main);
-}
-
-.chatComposerFixedReplyTargetLabel {
-  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-  color: var(--theme-text-subtle);
-  white-space: nowrap;
-}
-
+/* 本文 */
 .chatComposerTextarea {
   width: 100%;
   min-height: 120px;
@@ -766,6 +742,7 @@ body {
   margin-bottom: 8px;
 }
 
+/* ツールバー */
 .chatComposerToolbar {
   display: flex;
   flex-direction: column;
@@ -831,36 +808,19 @@ body {
   cursor: pointer;
 }
 
-.chatTabButton:hover,
-.chatComposerIconButton:hover,
 .chatComposerToolButton:not(.richTextToolButtonIconLike):hover,
 .chatComposerSubmitButton:hover {
   background: var(--theme-button-bg-hover);
 }
 
-.chatComposerTextarea::placeholder,
-.chatComposerNameInput::placeholder {
-  color: var(--theme-text-muted);
-}
-
-
-/* プレビュー */
-.chatPostCardDraftPreview {
-  opacity: 0.72;
-}
-
+/* =======================================================
+   下書き・引用・ツリーメモ・ショップ
+======================================================= */
 .chatThreadDraftPreviewSection {
   width: 100%;
   max-width: 800px;
   margin: 8px auto 0;
   box-sizing: border-box;
-}
-
-.chatPostIconImage {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
 }
 
 .chatQuoteAnchor {
@@ -962,12 +922,9 @@ body {
   line-height: 1.6;
 }
 
-
-
-/* ========================================
-   お気に入り一覧（右カラム）
-   ======================================== */
-
+/* =======================================================
+   お気に入りパネル
+======================================================= */
 .chatFavoritesPanelSection {
   width: 100%;
   box-sizing: border-box;
@@ -979,10 +936,33 @@ body {
   color: var(--theme-text-main);
 }
 
-.chatFavoritesPanelContent {
-  width: 100%;
+.chatFavoritesPanelTabRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
+.chatFavoritesPanelTabButton {
+  padding: 4px 10px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  font: inherit;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  cursor: pointer;
+}
+
+.chatFavoritesPanelTabButton:hover {
+  background: var(--theme-button-bg-hover);
+}
+
+.chatFavoritesPanelTabButton.is-active {
+  border-color: var(--theme-border-strong);
+  background: var(--theme-button-bg-hover);
+}
+
+.chatFavoritesPanelContent,
 .chatFavoritesPanelItem {
   width: 100%;
 }
@@ -1017,30 +997,4 @@ body {
   color: var(--theme-text-muted);
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   line-height: 1.6;
-}
-
-.chatFavoritesPanelTabRow {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.chatFavoritesPanelTabButton {
-  padding: 4px 10px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-sm);
-  background: var(--theme-button-bg);
-  color: var(--theme-button-text);
-  font: inherit;
-  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-  cursor: pointer;
-}
-
-.chatFavoritesPanelTabButton:hover {
-  background: var(--theme-button-bg-hover);
-}
-
-.chatFavoritesPanelTabButton.is-active {
-  border-color: var(--theme-border-strong);
-  background: var(--theme-button-bg-hover);
 }
