@@ -171,18 +171,7 @@ function buildPlaceTabs(place) {
   }
 
   if (place.kind === "room") {
-    const tabs = [];
-
-    if (place.accessType === "public" || place.accessType === "password" || place.accessType === "private") {
-      tabs.push({
-        key: "shop",
-        label: "SHOP",
-        isActive: false,
-        isDisabled: true
-      });
-    }
-
-    return tabs;
+    return [];
   }
 
   const sameGroupPlaces =
@@ -192,16 +181,16 @@ function buildPlaceTabs(place) {
         getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
       );
 
-const tabs = sameGroupPlaces.map(item => ({
-  key: `layer-${item.layer}`,
-  label: String(item.layer ?? "").toUpperCase(),
-  isActive: item.placeId === place.placeId,
-  isCurrent: item.placeId === place.placeId,
-  isDisabled: item.placeId === place.placeId,
-  onClick: () => {
-    moveToPlace(item.placeId);
-  }
-}));
+  const tabs = sameGroupPlaces.map(item => ({
+    key: `layer-${item.layer}`,
+    label: String(item.layer ?? "").toUpperCase(),
+    isActive: item.placeId === place.placeId,
+    isCurrent: item.placeId === place.placeId,
+    isDisabled: item.placeId === place.placeId,
+    onClick: () => {
+      moveToPlace(item.placeId);
+    }
+  }));
 
   tabs.push({
     key: "shop",
@@ -532,9 +521,11 @@ const fixedReplyTargetName =
 const placeTabs = buildPlaceTabs(place);
 const viewTabs = buildViewTabs();
 
-renderPlaceTabsSection(centerPanel, {
-  tabs: placeTabs
-});
+if (placeTabs.length > 0) {
+  renderPlaceTabsSection(centerPanel, {
+    tabs: placeTabs
+  });
+}
 
 const composerRefs = renderChatComposerSection(centerPanel, {
   composerDraft,
