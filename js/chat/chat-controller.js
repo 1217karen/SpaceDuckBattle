@@ -275,6 +275,28 @@ function getReplyPostsForEno(allPosts, eno) {
     .sort((a, b) => b.postId - a.postId);
 }
 
+function getSelfPostsForEno(allPosts, eno) {
+  const normalizedEno =
+    typeof eno === "number"
+      ? eno
+      : Number(eno || 0);
+
+  if (!normalizedEno) {
+    return [];
+  }
+
+  return allPosts
+    .filter(post =>
+      !post.isDeleted &&
+      Number(post.authorEno) === normalizedEno
+    )
+    .map(post => ({
+      ...post,
+      displayType: "normal"
+    }))
+    .sort((a, b) => b.postId - a.postId);
+}
+
 function buildViewTabs(options = {}) {
   const {
     currentMode = "chat",
@@ -333,8 +355,14 @@ function buildViewTabs(options = {}) {
     {
       key: "self",
       label: "SELF",
-      isActive: false,
-      isDisabled: true
+      isActive: currentMode === "self",
+      isCurrent: currentMode === "self",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("self");
+        }
+      }
     }
   ];
 }
@@ -366,13 +394,15 @@ const rawDisplayPosts = threadRootPostId
     }))
   : currentViewMode === "reply"
     ? getReplyPostsForEno(allPosts, currentEno)
-    : currentViewMode === "here"
-      ? getHerePosts(place, allPosts)
-      : getDisplayPosts({
-          currentPlace: place,
-          allPosts,
-          places
-        });
+    : currentViewMode === "self"
+      ? getSelfPostsForEno(allPosts, currentEno)
+      : currentViewMode === "here"
+        ? getHerePosts(place, allPosts)
+        : getDisplayPosts({
+            currentPlace: place,
+            allPosts,
+            places
+          });
 
     const displayPosts = rawDisplayPosts.filter(post =>
       !hiddenPostIds.has(post.postId)
@@ -838,13 +868,15 @@ const rawDisplayPosts = threadRootPostId
     }))
   : currentViewMode === "reply"
     ? getReplyPostsForEno(allPosts, eno)
-    : currentViewMode === "here"
-      ? getHerePosts(place, allPosts)
-      : getDisplayPosts({
-          currentPlace: place,
-          allPosts,
-          places
-        });
+    : currentViewMode === "self"
+      ? getSelfPostsForEno(allPosts, eno)
+      : currentViewMode === "here"
+        ? getHerePosts(place, allPosts)
+        : getDisplayPosts({
+            currentPlace: place,
+            allPosts,
+            places
+          });
 
 const displayPosts = rawDisplayPosts.filter(post =>
   !hiddenPostIds.has(post.postId)
