@@ -227,6 +227,23 @@ function buildPlaceTabs(place, options = {}) {
   return tabs;
 }
 
+function getHerePosts(currentPlace, allPosts) {
+  if (!currentPlace?.placeId) {
+    return [];
+  }
+
+  return allPosts
+    .filter(post =>
+      post.placeId === currentPlace.placeId &&
+      !post.isDeleted
+    )
+    .map(post => ({
+      ...post,
+      displayType: "normal"
+    }))
+    .sort((a, b) => b.postId - a.postId);
+}
+
 function getReplyPostsForEno(allPosts, eno) {
   const normalizedEno =
     typeof eno === "number"
@@ -274,6 +291,18 @@ function buildViewTabs(options = {}) {
       onClick: () => {
         if (typeof onSelectMode === "function") {
           onSelectMode("chat");
+        }
+      }
+    },
+    {
+      key: "here",
+      label: "HERE",
+      isActive: currentMode === "here",
+      isCurrent: currentMode === "here",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("here");
         }
       }
     },
@@ -330,18 +359,20 @@ function setupDraftPreview({
   function refreshDraftPreview() {
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
-    const rawDisplayPosts = threadRootPostId
-      ? getThreadPosts(allPosts, threadRootPostId).map(post => ({
-          ...post,
-          displayType: "normal"
-        }))
-      : currentViewMode === "reply"
-        ? getReplyPostsForEno(allPosts, currentEno)
-        : getDisplayPosts({
-            currentPlace: place,
-            allPosts,
-            places
-          });
+const rawDisplayPosts = threadRootPostId
+  ? getThreadPosts(allPosts, threadRootPostId).map(post => ({
+      ...post,
+      displayType: "normal"
+    }))
+  : currentViewMode === "reply"
+    ? getReplyPostsForEno(allPosts, currentEno)
+    : currentViewMode === "here"
+      ? getHerePosts(place, allPosts)
+      : getDisplayPosts({
+          currentPlace: place,
+          allPosts,
+          places
+        });
 
     const displayPosts = rawDisplayPosts.filter(post =>
       !hiddenPostIds.has(post.postId)
@@ -807,11 +838,13 @@ const rawDisplayPosts = threadRootPostId
     }))
   : currentViewMode === "reply"
     ? getReplyPostsForEno(allPosts, eno)
-    : getDisplayPosts({
-        currentPlace: place,
-        allPosts,
-        places
-      });
+    : currentViewMode === "here"
+      ? getHerePosts(place, allPosts)
+      : getDisplayPosts({
+          currentPlace: place,
+          allPosts,
+          places
+        });
 
 const displayPosts = rawDisplayPosts.filter(post =>
   !hiddenPostIds.has(post.postId)
