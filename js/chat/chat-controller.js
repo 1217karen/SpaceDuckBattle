@@ -18,6 +18,7 @@ import { showToast } from "../common/toast.js";
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
+let currentViewMode = "chat";
 let isShopOpen = false;
 
 function getPlaceIdFromQuery() {
@@ -215,19 +216,67 @@ function buildPlaceTabs(place, options = {}) {
   return tabs;
 }
 
-function buildViewTabs() {
+function getReplyPostsForEno(allPosts, eno) {
+  const normalizedEno =
+    typeof eno === "number"
+      ? eno
+      : Number(eno || 0);
+
+  if (!normalizedEno) {
+    return [];
+  }
+
+  return allPosts
+    .filter(post => {
+      if (post?.isDeleted) {
+        return false;
+      }
+
+      if (!Array.isArray(post?.targetEnoList)) {
+        return false;
+      }
+
+      return post.targetEnoList.some(item =>
+        Number(item) === normalizedEno
+      );
+    })
+    .map(post => ({
+      ...post,
+      displayType: "normal"
+    }))
+    .sort((a, b) => b.postId - a.postId);
+}
+
+function buildViewTabs(options = {}) {
+  const {
+    currentMode = "chat",
+    onSelectMode = null
+  } = options;
+
   return [
     {
       key: "chat",
       label: "CHAT",
-      isActive: true,
-      isDisabled: true
+      isActive: currentMode === "chat",
+      isCurrent: currentMode === "chat",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("chat");
+        }
+      }
     },
     {
       key: "reply",
       label: "REPLY",
-      isActive: false,
-      isDisabled: true
+      isActive: currentMode === "reply",
+      isCurrent: currentMode === "reply",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("reply");
+        }
+      }
     },
     {
       key: "message",
@@ -249,7 +298,6 @@ function buildViewTabs() {
     }
   ];
 }
-
 
 function setupDraftPreview({
   postListRefs,
@@ -276,11 +324,13 @@ function setupDraftPreview({
           ...post,
           displayType: "normal"
         }))
-      : getDisplayPosts({
-          currentPlace: place,
-          allPosts,
-          places
-        });
+      : currentViewMode === "reply"
+        ? getReplyPostsForEno(allPosts, currentEno)
+        : getDisplayPosts({
+            currentPlace: place,
+            allPosts,
+            places
+          });
 
     const displayPosts = rawDisplayPosts.filter(post =>
       !hiddenPostIds.has(post.postId)
@@ -568,7 +618,14 @@ const placeTabs = buildPlaceTabs(place, {
     renderChatPlaceInfo();
   }
 });
-const viewTabs = buildViewTabs();
+
+const viewTabs = buildViewTabs({
+  currentMode: currentViewMode,
+  onSelectMode: (mode) => {
+    currentViewMode = mode;
+    renderChatPlaceInfo();
+  }
+});
 
 if (placeTabs.length > 0) {
   renderPlaceTabsSection(centerPanel, {
@@ -709,11 +766,13 @@ const rawDisplayPosts = threadRootPostId
       ...post,
       displayType: "normal"
     }))
-  : getDisplayPosts({
-      currentPlace: place,
-      allPosts,
-      places
-    });
+  : currentViewMode === "reply"
+    ? getReplyPostsForEno(allPosts, eno)
+    : getDisplayPosts({
+        currentPlace: place,
+        allPosts,
+        places
+      });
 
 const displayPosts = rawDisplayPosts.filter(post =>
   !hiddenPostIds.has(post.postId)
