@@ -4,16 +4,17 @@ import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
-import { createPost,deletePost,getAllPosts,getAllPostsIncludingDeleted} from "../services/post-service.js";
+import { createPost,deletePost,getAllPosts,getAllPostsIncludingDeleted } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection,renderChatComposerSection,
-        renderViewTabsSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
-import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
-import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
-import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
+        renderViewTabsSection,renderPostListSection,renderPostListContent } from "./chat-view.js";
+import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs } from "./chat-composer-state.js";
+import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost } from "./chat-reply-state.js";
+import { buildComposerPostInput,buildDraftPreviewPost } from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
 import { createPostActions } from "./chat-post-actions.js";
 import { showToast } from "../common/toast.js";
+import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
@@ -581,7 +582,22 @@ if (threadRootPostId) {
     place,
     aroundBasePlace,
     places,
-    onMoveToPlace: moveToPlace
+    onMoveToPlace: moveToPlace,
+    isFavorite: isFavoritePlace(place?.placeId ?? ""),
+    onToggleFavorite: (targetPlace) => {
+      const result = toggleFavoritePlace(targetPlace?.placeId ?? "");
+
+      renderChatPlaceInfo();
+
+      showToast(
+        result.isFavorite
+          ? "現在地をお気に入り登録しました"
+          : "現在地のお気に入りを解除しました",
+        {
+          type: result.isFavorite ? "success" : "info"
+        }
+      );
+    }
   });
 }
 
