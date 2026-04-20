@@ -1,6 +1,4 @@
 //post-service.js
-  
-import { posts as seedPosts } from "../data/posts-data.js";
 
 const POSTS_STORAGE_KEY = "chatPosts";
 
@@ -107,18 +105,8 @@ function saveStoredPosts(posts) {
   );
 }
 
-function getSeedPosts() {
-  return seedPosts.map(clonePost);
-}
-
 function getSourcePosts() {
-  const storedPosts = loadStoredPosts();
-
-  if (storedPosts.length > 0) {
-    return storedPosts;
-  }
-
-  return getSeedPosts();
+  return loadStoredPosts();
 }
 
 function getNextPostId(posts) {
