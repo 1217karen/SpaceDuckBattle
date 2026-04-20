@@ -460,7 +460,9 @@ export function renderPlaceInfoSection(container, options = {}) {
     place,
     aroundBasePlace,
     places = [],
-    onMoveToPlace
+    onMoveToPlace,
+    isFavorite = false,
+    onToggleFavorite = null
   } = options;
 
   const section = document.createElement("section");
@@ -574,6 +576,11 @@ inner.appendChild(body);
 
   section.appendChild(inner);
   container.appendChild(section);
+
+  return {
+    section,
+    favoriteButton
+  };
 }
 
 export function renderThreadHeaderSection(container, options = {}) {
@@ -600,6 +607,30 @@ title.className = "chatHeaderTitle";
 title.textContent = "返信ツリー";
 
 titleGroup.appendChild(title);
+
+  let favoriteButton = null;
+
+  if (place) {
+    favoriteButton = document.createElement("button");
+    favoriteButton.type = "button";
+    favoriteButton.className = "chatHeaderFavoriteButton";
+    favoriteButton.textContent = isFavorite ? "★" : "☆";
+    favoriteButton.title = isFavorite ? "お気に入り解除" : "お気に入り登録";
+    favoriteButton.setAttribute(
+      "aria-label",
+      isFavorite ? "お気に入り解除" : "お気に入り登録"
+    );
+
+    if (typeof onToggleFavorite === "function") {
+      favoriteButton.addEventListener("click", () => {
+        onToggleFavorite(place);
+      });
+    } else {
+      favoriteButton.disabled = true;
+    }
+
+    titleGroup.appendChild(favoriteButton);
+  }
 
 let closeThreadButton = null;
 
