@@ -128,29 +128,39 @@ export function createPostCard(post, options = {}) {
 
   if (!isPreview) {
 
-    const nameButton = document.createElement("button");
-    nameButton.type = "button";
-    nameButton.className = "chatPostNameButton";
+    const nameRow = document.createElement("div");
+    nameRow.className = "chatPostNameRow";
 
-    const name = document.createElement("div");
+    const name = document.createElement("span");
     name.className = "chatPostName";
-    name.textContent = `${post.speakerName} / Eno:${post.authorEno}`;
+    name.textContent =
+      typeof post.speakerName === "string"
+        ? post.speakerName
+        : "";
 
-    nameButton.appendChild(name);
+    const enoLink = document.createElement("button");
+    enoLink.type = "button";
+    enoLink.className = "chatPostEnoLink";
+    enoLink.textContent =
+      typeof post?.authorEno === "number" && post.authorEno > 0
+        ? ` / Eno.${post.authorEno}`
+        : " / Eno.?";
 
     if (
       typeof post?.authorEno === "number" &&
       post.authorEno > 0
     ) {
-      nameButton.addEventListener("click", () => {
+      enoLink.addEventListener("click", () => {
         window.location.href =
           `./profile.html?eno=${encodeURIComponent(post.authorEno)}`;
       });
     } else {
-      nameButton.disabled = true;
+      enoLink.disabled = true;
     }
 
-    headerLeft.appendChild(nameButton);
+    nameRow.appendChild(name);
+    nameRow.appendChild(enoLink);
+    headerLeft.appendChild(nameRow);
   }
 
   const postNo = document.createElement("div");
