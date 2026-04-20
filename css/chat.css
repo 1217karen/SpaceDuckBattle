@@ -961,3 +961,60 @@ body {
   margin: 0;
   line-height: 1.6;
 }
+
+
+
+/* ========================================
+   お気に入り一覧（右カラム）
+   ======================================== */
+
+.chatFavoritesPanelSection {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.chatFavoritesPanelHeading {
+  margin: 0 0 10px;
+  font-size: calc(var(--chat-font-base) * 1);
+  color: var(--theme-text-main);
+}
+
+.chatFavoritesPanelContent {
+  width: 100%;
+}
+
+.chatFavoritesPanelItem {
+  width: 100%;
+}
+
+.chatFavoritesPanelPlaceButton {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--theme-text-main);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chatFavoritesPanelPlaceButton:hover {
+  text-decoration: underline;
+}
+
+.chatFavoritesPanelPlaceButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.chatFavoritesPanelDivider {
+  margin: 8px 0;
+  border-top: 1px dotted var(--theme-border-soft);
+}
+
+.chatFavoritesPanelEmptyText {
+  margin: 0;
+  color: var(--theme-text-muted);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  line-height: 1.6;
+}
