@@ -18,6 +18,7 @@ import { showToast } from "../common/toast.js";
 const centerPanel = document.querySelector(".center-panel");
 const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
+let isShopOpen = false;
 
 function getPlaceIdFromQuery() {
   const params = new URLSearchParams(window.location.search);
@@ -67,6 +68,8 @@ function moveToPlace(placeId) {
 
   const eno = account.eno;
   const character = loadCharacter(eno) || {};
+
+  isShopOpen = false;
 
   saveCharacter(eno, {
     ...character,
@@ -165,7 +168,12 @@ function getAroundBasePlace(place) {
   ) || place;
 }
 
-function buildPlaceTabs(place) {
+function buildPlaceTabs(place, options = {}) {
+  const {
+    isShopOpen = false,
+    onToggleShop = null
+  } = options;
+
   if (!place) {
     return [];
   }
@@ -195,8 +203,13 @@ function buildPlaceTabs(place) {
   tabs.push({
     key: "shop",
     label: "SHOP",
-    isActive: false,
-    isDisabled: true
+    isActive: isShopOpen,
+    isDisabled: typeof onToggleShop !== "function",
+    onClick: () => {
+      if (typeof onToggleShop === "function") {
+        onToggleShop();
+      }
+    }
   });
 
   return tabs;
@@ -340,6 +353,7 @@ function setupComposerSubmit({
     });
 
     saveComposerDraft(clearedDraft);
+    isShopOpen = false;
     renderChatPlaceInfo();
     showToast("発言を投稿しました", { type: "success" });
   });
@@ -444,6 +458,35 @@ function setupComposerDraftPersistence(composerRefs) {
   composerRefs.additionalTargetSection?.addEventListener("toggle", persistDraft);
 }
 
+
+function renderShopPlaceholderSection(container) {
+  if (!container) {
+    return null;
+  }
+
+  const section = document.createElement("section");
+  section.className = "chatShopSection";
+
+  const inner = document.createElement("div");
+  inner.className = "chatShopInner";
+
+  const card = document.createElement("div");
+  card.className = "chatShopCard";
+
+  const text = document.createElement("p");
+  text.className = "chatShopPlaceholderText";
+  text.textContent = "ショップです";
+
+  card.appendChild(text);
+  inner.appendChild(card);
+  section.appendChild(inner);
+  container.appendChild(section);
+
+  return {
+    section
+  };
+}
+
 function renderChatPlaceInfo() {
   if (!centerPanel) return;
 
@@ -518,7 +561,13 @@ const fixedReplyTargetName =
         ? replySourcePost.speakerName
         : "");
 
-const placeTabs = buildPlaceTabs(place);
+const placeTabs = buildPlaceTabs(place, {
+  isShopOpen,
+  onToggleShop: () => {
+    isShopOpen = !isShopOpen;
+    renderChatPlaceInfo();
+  }
+});
 const viewTabs = buildViewTabs();
 
 if (placeTabs.length > 0) {
@@ -527,38 +576,42 @@ if (placeTabs.length > 0) {
   });
 }
 
-const composerRefs = renderChatComposerSection(centerPanel, {
-  composerDraft,
-  replySourcePost,
-  getPlaceLabel,
-  currentPlaceLabel: getPlaceLabel(place.placeId),
-  useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
-  fixedReplyTargetEno: composerDraft.fixedReplyTargetEno,
-  fixedReplyTargetName,
-  isAdditionalTargetOpen: composerDraft.isAdditionalTargetOpen,
-  onClearReply: () => {
-    const currentDraft = saveComposerDraft(
-      readComposerDraftFromRefs(composerRefs)
+let composerRefs = null;
+
+if (isShopOpen) {
+  renderShopPlaceholderSection(centerPanel);
+} else {
+  composerRefs = renderChatComposerSection(centerPanel, {
+    composerDraft,
+    replySourcePost,
+    getPlaceLabel,
+    currentPlaceLabel: getPlaceLabel(place.placeId),
+    useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
+    fixedReplyTargetEno: composerDraft.fixedReplyTargetEno,
+    fixedReplyTargetName,
+    isAdditionalTargetOpen: composerDraft.isAdditionalTargetOpen,
+    onClearReply: () => {
+      const currentDraft = saveComposerDraft(
+        readComposerDraftFromRefs(composerRefs)
+      );
+
+      const nextDraft = clearReplyState(currentDraft);
+      saveComposerDraft(nextDraft);
+      renderChatPlaceInfo();
+    }
+  });
+
+  setupComposerIconPicker(composerRefs, character);
+  setupComposerDraftPersistence(composerRefs);
+  applyComposerDraftToRefs(composerRefs, composerDraft);
+
+  if (composerDraft.iconId || composerDraft.iconUrl) {
+    setButtonPreview(
+      composerRefs.iconButton,
+      composerDraft.iconId,
+      composerDraft.iconUrl || getNoImageUrl()
     );
-
-    const nextDraft = clearReplyState(currentDraft);
-    saveComposerDraft(nextDraft);
-    renderChatPlaceInfo();
   }
-});
-
-setupComposerIconPicker(composerRefs, character);
-
-setupComposerDraftPersistence(composerRefs);
-
-applyComposerDraftToRefs(composerRefs, composerDraft);
-
-if (composerDraft.iconId || composerDraft.iconUrl) {
-  setButtonPreview(
-    composerRefs.iconButton,
-    composerDraft.iconId,
-    composerDraft.iconUrl || getNoImageUrl()
-  );
 }
 
 const handleReply = (post) => {
@@ -676,25 +729,27 @@ const postListRefs = renderPostListSection(centerPanel, {
   getQuotePreviewPostById
 });
 
-setupDraftPreview({
-  postListRefs,
-  place,
-  character,
-  composerRefs,
-  allPosts,
-  getPlaceLabel,
-  onMoveToPlace: moveToPlace,
-  postActions,
-  getQuotePreviewPostById,
-  threadRootPostId,
-  currentEno: eno
-});
+if (composerRefs) {
+  setupDraftPreview({
+    postListRefs,
+    place,
+    character,
+    composerRefs,
+    allPosts,
+    getPlaceLabel,
+    onMoveToPlace: moveToPlace,
+    postActions,
+    getQuotePreviewPostById,
+    threadRootPostId,
+    currentEno: eno
+  });
 
-setupComposerSubmit({
-  place,
-  character,
-  composerRefs
-});
+  setupComposerSubmit({
+    place,
+    character,
+    composerRefs
+  });
+}
 }
 
 renderChatPlaceInfo();
