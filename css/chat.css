@@ -297,23 +297,35 @@ body {
   font-weight: bold;
 }
 
-.chatPostNameButton {
-  display: block;
-  width: 100%;
+.chatPostNameRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0;
+  min-width: 0;
+}
+
+.chatPostName {
+  font-weight: bold;
+}
+
+.chatPostEnoLink {
   padding: 0;
   border: none;
   background: none;
-  color: inherit;
+  color: var(--theme-text-muted);
   font: inherit;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   text-align: left;
   cursor: pointer;
 }
 
-.chatPostNameButton:disabled {
+.chatPostEnoLink:disabled {
   cursor: default;
 }
 
-.chatPostNameButton:hover .chatPostName {
+.chatPostEnoLink:hover {
+  color: var(--theme-text-main);
   text-decoration: underline;
 }
 
