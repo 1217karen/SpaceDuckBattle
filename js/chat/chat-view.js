@@ -484,6 +484,7 @@ export function renderPlaceInfoSection(container, options = {}) {
   let favoriteButton = null;
 
   titleGroup.appendChild(title);
+  topRow.appendChild(titleGroup);
 
   if (place) {
     favoriteButton = document.createElement("button");
@@ -504,10 +505,8 @@ export function renderPlaceInfoSection(container, options = {}) {
       favoriteButton.disabled = true;
     }
 
-    titleGroup.appendChild(favoriteButton);
+    topRow.appendChild(favoriteButton);
   }
-
-  topRow.appendChild(titleGroup);
 
   if (!place) {
     inner.appendChild(topRow);
@@ -635,30 +634,6 @@ title.className = "chatHeaderTitle";
 title.textContent = "返信ツリー";
 
 titleGroup.appendChild(title);
-
-  let favoriteButton = null;
-
-  if (place) {
-    favoriteButton = document.createElement("button");
-    favoriteButton.type = "button";
-    favoriteButton.className = "chatHeaderFavoriteButton";
-    favoriteButton.textContent = isFavorite ? "★" : "☆";
-    favoriteButton.title = isFavorite ? "お気に入り解除" : "お気に入り登録";
-    favoriteButton.setAttribute(
-      "aria-label",
-      isFavorite ? "お気に入り解除" : "お気に入り登録"
-    );
-
-    if (typeof onToggleFavorite === "function") {
-      favoriteButton.addEventListener("click", () => {
-        onToggleFavorite(place);
-      });
-    } else {
-      favoriteButton.disabled = true;
-    }
-
-    titleGroup.appendChild(favoriteButton);
-  }
 
 let closeThreadButton = null;
 
