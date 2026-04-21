@@ -14,17 +14,29 @@ html, body{
   border-right:1px solid #ccc;
   overflow-y:auto;
   padding:10px;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
 }
 
 .center-panel{
   overflow-y:auto;
   padding:10px;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
 }
 
 .right-panel{
   border-left:1px solid #ccc;
   overflow-y:auto;
   padding:10px;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+
+.left-panel::-webkit-scrollbar,
+.center-panel::-webkit-scrollbar,
+.right-panel::-webkit-scrollbar{
+  display:none;
 }
 
 /* スマホ表示 */
