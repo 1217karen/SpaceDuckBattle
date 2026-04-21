@@ -58,3 +58,18 @@ html, body{
   }
 
 }
+
+/* 左カラムもしまう条件
+   左220 + 中央620 = 840
+*/
+@media (max-width:840px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .left-panel{
+    display:none;
+  }
+
+}
