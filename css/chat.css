@@ -41,7 +41,7 @@ body {
 
 .chatHeaderInner {
   width: 100%;
-  max-width: 1000px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 14px 16px;
   border: 1px solid var(--theme-border-main);
@@ -205,7 +205,7 @@ body {
   flex-direction: column;
   gap: 6px;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto 8px;
   padding: 10px;
   border: 1px solid var(--theme-border-main);
@@ -534,7 +534,7 @@ body {
 
 .chatComposerInner {
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -818,7 +818,7 @@ body {
 ======================================================= */
 .chatThreadDraftPreviewSection {
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   margin: 8px auto 0;
   box-sizing: border-box;
 }
@@ -898,7 +898,7 @@ body {
 
 .chatShopInner {
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   box-sizing: border-box;
 }
