@@ -7,18 +7,6 @@
 }
 
 /* =======================================================
-   共通文字サイズ
-======================================================= */
-.chatAroundRow,
-.chatPostBody,
-.chatComposerTextarea,
-.chatComposerNameInput,
-.chatHeaderShortDescription,
-.chatHeaderLongDescription {
-  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-body));
-}
-
-/* =======================================================
    全体背景
 ======================================================= */
 body {
@@ -617,7 +605,6 @@ body {
   border-radius: var(--theme-radius-sm);
   background: rgba(0, 0, 0, 0.28);
   color: var(--theme-text-main);
-  font: inherit;
   line-height: 1.4;
   cursor: pointer;
 }
@@ -651,7 +638,6 @@ body {
   background: rgba(0, 0, 0, 0.28);
   color: var(--theme-text-main);
   box-sizing: border-box;
-  font: inherit;
 }
 
 .chatComposerNameInput::placeholder,
@@ -722,7 +708,6 @@ body {
   background: rgba(0, 0, 0, 0.28);
   color: var(--theme-text-main);
   box-sizing: border-box;
-  font: inherit;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
 }
 
@@ -737,7 +722,6 @@ body {
   color: var(--theme-text-main);
   box-sizing: border-box;
   resize: vertical;
-  font: inherit;
   line-height: 1.6;
   margin-bottom: 8px;
 }
@@ -883,7 +867,6 @@ body {
   background: var(--theme-button-bg);
   color: var(--theme-button-text);
   box-shadow: var(--theme-shadow-soft);
-  font: inherit;
   cursor: pointer;
 }
 
@@ -948,7 +931,6 @@ body {
   border-radius: var(--theme-radius-sm);
   background: var(--theme-button-bg);
   color: var(--theme-button-text);
-  font: inherit;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   cursor: pointer;
 }
