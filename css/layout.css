@@ -21,8 +21,11 @@ html, body{
 .center-panel{
   overflow-y:auto;
   padding:10px;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
+  background-image:url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG.webp");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
 }
 
 .right-panel{
