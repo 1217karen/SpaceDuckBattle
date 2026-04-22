@@ -520,7 +520,7 @@ export function renderPlaceInfoSection(container, options = {}) {
 
   const aroundToggle = document.createElement("button");
   aroundToggle.type = "button";
-  aroundToggle.className = "chatHeaderLinkButton chatHeaderAroundToggle";
+  aroundToggle.className = "chatHeaderLinkButton chatHeaderAroundToggle button-toggle";
   aroundToggle.textContent = "▼周辺を表示";
 
   titleGroup.appendChild(aroundToggle);
@@ -548,7 +548,7 @@ export function renderPlaceInfoSection(container, options = {}) {
 
   const detailToggle = document.createElement("button");
   detailToggle.type = "button";
-  detailToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle";
+  detailToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-toggle";
   detailToggle.textContent = "▼詳細を表示";
 
   const detailContent = document.createElement("div");
@@ -580,16 +580,16 @@ export function renderPlaceInfoSection(container, options = {}) {
     const isOpen = !aroundPanel.hidden;
     aroundPanel.hidden = isOpen;
     aroundToggle.textContent = isOpen
-      ? "▼周辺を表示"
-      : "▲周辺を閉じる";
+      ? "▶周辺を表示"
+      : "▼周辺を閉じる";
   });
 
   detailToggle.addEventListener("click", () => {
     const isOpen = !detailContent.hidden;
     detailContent.hidden = isOpen;
     detailToggle.textContent = isOpen
-      ? "▼詳細を表示"
-      : "▲詳細を閉じる";
+      ? "▶詳細を表示"
+      : "▼詳細を閉じる";
   });
 
   body.appendChild(shortDescription);
@@ -660,10 +660,10 @@ topRow.appendChild(titleGroup);
 
   const memoToggle = document.createElement("button");
   memoToggle.type = "button";
-  memoToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle";
+  memoToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-toggle";
   memoToggle.textContent = isMemoOpen
-    ? "▲非公開メモを閉じる"
-    : "▼非公開メモを表示";
+    ? "▼非公開メモを閉じる"
+    : "▶非公開メモを表示";
 
   const memoContent = document.createElement("div");
   memoContent.className = "chatHeaderDetailContent";
