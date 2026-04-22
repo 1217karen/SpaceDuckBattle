@@ -948,10 +948,10 @@ if (replySourcePost) {
   postPlaceInfo.className = "chatComposerPostPlaceInfo";
   postPlaceInfo.textContent = `現在地: ${currentPlaceLabel}`;
 
-  const submitButton = document.createElement("button");
-  submitButton.type = "button";
-  submitButton.className = "chatComposerSubmitButton";
-  submitButton.textContent = "投稿";
+const submitButton = document.createElement("button");
+submitButton.type = "button";
+submitButton.className = "chatComposerSubmitButton button-primary";
+submitButton.textContent = "投稿";
 
   toolRow.appendChild(createRichTextToolbarButtons());
   
