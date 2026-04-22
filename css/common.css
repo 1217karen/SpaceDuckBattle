@@ -54,6 +54,22 @@ button:hover{
   background:var(--theme-button-bg-hover);
 }
 
+.button-small{
+  padding:0;
+  border:none;
+  background:none;
+  color:var(--theme-text-accent);
+  box-shadow:none;
+  font:inherit;
+  line-height:1;
+  cursor:pointer;
+}
+
+.button-small:hover{
+  color:var(--theme-text-strong);
+  background:none;
+}
+
 select,
 input,
 textarea{
