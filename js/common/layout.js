@@ -1,11 +1,17 @@
 //layout.js
 
+function isMobileLikeEnvironment() {
+  return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+}
+
 function updatePanelCollapseState() {
   const layout = document.querySelector(".layout");
   if (!layout) return;
 
-  const rightCollapsed = window.innerWidth <= 1140;
-  const leftCollapsed = window.innerWidth <= 840;
+  const isMobileLike = isMobileLikeEnvironment();
+
+  const rightCollapsed = isMobileLike || window.innerWidth <= 1140;
+  const leftCollapsed = isMobileLike || window.innerWidth <= 840;
 
   layout.classList.toggle("panel-right-collapsed", rightCollapsed);
   layout.classList.toggle("panel-left-collapsed", leftCollapsed);
