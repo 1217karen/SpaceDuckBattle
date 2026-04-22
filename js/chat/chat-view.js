@@ -805,7 +805,7 @@ if (replySourcePost) {
   if (typeof onClearReply === "function") {
     const clearReplyButton = document.createElement("button");
     clearReplyButton.type = "button";
-    clearReplyButton.className = "chatComposerReplyClearButton";
+    clearReplyButton.className = "chatComposerReplyClearButton button-small";
     clearReplyButton.textContent = "×";
     clearReplyButton.title = "返信を解除";
     clearReplyButton.setAttribute("aria-label", "返信を解除");
