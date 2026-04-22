@@ -70,6 +70,22 @@ button:hover{
   background:none;
 }
 
+.button-toggle{
+  padding:0;
+  border:none;
+  background:none;
+  color:var(--theme-text-subtle);
+  box-shadow:none;
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+
+.button-toggle:hover{
+  color:var(--theme-text-main);
+  background:none;
+}
+
 select,
 input,
 textarea{
