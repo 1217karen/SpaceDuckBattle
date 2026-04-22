@@ -607,13 +607,7 @@ body {
 }
 
 .chatComposerReplyClearButton {
-  padding: 0 6px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-sm);
-  background: rgba(0, 0, 0, 0.28);
-  color: var(--theme-text-main);
   line-height: 1.4;
-  cursor: pointer;
 }
 
 .chatComposerReplyClearButton:hover {
