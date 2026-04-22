@@ -787,8 +787,7 @@ body {
   color: var(--theme-text-subtle);
 }
 
-.chatComposerToolButton:not(.richTextToolButtonIconLike),
-.chatComposerSubmitButton {
+.chatComposerToolButton:not(.richTextToolButtonIconLike) {
   padding: 4px 12px;
   border: 1px solid var(--theme-border-main);
   border-radius: var(--theme-radius-sm);
@@ -799,8 +798,7 @@ body {
   cursor: pointer;
 }
 
-.chatComposerToolButton:not(.richTextToolButtonIconLike):hover,
-.chatComposerSubmitButton:hover {
+.chatComposerToolButton:not(.richTextToolButtonIconLike):hover {
   background: var(--theme-button-bg-hover);
 }
 
