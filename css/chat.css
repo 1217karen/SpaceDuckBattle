@@ -67,16 +67,10 @@ body {
 
 /* ヘッダー内リンク風ボタン */
 .chatHeaderLinkButton {
-  padding: 0;
-  border: none;
-  background: none;
   font-size: calc(var(--chat-font-base) * 0.93);
-  color: var(--theme-text-subtle);
-  cursor: pointer;
 }
 
 .chatHeaderLinkButton:hover {
-  color: var(--theme-text-main);
   text-decoration: underline;
 }
 
