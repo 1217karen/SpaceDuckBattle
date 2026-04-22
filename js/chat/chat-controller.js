@@ -18,6 +18,7 @@ import { isFavoritePlace,toggleFavoritePlace,loadFavoritePlaceIds } from "./chat
 import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
 
 const centerPanel = document.querySelector(".center-panel");
+const chatMainArea = document.querySelector("#chatMainArea");
 const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
@@ -623,7 +624,7 @@ function renderRightPanel() {
 }
 
 function renderChatPlaceInfo() {
-  if (!centerPanel) return;
+  if (!centerPanel || !chatMainArea) return;
 
   const account = getCurrentAccount();
   const eno = account?.eno ?? null;
@@ -638,7 +639,7 @@ const place = getPlaceById(placeId);
 const aroundBasePlace = getAroundBasePlace(place);
 const threadRootPostId = getThreadRootPostIdFromQuery();
 
-centerPanel.innerHTML = "";
+chatMainArea.innerHTML = "";
 
   const pendingToast = sessionStorage.getItem("chatToastMessage");
 
@@ -658,11 +659,11 @@ centerPanel.innerHTML = "";
   }
 
 if (threadRootPostId) {
-  renderThreadHeaderSection(centerPanel, {
+  renderThreadHeaderSection(chatMainArea, {
     memoText: "この欄は非公開メモ用です。"
   });
 } else {
-  renderPlaceInfoSection(centerPanel, {
+  renderPlaceInfoSection(chatMainArea, {
     place,
     aroundBasePlace,
     places,
@@ -728,7 +729,7 @@ const viewTabs = buildViewTabs({
 });
 
 if (placeTabs.length > 0) {
-  renderPlaceTabsSection(centerPanel, {
+  renderPlaceTabsSection(chatMainArea, {
     tabs: placeTabs
   });
 }
@@ -738,7 +739,7 @@ let composerRefs = null;
 if (isShopOpen) {
   renderShopPlaceholderSection(centerPanel);
 } else {
-  composerRefs = renderChatComposerSection(centerPanel, {
+  composerRefs = renderChatComposerSection(chatMainArea, {
     composerDraft,
     replySourcePost,
     getPlaceLabel,
@@ -856,7 +857,7 @@ const postActions = createPostActions({
   onHide: handleHide
 });
 
-renderViewTabsSection(centerPanel, {
+renderViewTabsSection(chatMainArea, {
   tabs: viewTabs
 });
 
@@ -882,7 +883,7 @@ const displayPosts = rawDisplayPosts.filter(post =>
   !hiddenPostIds.has(post.postId)
 );
 
-const postListRefs = renderPostListSection(centerPanel, {
+const postListRefs = renderPostListSection(chatMainArea, {
   posts: displayPosts,
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
