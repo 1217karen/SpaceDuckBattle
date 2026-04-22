@@ -521,7 +521,7 @@ export function renderPlaceInfoSection(container, options = {}) {
   const aroundToggle = document.createElement("button");
   aroundToggle.type = "button";
   aroundToggle.className = "chatHeaderLinkButton chatHeaderAroundToggle button-toggle";
-  aroundToggle.textContent = "▼周辺を表示";
+  aroundToggle.textContent = "▶周辺を表示";
 
   titleGroup.appendChild(aroundToggle);
 
@@ -549,7 +549,7 @@ export function renderPlaceInfoSection(container, options = {}) {
   const detailToggle = document.createElement("button");
   detailToggle.type = "button";
   detailToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-toggle";
-  detailToggle.textContent = "▼詳細を表示";
+  detailToggle.textContent = "▶詳細を表示";
 
   const detailContent = document.createElement("div");
   detailContent.className = "chatHeaderDetailContent";
