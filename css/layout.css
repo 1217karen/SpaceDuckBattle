@@ -46,6 +46,22 @@ html, body{
   box-sizing:border-box;
 }
 
+.panel-toggle-button{
+  display:none;
+  padding:4px 10px;
+  border:1px solid var(--theme-border-main);
+  border-radius:var(--theme-radius-sm);
+  background:var(--theme-button-bg);
+  color:var(--theme-button-text);
+  box-shadow:var(--theme-shadow-soft);
+  font:inherit;
+  cursor:pointer;
+}
+
+.panel-toggle-button:hover{
+  background:var(--theme-button-bg-hover);
+}
+
 .center-topbar-left{
   display:flex;
   align-items:center;
@@ -99,7 +115,24 @@ html, body{
   }
 
   .right-panel{
-    display:none;
+    position:fixed;
+    top:0;
+    right:0;
+    bottom:0;
+    width:300px;
+    z-index:40;
+    transform:translateX(100%);
+    transition:transform .2s ease;
+  }
+
+  .right-panel.open{
+    transform:translateX(0);
+  }
+
+  .layout.panel-right-collapsed .right-panel-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
   }
 
 }
@@ -114,7 +147,24 @@ html, body{
   }
 
   .left-panel{
-    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width:220px;
+    z-index:40;
+    transform:translateX(-100%);
+    transition:transform .2s ease;
+  }
+
+  .left-panel.open{
+    transform:translateX(0);
+  }
+
+  .layout.panel-left-collapsed .left-panel-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
   }
 
 }
