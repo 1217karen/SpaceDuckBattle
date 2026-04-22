@@ -721,6 +721,7 @@ export function renderPlaceTabsSection(container, options = {}) {
 
   renderChatTabSection(container, {
     sectionClassName: "chatPlaceTabsSection",
+    buttonClassName: "chatPlaceTabButton",
     tabs
   });
 }
@@ -732,6 +733,7 @@ export function renderViewTabsSection(container, options = {}) {
 
   renderChatTabSection(container, {
     sectionClassName: "chatViewTabsSection",
+    buttonClassName: "chatViewTabButton",
     tabs
   });
 }
@@ -997,6 +999,7 @@ if (replySourcePost) {
 function renderChatTabSection(container, options = {}) {
   const {
     sectionClassName = "",
+    buttonClassName = "",
     tabs = []
   } = options;
 
@@ -1010,7 +1013,7 @@ function renderChatTabSection(container, options = {}) {
   row.className = "chatTabRow";
 
   tabs.forEach(tab => {
-    row.appendChild(createChatTabButton(tab));
+    row.appendChild(createChatTabButton(tab, buttonClassName));
   });
 
   inner.appendChild(row);
@@ -1018,11 +1021,15 @@ function renderChatTabSection(container, options = {}) {
   container.appendChild(section);
 }
 
-function createChatTabButton(tab = {}) {
+function createChatTabButton(tab = {}, buttonClassName = "") {
   const button = document.createElement("button");
   button.type = "button";
 
   const classNames = ["chatTabButton"];
+
+  if (buttonClassName) {
+    classNames.push(buttonClassName);
+  }
 
   if (tab.isActive) {
     classNames.push("chatTabButtonActive");
