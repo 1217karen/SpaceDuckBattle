@@ -86,6 +86,23 @@ button:hover{
   background:none;
 }
 
+.button-topbar-link{
+  padding:0;
+  border:none;
+  background:none;
+  color:#e7d38a;
+  box-shadow:none;
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+
+.button-topbar-link:hover{
+  color:#f6e7b0;
+  background:none;
+  text-decoration:underline;
+}
+
 .button-tab{
   min-width:88px;
   padding:8px 14px;
