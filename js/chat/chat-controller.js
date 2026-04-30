@@ -1,6 +1,7 @@
 //chat-controller.js
 
 import { places } from "../data/places-data.js";
+import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker, getNoImageUrl, setButtonPreview } from "../common/icon-picker.js";
 import { setupComposerIconPicker, setupComposerDraftPersistence } from "./chat-composer-ui.js";
@@ -14,7 +15,7 @@ import { buildComposerPostInput,buildDraftPreviewPost } from "./chat-composer-po
 import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
 import { createPostActions } from "./chat-post-actions.js";
 import { showToast } from "../common/toast.js";
-import { isFavoritePlace,toggleFavoritePlace,loadFavoritePlaceIds } from "./chat-place-favorites.js";
+import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
 import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
 
 const centerPanel = document.querySelector(".center-panel");
@@ -30,9 +31,6 @@ function getPlaceIdFromQuery() {
   return params.get("placeId");
 }
 
-function getPlaceById(placeId) {
-  return places.find(place => place.placeId === placeId) || null;
-}
 
 function getKindLabel(kind) {
   if (kind === "field") return "フィールド";
@@ -92,19 +90,6 @@ function moveToPlace(placeId) {
 
   window.location.href =
     `./chat.html?placeId=${encodeURIComponent(placeId)}`;
-}
-
-function getPlaceLabel(placeId) {
-  const place = getPlaceById(placeId);
-  return place?.name || placeId;
-}
-
-function getFavoritePlaces() {
-  const favoritePlaceIds = loadFavoritePlaceIds();
-
-  return favoritePlaceIds
-    .map(placeId => getPlaceById(placeId))
-    .filter(place => place !== null);
 }
 
 function openThread(post) {
