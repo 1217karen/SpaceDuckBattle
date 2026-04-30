@@ -18,6 +18,7 @@ import { loadFavoritePlaceIds } from "./chat-place-favorites.js";
 import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
 
 const centerPanel = document.querySelector(".center-panel");
+const chatMainArea = document.querySelector("#chatMainArea");
 const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenThreadPostIds = new Set();
@@ -339,7 +340,7 @@ function renderRightPanel() {
 }
 
 function renderThreadPage() {
-  if (!centerPanel) {
+  if (!centerPanel || !chatMainArea) {
     return;
   }
 
@@ -351,12 +352,12 @@ function renderThreadPage() {
   const place = getPlaceById(placeId);
   const threadRootPostId = getThreadRootPostIdFromQuery();
 
-  centerPanel.innerHTML = "";
+  chatMainArea.innerHTML = "";
 
   if (!threadRootPostId) {
     const errorText = document.createElement("p");
     errorText.textContent = "返信ツリーIDが指定されていません。";
-    centerPanel.appendChild(errorText);
+    chatMainArea.appendChild(errorText);
     return;
   }
 
@@ -366,7 +367,7 @@ function renderThreadPage() {
   if (threadPosts.length === 0) {
     const errorText = document.createElement("p");
     errorText.textContent = "返信ツリーが見つかりません。";
-    centerPanel.appendChild(errorText);
+    chatMainArea.appendChild(errorText);
     return;
   }
 
@@ -375,7 +376,7 @@ function renderThreadPage() {
     threadRootPostId
   });
 
-  const threadHeaderRefs = renderThreadHeaderSection(centerPanel, {
+  const threadHeaderRefs = renderThreadHeaderSection(chatMainArea, {
     memoText: initialThreadPrivateNote,
     isMemoOpen:
       typeof initialThreadPrivateNote === "string" &&
@@ -413,7 +414,7 @@ function renderThreadPage() {
           ? replySourcePost.speakerName
           : "");
 
-  const composerRefs = renderChatComposerSection(centerPanel, {
+  const composerRefs = renderChatComposerSection(chatMainArea, {
     composerDraft,
     replySourcePost,
     getPlaceLabel,
@@ -531,7 +532,7 @@ function renderThreadPage() {
     onHide: handleHide
   });
 
-  const postListRefs = renderPostListSection(centerPanel, {
+  const postListRefs = renderPostListSection(chatMainArea, {
     posts: threadPosts
       .filter(post => !hiddenThreadPostIds.has(post.postId))
       .map(post => ({
@@ -545,8 +546,6 @@ function renderThreadPage() {
     getReplyTargetLabels,
     getQuotePreviewPostById
   });
-
-  centerPanel.appendChild(composerRefs.section);
 
 setupDraftPreview({
   postListRefs,
