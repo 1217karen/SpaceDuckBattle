@@ -456,30 +456,9 @@ body {
   font-size: calc(var(--chat-font-base) * 0.93);
 }
 
-.chatPlaceTabButton {
-  border-radius: 999px;
-}
-
 .chatTabButtonActive {
   border-color: var(--theme-border-strong);
   font-weight: bold;
-}
-
-.chatTabButtonCurrent {
-  position: relative;
-  border-width: 2px;
-  border-color: var(--theme-border-strong);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-    0 0 10px rgba(120, 180, 255, 0.45);
-}
-
-.chatTabButtonCurrent::after {
-  content: "(現在地)";
-  display: inline-block;
-  margin-left: 8px;
-  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-xs));
-  color: var(--theme-text-subtle);
 }
 
 .chatTabButtonDisabled {
