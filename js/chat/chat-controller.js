@@ -2,8 +2,8 @@
 
 import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
-import { createIconPicker, getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
-import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
+import { createIconPicker, getNoImageUrl, setButtonPreview } from "../common/icon-picker.js";
+import { setupComposerIconPicker, setupComposerDraftPersistence } from "./chat-composer-ui.js";
 import { createPost,deletePost,getAllPosts,getAllPostsIncludingDeleted } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection,renderChatComposerSection,
@@ -482,33 +482,6 @@ function setupComposerSubmit({
   });
 }
 
-function getInitialComposerIcon(character) {
-  const commIcons = normalizeCommIcons(character?.commIcons);
-  const defaultIconUrl =
-    typeof character?.defaultIcon === "string"
-      ? character.defaultIcon.trim()
-      : "";
-
-  if (defaultIconUrl !== "") {
-    return {
-      iconId: null,
-      iconUrl: defaultIconUrl
-    };
-  }
-
-  if (commIcons.length > 0) {
-    return {
-      iconId: commIcons[0].id,
-      iconUrl: commIcons[0].url
-    };
-  }
-
-  return {
-    iconId: null,
-    iconUrl: getNoImageUrl()
-  };
-}
-
 function getInitialComposerSpeakerName(character, initialIcon) {
   const defaultName =
     typeof character?.defaultName === "string"
@@ -530,55 +503,6 @@ function getInitialComposerSpeakerName(character, initialIcon) {
   }
 
   return defaultName;
-}
-
-function setupComposerIconPicker(composerRefs, character) {
-  if (!composerRefs?.iconButton) {
-    return;
-  }
-
-  const commIcons = normalizeCommIcons(character?.commIcons);
-  const initialIcon = getInitialComposerIcon(character);
-
-  setButtonPreview(
-    composerRefs.iconButton,
-    initialIcon.iconId,
-    initialIcon.iconUrl
-  );
-
-  bindSpeakerNameSync({
-    nameInput: composerRefs.nameInput,
-    button: composerRefs.iconButton,
-    getIcons: () => commIcons,
-    getDefaultName: () =>
-      typeof character?.defaultName === "string"
-        ? character.defaultName.trim()
-        : "",
-    mode: "value"
-  });
-
-  composerRefs.iconButton.addEventListener("click", () => {
-    chatIconPicker.open(composerRefs.iconButton, commIcons);
-  });
-}
-
-function setupComposerDraftPersistence(composerRefs) {
-  if (!composerRefs) {
-    return;
-  }
-
-  function persistDraft() {
-    saveComposerDraft(
-      readComposerDraftFromRefs(composerRefs)
-    );
-  }
-
-  composerRefs.nameInput?.addEventListener("input", persistDraft);
-  composerRefs.textarea?.addEventListener("input", persistDraft);
-  composerRefs.replyTargetInput?.addEventListener("input", persistDraft);
-  composerRefs.iconButton?.addEventListener("iconchange", persistDraft);
-  composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", persistDraft);
-  composerRefs.additionalTargetSection?.addEventListener("toggle", persistDraft);
 }
 
 
@@ -759,7 +683,11 @@ if (isShopOpen) {
     }
   });
 
-  setupComposerIconPicker(composerRefs, character);
+setupComposerIconPicker({
+  composerRefs,
+  character,
+  chatIconPicker
+});
   setupComposerDraftPersistence(composerRefs);
   applyComposerDraftToRefs(composerRefs, composerDraft);
 
