@@ -733,7 +733,7 @@ export function renderViewTabsSection(container, options = {}) {
 
   renderChatTabSection(container, {
     sectionClassName: "chatViewTabsSection",
-    buttonClassName: "chatViewTabButton",
+    buttonClassName: "chatViewTabButton button-tab",
     tabs
   });
 }
@@ -1027,13 +1027,13 @@ function createChatTabButton(tab = {}, buttonClassName = "") {
 
   const classNames = ["chatTabButton"];
 
-  if (buttonClassName) {
-    classNames.push(buttonClassName);
-  }
+if (buttonClassName) {
+  classNames.push(...buttonClassName.split(" ").filter(Boolean));
+}
 
-  if (tab.isActive) {
-    classNames.push("chatTabButtonActive");
-  }
+if (tab.isActive) {
+  classNames.push("chatTabButtonActive", "is-active");
+}
 
   if (tab.isDisabled) {
     classNames.push("chatTabButtonDisabled");
