@@ -721,7 +721,7 @@ export function renderPlaceTabsSection(container, options = {}) {
 
   renderChatTabSection(container, {
     sectionClassName: "chatPlaceTabsSection",
-    buttonClassName: "chatPlaceTabButton",
+    buttonClassName: "chatPlaceTabButton button-place-tab",
     tabs
   });
 }
@@ -1040,9 +1040,9 @@ if (tab.isActive) {
     button.disabled = true;
   }
 
-  if (tab.isCurrent) {
-    classNames.push("chatTabButtonCurrent");
-  }
+if (tab.isCurrent) {
+  classNames.push("chatTabButtonCurrent", "is-current");
+}
 
   button.className = classNames.join(" ");
   button.textContent = tab.label ?? "";
