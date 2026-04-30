@@ -111,6 +111,43 @@ button:hover{
   font-weight:bold;
 }
 
+.button-place-tab{
+  min-width:88px;
+  padding:8px 14px;
+  border:1px solid var(--theme-border-main);
+  border-radius:999px;
+  background:var(--theme-button-bg);
+  color:var(--theme-button-text);
+  box-shadow:var(--theme-shadow-soft);
+  cursor:pointer;
+}
+
+.button-place-tab:hover{
+  background:var(--theme-button-bg-hover);
+}
+
+.button-place-tab.is-active{
+  border-color:var(--theme-border-strong);
+  font-weight:bold;
+}
+
+.button-place-tab.is-current{
+  position:relative;
+  border-width:2px;
+  border-color:var(--theme-border-strong);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 0 10px rgba(120, 180, 255, 0.45);
+}
+
+.button-place-tab.is-current::after{
+  content:"(現在地)";
+  display:inline-block;
+  margin-left:8px;
+  font-size:var(--font-size-xs);
+  color:var(--theme-text-subtle);
+}
+
 select,
 input,
 textarea{
