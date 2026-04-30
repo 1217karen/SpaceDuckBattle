@@ -453,26 +453,11 @@ body {
 }
 
 .chatTabButton {
-  min-width: 88px;
-  padding: 8px 14px;
-  border: 1px solid var(--theme-border-main);
-  background: var(--theme-button-bg);
-  color: var(--theme-button-text);
-  box-shadow: var(--theme-shadow-soft);
   font-size: calc(var(--chat-font-base) * 0.93);
-  cursor: pointer;
 }
 
 .chatPlaceTabButton {
   border-radius: 999px;
-}
-
-.chatViewTabButton {
-  border-radius: 8px;
-}
-
-.chatTabButton:hover {
-  background: var(--theme-button-bg-hover);
 }
 
 .chatTabButtonActive {
@@ -507,11 +492,6 @@ body {
   content: none;
 }
 
-.chatViewTabsSection .chatTabButtonCurrent {
-  background: var(--theme-button-bg-hover);
-  color: var(--theme-text-main);
-  border-color: var(--theme-border-strong);
-}
 
 /* =======================================================
    投稿入力欄
