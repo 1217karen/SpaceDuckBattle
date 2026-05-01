@@ -1,9 +1,7 @@
-//chat-composer-ui.js
-
+import { loadCharacter } from "../services/storage-service.js";
 import { getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
-import { saveComposerDraft, readComposerDraftFromRefs } from "./chat-composer-state.js";
-import { loadCharacter } from "../services/storage-service.js";
+import { saveComposerDraft, readComposerDraftFromRefs, applyComposerDraftToRefs } from "./chat-composer-state.js";
 
 function getInitialComposerIcon(character) {
   const commIcons = normalizeCommIcons(character?.commIcons);
@@ -83,4 +81,53 @@ export function setupComposerDraftPersistence(composerRefs) {
   composerRefs.iconButton?.addEventListener("iconchange", persistDraft);
   composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", persistDraft);
   composerRefs.additionalTargetSection?.addEventListener("toggle", persistDraft);
+}
+
+export function getFixedReplyTargetName(replySourcePost) {
+  const replyTargetCharacter =
+    replySourcePost?.authorEno
+      ? loadCharacter(replySourcePost.authorEno)
+      : null;
+
+  if (
+    typeof replyTargetCharacter?.defaultName === "string" &&
+    replyTargetCharacter.defaultName.trim() !== ""
+  ) {
+    return replyTargetCharacter.defaultName.trim();
+  }
+
+  return typeof replySourcePost?.speakerName === "string"
+    ? replySourcePost.speakerName
+    : "";
+}
+
+export function applyComposerDraftIconPreview(composerRefs, composerDraft) {
+  if (!composerRefs?.iconButton) {
+    return;
+  }
+
+  if (composerDraft?.iconId || composerDraft?.iconUrl) {
+    setButtonPreview(
+      composerRefs.iconButton,
+      composerDraft.iconId,
+      composerDraft.iconUrl || getNoImageUrl()
+    );
+  }
+}
+
+export function setupRenderedComposer({
+  composerRefs,
+  composerDraft,
+  character,
+  chatIconPicker
+}) {
+  setupComposerIconPicker({
+    composerRefs,
+    character,
+    chatIconPicker
+  });
+
+  setupComposerDraftPersistence(composerRefs);
+  applyComposerDraftToRefs(composerRefs, composerDraft);
+  applyComposerDraftIconPreview(composerRefs, composerDraft);
 }
