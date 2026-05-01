@@ -18,6 +18,7 @@ import { showToast } from "../common/toast.js";
 import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
 import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
 import { openThreadFromPost, getReplyTargetLabels } from "./chat-post-utils.js";
+import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -555,18 +556,7 @@ const threadRootPost =
 const composerDraft = loadComposerDraft();
 const replySourcePost = findReplySourcePost(allPosts, composerDraft);
 
-const replyTargetCharacter =
-  replySourcePost?.authorEno
-    ? loadCharacter(replySourcePost.authorEno)
-    : null;
-
-const fixedReplyTargetName =
-  typeof replyTargetCharacter?.defaultName === "string" &&
-  replyTargetCharacter.defaultName.trim() !== ""
-    ? replyTargetCharacter.defaultName.trim()
-    : (typeof replySourcePost?.speakerName === "string"
-        ? replySourcePost.speakerName
-        : "");
+const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
 
 const placeTabs = buildPlaceTabs(place, {
   isShopOpen,
@@ -615,21 +605,12 @@ if (isShopOpen) {
     }
   });
 
-setupComposerIconPicker({
+setupRenderedComposer({
   composerRefs,
+  composerDraft,
   character,
   chatIconPicker
 });
-  setupComposerDraftPersistence(composerRefs);
-  applyComposerDraftToRefs(composerRefs, composerDraft);
-
-  if (composerDraft.iconId || composerDraft.iconUrl) {
-    setButtonPreview(
-      composerRefs.iconButton,
-      composerDraft.iconId,
-      composerDraft.iconUrl || getNoImageUrl()
-    );
-  }
 }
 
 const handleReply = (post) => {
