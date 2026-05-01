@@ -4,11 +4,11 @@
 import { places } from "../data/places-data.js";
 import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
-import { createIconPicker, getNoImageUrl, setButtonPreview } from "../common/icon-picker.js";
+import { createIconPicker } from "../common/icon-picker.js";
 import { setupComposerIconPicker, setupComposerDraftPersistence } from "./chat-composer-ui.js";
 import { createPost,deletePost,getAllPosts,getAllPostsIncludingDeleted} from "../services/post-service.js";
 import { createPostCard,renderThreadHeaderSection,renderChatComposerSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
-import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs} from "./chat-composer-state.js";
+import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs} from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-view.js";
@@ -17,6 +17,7 @@ import { showToast } from "../common/toast.js";
 import { loadThreadPrivateNote,saveThreadPrivateNote} from "./chat-thread-private-note.js";
 import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
 import { openThreadFromPost, getReplyTargetLabels } from "./chat-post-utils.js";
+import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -254,18 +255,7 @@ function renderThreadPage() {
   const composerDraft = loadComposerDraft();
   const replySourcePost = findReplySourcePost(allPosts, composerDraft);
 
-  const replyTargetCharacter =
-    replySourcePost?.authorEno
-      ? loadCharacter(replySourcePost.authorEno)
-      : null;
-
-  const fixedReplyTargetName =
-    typeof replyTargetCharacter?.defaultName === "string" &&
-    replyTargetCharacter.defaultName.trim() !== ""
-      ? replyTargetCharacter.defaultName.trim()
-      : (typeof replySourcePost?.speakerName === "string"
-          ? replySourcePost.speakerName
-          : "");
+const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
 
   const composerRefs = renderChatComposerSection(chatMainArea, {
     composerDraft,
@@ -287,22 +277,12 @@ function renderThreadPage() {
     }
   });
 
-setupComposerIconPicker({
+setupRenderedComposer({
   composerRefs,
+  composerDraft,
   character,
   chatIconPicker
 });
-  setupComposerDraftPersistence(composerRefs);
-
-  applyComposerDraftToRefs(composerRefs, composerDraft);
-
-  if (composerDraft.iconId || composerDraft.iconUrl) {
-    setButtonPreview(
-      composerRefs.iconButton,
-      composerDraft.iconId,
-      composerDraft.iconUrl || getNoImageUrl()
-    );
-  }
 
   const handleReply = (post) => {
     const currentDraft = saveComposerDraft(
