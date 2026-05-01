@@ -427,3 +427,55 @@ setupDraftPreview({
 }
 
 renderThreadPage();
+
+import { applyComposerDraftToRefs } from "./chat-composer-state.js";
+import { findReplySourcePost } from "./chat-reply-state.js";
+
+export function getFixedReplyTargetName(replySourcePost) {
+  const replyTargetCharacter =
+    replySourcePost?.authorEno
+      ? loadCharacter(replySourcePost.authorEno)
+      : null;
+
+  if (
+    typeof replyTargetCharacter?.defaultName === "string" &&
+    replyTargetCharacter.defaultName.trim() !== ""
+  ) {
+    return replyTargetCharacter.defaultName.trim();
+  }
+
+  return typeof replySourcePost?.speakerName === "string"
+    ? replySourcePost.speakerName
+    : "";
+}
+
+export function applyComposerDraftIconPreview(composerRefs, composerDraft) {
+  if (!composerRefs?.iconButton) {
+    return;
+  }
+
+  if (composerDraft?.iconId || composerDraft?.iconUrl) {
+    setButtonPreview(
+      composerRefs.iconButton,
+      composerDraft.iconId,
+      composerDraft.iconUrl || getNoImageUrl()
+    );
+  }
+}
+
+export function setupRenderedComposer({
+  composerRefs,
+  composerDraft,
+  character,
+  chatIconPicker
+}) {
+  setupComposerIconPicker({
+    composerRefs,
+    character,
+    chatIconPicker
+  });
+
+  setupComposerDraftPersistence(composerRefs);
+  applyComposerDraftToRefs(composerRefs, composerDraft);
+  applyComposerDraftIconPreview(composerRefs, composerDraft);
+}
