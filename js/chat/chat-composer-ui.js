@@ -3,6 +3,7 @@
 import { getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
 import { saveComposerDraft, readComposerDraftFromRefs } from "./chat-composer-state.js";
+import { loadCharacter } from "../services/storage-service.js";
 
 function getInitialComposerIcon(character) {
   const commIcons = normalizeCommIcons(character?.commIcons);
