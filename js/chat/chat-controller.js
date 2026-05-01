@@ -17,6 +17,7 @@ import { createPostActions } from "./chat-post-actions.js";
 import { showToast } from "../common/toast.js";
 import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
 import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
+import { openThreadFromPost, getReplyTargetLabels } from "./chat-post-utils.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -90,60 +91,6 @@ function moveToPlace(placeId) {
 
   window.location.href =
     `./chat.html?placeId=${encodeURIComponent(placeId)}`;
-}
-
-function openThread(post) {
-  if (!post) {
-    return;
-  }
-
-  const threadRootPostId =
-    typeof post.threadRootPostId === "number" && post.threadRootPostId > 0
-      ? post.threadRootPostId
-      : post.postId;
-
-  const placeId = getPlaceIdFromQuery() || post.placeId || "F1-1";
-
-  window.location.href =
-    `./chat-thread.html?placeId=${encodeURIComponent(placeId)}&threadRootPostId=${encodeURIComponent(threadRootPostId)}`;}
-
-function getReplyTargetLabels(post) {
-  if (!post) {
-    return [];
-  }
-
-  const targetEnoSet = new Set();
-
-  const fixedReplyTargetEno =
-    typeof post.authorEno === "number" && post.authorEno > 0
-      ? post.authorEno
-      : null;
-
-  if (fixedReplyTargetEno) {
-    targetEnoSet.add(fixedReplyTargetEno);
-  }
-
-  if (Array.isArray(post.targetEnoList)) {
-    post.targetEnoList.forEach(item => {
-      const eno = Number(item);
-      if (Number.isInteger(eno) && eno > 0) {
-        targetEnoSet.add(eno);
-      }
-    });
-  }
-
-  return [...targetEnoSet].map(eno => {
-    const character = loadCharacter(eno);
-    const defaultName =
-      typeof character?.defaultName === "string" && character.defaultName.trim() !== ""
-        ? character.defaultName.trim()
-        : "";
-
-    return {
-      eno,
-      name: defaultName
-    };
-  });
 }
 
 function getAroundBasePlace(place) {
@@ -765,7 +712,9 @@ const handleQuote = (post) => {
 const postActions = createPostActions({
   onReply: handleReply,
   onDelete: handleDelete,
-  onOpenThread: openThread,
+  onOpenThread: (post) => {
+    openThreadFromPost(post, getPlaceIdFromQuery() || "F1-1");
+  },
   onQuote: handleQuote,
   onHide: handleHide
 });
