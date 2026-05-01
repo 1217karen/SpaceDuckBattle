@@ -3,13 +3,13 @@
 import { places } from "../data/places-data.js";
 import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
-import { createIconPicker, getNoImageUrl, setButtonPreview } from "../common/icon-picker.js";
+import { createIconPicker } from "../common/icon-picker.js";
 import { setupComposerIconPicker, setupComposerDraftPersistence } from "./chat-composer-ui.js";
 import { createPost,deletePost,getAllPosts,getAllPostsIncludingDeleted } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection,renderChatComposerSection,
         renderViewTabsSection,renderPostListSection,renderPostListContent } from "./chat-view.js";
-import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,applyComposerDraftToRefs } from "./chat-composer-state.js";
+import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs } from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost } from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost } from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
