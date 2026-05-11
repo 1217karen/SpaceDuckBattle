@@ -16,9 +16,10 @@ import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.
 import { createPostActions } from "./chat-post-actions.js";
 import { showToast } from "../common/toast.js";
 import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
-import { renderFavoritePlacesPanel } from "./chat-favorites-panel.js";
 import { openThreadFromPost, getReplyTargetLabels } from "./chat-post-utils.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
+import { renderFavoritePlacesSidePanel } from "./chat-side-panel.js";
+
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -467,18 +468,6 @@ function renderShopPlaceholderSection(container) {
   };
 }
 
-function renderRightPanel() {
-  if (!rightPanel) {
-    return;
-  }
-
-  rightPanel.innerHTML = "";
-
-  renderFavoritePlacesPanel(rightPanel, {
-    favoritePlaces: getFavoritePlaces(),
-    onMoveToPlace: moveToPlace
-  });
-}
 
 function renderChatPlaceInfo() {
   if (!centerPanel || !chatMainArea) return;
@@ -758,7 +747,10 @@ if (composerRefs) {
   });
 }
 
-renderRightPanel();
+renderFavoritePlacesSidePanel(rightPanel, {
+  favoritePlaces: getFavoritePlaces(),
+  onMoveToPlace: moveToPlace
+});
 }
 
 renderChatPlaceInfo();
