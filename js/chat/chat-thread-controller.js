@@ -12,13 +12,11 @@ import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs} from "./
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-view.js";
-import { createPostActions } from "./chat-post-actions.js";
 import { showToast } from "../common/toast.js";
 import { loadThreadPrivateNote,saveThreadPrivateNote} from "./chat-thread-private-note.js";
-import { openThreadFromPost, getReplyTargetLabels } from "./chat-post-utils.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 import { renderFavoritePlacesSidePanel } from "./chat-side-panel.js";
-import { createDeleteHandler, createHideHandler, createQuoteHandler, getQuotePreviewPostById } from "./chat-post-action-helpers.js";
+import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
