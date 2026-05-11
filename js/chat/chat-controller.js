@@ -5,7 +5,7 @@ import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-uti
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
 import { setupComposerIconPicker, setupComposerDraftPersistence } from "./chat-composer-ui.js";
-import { createPost,deletePost,getAllPosts,getAllPostsIncludingDeleted } from "../services/post-service.js";
+import { createPost,getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection,renderChatComposerSection,
         renderViewTabsSection,renderPostListSection,renderPostListContent } from "./chat-view.js";
@@ -19,6 +19,7 @@ import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
 import { openThreadFromPost, getReplyTargetLabels } from "./chat-post-utils.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 import { renderFavoritePlacesSidePanel } from "./chat-side-panel.js";
+import { createDeleteHandler, createHideHandler, createQuoteHandler, getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 
 
 const centerPanel = document.querySelector(".center-panel");
@@ -614,70 +615,19 @@ const handleReply = (post) => {
   renderChatPlaceInfo();
 };
 
-const handleDelete = (post) => {
-  if (!post || typeof post.postId !== "number") {
-    return;
-  }
+const handleDelete = createDeleteHandler({
+  currentEno: eno,
+  rerender: renderChatPlaceInfo
+});
 
-  const ok = window.confirm("この発言を削除しますか？");
-  if (!ok) {
-    return;
-  }
+const handleHide = createHideHandler({
+  hiddenPostIds,
+  rerender: renderChatPlaceInfo
+});
 
-  deletePost(post.postId, eno);
-  renderChatPlaceInfo();
-  showToast("発言を削除しました", { type: "success" });
-};
-
-const handleHide = (post) => {
-  if (!post || typeof post.postId !== "number") {
-    return;
-  }
-
-  hiddenPostIds.add(post.postId);
-  renderChatPlaceInfo();
-  showToast("発言を非表示にしました", { type: "info" });
-};
-
-const getQuotePreviewPostById = (postId) => {
-  const allPostsIncludingDeleted = getAllPostsIncludingDeleted();
-  return allPostsIncludingDeleted.find(post => post.postId === postId) || null;
-};
-
-const handleQuote = (post) => {
-  if (!post || !composerRefs?.textarea) {
-    return;
-  }
-
-  const quoteText = `>>${post.postId}`;
-
-  const textarea = composerRefs.textarea;
-  const start = textarea.selectionStart ?? textarea.value.length;
-  const end = textarea.selectionEnd ?? textarea.value.length;
-  const before = textarea.value.slice(0, start);
-  const after = textarea.value.slice(end);
-
-  const needsLeadingSpace =
-    before.length > 0 &&
-    !before.endsWith("\n") &&
-    !before.endsWith(" ");
-
-  const needsTrailingSpace =
-    after.length > 0 &&
-    !after.startsWith("\n") &&
-    !after.startsWith(" ");
-
-  const insertText =
-    `${needsLeadingSpace ? " " : ""}${quoteText}${needsTrailingSpace ? " " : ""}`;
-
-  textarea.value = `${before}${insertText}${after}`;
-
-  const nextCaretPosition = before.length + insertText.length;
-  textarea.focus();
-  textarea.setSelectionRange(nextCaretPosition, nextCaretPosition);
-
-  textarea.dispatchEvent(new Event("input", { bubbles: true }));
-};
+const handleQuote = createQuoteHandler({
+  composerRefs
+});
 
 const postActions = createPostActions({
   onReply: handleReply,
