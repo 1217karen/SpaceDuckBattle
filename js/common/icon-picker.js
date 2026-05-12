@@ -80,12 +80,7 @@ export function createIconPicker({
     img.src = item.url;
     img.alt = `icon ${item.id}`;
 
-    const label = document.createElement("div");
-    label.className = "iconPickerCardId";
-    label.textContent = `ID ${item.id}`;
-
     card.appendChild(img);
-    card.appendChild(label);
 
     card.addEventListener("click", () => {
       if (!currentButton) return;
