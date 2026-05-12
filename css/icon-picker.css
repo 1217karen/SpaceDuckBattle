@@ -53,12 +53,9 @@
 }
 
 .iconPickerCard {
-  width: 84px;
-  border: 1px solid #888;
-  padding: 6px;
-  background: #fff;
+  width: 60px;
+  height: 60px;
   cursor: pointer;
-  text-align: center;
   box-sizing: border-box;
 }
 
@@ -67,11 +64,6 @@
   height: 60px;
   object-fit: cover;
   display: block;
-  margin: 0 auto 6px;
-}
-
-.iconPickerCardId {
-  font-size: 12px;
 }
 
 .iconPickerEmpty {
