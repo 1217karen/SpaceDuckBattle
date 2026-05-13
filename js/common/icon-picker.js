@@ -64,11 +64,57 @@ export function createIconPicker({
   closeId = "iconPickerClose"
 } = {}) {
   const modal = document.getElementById(modalId);
-  const list = document.getElementById(listId);
-  const closeBtn = document.getElementById(closeId);
+
+  let list = document.getElementById(listId);
+  let closeBtn = document.getElementById(closeId);
 
   let currentButton = null;
   let currentIcons = [];
+
+  function setupModalStructure() {
+    if (!modal) return;
+
+    let windowEl = modal.querySelector(".iconPickerWindow");
+    if (!windowEl) {
+      windowEl = document.createElement("div");
+      windowEl.className = "iconPickerWindow";
+      modal.appendChild(windowEl);
+    }
+
+    let header = windowEl.querySelector(".iconPickerHeader");
+    if (!header) {
+      header = document.createElement("div");
+      header.className = "iconPickerHeader";
+      windowEl.insertBefore(header, windowEl.firstChild);
+    }
+
+    let title = header.querySelector(".iconPickerTitle");
+    if (!title) {
+      title = document.createElement("div");
+      title.className = "iconPickerTitle";
+      title.textContent = "アイコン選択";
+      header.insertBefore(title, header.firstChild);
+    }
+
+    closeBtn = document.getElementById(closeId);
+    if (!closeBtn) {
+      closeBtn = document.createElement("button");
+      closeBtn.type = "button";
+      closeBtn.id = closeId;
+      closeBtn.textContent = "閉じる";
+      header.appendChild(closeBtn);
+    }
+
+    list = document.getElementById(listId);
+    if (!list) {
+      list = document.createElement("div");
+      list.id = listId;
+      list.className = "iconPickerList";
+      windowEl.appendChild(list);
+    }
+  }
+
+  setupModalStructure();
 
   function createIconCard(item) {
     const card = document.createElement("div");
