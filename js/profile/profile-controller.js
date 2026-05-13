@@ -2,8 +2,8 @@
 
 import { loadCharacter, loadUnit } from "../services/storage-service.js";
 import { skillHandlers } from "../data/skills.js";
+import { getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
 
-const DEFAULT_NO_IMAGE_URL = "https://example.com/noimg.png";
 const MAX_CHARACTER_ICONS = 10;
 
 const profilePage = document.getElementById("profilePage");
@@ -33,30 +33,7 @@ function getSafeImageUrl(url) {
     return url.trim();
   }
 
-  return DEFAULT_NO_IMAGE_URL;
-}
-
-function normalizeCommIcons(commIcons) {
-  if (!Array.isArray(commIcons)) {
-    return [];
-  }
-
-  return commIcons
-    .map((item, index) => ({
-      id:
-        typeof item?.id === "number"
-          ? item.id
-          : index + 1,
-      url:
-        typeof item?.url === "string"
-          ? item.url
-          : "",
-      name:
-        typeof item?.name === "string"
-          ? item.name
-          : ""
-    }))
-    .filter(item => item.url.trim() !== "");
+  return getNoImageUrl();
 }
 
 function buildCharacterIconList(character) {
