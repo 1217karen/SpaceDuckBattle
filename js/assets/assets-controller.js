@@ -24,6 +24,87 @@ function normalizeCommIcons(commIcons) {
     }));
 }
 
+function normalizeProfileImages(profileImages) {
+  if (!Array.isArray(profileImages)) return [];
+
+  return profileImages
+    .map((item, index) => ({
+      id:
+        typeof item?.id === "number"
+          ? item.id
+          : index + 1,
+      url:
+        typeof item?.url === "string"
+          ? item.url
+          : "",
+      enabled:
+        typeof item?.enabled === "boolean"
+          ? item.enabled
+          : true
+    }));
+}
+
+function createProfileImageRow(item) {
+  const row = document.createElement("div");
+  row.className = "profileImageRow";
+  row.dataset.id = String(item.id);
+
+  const enabledInput = document.createElement("input");
+  enabledInput.type = "checkbox";
+  enabledInput.className = "profileImageEnabledInput";
+  enabledInput.checked = item.enabled !== false;
+  row.appendChild(enabledInput);
+
+  const label = document.createElement("span");
+  label.textContent = ` ID ${item.id} `;
+  row.appendChild(label);
+
+  const urlInput = document.createElement("input");
+  urlInput.type = "text";
+  urlInput.className = "profileImageUrlInput";
+  urlInput.value = item.url ?? "";
+  urlInput.placeholder = "プロフィール画像URL";
+  row.appendChild(urlInput);
+
+  return row;
+}
+
+function renderProfileImageArea(profileImages) {
+  const area =
+    document.getElementById("profileImageArea");
+
+  area.innerHTML = "";
+
+  profileImages.forEach(item => {
+    area.appendChild(createProfileImageRow(item));
+    area.appendChild(document.createElement("br"));
+  });
+}
+
+function readProfileImageArea() {
+  const rows =
+    document.querySelectorAll(".profileImageRow");
+
+  return [...rows]
+    .map(row => {
+      const id =
+        Number(row.dataset.id);
+
+      const url =
+        row.querySelector(".profileImageUrlInput")?.value ?? "";
+
+      const enabled =
+        row.querySelector(".profileImageEnabledInput")?.checked ?? true;
+
+      return {
+        id,
+        url,
+        enabled
+      };
+    })
+    .filter(item => item.url.trim() !== "");
+}
+
 function createCommIconRow(item) {
   const row = document.createElement("div");
   row.className = "commIconRow";
@@ -100,8 +181,10 @@ function loadManagement() {
   const character =
     loadCharacter(eno);
 
-  document.getElementById("characterStandImage").value =
-    character?.standImage ?? "";
+  const profileImages =
+    normalizeProfileImages(character?.profileImages);
+
+  renderProfileImageArea(profileImages);
 
   document.getElementById("characterDefaultIcon").value =
     character?.defaultIcon ?? "";
@@ -126,6 +209,25 @@ function loadManagement() {
 
   renderCommIconArea(commIcons);
 }
+
+document.getElementById("addProfileImage")
+  .addEventListener("click", () => {
+    const current =
+      readProfileImageArea();
+
+    const nextId =
+      current.length > 0
+        ? Math.max(...current.map(x => x.id)) + 1
+        : 1;
+
+    current.push({
+      id: nextId,
+      url: "",
+      enabled: true
+    });
+
+    renderProfileImageArea(current);
+  });
 
 document.getElementById("addCommIcon")
   .addEventListener("click", () => {
@@ -173,6 +275,9 @@ saveBtn.addEventListener("click", () => {
     W: document.getElementById("iconW").value
   };
 
+  const profileImages =
+    readProfileImageArea();
+
   const commIcons =
     readCommIconArea();
 
@@ -187,7 +292,7 @@ saveBtn.addEventListener("click", () => {
   const character = {
     ...oldCharacter,
     eno,
-    standImage: document.getElementById("characterStandImage").value,
+    profileImages,
     defaultIcon: document.getElementById("characterDefaultIcon").value,
     commIcons
   };
