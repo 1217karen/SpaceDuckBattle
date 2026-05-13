@@ -51,6 +51,11 @@
   margin-bottom: 12px;
 }
 
+.iconPickerTitle {
+  color: var(--theme-text-accent);
+  font-weight: bold;
+}
+
 .iconPickerList {
   display: flex;
   flex-wrap: wrap;
