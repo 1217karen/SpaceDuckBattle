@@ -147,31 +147,6 @@ function addCommRow(typeKey, rowData = {}) {
   list.appendChild(createCommRowElement(typeKey, rowData));
 }
 
-function renderIconPicker() {
-  const list =
-    document.getElementById("iconPickerList");
-
-  list.innerHTML = "";
-
-  if (currentCommIcons.length === 0) {
-    const empty = document.createElement("div");
-    empty.className = "iconPickerEmpty";
-    empty.textContent = "assets に登録されたキャラアイコンがありません";
-    list.appendChild(empty);
-    return;
-  }
-
-  currentCommIcons.forEach(item => {
-    list.appendChild(createIconCard(item));
-  });
-}
-
-function closeIconPicker() {
-  document.getElementById("iconPickerModal")
-    .classList.add("hidden");
-
-  currentPickerButton = null;
-}
 
 function getCommRows(typeKey) {
   const list = document.getElementById(`${typeKey}List`);
