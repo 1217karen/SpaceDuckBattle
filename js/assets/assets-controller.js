@@ -100,6 +100,9 @@ function loadManagement() {
   const character =
     loadCharacter(eno);
 
+  document.getElementById("characterStandImage").value =
+    character?.standImage ?? "";
+
   document.getElementById("characterDefaultIcon").value =
     character?.defaultIcon ?? "";
 
@@ -184,6 +187,7 @@ saveBtn.addEventListener("click", () => {
   const character = {
     ...oldCharacter,
     eno,
+    standImage: document.getElementById("characterStandImage").value,
     defaultIcon: document.getElementById("characterDefaultIcon").value,
     commIcons
   };
