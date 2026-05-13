@@ -2,7 +2,7 @@
 
 const CURRENT_LOGIN_ID_KEY = "currentLoginId";
 const ENO_COUNTER_KEY = "enoCounter";
-const DEFAULT_NO_IMAGE_URL = "https://example.com/noimg.png";
+const DEFAULT_NO_IMAGE_URL = "https://placehold.co/60x60?text=NO+IMG";
 
 function makeAccountKey(loginId) {
   return `account:${loginId}`;
