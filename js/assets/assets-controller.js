@@ -47,13 +47,6 @@ function normalizeProfileImages(profileImages) {
 
 let draggedCommIconRow = null;
 
-function clearCommIconDropGuide() {
-  document
-    .querySelectorAll(".commIconRow.is-drop-before, .commIconRow.is-drop-after")
-    .forEach(row => {
-      row.classList.remove("is-drop-before", "is-drop-after");
-    });
-}
 
 function bindCommIconDrag(row, dragHandle) {
   dragHandle.draggable = true;
@@ -71,31 +64,10 @@ function bindCommIconDrag(row, dragHandle) {
 
   dragHandle.addEventListener("dragend", () => {
     row.classList.remove("is-dragging");
-    clearCommIconDropGuide();
     draggedCommIconRow = null;
   });
 
   row.addEventListener("dragover", (e) => {
-    if (!draggedCommIconRow || draggedCommIconRow === row) return;
-
-    e.preventDefault();
-
-    const rect =
-      row.getBoundingClientRect();
-
-    const insertAfter =
-      e.clientY > rect.top + rect.height / 2;
-
-    clearCommIconDropGuide();
-
-    if (insertAfter) {
-      row.classList.add("is-drop-after");
-    } else {
-      row.classList.add("is-drop-before");
-    }
-  });
-
-  row.addEventListener("drop", (e) => {
     if (!draggedCommIconRow || draggedCommIconRow === row) return;
 
     e.preventDefault();
@@ -116,8 +88,6 @@ function bindCommIconDrag(row, dragHandle) {
     } else {
       area.insertBefore(draggedCommIconRow, row);
     }
-
-    clearCommIconDropGuide();
   });
 }
 
@@ -180,6 +150,20 @@ function readProfileImageArea() {
       };
     })
     .filter(item => item.url.trim() !== "");
+}
+
+function getNextRowId(selector) {
+  const rows =
+    document.querySelectorAll(selector);
+
+  const ids =
+    [...rows]
+      .map(row => Number(row.dataset.id))
+      .filter(id => Number.isFinite(id) && id > 0);
+
+  return ids.length > 0
+    ? Math.max(...ids) + 1
+    : 1;
 }
 
 function createCommIconRow(item) {
@@ -306,12 +290,17 @@ function loadManagement() {
 document.getElementById("addProfileImage")
   .addEventListener("click", () => {
     const current =
-      readProfileImageArea();
+      normalizeProfileImages(
+        [...document.querySelectorAll(".profileImageRow")]
+          .map(row => ({
+            id: Number(row.dataset.id),
+            url: row.querySelector(".profileImageUrlInput")?.value ?? "",
+            enabled: row.querySelector(".profileImageEnabledInput")?.checked ?? true
+          }))
+      );
 
     const nextId =
-      current.length > 0
-        ? Math.max(...current.map(x => x.id)) + 1
-        : 1;
+      getNextRowId(".profileImageRow");
 
     current.push({
       id: nextId,
@@ -325,12 +314,17 @@ document.getElementById("addProfileImage")
 document.getElementById("addCommIcon")
   .addEventListener("click", () => {
     const current =
-      readCommIconArea();
+      normalizeCommIcons(
+        [...document.querySelectorAll(".commIconRow")]
+          .map(row => ({
+            id: Number(row.dataset.id),
+            url: row.querySelector(".commIconUrlInput")?.value ?? "",
+            name: row.querySelector(".commIconNameInput")?.value ?? ""
+          }))
+      );
 
     const nextId =
-      current.length > 0
-        ? Math.max(...current.map(x => x.id)) + 1
-        : 1;
+      getNextRowId(".commIconRow");
 
     current.push({
       id: nextId,
