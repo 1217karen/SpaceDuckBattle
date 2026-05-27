@@ -242,6 +242,52 @@ function readCommIconArea() {
     .filter(item => item.url.trim() !== "");
 }
 
+function readBulkCommIconUrls() {
+  const textarea =
+    document.getElementById("bulkCommIconUrls");
+
+  if (!textarea) return [];
+
+  return textarea.value
+    .split(/\r?\n/)
+    .map(url => url.trim())
+    .filter(url => url !== "");
+}
+
+function appendBulkCommIcons(commIcons, urls) {
+  if (!Array.isArray(urls) || urls.length === 0) {
+    return commIcons;
+  }
+
+  const ids =
+    commIcons
+      .map(item => Number(item.id))
+      .filter(id => Number.isFinite(id) && id > 0);
+
+  let nextId =
+    ids.length > 0
+      ? Math.max(...ids) + 1
+      : 1;
+
+  const addedIcons =
+    urls.map(url => {
+      const icon = {
+        id: nextId,
+        url,
+        name: ""
+      };
+
+      nextId += 1;
+
+      return icon;
+    });
+
+  return [
+    ...commIcons,
+    ...addedIcons
+  ];
+}
+
 function loadManagement() {
   const account = getCurrentAccount();
 
@@ -366,7 +412,10 @@ saveBtn.addEventListener("click", () => {
     readProfileImageArea();
 
   const commIcons =
-    readCommIconArea();
+    appendBulkCommIcons(
+      readCommIconArea(),
+      readBulkCommIconUrls()
+    );
 
   const unit = {
     ...oldUnit,
