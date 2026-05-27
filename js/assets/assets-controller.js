@@ -388,6 +388,7 @@ saveBtn.addEventListener("click", () => {
   saveCharacter(eno, character);
 
   alert("アイコン設定を保存しました");
+  window.location.reload();
 });
 
 loadManagement();
