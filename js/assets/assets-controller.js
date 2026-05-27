@@ -47,6 +47,14 @@ function normalizeProfileImages(profileImages) {
 
 let draggedCommIconRow = null;
 
+function clearCommIconDropGuide() {
+  document
+    .querySelectorAll(".commIconRow.is-drop-before, .commIconRow.is-drop-after")
+    .forEach(row => {
+      row.classList.remove("is-drop-before", "is-drop-after");
+    });
+}
+
 function bindCommIconDrag(row, dragHandle) {
   dragHandle.draggable = true;
   dragHandle.title = "ドラッグで並べ替え";
@@ -63,10 +71,31 @@ function bindCommIconDrag(row, dragHandle) {
 
   dragHandle.addEventListener("dragend", () => {
     row.classList.remove("is-dragging");
+    clearCommIconDropGuide();
     draggedCommIconRow = null;
   });
 
   row.addEventListener("dragover", (e) => {
+    if (!draggedCommIconRow || draggedCommIconRow === row) return;
+
+    e.preventDefault();
+
+    const rect =
+      row.getBoundingClientRect();
+
+    const insertAfter =
+      e.clientY > rect.top + rect.height / 2;
+
+    clearCommIconDropGuide();
+
+    if (insertAfter) {
+      row.classList.add("is-drop-after");
+    } else {
+      row.classList.add("is-drop-before");
+    }
+  });
+
+  row.addEventListener("drop", (e) => {
     if (!draggedCommIconRow || draggedCommIconRow === row) return;
 
     e.preventDefault();
@@ -87,6 +116,8 @@ function bindCommIconDrag(row, dragHandle) {
     } else {
       area.insertBefore(draggedCommIconRow, row);
     }
+
+    clearCommIconDropGuide();
   });
 }
 
