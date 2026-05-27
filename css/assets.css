@@ -12,6 +12,15 @@
   border: 1px solid var(--theme-border-main);
   background: rgba(0, 0, 0, 0.28);
   flex-shrink: 0;
+  cursor: grab;
+}
+
+.commIconPreview:active {
+  cursor: grabbing;
+}
+
+.commIconRow.is-dragging {
+  opacity: 0.45;
 }
 
 .commIconUrlInput {
