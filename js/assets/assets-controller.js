@@ -147,22 +147,24 @@ function readCommIconArea() {
   const rows =
     document.querySelectorAll(".commIconRow");
 
-  return [...rows].map(row => {
-    const id =
-      Number(row.dataset.id);
+  return [...rows]
+    .map(row => {
+      const id =
+        Number(row.dataset.id);
 
-    const url =
-      row.querySelector(".commIconUrlInput")?.value ?? "";
+      const url =
+        row.querySelector(".commIconUrlInput")?.value ?? "";
 
-    const name =
-      row.querySelector(".commIconNameInput")?.value ?? "";
+      const name =
+        row.querySelector(".commIconNameInput")?.value ?? "";
 
-    return {
-      id,
-      url,
-      name
-    };
-  });
+      return {
+        id,
+        url,
+        name
+      };
+    })
+    .filter(item => item.url.trim() !== "");
 }
 
 function loadManagement() {
