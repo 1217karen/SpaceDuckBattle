@@ -44,17 +44,25 @@
 
 <label>デフォルトアイコンURL <input id="characterDefaultIcon"></label>
 
-<br><br>
+<br>
 
 <div id="commIconArea"></div>
 
 <br>
 
-<button id="addCommIcon">アイコン枠を追加</button>
-
-<br><br>
+<button type="button" id="addCommIcon">アイコン枠を追加</button>
 
 <div class="section-divider"></div>
+
+<h3>アイコン一括登録</h3>
+
+<label>
+  改行区切りでアイコンURLを入力
+  <textarea id="bulkCommIconUrls" rows="6"></textarea>
+</label>
+
+<div class="section-divider"></div>
+    
 <button id="saveManagement">設定を保存する</button>
 
 <script type="module" src="./js/assets/assets-controller.js"></script>
