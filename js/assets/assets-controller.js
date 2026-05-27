@@ -44,6 +44,52 @@ function normalizeProfileImages(profileImages) {
     }));
 }
 
+
+let draggedCommIconRow = null;
+
+function bindCommIconDrag(row, dragHandle) {
+  dragHandle.draggable = true;
+  dragHandle.title = "ドラッグで並べ替え";
+
+  dragHandle.addEventListener("dragstart", (e) => {
+    draggedCommIconRow = row;
+    row.classList.add("is-dragging");
+
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", row.dataset.id || "");
+    }
+  });
+
+  dragHandle.addEventListener("dragend", () => {
+    row.classList.remove("is-dragging");
+    draggedCommIconRow = null;
+  });
+
+  row.addEventListener("dragover", (e) => {
+    if (!draggedCommIconRow || draggedCommIconRow === row) return;
+
+    e.preventDefault();
+
+    const area =
+      document.getElementById("commIconArea");
+
+    if (!area) return;
+
+    const rect =
+      row.getBoundingClientRect();
+
+    const insertAfter =
+      e.clientY > rect.top + rect.height / 2;
+
+    if (insertAfter) {
+      area.insertBefore(draggedCommIconRow, row.nextSibling);
+    } else {
+      area.insertBefore(draggedCommIconRow, row);
+    }
+  });
+}
+
 function createProfileImageRow(item) {
   const row = document.createElement("div");
   row.className = "profileImageRow";
@@ -118,6 +164,8 @@ function createCommIconRow(item) {
       : getNoImageUrl();
   preview.alt = `アイコン${item.id}`;
   row.appendChild(preview);
+
+  bindCommIconDrag(row, preview);
 
   const urlInput = document.createElement("input");
   urlInput.type = "text";
