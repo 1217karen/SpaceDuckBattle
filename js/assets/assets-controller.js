@@ -309,8 +309,19 @@ function loadManagement() {
 
   renderProfileImageArea(profileImages);
 
-  document.getElementById("characterDefaultIcon").value =
-    character?.defaultIcon ?? "";
+const characterDefaultIconInput =
+  document.getElementById("characterDefaultIcon");
+
+const characterDefaultIconPreview =
+  document.getElementById("characterDefaultIconPreview");
+
+characterDefaultIconInput.value =
+  character?.defaultIcon ?? "";
+
+characterDefaultIconPreview.src =
+  characterDefaultIconInput.value.trim() !== ""
+    ? characterDefaultIconInput.value.trim()
+    : getNoImageUrl();
 
   document.getElementById("iconDefault").value =
     unit?.icon?.default ?? "";
@@ -332,6 +343,20 @@ function loadManagement() {
 
   renderCommIconArea(commIcons);
 }
+
+document.getElementById("characterDefaultIcon")
+  .addEventListener("input", () => {
+    const input =
+      document.getElementById("characterDefaultIcon");
+
+    const preview =
+      document.getElementById("characterDefaultIconPreview");
+
+    preview.src =
+      input.value.trim() !== ""
+        ? input.value.trim()
+        : getNoImageUrl();
+  });
 
 document.getElementById("addProfileImage")
   .addEventListener("click", () => {
