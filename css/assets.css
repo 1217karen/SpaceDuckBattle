@@ -1,0 +1,25 @@
+.commIconRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.commIconPreview {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+  flex-shrink: 0;
+}
+
+.commIconUrlInput {
+  flex: 1;
+  min-width: 180px;
+}
+
+.commIconNameInput {
+  width: 220px;
+}
