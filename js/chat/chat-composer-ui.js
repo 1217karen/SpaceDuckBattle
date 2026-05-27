@@ -1,3 +1,5 @@
+//chat-composer-ui.js
+
 import { loadCharacter } from "../services/storage-service.js";
 import { getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/icon-picker.js";
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
