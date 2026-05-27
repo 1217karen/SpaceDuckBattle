@@ -10,7 +10,6 @@
   height: 60px;
   object-fit: cover;
   border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-sm);
   background: rgba(0, 0, 0, 0.28);
   flex-shrink: 0;
 }
