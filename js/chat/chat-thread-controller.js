@@ -19,7 +19,6 @@ import { renderFavoritePlacesSidePanel } from "./chat-side-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 
 import { applyComposerDraftToRefs } from "./chat-composer-state.js";
-import { findReplySourcePost } from "./chat-reply-state.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
