@@ -31,3 +31,14 @@
 .commIconNameInput {
   width: 220px;
 }
+
+.defaultIconRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.defaultIconRow input {
+  flex: 1;
+  min-width: 180px;
+}
