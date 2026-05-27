@@ -1,7 +1,7 @@
 //assets-controller.js
 
 import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "../services/storage-service.js";
-
+import { getNoImageUrl } from "../common/icon-picker.js";
 requireLogin()
 
 function normalizeCommIcons(commIcons) {
@@ -110,15 +110,28 @@ function createCommIconRow(item) {
   row.className = "commIconRow";
   row.dataset.id = String(item.id);
 
-  const label = document.createElement("span");
-  label.textContent = `ID ${item.id} `;
-  row.appendChild(label);
+  const preview = document.createElement("img");
+  preview.className = "commIconPreview";
+  preview.src =
+    typeof item.url === "string" && item.url.trim() !== ""
+      ? item.url.trim()
+      : getNoImageUrl();
+  preview.alt = `アイコン${item.id}`;
+  row.appendChild(preview);
 
   const urlInput = document.createElement("input");
   urlInput.type = "text";
   urlInput.className = "commIconUrlInput";
   urlInput.value = item.url ?? "";
   urlInput.placeholder = "アイコンURL";
+
+  urlInput.addEventListener("input", () => {
+    preview.src =
+      urlInput.value.trim() !== ""
+        ? urlInput.value.trim()
+        : getNoImageUrl();
+  });
+
   row.appendChild(urlInput);
 
   const nameInput = document.createElement("input");
@@ -139,7 +152,6 @@ function renderCommIconArea(commIcons) {
 
   commIcons.forEach(item => {
     area.appendChild(createCommIconRow(item));
-    area.appendChild(document.createElement("br"));
   });
 }
 
