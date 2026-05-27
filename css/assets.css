@@ -20,7 +20,21 @@
 }
 
 .commIconRow.is-dragging {
-  opacity: 0.45;
+  opacity: 0.55;
+}
+
+.commIconRow.is-dragging .commIconPreview {
+  visibility: hidden;
+}
+
+.commIconRow.is-drop-before {
+  border-top: 2px dashed var(--theme-text-accent);
+  padding-top: 8px;
+}
+
+.commIconRow.is-drop-after {
+  border-bottom: 2px dashed var(--theme-text-accent);
+  padding-bottom: 8px;
 }
 
 .commIconUrlInput {
