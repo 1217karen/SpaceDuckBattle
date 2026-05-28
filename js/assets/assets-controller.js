@@ -145,7 +145,7 @@ function createProfileImageRow(item) {
   enabledInput.checked = item.enabled !== false;
 
   const publicText = document.createElement("span");
-  publicText.textContent = "公開可否";
+  publicText.textContent = "公開";
 
   publicLabel.appendChild(publicText);
   publicLabel.appendChild(enabledInput);
