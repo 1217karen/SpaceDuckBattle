@@ -311,6 +311,50 @@ a{
   border-top: 1px dashed var(--theme-border-main);
 }
 
+.imageInputRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.imageInputPreview {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 1px solid var(--theme-border-main);
+  background: rgba(0, 0, 0, 0.28);
+  flex-shrink: 0;
+}
+
+.imageInputPreview-large {
+  width: 120px;
+  height: 120px;
+}
+
+.imageInputBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.imageInputLabel {
+  color: var(--theme-text-main);
+}
+
+.imageInputMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.imageInputControl {
+  width: 100%;
+}
+
+
 .commonToast-warning {
   border-color: rgba(243, 211, 106, 0.58);
   background: rgba(60, 48, 24, 0.95);
