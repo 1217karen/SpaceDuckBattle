@@ -98,3 +98,27 @@
 .skillPerformanceArea {
   margin-top: 8px;
 }
+
+.skillBlockHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.skillDragHandle {
+  width: 28px;
+  height: 28px;
+  color: var(--theme-text-muted);
+  cursor: grab;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.skillDragHandle:active {
+  cursor: grabbing;
+}
+
+.skillBlock.is-dragging {
+  opacity: 0.55;
+}
