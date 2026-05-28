@@ -36,6 +36,7 @@ function getUnlockedSkillList() {
 
 let currentCommIcons = [];
 let nextDialogueRowId = 1;
+let draggedSkillBlock = null;
 
 const iconPicker = createIconPicker();
 
@@ -276,6 +277,49 @@ function createSkillDialogueList(dialogues = []) {
   return list;
 }
 
+function bindSkillBlockDrag(block, dragHandle) {
+  dragHandle.draggable = true;
+  dragHandle.title = "ドラッグで並べ替え";
+
+  dragHandle.addEventListener("dragstart", (e) => {
+    draggedSkillBlock = block;
+    block.classList.add("is-dragging");
+
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", block.dataset.index || "");
+    }
+  });
+
+  dragHandle.addEventListener("dragend", () => {
+    block.classList.remove("is-dragging");
+    draggedSkillBlock = null;
+  });
+
+  block.addEventListener("dragover", (e) => {
+    if (!draggedSkillBlock || draggedSkillBlock === block) return;
+
+    e.preventDefault();
+
+    const area =
+      document.getElementById("skillArea");
+
+    if (!area) return;
+
+    const rect =
+      block.getBoundingClientRect();
+
+    const insertAfter =
+      e.clientY > rect.top + rect.height / 2;
+
+    if (insertAfter) {
+      area.insertBefore(draggedSkillBlock, block.nextSibling);
+    } else {
+      area.insertBefore(draggedSkillBlock, block);
+    }
+  });
+}
+
 function createSkillBlock(skillData, index) {
 const wrapper = document.createElement("div");
 wrapper.className = "skillBlock subsection-card";
@@ -283,6 +327,14 @@ wrapper.dataset.index = String(index);
 
   const select = document.createElement("select");
   select.className = "skillSelect";
+
+  const skillHeader = document.createElement("div");
+  skillHeader.className = "skillBlockHeader";
+
+  const dragHandle = document.createElement("button");
+  dragHandle.type = "button";
+  dragHandle.className = "skillDragHandle button-small";
+  dragHandle.textContent = "☰";
 
   const emptyOption = document.createElement("option");
   emptyOption.value = "";
@@ -426,7 +478,12 @@ wrapper.dataset.index = String(index);
 
   select.addEventListener("change", updateDetailVisibility);
 
-  wrapper.appendChild(select);
+  bindSkillBlockDrag(wrapper, dragHandle);
+
+  skillHeader.appendChild(dragHandle);
+  skillHeader.appendChild(select);
+
+  wrapper.appendChild(skillHeader);
   wrapper.appendChild(detailArea);
 
   updateDetailVisibility();
@@ -442,10 +499,6 @@ function renderSkillArea(skills, visibleCount = skills.length) {
   visibleSkills.forEach((skillData, index) => {
     const block = createSkillBlock(skillData, index);
     skillArea.appendChild(block);
-
-    if (index < visibleSkills.length - 1) {
-      skillArea.appendChild(document.createElement("br"));
-    }
   });
 }
 
