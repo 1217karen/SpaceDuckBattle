@@ -259,15 +259,8 @@ function appendBulkCommIcons(commIcons, urls) {
     return commIcons;
   }
 
-  const ids =
-    commIcons
-      .map(item => Number(item.id))
-      .filter(id => Number.isFinite(id) && id > 0);
-
   let nextId =
-    ids.length > 0
-      ? Math.max(...ids) + 1
-      : 1;
+    getNextRowId(".commIconRow");
 
   const addedIcons =
     urls.map(url => {
@@ -309,22 +302,33 @@ function loadManagement() {
 
   renderProfileImageArea(profileImages);
 
-const characterDefaultIconInput =
-  document.getElementById("characterDefaultIcon");
+  const characterDefaultIconInput =
+    document.getElementById("characterDefaultIcon");
 
-const characterDefaultIconPreview =
-  document.getElementById("characterDefaultIconPreview");
+  const characterDefaultIconPreview =
+    document.getElementById("characterDefaultIconPreview");
 
-characterDefaultIconInput.value =
-  character?.defaultIcon ?? "";
+  characterDefaultIconInput.value =
+    character?.defaultIcon ?? "";
 
-characterDefaultIconPreview.src =
-  characterDefaultIconInput.value.trim() !== ""
-    ? characterDefaultIconInput.value.trim()
-    : getNoImageUrl();
+  characterDefaultIconPreview.src =
+    characterDefaultIconInput.value.trim() !== ""
+      ? characterDefaultIconInput.value.trim()
+      : getNoImageUrl();
 
-  document.getElementById("iconDefault").value =
+  const iconDefaultInput =
+    document.getElementById("iconDefault");
+
+  const iconDefaultPreview =
+    document.getElementById("iconDefaultPreview");
+
+  iconDefaultInput.value =
     unit?.icon?.default ?? "";
+
+  iconDefaultPreview.src =
+    iconDefaultInput.value.trim() !== ""
+      ? iconDefaultInput.value.trim()
+      : getNoImageUrl();
 
   document.getElementById("iconN").value =
     unit?.icon?.N ?? "";
@@ -343,6 +347,20 @@ characterDefaultIconPreview.src =
 
   renderCommIconArea(commIcons);
 }
+
+document.getElementById("iconDefault")
+  .addEventListener("input", () => {
+    const input =
+      document.getElementById("iconDefault");
+
+    const preview =
+      document.getElementById("iconDefaultPreview");
+
+    preview.src =
+      input.value.trim() !== ""
+        ? input.value.trim()
+        : getNoImageUrl();
+  });
 
 document.getElementById("characterDefaultIcon")
   .addEventListener("input", () => {
