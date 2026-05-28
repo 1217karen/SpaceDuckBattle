@@ -367,11 +367,36 @@ wrapper.dataset.index = String(index);
     skillData?.dialogue
   );
 
+  const performanceToggle = document.createElement("button");
+  performanceToggle.type = "button";
+  performanceToggle.className = "button-toggle skillPerformanceToggle";
+  performanceToggle.textContent = "▶ 演出設定";
+
+  const performanceArea = document.createElement("div");
+  performanceArea.className = "skillPerformanceArea";
+  performanceArea.style.display = "none";
+
+  performanceToggle.addEventListener("click", () => {
+    const isOpen =
+      performanceArea.style.display !== "none";
+
+    performanceArea.style.display =
+      isOpen ? "none" : "";
+
+    performanceToggle.textContent =
+      isOpen
+        ? "▶ 演出設定"
+        : "▼ 演出設定";
+  });
+
+  performanceArea.appendChild(cutinRow);
+  performanceArea.appendChild(dialogueList);
+
   detailArea.appendChild(skillInfo);
   skillInfo.appendChild(skillRange);
   skillInfo.appendChild(skillDescription);
-  detailArea.appendChild(cutinRow);
-  detailArea.appendChild(dialogueList);
+  detailArea.appendChild(performanceToggle);
+  detailArea.appendChild(performanceArea);
 
   const updateSkillInfo = () => {
     const selectedSkill = skillHandlers[select.value];
