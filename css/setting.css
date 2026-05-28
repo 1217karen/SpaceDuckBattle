@@ -90,3 +90,11 @@
   object-fit: cover;
   display: block;
 }
+
+.skillPerformanceToggle {
+  margin: 8px 0;
+}
+
+.skillPerformanceArea {
+  margin-top: 8px;
+}
