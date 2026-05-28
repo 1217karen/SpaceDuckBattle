@@ -35,3 +35,7 @@
   width: min(100%, 720px);
   margin-left: 8px;
 }
+
+.commIconNameInput {
+  width: min(100%, 300px);
+}
