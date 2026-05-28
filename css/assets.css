@@ -1,17 +1,4 @@
-.commIconRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
 .commIconPreview {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border: 1px solid var(--theme-border-main);
-  background: rgba(0, 0, 0, 0.28);
-  flex-shrink: 0;
   cursor: grab;
 }
 
@@ -21,26 +8,6 @@
 
 .commIconRow.is-dragging {
   opacity: 0.55;
-}
-
-.commIconUrlInput {
-  flex: 1;
-  min-width: 180px;
-}
-
-.commIconNameInput {
-  width: 220px;
-}
-
-.defaultIconRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.defaultIconRow input {
-  flex: 1;
-  min-width: 180px;
 }
 
 .directionIconPreviewRow {
@@ -57,41 +24,6 @@
   margin-bottom: 4px;
   font-size: var(--font-size-small);
   color: var(--theme-text-subtle);
-}
-
-.profileImageRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.profileImagePreview {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border: 1px solid var(--theme-border-main);
-  background: rgba(0, 0, 0, 0.28);
-  flex-shrink: 0;
-}
-
-.profileImageInputArea {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.profileImagePublicLabel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--theme-text-main);
-}
-
-.profileImageUrlInput {
-  width: 100%;
 }
 
 .directionIconInputLabel {
