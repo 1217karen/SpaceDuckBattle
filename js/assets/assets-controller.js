@@ -2,7 +2,8 @@
 
 import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "../services/storage-service.js";
 import { getNoImageUrl } from "../common/icon-picker.js";
-requireLogin()
+
+requireLogin();
 
 function normalizeCommIcons(commIcons) {
   if (!Array.isArray(commIcons)) return [];
@@ -44,9 +45,7 @@ function normalizeProfileImages(profileImages) {
     }));
 }
 
-
 let draggedCommIconRow = null;
-
 
 function bindCommIconDrag(row, dragHandle) {
   dragHandle.draggable = true;
@@ -89,6 +88,35 @@ function bindCommIconDrag(row, dragHandle) {
       area.insertBefore(draggedCommIconRow, row);
     }
   });
+}
+
+function setIconInputAndPreview(inputId, previewId, value) {
+  const input =
+    document.getElementById(inputId);
+
+  const preview =
+    document.getElementById(previewId);
+
+  if (!input || !preview) return;
+
+  input.value = value ?? "";
+
+  updateIconPreview(inputId, previewId);
+}
+
+function updateIconPreview(inputId, previewId) {
+  const input =
+    document.getElementById(inputId);
+
+  const preview =
+    document.getElementById(previewId);
+
+  if (!input || !preview) return;
+
+  preview.src =
+    input.value.trim() !== ""
+      ? input.value.trim()
+      : getNoImageUrl();
 }
 
 function createProfileImageRow(item) {
@@ -302,45 +330,41 @@ function loadManagement() {
 
   renderProfileImageArea(profileImages);
 
-  const characterDefaultIconInput =
-    document.getElementById("characterDefaultIcon");
+  setIconInputAndPreview(
+    "characterDefaultIcon",
+    "characterDefaultIconPreview",
+    character?.defaultIcon ?? ""
+  );
 
-  const characterDefaultIconPreview =
-    document.getElementById("characterDefaultIconPreview");
+  setIconInputAndPreview(
+    "iconDefault",
+    "iconDefaultPreview",
+    unit?.icon?.default ?? ""
+  );
 
-  characterDefaultIconInput.value =
-    character?.defaultIcon ?? "";
+  setIconInputAndPreview(
+    "iconN",
+    "iconNPreview",
+    unit?.icon?.N ?? ""
+  );
 
-  characterDefaultIconPreview.src =
-    characterDefaultIconInput.value.trim() !== ""
-      ? characterDefaultIconInput.value.trim()
-      : getNoImageUrl();
+  setIconInputAndPreview(
+    "iconE",
+    "iconEPreview",
+    unit?.icon?.E ?? ""
+  );
 
-  const iconDefaultInput =
-    document.getElementById("iconDefault");
+  setIconInputAndPreview(
+    "iconS",
+    "iconSPreview",
+    unit?.icon?.S ?? ""
+  );
 
-  const iconDefaultPreview =
-    document.getElementById("iconDefaultPreview");
-
-  iconDefaultInput.value =
-    unit?.icon?.default ?? "";
-
-  iconDefaultPreview.src =
-    iconDefaultInput.value.trim() !== ""
-      ? iconDefaultInput.value.trim()
-      : getNoImageUrl();
-
-  document.getElementById("iconN").value =
-    unit?.icon?.N ?? "";
-
-  document.getElementById("iconE").value =
-    unit?.icon?.E ?? "";
-
-  document.getElementById("iconS").value =
-    unit?.icon?.S ?? "";
-
-  document.getElementById("iconW").value =
-    unit?.icon?.W ?? "";
+  setIconInputAndPreview(
+    "iconW",
+    "iconWPreview",
+    unit?.icon?.W ?? ""
+  );
 
   const commIcons =
     normalizeCommIcons(character?.commIcons);
@@ -350,30 +374,28 @@ function loadManagement() {
 
 document.getElementById("iconDefault")
   .addEventListener("input", () => {
-    const input =
-      document.getElementById("iconDefault");
-
-    const preview =
-      document.getElementById("iconDefaultPreview");
-
-    preview.src =
-      input.value.trim() !== ""
-        ? input.value.trim()
-        : getNoImageUrl();
+    updateIconPreview("iconDefault", "iconDefaultPreview");
   });
+
+["N", "E", "S", "W"].forEach(direction => {
+  const inputId =
+    `icon${direction}`;
+
+  const previewId =
+    `icon${direction}Preview`;
+
+  document.getElementById(inputId)
+    .addEventListener("input", () => {
+      updateIconPreview(inputId, previewId);
+    });
+});
 
 document.getElementById("characterDefaultIcon")
   .addEventListener("input", () => {
-    const input =
-      document.getElementById("characterDefaultIcon");
-
-    const preview =
-      document.getElementById("characterDefaultIconPreview");
-
-    preview.src =
-      input.value.trim() !== ""
-        ? input.value.trim()
-        : getNoImageUrl();
+    updateIconPreview(
+      "characterDefaultIcon",
+      "characterDefaultIconPreview"
+    );
   });
 
 document.getElementById("addProfileImage")
