@@ -454,16 +454,16 @@ wrapper.dataset.index = String(index);
     const selectedSkill = skillHandlers[select.value];
 
     if (!selectedSkill) {
-      skillRange.textContent = "";
-      skillDescription.textContent = "";
+      skillCooldown.textContent = "";
+      skillSummary.textContent = "";
       return;
     }
 
-skillRange.textContent =
-  `CT: ${selectedSkill.cooldown ?? 0}`;
+    skillCooldown.textContent =
+      `CT: ${selectedSkill.cooldown ?? 0}`;
 
-skillDescription.textContent =
-  selectedSkill.summary || selectedSkill.description || "説明未設定";
+    skillSummary.textContent =
+      selectedSkill.summary || selectedSkill.description || "説明未設定";
   };
 
   const updateDetailVisibility = () => {
