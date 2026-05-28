@@ -180,7 +180,7 @@ function createSkillDialogueRow(dialogueData = {}) {
   const rowId = nextDialogueRowId++;
 
   const row = document.createElement("div");
-  row.className = "skillDialogueRow";
+  row.className = "skillDialogueRow imageInputRow";
   row.dataset.rowId = String(rowId);
 
   const button = document.createElement("button");
@@ -202,7 +202,7 @@ function createSkillDialogueRow(dialogueData = {}) {
   });
 
   const inputArea = document.createElement("div");
-  inputArea.className = "skillDialogueInputArea";
+  inputArea.className = "skillDialogueInputArea imageInputBody";
 
   const nameInput = document.createElement("input");
   nameInput.type = "text";
@@ -326,14 +326,42 @@ function createSkillBlock(skillData, index) {
   const skillDescription = document.createElement("div");
   skillDescription.className = "skillInfoDescription";
 
-  const cutinLabel = document.createElement("div");
+  const cutinRow = document.createElement("div");
+  cutinRow.className = "cutinImageRow imageInputRow";
+
+  const cutinPreview = document.createElement("img");
+  cutinPreview.className = "cutinPreview imageInputPreview imageInputPreview-large";
+  cutinPreview.src =
+    skillData?.cutinUrl
+      ? skillData.cutinUrl
+      : getNoImageUrl();
+  cutinPreview.alt = "カットインプレビュー";
+
+  const cutinInputArea = document.createElement("div");
+  cutinInputArea.className = "imageInputBody";
+
+  const cutinLabel = document.createElement("label");
+  cutinLabel.className = "imageInputLabel";
   cutinLabel.textContent = "カットインURL";
 
   const cutinInput = document.createElement("input");
   cutinInput.type = "text";
-  cutinInput.className = "cutinUrlInput";
+  cutinInput.className = "cutinUrlInput imageInputControl";
   cutinInput.placeholder = "https://...";
   cutinInput.value = skillData?.cutinUrl || "";
+
+  cutinInput.addEventListener("input", () => {
+    cutinPreview.src =
+      cutinInput.value.trim() !== ""
+        ? cutinInput.value.trim()
+        : getNoImageUrl();
+  });
+
+  cutinInputArea.appendChild(cutinLabel);
+  cutinInputArea.appendChild(cutinInput);
+
+  cutinRow.appendChild(cutinPreview);
+  cutinRow.appendChild(cutinInputArea);
 
   const dialogueList = createSkillDialogueList(
     skillData?.dialogue
@@ -342,10 +370,7 @@ function createSkillBlock(skillData, index) {
   detailArea.appendChild(skillInfo);
   skillInfo.appendChild(skillRange);
   skillInfo.appendChild(skillDescription);
-  detailArea.appendChild(document.createElement("br"));
-  detailArea.appendChild(cutinLabel);
-  detailArea.appendChild(cutinInput);
-  detailArea.appendChild(document.createElement("br"));
+  detailArea.appendChild(cutinRow);
   detailArea.appendChild(dialogueList);
 
   const updateSkillInfo = () => {
