@@ -55,12 +55,13 @@
   border: 1px dashed #999;
 }
 
-.skillInfoRange {
+.skillInfoCooldown {
   margin-bottom: 4px;
   font-weight: bold;
+  color: var(--theme-text-accent);
 }
 
-.skillInfoDescription {
+.skillInfoSummary {
   line-height: 1.4;
 }
 
