@@ -359,3 +359,17 @@ a{
   border-color: rgba(243, 211, 106, 0.58);
   background: rgba(60, 48, 24, 0.95);
 }
+
+.subsection-card {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--theme-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+}
+
+.subsection-divider {
+  margin: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
