@@ -372,11 +372,11 @@ wrapper.dataset.index = String(index);
   const skillInfo = document.createElement("div");
   skillInfo.className = "skillInfoBox";
 
-  const skillRange = document.createElement("div");
-  skillRange.className = "skillInfoRange";
+  const skillCooldown = document.createElement("div");
+  skillCooldown.className = "skillInfoCooldown";
 
-  const skillDescription = document.createElement("div");
-  skillDescription.className = "skillInfoDescription";
+  const skillSummary = document.createElement("div");
+  skillSummary.className = "skillInfoSummary";
 
   const cutinRow = document.createElement("div");
   cutinRow.className = "cutinImageRow imageInputRow";
@@ -445,8 +445,8 @@ wrapper.dataset.index = String(index);
   performanceArea.appendChild(dialogueList);
 
   detailArea.appendChild(skillInfo);
-  skillInfo.appendChild(skillRange);
-  skillInfo.appendChild(skillDescription);
+  skillInfo.appendChild(skillCooldown);
+  skillInfo.appendChild(skillSummary);
   detailArea.appendChild(performanceToggle);
   detailArea.appendChild(performanceArea);
 
@@ -459,11 +459,11 @@ wrapper.dataset.index = String(index);
       return;
     }
 
-    skillRange.textContent =
-      `範囲: ${selectedSkill.rangeText || "未設定"}`;
+skillRange.textContent =
+  `CT: ${selectedSkill.cooldown ?? 0}`;
 
-    skillDescription.textContent =
-      `説明: ${selectedSkill.description || "未設定"}`;
+skillDescription.textContent =
+  selectedSkill.summary || selectedSkill.description || "説明未設定";
   };
 
   const updateDetailVisibility = () => {
