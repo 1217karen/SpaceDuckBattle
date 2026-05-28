@@ -121,11 +121,11 @@ function updateIconPreview(inputId, previewId) {
 
 function createProfileImageRow(item) {
   const row = document.createElement("div");
-  row.className = "profileImageRow";
+  row.className = "profileImageRow imageInputRow";
   row.dataset.id = String(item.id);
 
   const preview = document.createElement("img");
-  preview.className = "profileImagePreview";
+  preview.className = "profileImagePreview imageInputPreview imageInputPreview-large";
   preview.src =
     typeof item.url === "string" && item.url.trim() !== ""
       ? item.url.trim()
@@ -134,25 +134,25 @@ function createProfileImageRow(item) {
   row.appendChild(preview);
 
   const inputArea = document.createElement("div");
-  inputArea.className = "profileImageInputArea";
+  inputArea.className = "profileImageInputArea imageInputBody";
 
   const publicLabel = document.createElement("label");
-  publicLabel.className = "profileImagePublicLabel";
+  publicLabel.className = "profileImagePublicLabel imageInputMeta";
+
+  const publicText = document.createElement("span");
+  publicText.textContent = "公開可否";
 
   const enabledInput = document.createElement("input");
   enabledInput.type = "checkbox";
   enabledInput.className = "profileImageEnabledInput";
   enabledInput.checked = item.enabled !== false;
 
-  const publicText = document.createElement("span");
-  publicText.textContent = "公開";
-
   publicLabel.appendChild(publicText);
   publicLabel.appendChild(enabledInput);
 
   const urlInput = document.createElement("input");
   urlInput.type = "text";
-  urlInput.className = "profileImageUrlInput";
+  urlInput.className = "profileImageUrlInput imageInputControl";
   urlInput.value = item.url ?? "";
   urlInput.placeholder = "プロフィール画像URL";
 
@@ -222,11 +222,11 @@ function getNextRowId(selector) {
 
 function createCommIconRow(item) {
   const row = document.createElement("div");
-  row.className = "commIconRow";
+  row.className = "commIconRow imageInputRow";
   row.dataset.id = String(item.id);
 
   const preview = document.createElement("img");
-  preview.className = "commIconPreview";
+  preview.className = "commIconPreview imageInputPreview";
   preview.src =
     typeof item.url === "string" && item.url.trim() !== ""
       ? item.url.trim()
@@ -236,9 +236,18 @@ function createCommIconRow(item) {
 
   bindCommIconDrag(row, preview);
 
+  const inputArea = document.createElement("div");
+  inputArea.className = "imageInputBody";
+
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.className = "commIconNameInput imageInputControl";
+  nameInput.value = item.name ?? "";
+  nameInput.placeholder = "発言者名（未入力ならデフォルト名）";
+
   const urlInput = document.createElement("input");
   urlInput.type = "text";
-  urlInput.className = "commIconUrlInput";
+  urlInput.className = "commIconUrlInput imageInputControl";
   urlInput.value = item.url ?? "";
   urlInput.placeholder = "アイコンURL";
 
@@ -249,14 +258,10 @@ function createCommIconRow(item) {
         : getNoImageUrl();
   });
 
-  row.appendChild(urlInput);
+  inputArea.appendChild(nameInput);
+  inputArea.appendChild(urlInput);
 
-  const nameInput = document.createElement("input");
-  nameInput.type = "text";
-  nameInput.className = "commIconNameInput";
-  nameInput.value = item.name ?? "";
-  nameInput.placeholder = "発言者名（未入力ならデフォルト名）";
-  row.appendChild(nameInput);
+  row.appendChild(inputArea);
 
   return row;
 }
