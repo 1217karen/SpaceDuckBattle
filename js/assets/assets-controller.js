@@ -124,22 +124,49 @@ function createProfileImageRow(item) {
   row.className = "profileImageRow";
   row.dataset.id = String(item.id);
 
+  const preview = document.createElement("img");
+  preview.className = "profileImagePreview";
+  preview.src =
+    typeof item.url === "string" && item.url.trim() !== ""
+      ? item.url.trim()
+      : getNoImageUrl();
+  preview.alt = `プロフィール画像${item.id}`;
+  row.appendChild(preview);
+
+  const inputArea = document.createElement("div");
+  inputArea.className = "profileImageInputArea";
+
+  const publicLabel = document.createElement("label");
+  publicLabel.className = "profileImagePublicLabel";
+
   const enabledInput = document.createElement("input");
   enabledInput.type = "checkbox";
   enabledInput.className = "profileImageEnabledInput";
   enabledInput.checked = item.enabled !== false;
-  row.appendChild(enabledInput);
 
-  const label = document.createElement("span");
-  label.textContent = ` ID ${item.id} `;
-  row.appendChild(label);
+  const publicText = document.createElement("span");
+  publicText.textContent = "公開可否";
+
+  publicLabel.appendChild(publicText);
+  publicLabel.appendChild(enabledInput);
 
   const urlInput = document.createElement("input");
   urlInput.type = "text";
   urlInput.className = "profileImageUrlInput";
   urlInput.value = item.url ?? "";
   urlInput.placeholder = "プロフィール画像URL";
-  row.appendChild(urlInput);
+
+  urlInput.addEventListener("input", () => {
+    preview.src =
+      urlInput.value.trim() !== ""
+        ? urlInput.value.trim()
+        : getNoImageUrl();
+  });
+
+  inputArea.appendChild(publicLabel);
+  inputArea.appendChild(urlInput);
+
+  row.appendChild(inputArea);
 
   return row;
 }
@@ -152,7 +179,6 @@ function renderProfileImageArea(profileImages) {
 
   profileImages.forEach(item => {
     area.appendChild(createProfileImageRow(item));
-    area.appendChild(document.createElement("br"));
   });
 }
 
