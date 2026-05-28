@@ -277,9 +277,9 @@ function createSkillDialogueList(dialogues = []) {
 }
 
 function createSkillBlock(skillData, index) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "skillBlock";
-  wrapper.dataset.index = String(index);
+const wrapper = document.createElement("div");
+wrapper.className = "skillBlock subsection-card";
+wrapper.dataset.index = String(index);
 
   const select = document.createElement("select");
   select.className = "skillSelect";
