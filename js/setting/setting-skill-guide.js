@@ -3,45 +3,43 @@
 import { skillHandlers } from "../data/skills.js";
 import { getCurrentStats, isSkillUnlocked, formatUnlockText } from "./skill-unlock.js";
 
-function createRow(labelText, valueText) {
-  const row = document.createElement("div");
-  row.className = "skillGuideRow";
-
-  const label = document.createElement("span");
-  label.className = "skillGuideLabel";
-  label.textContent = labelText;
-
-  const value = document.createElement("span");
-  value.className = "skillGuideValue";
-  value.textContent = valueText;
-
-  row.appendChild(label);
-  row.appendChild(value);
-
-  return row;
-}
-
 function createSkillGuideItem(skillId, skill, unlocked) {
   const item = document.createElement("div");
   item.className = "skillGuideItem";
 
   const title = document.createElement("div");
   title.className = "skillGuideTitle";
-  title.textContent = `${skill.name || skillId}`;
 
-  const cooldownRow = createRow("CT", String(skill.cooldown ?? 0));
-  const rangeRow = createRow("範囲", skill.rangeText || "未設定");
-  const descRow = createRow("説明", skill.description || "未設定");
-  const unlockRow = createRow(
-    "解放条件",
-    formatUnlockText(skill.unlock)
-  );
+  if (skill.icon) {
+    const icon = document.createElement("img");
+    icon.className = "skillGuideIcon";
+    icon.src = skill.icon;
+    icon.alt = skill.name || skillId;
+    title.appendChild(icon);
+  }
+
+  const name = document.createElement("span");
+  name.textContent = skill.name || skillId;
+  title.appendChild(name);
+
+  const cooldown = document.createElement("div");
+  cooldown.className = "skillGuideCooldown";
+  cooldown.textContent = `CT: ${skill.cooldown ?? 0}`;
+
+  const summary = document.createElement("div");
+  summary.className = "skillGuideSummary";
+  summary.textContent =
+    skill.summary || skill.description || "説明未設定";
+
+  const unlock = document.createElement("div");
+  unlock.className = "skillGuideUnlock";
+  unlock.textContent =
+    `解放条件：${formatUnlockText(skill.unlock)}`;
 
   item.appendChild(title);
-  item.appendChild(cooldownRow);
-  item.appendChild(rangeRow);
-  item.appendChild(descRow);
-  item.appendChild(unlockRow);
+  item.appendChild(cooldown);
+  item.appendChild(summary);
+  item.appendChild(unlock);
 
   if (!unlocked) {
     item.classList.add("is-locked");
