@@ -25,28 +25,42 @@
 }
 
 .skillGuideItem {
-  padding: 8px 0;
-  border-bottom: 1px dashed #999;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--theme-border-main);
 }
 
 .skillGuideTitle {
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 6px;
-}
-
-.skillGuideRow {
-  margin-bottom: 4px;
-  line-height: 1.4;
-}
-
-.skillGuideLabel {
-  display: inline-block;
-  min-width: 72px;
   font-weight: bold;
+  color: var(--theme-text-main);
 }
 
-.skillGuideValue {
-  display: inline;
+.skillGuideIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.skillGuideCooldown {
+  margin-bottom: 4px;
+  color: var(--theme-text-accent);
+  font-weight: bold;
+  font-size: var(--font-size-small);
+}
+
+.skillGuideSummary {
+  margin-bottom: 4px;
+  line-height: 1.45;
+}
+
+.skillGuideUnlock {
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.4;
 }
 
 .skillInfoBox {
