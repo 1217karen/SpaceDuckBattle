@@ -18,11 +18,11 @@
     </aside>
 
 <main class="center-panel">
-  <div class="center-topbar">
-    <div class="center-topbar-left"></div>
-    <div class="center-topbar-center">お知らせエリア</div>
-    <div class="center-topbar-right"></div>
-  </div>
+<div
+  class="center-topbar"
+  data-notice="お知らせエリア"
+  data-right-label="FAV ＞"
+></div>
 
   <h1>キャラリスト</h1>
   
@@ -30,12 +30,19 @@
     </main>
 
     <aside class="right-panel">
-      登録キャラクター一覧
+      お気に入りキャラクター一覧
     </aside>
 
   </div>
 
-  <script type="module" src="./js/character-list/character-list-controller.js"></script>
-  <script type="module" src="./js/common/include-menu.js"></script>
+<script type="module" src="./js/character-list/character-list-controller.js"></script>
+<script type="module" src="./js/common/include-menu.js"></script>
+<script type="module">
+  import { initCenterTopbar } from "./js/common/center-topbar.js";
+  import { initLayoutPanelToggles } from "./js/common/layout.js";
+
+  initCenterTopbar();
+  initLayoutPanelToggles();
+</script>
 </body>
 </html>
