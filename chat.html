@@ -21,15 +21,11 @@
 
 <main class="center-panel">
 
-<div class="center-topbar">
-  <div class="center-topbar-left">
-    <button type="button" class="panel-toggle-button left-panel-toggle button-topbar-link">＜ MENU</button>
-  </div>
-  <div class="center-topbar-center">お知らせエリア</div>
-  <div class="center-topbar-right">
-    <button type="button" class="panel-toggle-button right-panel-toggle button-topbar-link">FAV ＞</button>
-  </div>
-</div>
+<div
+  class="center-topbar"
+  data-notice="お知らせエリア"
+  data-right-label="FAV ＞"
+></div>
 
   <div id="chatMainArea"></div>
 </main>
@@ -43,7 +39,10 @@
 <script type="module" src="./js/common/include-menu.js"></script>
 <script type="module" src="./js/chat/chat-controller.js"></script>
 <script type="module">
+  import { initCenterTopbar } from "./js/common/center-topbar.js";
   import { initLayoutPanelToggles } from "./js/common/layout.js";
+
+  initCenterTopbar();
   initLayoutPanelToggles();
 </script>
 </body>
