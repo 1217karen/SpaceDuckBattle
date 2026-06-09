@@ -141,6 +141,7 @@
 .statLabel {
   color: var(--theme-text-accent);
   font-weight: bold;
+  text-align: right;
 }
 
 .statField input {
