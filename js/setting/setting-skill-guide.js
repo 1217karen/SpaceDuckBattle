@@ -27,7 +27,8 @@ const filterOptions = {
     { value: "attack", label: "攻撃" },
     { value: "heal", label: "回復" },
     { value: "buff", label: "強化" },
-    { value: "debuff", label: "弱化" }
+    { value: "debuff", label: "弱化" },
+    { value: "move", label: "移動" }
   ]
 };
 
