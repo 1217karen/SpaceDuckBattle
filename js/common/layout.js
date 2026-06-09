@@ -1,24 +1,20 @@
-//layout.js
+// layout.js
 
 function updatePanelCollapseState() {
   const layout = document.querySelector(".layout");
   if (!layout) return;
 
-  const rightCollapsed = window.innerWidth <= 1140;
-  const leftCollapsed = window.innerWidth <= 840;
+  const panelsCollapsed = window.innerWidth <= 1140;
 
-  layout.classList.toggle("panel-right-collapsed", rightCollapsed);
-  layout.classList.toggle("panel-left-collapsed", leftCollapsed);
+  layout.classList.toggle("panel-right-collapsed", panelsCollapsed);
+  layout.classList.toggle("panel-left-collapsed", panelsCollapsed);
 
   const leftPanel = document.querySelector(".left-panel");
   const rightPanel = document.querySelector(".right-panel");
 
-  if (!rightCollapsed) {
-    rightPanel?.classList.remove("open");
-  }
-
-  if (!leftCollapsed) {
+  if (!panelsCollapsed) {
     leftPanel?.classList.remove("open");
+    rightPanel?.classList.remove("open");
   }
 }
 
