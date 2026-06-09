@@ -5,6 +5,8 @@ import { getCurrentStats, isSkillUnlocked, formatUnlockText } from "./skill-unlo
 
 const filterState = {
   ctSort: "",
+  targetMatchMode: "any",
+  effectMatchMode: "any",
   targets: [],
   targetCounts: [],
   effects: []
@@ -29,14 +31,46 @@ const filterOptions = {
   ]
 };
 
-function createFilterCheckboxGroup(titleText, stateKey, options) {
+function createFilterCheckboxGroup(titleText, stateKey, options, matchModeKey = null) {
   const group = document.createElement("div");
   group.className = "skillGuideFilterGroup";
+
+  const header = document.createElement("div");
+  header.className = "skillGuideFilterHeader";
 
   const title = document.createElement("div");
   title.className = "skillGuideFilterTitle";
   title.textContent = titleText;
-  group.appendChild(title);
+
+  header.appendChild(title);
+
+  if (matchModeKey) {
+    const modeButton = document.createElement("button");
+    modeButton.type = "button";
+    modeButton.className = "skillGuideMatchModeButton button-small";
+    modeButton.textContent =
+      filterState[matchModeKey] === "all"
+        ? "すべてを含む"
+        : "どれかを含む";
+
+    modeButton.addEventListener("click", () => {
+      filterState[matchModeKey] =
+        filterState[matchModeKey] === "all"
+          ? "any"
+          : "all";
+
+      modeButton.textContent =
+        filterState[matchModeKey] === "all"
+          ? "すべてを含む"
+          : "どれかを含む";
+
+      renderSkillGuideItems();
+    });
+
+    header.appendChild(modeButton);
+  }
+
+  group.appendChild(header);
 
   const items = document.createElement("div");
   items.className = "skillGuideFilterItems";
@@ -114,35 +148,57 @@ function createSkillGuideControls() {
   ctGroup.appendChild(ctItems);
 
   controls.appendChild(ctGroup);
-  controls.appendChild(
-    createFilterCheckboxGroup("対象", "targets", filterOptions.targets)
-  );
-  controls.appendChild(
-    createFilterCheckboxGroup("単複", "targetCounts", filterOptions.targetCounts)
-  );
-  controls.appendChild(
-    createFilterCheckboxGroup("効果", "effects", filterOptions.effects)
-  );
+controls.appendChild(
+  createFilterCheckboxGroup(
+    "対象",
+    "targets",
+    filterOptions.targets,
+    "targetMatchMode"
+  )
+);
+controls.appendChild(
+  createFilterCheckboxGroup(
+    "単複",
+    "targetCounts",
+    filterOptions.targetCounts
+  )
+);
+controls.appendChild(
+  createFilterCheckboxGroup(
+    "効果",
+    "effects",
+    filterOptions.effects,
+    "effectMatchMode"
+  )
+);
 
   const resetButton = document.createElement("button");
   resetButton.type = "button";
   resetButton.className = "skillGuideResetButton";
   resetButton.textContent = "リセット";
 
-  resetButton.addEventListener("click", () => {
-    filterState.ctSort = "";
-    filterState.targets = [];
-    filterState.targetCounts = [];
-    filterState.effects = [];
+resetButton.addEventListener("click", () => {
+  filterState.ctSort = "";
+  filterState.targetMatchMode = "any";
+  filterState.effectMatchMode = "any";
+  filterState.targets = [];
+  filterState.targetCounts = [];
+  filterState.effects = [];
 
-    controls
-      .querySelectorAll("input")
-      .forEach(input => {
-        input.checked = false;
-      });
+  controls
+    .querySelectorAll("input")
+    .forEach(input => {
+      input.checked = false;
+    });
 
-    renderSkillGuideItems();
-  });
+  controls
+    .querySelectorAll(".skillGuideMatchModeButton")
+    .forEach(button => {
+      button.textContent = "どれかを含む";
+    });
+
+  renderSkillGuideItems();
+});
 
   controls.appendChild(resetButton);
 
@@ -194,9 +250,15 @@ function createSkillGuideItem(skillId, skill, unlocked) {
   return item;
 }
 
-function includesAny(values, selectedValues) {
+function matchesValues(values, selectedValues, matchMode = "any") {
   if (selectedValues.length === 0) return true;
   if (!Array.isArray(values)) return false;
+
+  if (matchMode === "all") {
+    return selectedValues.every(value =>
+      values.includes(value)
+    );
+  }
 
   return selectedValues.some(value =>
     values.includes(value)
@@ -206,7 +268,13 @@ function includesAny(values, selectedValues) {
 function matchesSkillFilter(skill) {
   const meta = skill.meta || {};
 
-  if (!includesAny(meta.targets, filterState.targets)) {
+  if (
+    !matchesValues(
+      meta.targets,
+      filterState.targets,
+      filterState.targetMatchMode
+    )
+  ) {
     return false;
   }
 
@@ -217,7 +285,13 @@ function matchesSkillFilter(skill) {
     return false;
   }
 
-  if (!includesAny(meta.effects, filterState.effects)) {
+  if (
+    !matchesValues(
+      meta.effects,
+      filterState.effects,
+      filterState.effectMatchMode
+    )
+  ) {
     return false;
   }
 
