@@ -20,11 +20,11 @@
 
 <main class="center-panel">
 
-    <div class="center-topbar">
-      <div class="center-topbar-left"></div>
-      <div class="center-topbar-center">お知らせエリア</div>
-      <div class="center-topbar-right"></div>
-    </div>
+<div
+  class="center-topbar"
+  data-notice="お知らせエリア"
+  data-right-label="SKILL ＞"
+></div>
 
     <h1>アヒル設定</h1>
 
@@ -118,10 +118,14 @@
 
     <br><br>
 <div id="iconPickerModal" class="iconPickerModal hidden"></div>
+    
+  </main>
 
-<script type="module" src="./js/setting/setting-controller.js"></script>
-<script type="module" src="./js/setting/setting-skill-guide.js"></script>
-<script type="module" src="./js/common/include-menu.js"></script>
+  <aside class="right-panel">
+    <h2>スキル一覧</h2>
+    <div id="skillGuide"></div>
+    <br><br>
+    <div id="iconPickerModal" class="iconPickerModal hidden"></div>
     
   </main>
 
@@ -131,5 +135,17 @@
   </aside>
 
 </div>
+
+<script type="module" src="./js/setting/setting-controller.js"></script>
+<script type="module" src="./js/setting/setting-skill-guide.js"></script>
+<script type="module" src="./js/common/include-menu.js"></script>
+<script type="module">
+  import { initCenterTopbar } from "./js/common/center-topbar.js";
+  import { initLayoutPanelToggles } from "./js/common/layout.js";
+
+  initCenterTopbar();
+  initLayoutPanelToggles();
+</script>
+
 </body>
 </html>
