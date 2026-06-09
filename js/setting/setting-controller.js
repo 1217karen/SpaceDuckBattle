@@ -17,6 +17,28 @@ const TEC_PER_EXTRA_SLOT = 10;
 const skillList = Object.keys(skillHandlers);
 const skillArea = document.getElementById("skillArea");
 
+const unitTypeDescriptions = {
+  attack: "自身から一番近くの敵に向かって進みます。",
+  defense: "敵に一番近い味方と敵の間に向かって進みます。",
+  heal: "一番HPの低い味方の近くに向かって進みます。",
+  speed: "自陣から一番遠くにいる敵に向かって進みます。",
+  technical: "自身から一番近くの敵から１マス間を開けた場所を維持します。",
+  support: "敵に一番近い味方の隣に向かって進みます。"
+};
+
+function updateUnitTypeDescription() {
+  const select =
+    document.getElementById("unitType");
+
+  const description =
+    document.getElementById("unitTypeDescription");
+
+  if (!select || !description) return;
+
+  description.textContent =
+    unitTypeDescriptions[select.value] || "";
+}
+
 function getAvailableSkillSlotCount(tec) {
   const safeTec = Math.max(0, Number(tec) || 0);
 
