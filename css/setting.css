@@ -170,13 +170,13 @@
 }
 
 .skillGuideControls {
-  margin-bottom: 12px;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 1px dashed var(--theme-border-main);
 }
 
 .skillGuideFilterGroup {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .skillGuideFilterHeader {
@@ -205,7 +205,7 @@
 .skillGuideFilterItems {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 10px;
+  gap: 4px 8px;
 }
 
 .skillGuideFilterLabel {
@@ -222,7 +222,9 @@
 }
 
 .skillGuideResetButton {
-  margin-top: 4px;
+  margin-top: 2px;
+  padding: 2px 6px;
+  font-size: var(--font-size-xs);
 }
 
 .skillGuideList {
