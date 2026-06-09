@@ -169,3 +169,16 @@
   color: var(--theme-text-main);
   line-height: 1.5;
 }
+
+.skillBlockHeader {
+  align-items: stretch;
+}
+
+.skillBlockHeader .skillSelect {
+  margin-bottom: 0;
+}
+
+.skillBlockHeader .skillInfoBox {
+  flex: 1;
+  margin: 0;
+}
