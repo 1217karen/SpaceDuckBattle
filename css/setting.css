@@ -123,3 +123,26 @@
 .skillBlock.is-dragging {
   opacity: 0.55;
 }
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 14px;
+  max-width: 720px;
+}
+
+.statField {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.statLabel {
+  color: var(--theme-text-accent);
+  font-weight: bold;
+}
+
+.statField input {
+  width: 100%;
+}
