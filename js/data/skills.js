@@ -1,6 +1,5 @@
 // skills.js
 
-
 export const skillHandlers = {
 
   // =========================
@@ -12,8 +11,13 @@ export const skillHandlers = {
     description: "敵1体に通常攻撃（威力4）",
     summary: "前方1マスの敵1体に通常攻撃（威力4）",
     rangeText: "前方1マス",
+    meta: {
+      targets: ["enemy"],
+      targetCount: "single",
+      effects: ["attack"]
+    },
     unlock: {
-    atk: 5
+      atk: 5
     },
     cooldown: 2,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_1.webp",
@@ -52,8 +56,13 @@ export const skillHandlers = {
     description: "DEF20%増（2T）",
     summary: "自分のDEFを20%増加（2T）",
     rangeText: "自分",
+    meta: {
+      targets: ["self"],
+      targetCount: "single",
+      effects: ["buff"]
+    },
     unlock: {
-    def: 5
+      def: 5
     },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_7.webp",
@@ -91,8 +100,13 @@ export const skillHandlers = {
     description: "味方1体を回復（威力4）",
     summary: "周囲1マスの味方1体を回復（威力4）",
     rangeText: "周囲1マス",
+    meta: {
+      targets: ["ally"],
+      targetCount: "single",
+      effects: ["heal"]
+    },
     unlock: {
-    heal: 5
+      heal: 5
     },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_4.webp",
@@ -147,8 +161,13 @@ export const skillHandlers = {
     description: "加速1段階上昇",
     summary: "自分の加速を1段階上昇。",
     rangeText: "自分",
+    meta: {
+      targets: ["self"],
+      targetCount: "single",
+      effects: ["buff"]
+    },
     unlock: {
-    speed: 5
+      speed: 5
     },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_5.webp",
@@ -184,8 +203,13 @@ export const skillHandlers = {
     description: "CRI20%増（2T）",
     summary: "自分のCRIを20%増加（2T）。",
     rangeText: "自分",
+    meta: {
+      targets: ["self"],
+      targetCount: "single",
+      effects: ["buff"]
+    },
     unlock: {
-    cri: 5
+      cri: 5
     },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_2.webp",
@@ -223,8 +247,13 @@ export const skillHandlers = {
     description: "敵1体に妨害付与（威力2）",
     summary: "周囲1マスの敵1体に妨害を付与（威力2）",
     rangeText: "周囲1マス",
+    meta: {
+      targets: ["enemy"],
+      targetCount: "single",
+      effects: ["debuff"]
+    },
     unlock: {
-    tec: 5
+      tec: 5
     },
     cooldown: 3,
     icon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=skill_chip_6.webp",
