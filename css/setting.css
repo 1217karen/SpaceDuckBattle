@@ -196,3 +196,49 @@
   flex: 1;
   margin: 0;
 }
+
+.skillGuideControls {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--theme-border-main);
+}
+
+.skillGuideFilterGroup {
+  margin-bottom: 8px;
+}
+
+.skillGuideFilterTitle {
+  margin-bottom: 4px;
+  color: var(--theme-text-accent);
+  font-weight: bold;
+  font-size: var(--font-size-small);
+}
+
+.skillGuideFilterItems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+
+.skillGuideFilterLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-small);
+  color: var(--theme-text-main);
+  cursor: pointer;
+}
+
+.skillGuideFilterLabel input {
+  margin: 0;
+}
+
+.skillGuideResetButton {
+  margin-top: 4px;
+}
+
+.skillGuideEmpty {
+  padding: 10px 0;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+}
