@@ -1,7 +1,125 @@
+/* =========================
+   タイプ設定
+========================= */
+
+.unitTypeRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.unitTypeSelectLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unitTypeDescription {
+  padding: 6px 10px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--theme-text-main);
+  line-height: 1.5;
+}
+
+
+/* =========================
+   ステータス設定
+========================= */
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 14px;
+  max-width: 720px;
+}
+
+.statField {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.statLabel {
+  color: var(--theme-text-accent);
+  font-weight: bold;
+  text-align: right;
+}
+
+.statField input {
+  width: 100%;
+}
+
+
+/* =========================
+   スキルブロック
+========================= */
+
+.skillBlockHeader {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.skillDragHandle {
+  width: 28px;
+  height: 28px;
+  color: var(--theme-text-muted);
+  cursor: grab;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.skillDragHandle:active {
+  cursor: grabbing;
+}
+
+.skillBlock.is-dragging {
+  opacity: 0.55;
+}
 
 .skillSelect {
   min-width: 220px;
-  margin-bottom: 10px;
+  margin-bottom: 0;
+}
+
+
+/* =========================
+   スキル説明
+========================= */
+
+.skillInfoBox {
+  flex: 1;
+  margin: 0;
+  padding: 6px 8px;
+  border: 1px dashed #999;
+}
+
+.skillInfoCooldown {
+  margin-bottom: 4px;
+  color: var(--theme-text-accent);
+  font-weight: bold;
+}
+
+.skillInfoSummary {
+  line-height: 1.4;
+}
+
+
+/* =========================
+   スキル演出設定
+========================= */
+
+.skillPerformanceToggle {
+  margin: 8px 0;
+}
+
+.skillPerformanceArea {
+  margin-top: 8px;
 }
 
 .skillDialogueList {
@@ -10,8 +128,16 @@
   gap: 10px;
 }
 
-.skillDialogueInput {
+.skillDialogueInputArea {
   flex: 1;
+}
+
+.skillDialogueNameInput {
+  width: min(100%, 300px);
+}
+
+.skillDialogueInput {
+  width: 100%;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -20,7 +146,86 @@
   align-self: flex-start;
 }
 
+.commIconPickerButton {
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.commIconPickerButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* =========================
+   右側：スキル一覧
+========================= */
+
 #skillGuide {
+  display: block;
+}
+
+.skillGuideControls {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--theme-border-main);
+}
+
+.skillGuideFilterGroup {
+  margin-bottom: 8px;
+}
+
+.skillGuideFilterHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.skillGuideFilterTitle {
+  margin-bottom: 0;
+  color: var(--theme-text-accent);
+  font-weight: bold;
+  font-size: var(--font-size-small);
+}
+
+.skillGuideMatchModeButton {
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.skillGuideMatchModeButton:hover {
+  color: var(--theme-text-main);
+}
+
+.skillGuideFilterItems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+
+.skillGuideFilterLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--theme-text-main);
+  font-size: var(--font-size-small);
+  cursor: pointer;
+}
+
+.skillGuideFilterLabel input {
+  margin: 0;
+}
+
+.skillGuideResetButton {
+  margin-top: 4px;
+}
+
+.skillGuideList {
   display: block;
 }
 
@@ -34,8 +239,8 @@
   align-items: center;
   gap: 6px;
   margin-bottom: 6px;
-  font-weight: bold;
   color: var(--theme-text-main);
+  font-weight: bold;
 }
 
 .skillGuideIcon {
@@ -63,202 +268,8 @@
   line-height: 1.4;
 }
 
-.skillInfoBox {
-  margin: 6px 0 8px;
-  padding: 6px 8px;
-  border: 1px dashed #999;
-}
-
-.skillInfoCooldown {
-  margin-bottom: 4px;
-  font-weight: bold;
-  color: var(--theme-text-accent);
-}
-
-.skillInfoSummary {
-  line-height: 1.4;
-}
-
-.skillDialogueInputArea {
-  flex: 1;
-}
-
-.skillDialogueNameInput {
-  width: min(100%, 300px);
-}
-
-.skillDialogueInput {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.commIconPickerButton {
-  width: 60px;
-  height: 60px;
-  padding: 0;
-  flex-shrink: 0;
-}
-
-.commIconPickerButton img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.skillPerformanceToggle {
-  margin: 8px 0;
-}
-
-.skillPerformanceArea {
-  margin-top: 8px;
-}
-
-.skillBlockHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.skillDragHandle {
-  width: 28px;
-  height: 28px;
-  color: var(--theme-text-muted);
-  cursor: grab;
-  font-size: 18px;
-  line-height: 1;
-}
-
-.skillDragHandle:active {
-  cursor: grabbing;
-}
-
-.skillBlock.is-dragging {
-  opacity: 0.55;
-}
-
-.statGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px 14px;
-  max-width: 720px;
-}
-
-.statField {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  align-items: center;
-  gap: 8px;
-}
-
-.statLabel {
-  color: var(--theme-text-accent);
-  font-weight: bold;
-  text-align: right;
-}
-
-.statField input {
-  width: 100%;
-}
-
-.unitTypeRow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.unitTypeSelectLabel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.unitTypeDescription {
-  padding: 6px 10px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-sm);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--theme-text-main);
-  line-height: 1.5;
-}
-
-.skillBlockHeader {
-  align-items: stretch;
-}
-
-.skillBlockHeader .skillSelect {
-  margin-bottom: 0;
-}
-
-.skillBlockHeader .skillInfoBox {
-  flex: 1;
-  margin: 0;
-}
-
-.skillGuideControls {
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed var(--theme-border-main);
-}
-
-.skillGuideFilterGroup {
-  margin-bottom: 8px;
-}
-
-.skillGuideFilterTitle {
-  margin-bottom: 4px;
-  color: var(--theme-text-accent);
-  font-weight: bold;
-  font-size: var(--font-size-small);
-}
-
-.skillGuideFilterItems {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 10px;
-}
-
-.skillGuideFilterLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: var(--font-size-small);
-  color: var(--theme-text-main);
-  cursor: pointer;
-}
-
-.skillGuideFilterLabel input {
-  margin: 0;
-}
-
-.skillGuideResetButton {
-  margin-top: 4px;
-}
-
 .skillGuideEmpty {
   padding: 10px 0;
   color: var(--theme-text-muted);
   font-size: var(--font-size-small);
-}
-
-.skillGuideFilterHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-.skillGuideFilterHeader .skillGuideFilterTitle {
-  margin-bottom: 0;
-}
-
-.skillGuideMatchModeButton {
-  color: var(--theme-text-muted);
-  font-size: var(--font-size-xs);
-}
-
-.skillGuideMatchModeButton:hover {
-  color: var(--theme-text-main);
 }
