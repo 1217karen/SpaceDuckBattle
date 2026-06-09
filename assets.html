@@ -19,11 +19,11 @@
 
 <main class="center-panel">
 
-    <div class="center-topbar">
-      <div class="center-topbar-left"></div>
-      <div class="center-topbar-center">お知らせエリア</div>
-      <div class="center-topbar-right"></div>
-    </div>
+<div
+  class="center-topbar"
+  data-notice="お知らせエリア"
+  data-right-label="補助 ＞"
+></div>
 
     <h1>画像登録</h1>
 
@@ -112,9 +112,6 @@
 <br>
 <br>
 
-<script type="module" src="./js/assets/assets-controller.js"></script>
-<script type="module" src="./js/common/include-menu.js"></script>
-
   </main>
 
   <aside class="right-panel">
@@ -122,5 +119,16 @@
   </aside>
 
 </div>
+
+<script type="module" src="./js/assets/assets-controller.js"></script>
+<script type="module" src="./js/common/include-menu.js"></script>
+<script type="module">
+  import { initCenterTopbar } from "./js/common/center-topbar.js";
+  import { initLayoutPanelToggles } from "./js/common/layout.js";
+
+  initCenterTopbar();
+  initLayoutPanelToggles();
+</script>
+
 </body>
 </html>
