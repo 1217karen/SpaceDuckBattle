@@ -18,11 +18,11 @@ const skillList = Object.keys(skillHandlers);
 const skillArea = document.getElementById("skillArea");
 
 const unitTypeDescriptions = {
-  attack: "自身から一番近くの敵に向かって進みます。",
-  defense: "敵に一番近い味方と敵の間に向かって進みます。",
-  heal: "一番HPの低い味方の近くに向かって進みます。",
+  attack: "自分から一番近い敵に向かって進みます。",
+  defense: "敵に一番近い味方の前に向かって進みます。",
+  heal: "一番HPが低い味方に向かって進みます。",
   speed: "自陣から一番遠くにいる敵に向かって進みます。",
-  technical: "自身から一番近くの敵から１マス間を開けた場所を維持します。",
+  technical: "自分から一番近い敵と１マス開けた場所を維持します。",
   support: "敵に一番近い味方の隣に向かって進みます。"
 };
 
