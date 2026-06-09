@@ -31,17 +31,20 @@
     <div class="section-divider"></div>
     <h2>タイプ</h2>
 
-    <label>
-      タイプ
-      <select id="unitType">
-        <option value="attack">アタック</option>
-        <option value="defense">ディフェンス</option>
-        <option value="heal">ヒール</option>
-        <option value="speed">スピード</option>
-        <option value="technical">テクニカル</option>
-        <option value="support">サポート</option>
-      </select>
-    </label>
+<div class="unitTypeRow">
+  <label class="unitTypeSelectLabel">
+    <select id="unitType">
+      <option value="attack">アタック</option>
+      <option value="defense">ディフェンス</option>
+      <option value="heal">ヒール</option>
+      <option value="speed">スピード</option>
+      <option value="technical">テクニカル</option>
+      <option value="support">サポート</option>
+    </select>
+  </label>
+
+  <div id="unitTypeDescription" class="unitTypeDescription text-muted"></div>
+</div>
 
     <div class="section-divider"></div>
     <h2>ステータス</h2>
