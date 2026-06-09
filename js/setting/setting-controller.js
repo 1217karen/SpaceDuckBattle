@@ -466,9 +466,9 @@ wrapper.dataset.index = String(index);
   performanceArea.appendChild(cutinRow);
   performanceArea.appendChild(dialogueList);
 
-  detailArea.appendChild(skillInfo);
   skillInfo.appendChild(skillCooldown);
   skillInfo.appendChild(skillSummary);
+
   detailArea.appendChild(performanceToggle);
   detailArea.appendChild(performanceArea);
 
@@ -476,16 +476,19 @@ wrapper.dataset.index = String(index);
     const selectedSkill = skillHandlers[select.value];
 
     if (!selectedSkill) {
+      skillInfo.style.display = "none";
       skillCooldown.textContent = "";
       skillSummary.textContent = "";
       return;
     }
 
+    skillInfo.style.display = "";
+
     skillCooldown.textContent =
       `CT: ${selectedSkill.cooldown ?? 0}`;
 
     skillSummary.textContent =
-      selectedSkill.summary || selectedSkill.description || "説明未設定";
+      selectedSkill.summary || selectedSkill.description || "スキル説明が未設定です。";
   };
 
   const updateDetailVisibility = () => {
@@ -504,6 +507,7 @@ wrapper.dataset.index = String(index);
 
   skillHeader.appendChild(dragHandle);
   skillHeader.appendChild(select);
+  skillHeader.appendChild(skillInfo);
 
   wrapper.appendChild(skillHeader);
   wrapper.appendChild(detailArea);
