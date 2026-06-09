@@ -754,6 +754,11 @@ if (unit?.patterns) {
 
   document.getElementById("unitType").value =
     unit?.type ?? "attack";
+  
+  updateUnitTypeDescription();
+
+document.getElementById("unitType")
+  .addEventListener("change", updateUnitTypeDescription);
 
   document.getElementById("statAT").value =
     unit?.stats?.atk ?? 0;
