@@ -162,5 +162,10 @@
 }
 
 .unitTypeDescription {
+  padding: 6px 10px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--theme-text-main);
   line-height: 1.5;
 }
