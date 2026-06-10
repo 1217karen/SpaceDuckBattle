@@ -4,7 +4,6 @@ import { places } from "../data/places-data.js";
 import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
-import { setupComposerIconPicker, setupComposerDraftPersistence } from "./chat-composer-ui.js";
 import { createPost,getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection,renderThreadHeaderSection,renderPlaceTabsSection,renderChatComposerSection,
