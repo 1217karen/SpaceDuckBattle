@@ -1,5 +1,11 @@
 //chat-post-view.js
 
+import { renderRichText } from "../common/rich-text.js";
+import { getNoImageUrl } from "../common/icon-picker.js";
+import { renderPostBodyWithQuoteAnchors } from "./chat-quote-view.js";
+
+
+
 function stripRichTextTags(text) {
   return String(text ?? "").replace(/<\/?(b|i|u|s|br|rb|rt|f1|f2|f3|f4|f5|f6|f7)>/g, "");
 }
@@ -43,4 +49,372 @@ function formatReplyTargetLabel(target = {}) {
   }
 
   return "不明";
+}
+
+export function createPostCard(post, options = {}) {
+  const {
+    isPreview = false,
+    getPlaceLabel,
+    onMoveToPlace,
+    postActions = {},
+    currentEno = null,
+    hideActions = false,
+    getReplyTargetLabels = null,
+    getQuotePreviewPostById = null,
+    quotePreviewRootArea = null
+  } = options;
+
+  const {
+    onReply = null,
+    onDelete = null,
+    onOpenThread = null,
+    onQuote = null,
+    onHide = null
+  } = postActions;
+
+  const postBox = document.createElement("div");
+
+  const classNames = ["chatPostCard"];
+
+    if (
+    typeof post?.parentPostId === "number" &&
+    post.parentPostId > 0
+  ) {
+    classNames.push("chatPostCardReply");
+  }
+
+  if (isPreview) {
+    classNames.push("chatPostCardPreview");
+  }
+
+  if (post.isDraftPreview) {
+    classNames.push("chatPostCardDraftPreview");
+  }
+
+  postBox.className = classNames.join(" ");
+
+  const left = document.createElement("div");
+  left.className = "chatPostCardLeft";
+
+  const right = document.createElement("div");
+  right.className = "chatPostCardRight";
+
+  if (!isPreview) {
+    const iconBox = document.createElement("div");
+    iconBox.className = "chatPostIcon";
+
+    const iconUrl =
+      typeof post.iconUrl === "string"
+        ? post.iconUrl.trim()
+        : "";
+
+    const iconImg = document.createElement("img");
+    iconImg.className = "chatPostIconImage";
+    iconImg.src = iconUrl || getNoImageUrl();
+    iconImg.alt = "post icon";
+    iconBox.appendChild(iconImg);
+
+    left.appendChild(iconBox);
+  }
+
+  const header = document.createElement("div");
+  header.className = "chatPostHeader";
+
+  const headerLeft = document.createElement("div");
+  headerLeft.className = "chatPostHeaderLeft";
+
+  const headerRight = document.createElement("div");
+  headerRight.className = "chatPostHeaderRight";
+
+  if (!isPreview) {
+
+    const nameRow = document.createElement("div");
+    nameRow.className = "chatPostNameRow";
+
+    const name = document.createElement("span");
+    name.className = "chatPostName";
+    name.textContent =
+      typeof post.speakerName === "string"
+        ? post.speakerName
+        : "";
+
+    const enoLink = document.createElement("button");
+    enoLink.type = "button";
+    enoLink.className = "chatPostEnoLink";
+    enoLink.textContent =
+      typeof post?.authorEno === "number" && post.authorEno > 0
+        ? ` / Eno.${post.authorEno}`
+        : " / Eno.?";
+
+    if (
+      typeof post?.authorEno === "number" &&
+      post.authorEno > 0
+    ) {
+      enoLink.addEventListener("click", () => {
+        window.location.href =
+          `./profile.html?eno=${encodeURIComponent(post.authorEno)}`;
+      });
+    } else {
+      enoLink.disabled = true;
+    }
+
+    nameRow.appendChild(name);
+    nameRow.appendChild(enoLink);
+    headerLeft.appendChild(nameRow);
+  }
+
+  const postNo = document.createElement("div");
+  postNo.className = "chatPostNo";
+  postNo.textContent = `No.${post.postId}`;
+
+  headerRight.appendChild(postNo);
+  header.appendChild(headerLeft);
+  header.appendChild(headerRight);
+
+  const divider = document.createElement("div");
+  divider.className = "chatPostDivider";
+
+  const body = document.createElement("div");
+  body.className = "chatPostBody";
+
+  if (isPreview) {
+    body.textContent = getPreviewText(post.body);
+  } else {
+    renderPostBodyWithQuoteAnchors(body, post, {
+      renderRichText,
+      getQuotePreviewPostById,
+      getPlaceLabel,
+      rootPreviewArea: quotePreviewRootArea
+    });
+  }
+
+  const actions = document.createElement("div");
+  actions.className = "chatPostActions";
+
+  if (!isPreview && !post.isDraftPreview && !hideActions) {
+    const isOwnPost =
+      currentEno !== null &&
+      currentEno !== undefined &&
+      String(post.authorEno) === String(currentEno);
+
+    const replyButton = document.createElement("button");
+    replyButton.type = "button";
+    replyButton.className = "chatPostActionButton chatPostActionButtonReply";
+    replyButton.title = "返信";
+    replyButton.setAttribute("aria-label", "返信");
+
+    if (typeof onReply === "function") {
+      replyButton.addEventListener("click", () => {
+        onReply(post);
+      });
+    }
+
+    const replyIcon = document.createElement("span");
+    replyIcon.className = "chatPostActionIcon chatPostActionIconReply";
+    replyButton.appendChild(replyIcon);
+
+    const quoteButton = document.createElement("button");
+    quoteButton.type = "button";
+    quoteButton.className = "chatPostActionButton chatPostActionButtonQuote";
+    quoteButton.title = "引用";
+    quoteButton.setAttribute("aria-label", "引用");
+
+    const quoteIcon = document.createElement("span");
+    quoteIcon.className = "chatPostActionIcon chatPostActionIconQuote";
+    quoteButton.appendChild(quoteIcon);
+    if (typeof onQuote === "function") {
+      quoteButton.addEventListener("click", () => {
+        onQuote(post);
+      });
+    }
+
+    const hideButton = document.createElement("button");
+    hideButton.type = "button";
+    hideButton.className = "chatPostActionButton chatPostActionButtonHide";
+    hideButton.title = "非表示";
+    hideButton.setAttribute("aria-label", "非表示");
+
+    const hideIcon = document.createElement("span");
+    hideIcon.className = "chatPostActionIcon chatPostActionIconHide";
+    hideButton.appendChild(hideIcon);
+
+    if (typeof onHide === "function") {
+      hideButton.addEventListener("click", () => {
+        onHide(post);
+      });
+    }
+
+    actions.appendChild(replyButton);
+    actions.appendChild(quoteButton);
+
+    if (isOwnPost) {
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "chatPostActionButton chatPostActionButtonDelete";
+      deleteButton.title = "削除";
+      deleteButton.setAttribute("aria-label", "削除");
+
+      const deleteIcon = document.createElement("span");
+      deleteIcon.className = "chatPostActionIcon chatPostActionIconDelete";
+      deleteButton.appendChild(deleteIcon);
+      if (typeof onDelete === "function") {
+        deleteButton.addEventListener("click", () => {
+          onDelete(post);
+        });
+      }
+
+      actions.appendChild(deleteButton);
+    }
+
+    actions.appendChild(hideButton);
+  }
+
+  const footer = document.createElement("div");
+  footer.className = "chatPostFooter";
+
+  const createdAtText = document.createElement("span");
+  createdAtText.textContent = `${post.createdAt} / `;
+
+  const placeButton = document.createElement("button");
+  placeButton.type = "button";
+  placeButton.className = "chatPostPlaceButton";
+  placeButton.textContent = getPlaceLabel(post.placeId);
+
+  if (typeof onMoveToPlace === "function") {
+    placeButton.addEventListener("click", () => {
+      onMoveToPlace(post.placeId);
+    });
+  } else {
+    placeButton.disabled = true;
+  }
+
+  footer.appendChild(createdAtText);
+  footer.appendChild(placeButton);
+
+  right.appendChild(header);
+  right.appendChild(divider);
+  right.appendChild(body);
+  right.appendChild(actions);
+  right.appendChild(footer);
+
+  const contentRow = document.createElement("div");
+  contentRow.className = "chatPostCardContentRow";
+
+  contentRow.appendChild(left);
+  contentRow.appendChild(right);
+
+  if (
+    !isPreview &&
+    typeof getReplyTargetLabels === "function" &&
+    typeof post?.parentPostId === "number" &&
+    post.parentPostId > 0
+  ) {
+    const replyTargets = getReplyTargetLabels(post);
+
+    if (Array.isArray(replyTargets) && replyTargets.length > 0) {
+      const replyLabelRow = document.createElement("div");
+      replyLabelRow.className = "chatPostReplyLabelRow";
+
+      const replyLabelButton = document.createElement("button");
+      replyLabelButton.type = "button";
+      replyLabelButton.className = "chatPostReplyLabelButton";
+
+      const replyLabel = document.createElement("div");
+      replyLabel.className = "chatPostReplyLabel";
+      replyLabel.textContent =
+        `${replyTargets.map(formatReplyTargetLabel).join("＆")}>>`;
+
+      replyLabelButton.appendChild(replyLabel);
+
+      if (typeof onOpenThread === "function") {
+        replyLabelButton.addEventListener("click", () => {
+          onOpenThread(post);
+        });
+      } else {
+        replyLabelButton.disabled = true;
+      }
+
+      replyLabelRow.appendChild(replyLabelButton);
+      postBox.appendChild(replyLabelRow);
+    }
+  }
+
+  postBox.appendChild(contentRow);
+
+  return postBox;
+}
+
+export function renderPostListSection(container, options = {}) {
+  const {
+    posts = [],
+    getPlaceLabel,
+    onMoveToPlace,
+    postActions = {},
+    currentEno = null,
+    getReplyTargetLabels = null,
+    getQuotePreviewPostById = null
+  } = options;
+
+  const section = document.createElement("section");
+  section.className = "chatPostListSection";
+
+  const list = document.createElement("div");
+  list.className = "chatPostList";
+  section.appendChild(list);
+
+  container.appendChild(section);
+
+  renderPostListContent(list, {
+    posts,
+    getPlaceLabel,
+    onMoveToPlace,
+    postActions,
+    currentEno,
+    getReplyTargetLabels,
+    getQuotePreviewPostById
+  });
+
+  return {
+    section,
+    list
+  };
+}
+
+export function renderPostListContent(listContainer, options = {}) {
+  const {
+    posts = [],
+    getPlaceLabel,
+    onMoveToPlace,
+    postActions = {},
+    currentEno = null,
+    getReplyTargetLabels = null,
+    getQuotePreviewPostById = null
+  } = options;
+
+  if (!listContainer) {
+    return;
+  }
+
+  listContainer.innerHTML = "";
+
+  if (posts.length === 0) {
+    const emptyPosts = document.createElement("p");
+    emptyPosts.textContent = "発言はありません";
+    listContainer.appendChild(emptyPosts);
+    return;
+  }
+
+  posts.forEach(post => {
+    listContainer.appendChild(
+      createPostCard(post, {
+        isPreview: post.displayType === "preview",
+        getPlaceLabel,
+        onMoveToPlace,
+        postActions,
+        currentEno,
+        getReplyTargetLabels,
+        getQuotePreviewPostById
+      })
+    );
+  });
 }
