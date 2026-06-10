@@ -151,3 +151,21 @@ export function renderFavoritePlacesPanel(container, options = {}) {
     content
   };
 }
+
+export function renderFavoritePlacesSidePanel(rightPanel, options = {}) {
+  const {
+    favoritePlaces = [],
+    onMoveToPlace = null
+  } = options;
+
+  if (!rightPanel) {
+    return null;
+  }
+
+  rightPanel.innerHTML = "";
+
+  return renderFavoritePlacesPanel(rightPanel, {
+    favoritePlaces,
+    onMoveToPlace
+  });
+}
