@@ -5,7 +5,6 @@ import { places } from "../data/places-data.js";
 import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
-import { setupComposerIconPicker, setupComposerDraftPersistence } from "./chat-composer-ui.js";
 import { createPost,getAllPosts} from "../services/post-service.js";
 import { createPostCard,renderThreadHeaderSection,renderChatComposerSection,renderPostListSection,renderPostListContent} from "./chat-view.js";
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs} from "./chat-composer-state.js";
