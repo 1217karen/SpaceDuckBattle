@@ -1,6 +1,6 @@
 //chat-quote-view.js
 
-import { createPostCard } from "./chat-view.js";
+import { createPostCard } from "./chat-post-view.js";
 
 function parseQuotePostIds(text) {
   const source = String(text ?? "");
