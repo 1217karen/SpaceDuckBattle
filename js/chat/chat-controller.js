@@ -6,7 +6,8 @@ import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/sto
 import { createIconPicker } from "../common/icon-picker.js";
 import { createPost,getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPlaceInfoSection,renderThreadHeaderSection,renderChatComposerSection } from "./chat-view.js";
+import { renderPlaceInfoSection,renderThreadHeaderSection } from "./chat-view.js";
+import { renderChatComposerSection } from "./chat-composer-view.js";
 import { renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.js";
 import { renderPostListSection,renderPostListContent } from "./chat-post-view.js";
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs } from "./chat-composer-state.js";
