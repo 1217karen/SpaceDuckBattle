@@ -1,7 +1,7 @@
 //chat-controller.js
 
 import { places } from "../data/places-data.js";
-import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-utils.js";
+import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
 import { setupComposerIconPicker, setupComposerDraftPersistence } from "./chat-composer-ui.js";
@@ -14,7 +14,6 @@ import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findRep
 import { buildComposerPostInput,buildDraftPreviewPost } from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
 import { showToast } from "../common/toast.js";
-import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
