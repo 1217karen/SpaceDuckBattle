@@ -344,17 +344,11 @@ body {
 }
 
 /* 発言カード下部 */
-.chatPostActionButton {
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--theme-text-accent);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.chatPostActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 4px;
 }
 
 .chatPostFooter {
