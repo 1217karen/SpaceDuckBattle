@@ -16,7 +16,7 @@ import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.
 import { showToast } from "../common/toast.js";
 import { isFavoritePlace,toggleFavoritePlace } from "./chat-place-favorites.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
-import { renderFavoritePlacesSidePanel } from "./chat-side-panel.js";
+import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 
 
