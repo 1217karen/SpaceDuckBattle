@@ -1,4 +1,4 @@
-//chat-view.js
+//chat-header-view.js
 
 
 export function renderPlaceInfoSection(container, options = {}) {
