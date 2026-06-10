@@ -100,11 +100,3 @@ export function findReplySourcePost(allPosts = [], draft = {}) {
 
   return allPosts.find(post => post.postId === replySourcePostId) || null;
 }
-
-export function hasReplyState(draft = {}) {
-  return Boolean(
-    draft.replySourcePostId &&
-    draft.replyParentPostId &&
-    draft.replyThreadRootPostId
-  );
-}
