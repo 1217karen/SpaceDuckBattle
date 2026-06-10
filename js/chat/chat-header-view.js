@@ -208,8 +208,8 @@ topRow.appendChild(titleGroup);
   memoToggle.type = "button";
   memoToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-toggle";
   memoToggle.textContent = isMemoOpen
-    ? "▼非公開メモを閉じる"
-    : "▶非公開メモを表示";
+    ? "▶非公開メモを閉じる"
+    : "▼非公開メモを表示";
 
   const memoContent = document.createElement("div");
   memoContent.className = "chatHeaderDetailContent";
@@ -233,8 +233,8 @@ topRow.appendChild(titleGroup);
     const isOpen = !memoContent.hidden;
     memoContent.hidden = isOpen;
     memoToggle.textContent = isOpen
-      ? "▼非公開メモを表示"
-      : "▲非公開メモを閉じる";
+      ? "▶非公開メモを表示"
+      : "▼非公開メモを閉じる";
   });
 
   memoContent.appendChild(memoTextarea);
