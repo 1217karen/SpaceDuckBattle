@@ -339,16 +339,22 @@ body {
 }
 
 .chatPostBody {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   word-break: break-word;
 }
 
 /* 発言カード下部 */
-.chatPostActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 8px;
+.chatPostActionButton {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--theme-text-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .chatPostFooter {
