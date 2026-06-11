@@ -149,6 +149,7 @@ function setupComposerSubmit({
 
     saveComposerDraft(clearedDraft);
     renderThreadPage();
+    showToast("発言を投稿しました", { type: "success" });
   });
 }
 
