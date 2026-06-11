@@ -90,16 +90,14 @@ function setupDraftPreview({
       return;
     }
 
-    const previewCard = createPostCard(draftPreviewPost, {
-      isPreview: false,
-      getPlaceLabel,
-      onMoveToPlace: null,
-      onReply: null,
-      currentEno,
-      hideActions: true,
-      getReplyTargetLabels,
-      onOpenThread: null
-    });
+const previewCard = createPostCard(draftPreviewPost, {
+  isPreview: false,
+  getPlaceLabel,
+  onMoveToPlace: null,
+  currentEno,
+  hideActions: true,
+  getReplyTargetLabels
+});
 
     previewCard.classList.add("chatComposerReplyPreviewCard");
 
