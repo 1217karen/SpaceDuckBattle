@@ -13,7 +13,7 @@ import { renderPostListSection,renderPostListContent } from "./chat-post-view.js
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs } from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost } from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost } from "./chat-composer-post.js";
-import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-view.js";
+import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-utils.js";
 import { showToast } from "../common/toast.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
