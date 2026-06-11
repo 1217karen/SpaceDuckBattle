@@ -7,6 +7,11 @@ function normalizeSubmittedBody(text) {
     .replace(/\n/g, "<br>");
 }
 
+const SPEAKER_NAME_MIN_LENGTH = 1;
+const SPEAKER_NAME_MAX_LENGTH = 15;
+const POST_BODY_MIN_LENGTH = 1;
+const POST_BODY_MAX_LENGTH = 600;
+
 function formatDraftBody(text) {
   return String(text ?? "").replace(/\n/g, "<br>");
 }
@@ -53,6 +58,27 @@ function getSpeakerName(draft = {}, character = {}) {
   }
 
   return "名前未設定";
+}
+
+export function validateComposerDraftForPost(draft = {}, character = {}) {
+  const speakerName = getSpeakerName(draft, character);
+  const rawBody = String(draft?.body ?? "");
+
+  if (
+    speakerName.length < SPEAKER_NAME_MIN_LENGTH ||
+    speakerName.length > SPEAKER_NAME_MAX_LENGTH
+  ) {
+    return `発言者名は${SPEAKER_NAME_MIN_LENGTH}〜${SPEAKER_NAME_MAX_LENGTH}文字にしてください`;
+  }
+
+  if (
+    rawBody.length < POST_BODY_MIN_LENGTH ||
+    rawBody.length > POST_BODY_MAX_LENGTH
+  ) {
+    return `本文は${POST_BODY_MIN_LENGTH}〜${POST_BODY_MAX_LENGTH}文字にしてください`;
+  }
+
+  return "";
 }
 
 function getIconData(draft = {}) {
@@ -125,11 +151,11 @@ export function buildComposerPostInput({
   draft,
   replySourcePost = null
 }) {
-const rawBody = String(draft?.body ?? "");
+  const rawBody = String(draft?.body ?? "");
 
-if (rawBody.length === 0) {
-  return null;
-}
+  if (rawBody.length === 0) {
+    return null;
+  }
 
   const { iconId, iconUrl } = getIconData(draft);
 
@@ -162,11 +188,11 @@ export function buildDraftPreviewPost({
   draft,
   replySourcePost = null
 }) {
-const rawBody = String(draft?.body ?? "");
+  const rawBody = String(draft?.body ?? "");
 
-if (rawBody.length === 0) {
-  return null;
-}
+  if (rawBody.length === 0) {
+    return null;
+  }
 
   const { iconId, iconUrl } = getIconData(draft);
 
