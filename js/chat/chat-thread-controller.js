@@ -20,7 +20,7 @@ import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
 import { getThreadDisplayPosts } from "./chat-post-filter.js";
-import { navigateToChatPlace } from "./chat-navigation.js";
+import { getPlaceIdFromQuery, navigateToChatPlace } from "./chat-navigation.js";
 
 
 const centerPanel = document.querySelector(".center-panel");
