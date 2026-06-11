@@ -18,6 +18,8 @@ import { loadThreadPrivateNote,saveThreadPrivateNote} from "./chat-thread-privat
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
+import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
+
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -106,13 +108,8 @@ function setupDraftPreview({
 
     draftPreviewContainer.appendChild(previewCard);
   }
-
-  composerRefs.textarea.addEventListener("input", refreshDraftPreview);
-  composerRefs.nameInput?.addEventListener("input", refreshDraftPreview);
-  composerRefs.replyTargetInput?.addEventListener("input", refreshDraftPreview);
-  composerRefs.iconButton?.addEventListener("iconchange", refreshDraftPreview);
-  composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", refreshDraftPreview);
-  composerRefs.additionalTargetSection?.addEventListener("toggle", refreshDraftPreview);
+  
+  bindComposerDraftPreviewEvents(composerRefs, refreshDraftPreview);
 
   refreshDraftPreview();
 }
