@@ -263,6 +263,7 @@ body {
 
 .chatPostHeaderLeft {
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .chatPostHeaderRight {
@@ -293,6 +294,10 @@ body {
 
 .chatPostName {
   font-weight: bold;
+  max-width: 15em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chatPostEnoLink {
@@ -387,15 +392,15 @@ body {
 .chatPostBottomRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 8px;
   margin-top: 4px;
 }
 
 .chatPostBottomRow .chatPostFooter {
   min-width: 0;
-  flex: 1 1 auto;
-  text-align: left;
+  flex: 0 1 auto;
+  text-align: right;
 }
 
 .chatPostBottomRow .chatPostActions {
