@@ -224,6 +224,7 @@ body {
 .chatPostReplyLabelRow {
   width: 100%;
   min-width: 0;
+  line-height: 1.4;
 }
 
 .chatPostCardLeft {
@@ -327,8 +328,8 @@ body {
 }
 
 .chatPostReplyLabelButton {
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: auto;
   padding: 0;
   border: none;
   background: none;
