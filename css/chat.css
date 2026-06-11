@@ -269,6 +269,20 @@ body {
   flex: 0 0 auto;
 }
 
+.chatPostMetaTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-muted);
+  white-space: nowrap;
+}
+
+.chatPostCreatedAt {
+  color: var(--theme-text-muted);
+}
+
 .chatPostNameRow {
   display: flex;
   align-items: baseline;
@@ -348,12 +362,12 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
-  margin-bottom: 4px;
+  margin-bottom: 0;
 }
 
 .chatPostFooter {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-  text-align: right;
+  text-align: left;
   color: var(--theme-text-muted);
 }
 
@@ -368,6 +382,25 @@ body {
 
 .chatPostPlaceButton:hover {
   text-decoration: underline;
+}
+
+.chatPostBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.chatPostBottomRow .chatPostFooter {
+  min-width: 0;
+  flex: 1 1 auto;
+  text-align: left;
+}
+
+.chatPostBottomRow .chatPostActions {
+  flex: 0 0 auto;
+  margin-bottom: 0;
 }
 
 /* 発言操作ボタン */
