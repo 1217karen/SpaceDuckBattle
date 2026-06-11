@@ -55,3 +55,8 @@ export function moveToChatPlace(placeId, options = {}) {
 
   return true;
 }
+
+export function getPlaceIdFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("placeId");
+}
