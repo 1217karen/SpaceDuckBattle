@@ -141,20 +141,11 @@ function setupComposerSubmit({
 
     createPost(postInput);
 
-    const allPosts = getAllPosts();
-    const latestThreadPosts = getThreadPosts(allPosts, currentDraft.replyThreadRootPostId);
-    const lastPost = latestThreadPosts[latestThreadPosts.length - 1] || null;
-
-    const nextReplyState = createReplyStateFromPost(lastPost);
-
-    const clearedDraft = applyReplyStateToDraft(
-      {
-        ...currentDraft,
-        body: "",
-        additionalTargetEnoText: ""
-      },
-      nextReplyState
-    );
+    const clearedDraft = clearReplyState({
+      ...currentDraft,
+      body: "",
+      additionalTargetEnoText: ""
+    });
 
     saveComposerDraft(clearedDraft);
     renderThreadPage();
