@@ -263,7 +263,7 @@ const rawDisplayPosts = threadRootPostId
     renderPostListContent(postListRefs.list, {
       posts: postsForRender,
       getPlaceLabel,
-      onMoveToPlace,
+      onMoveToPlace: null,
       postActions,
       currentEno,
       getReplyTargetLabels,
