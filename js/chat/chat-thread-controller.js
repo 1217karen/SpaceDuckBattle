@@ -9,7 +9,7 @@ import { renderChatComposerSection } from "./chat-composer-view.js";
 import { createPostCard,renderPostListSection,renderPostListContent } from "./chat-post-view.js";
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs} from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
-import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
+import { buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForPost } from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-utils.js";
 import { showToast } from "../common/toast.js";
 import { loadThreadPrivateNote,saveThreadPrivateNote} from "./chat-thread-private-note.js";
@@ -124,6 +124,13 @@ function setupComposerSubmit({
       !currentDraft.replyThreadRootPostId
     ) {
       alert("返信先が設定されていません");
+      return;
+    }
+
+    const validationError = validateComposerDraftForPost(currentDraft, character);
+
+    if (validationError) {
+      alert(validationError);
       return;
     }
 
