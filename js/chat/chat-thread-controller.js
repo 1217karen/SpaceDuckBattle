@@ -27,11 +27,6 @@ const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenThreadPostIds = new Set();
 
-function getPlaceIdFromQuery() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("placeId");
-}
-
 function closeThread() {
   const placeId = getPlaceIdFromQuery() || "F1-1";
   navigateToChatPlace(placeId);
@@ -90,14 +85,14 @@ function setupDraftPreview({
       return;
     }
 
-const previewCard = createPostCard(draftPreviewPost, {
-  isPreview: false,
-  getPlaceLabel,
-  onMoveToPlace: null,
-  currentEno,
-  hideActions: true,
-  getReplyTargetLabels
-});
+    const previewCard = createPostCard(draftPreviewPost, {
+      isPreview: false,
+      getPlaceLabel,
+      onMoveToPlace: null,
+      currentEno,
+      hideActions: true,
+      getReplyTargetLabels
+    });
 
     previewCard.classList.add("chatComposerReplyPreviewCard");
 
@@ -230,7 +225,7 @@ function renderThreadPage() {
   const composerDraft = loadComposerDraft();
   const replySourcePost = findReplySourcePost(allPosts, composerDraft);
 
-const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
+  const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
 
   const composerRefs = renderChatComposerSection(chatMainArea, {
     composerDraft,
@@ -252,12 +247,12 @@ const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
     }
   });
 
-setupRenderedComposer({
-  composerRefs,
-  composerDraft,
-  character,
-  chatIconPicker
-});
+  setupRenderedComposer({
+    composerRefs,
+    composerDraft,
+    character,
+    chatIconPicker
+  });
 
   const handleReply = (post) => {
     const currentDraft = saveComposerDraft(
@@ -271,19 +266,19 @@ setupRenderedComposer({
     renderThreadPage();
   };
 
-const handleDelete = createDeleteHandler({
-  currentEno: eno,
-  rerender: renderThreadPage
-});
+  const handleDelete = createDeleteHandler({
+    currentEno: eno,
+    rerender: renderThreadPage
+  });
 
-const handleHide = createHideHandler({
-  hiddenPostIds: hiddenThreadPostIds,
-  rerender: renderThreadPage
-});
+  const handleHide = createHideHandler({
+    hiddenPostIds: hiddenThreadPostIds,
+    rerender: renderThreadPage
+  });
 
-const handleQuote = createQuoteHandler({
-  composerRefs
-});
+  const handleQuote = createQuoteHandler({
+    composerRefs
+  });
 
   const postActions = createPostActions({
     onReply: handleReply,
@@ -305,16 +300,16 @@ const handleQuote = createQuoteHandler({
     getQuotePreviewPostById
   });
 
-setupDraftPreview({
-  postListRefs,
-  place,
-  character,
-  composerRefs,
-  threadPosts,
-  currentEno: eno,
-  postActions,
-  getQuotePreviewPostById
-});
+  setupDraftPreview({
+    postListRefs,
+    place,
+    character,
+    composerRefs,
+    threadPosts,
+    currentEno: eno,
+    postActions,
+    getQuotePreviewPostById
+  });
 
   setupComposerSubmit({
     place,
@@ -322,10 +317,10 @@ setupDraftPreview({
     composerRefs,
     threadPosts
   });
-renderFavoritePlacesSidePanel(rightPanel, {
-  favoritePlaces: getFavoritePlaces(),
-  onMoveToPlace: navigateToChatPlace
-});
+  renderFavoritePlacesSidePanel(rightPanel, {
+    favoritePlaces: getFavoritePlaces(),
+    onMoveToPlace: navigateToChatPlace
+  });
 }
 
 renderThreadPage();
