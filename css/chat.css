@@ -669,7 +669,7 @@ body {
 .chatComposerTextarea {
   width: 100%;
   min-height: 120px;
-  padding: 10px;
+  padding: px 10px;
   border: 1px solid var(--theme-border-main);
   border-radius: var(--theme-radius-md);
   background: rgba(0, 0, 0, 0.28);
@@ -677,7 +677,7 @@ body {
   box-sizing: border-box;
   resize: vertical;
   line-height: 1.6;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 /* ツールバー */
