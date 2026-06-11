@@ -253,6 +253,8 @@ body {
   min-width: 0;
 }
 
+
+
 /* 発言ヘッダー */
 .chatPostHeader {
   display: flex;
@@ -582,6 +584,17 @@ body {
   min-width: 0;
 }
 
+.chatComposerBodyCount {
+  margin-left: auto;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+  white-space: nowrap;
+}
+
+.chatComposerBodyCount.is-over-limit {
+  color: #ff8a8a;
+}
+
 /* 返信プレビュー */
 .chatComposerReplyPreview {
   width: 100%;
@@ -735,6 +748,7 @@ body {
 .chatComposerToolbarRowTools {
   flex-wrap: wrap;
   gap: 0 6px;
+  width: 100%;
 }
 
 .chatComposerToolbarRowActions {
