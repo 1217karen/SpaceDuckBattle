@@ -2,7 +2,7 @@
 
 import { places } from "../data/places-data.js";
 import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
-import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
+import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
 import { createPost,getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
@@ -20,7 +20,7 @@ import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
 import { filterHiddenPosts,getHerePosts,getReplyPostsForEno,getSelfPostsForEno } from "./chat-post-filter.js";
-
+import { moveToChatPlace } from "./chat-navigation.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -66,34 +66,11 @@ function getLayerSortValue(layer) {
 }
 
 function moveToPlace(placeId) {
-  const account = getCurrentAccount();
-
-  if (!account?.eno) {
-    alert("ログイン中のアカウント情報を確認できません");
-    return;
-  }
-
-  const eno = account.eno;
-  const character = loadCharacter(eno) || {};
-
-  isShopOpen = false;
-
-  saveCharacter(eno, {
-    ...character,
-    currentPlaceId: placeId
+  moveToChatPlace(placeId, {
+    onBeforeMove: () => {
+      isShopOpen = false;
+    }
   });
-
-  const placeLabel = getPlaceLabel(placeId);
-  sessionStorage.setItem(
-    "chatToastMessage",
-    JSON.stringify({
-      message: `${placeLabel}に移動しました`,
-      type: "info"
-    })
-  );
-
-  window.location.href =
-    `./chat.html?placeId=${encodeURIComponent(placeId)}`;
 }
 
 function getAroundBasePlace(place) {
