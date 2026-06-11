@@ -19,7 +19,7 @@ import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-
 import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
-
+import { getThreadDisplayPosts } from "./chat-post-filter.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -69,9 +69,7 @@ function setupDraftPreview({
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
     renderPostListContent(postListRefs.list, {
-      posts: threadPosts.filter(post =>
-        !hiddenThreadPostIds.has(post.postId)
-      ),
+      posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
       getPlaceLabel,
       onMoveToPlace: null,
       postActions,
@@ -301,12 +299,7 @@ const handleQuote = createQuoteHandler({
   });
 
   const postListRefs = renderPostListSection(chatMainArea, {
-    posts: threadPosts
-      .filter(post => !hiddenThreadPostIds.has(post.postId))
-      .map(post => ({
-        ...post,
-        displayType: "normal"
-      })),
+    posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
     getPlaceLabel,
     onMoveToPlace: null,
     postActions,
