@@ -6,14 +6,13 @@ import { getCurrentAccount, loadCharacter } from "../services/storage-service.js
 import { createIconPicker } from "../common/icon-picker.js";
 import { createPost,getAllPosts } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
-import { renderPlaceInfoSection,renderThreadHeaderSection } from "./chat-header-view.js";
+import { renderPlaceInfoSection } from "./chat-header-view.js";
 import { renderChatComposerSection } from "./chat-composer-view.js";
 import { renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.js";
 import { renderPostListSection,renderPostListContent } from "./chat-post-view.js";
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs } from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost } from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost } from "./chat-composer-post.js";
-import { getThreadRootPostIdFromQuery,getThreadPosts } from "./chat-thread-utils.js";
 import { showToast } from "../common/toast.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
@@ -29,26 +28,6 @@ const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
 let currentViewMode = "chat";
 let isShopOpen = false;
-
-function getPlaceIdFromQuery() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("placeId");
-}
-
-
-function getKindLabel(kind) {
-  if (kind === "field") return "フィールド";
-  if (kind === "area") return "エリア";
-  if (kind === "room") return "ルーム";
-  return "";
-}
-
-function getLayerLabel(layer) {
-  if (layer === "main") return "メイン";
-  if (layer === "side") return "サイド";
-  if (layer === "local") return "ローカル";
-  return "なし";
-}
 
 function getPlacesInSameGroup(place) {
   if (!place?.groupId) return [];
@@ -217,10 +196,8 @@ function setupDraftPreview({
   composerRefs,
   allPosts,
   getPlaceLabel,
-  onMoveToPlace,
   postActions,
   getQuotePreviewPostById,
-  threadRootPostId = null,
   currentEno
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
@@ -230,12 +207,8 @@ function setupDraftPreview({
   function refreshDraftPreview() {
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
-const rawDisplayPosts = threadRootPostId
-  ? getThreadPosts(allPosts, threadRootPostId).map(post => ({
-      ...post,
-      displayType: "normal"
-    }))
-  : currentViewMode === "reply"
+const rawDisplayPosts =
+  currentViewMode === "reply"
     ? getReplyPostsForEno(allPosts, currentEno)
     : currentViewMode === "self"
       ? getSelfPostsForEno(allPosts, currentEno)
@@ -271,7 +244,7 @@ const rawDisplayPosts = threadRootPostId
     });
   }
 
-    bindComposerDraftPreviewEvents(composerRefs, refreshDraftPreview);
+  bindComposerDraftPreviewEvents(composerRefs, refreshDraftPreview);
   
   refreshDraftPreview();
 }
@@ -317,29 +290,6 @@ function setupComposerSubmit({
   });
 }
 
-function getInitialComposerSpeakerName(character, initialIcon) {
-  const defaultName =
-    typeof character?.defaultName === "string"
-      ? character.defaultName.trim()
-      : "";
-
-  const commIcons = normalizeCommIcons(character?.commIcons);
-
-  if (initialIcon?.iconId) {
-    const matchedIcon = commIcons.find(item => item.id === initialIcon.iconId) || null;
-    const iconName =
-      typeof matchedIcon?.name === "string"
-        ? matchedIcon.name.trim()
-        : "";
-
-    if (iconName !== "") {
-      return iconName;
-    }
-  }
-
-  return defaultName;
-}
-
 
 function renderShopPlaceholderSection(container) {
   if (!container) {
@@ -382,11 +332,10 @@ function renderChatPlaceInfo() {
     character?.currentPlaceId ||
     "F1-1";
 
-const place = getPlaceById(placeId);
-const aroundBasePlace = getAroundBasePlace(place);
-const threadRootPostId = getThreadRootPostIdFromQuery();
+  const place = getPlaceById(placeId);
+  const aroundBasePlace = getAroundBasePlace(place);
 
-chatMainArea.innerHTML = "";
+  chatMainArea.innerHTML = "";
 
   const pendingToast = sessionStorage.getItem("chatToastMessage");
 
@@ -405,44 +354,33 @@ chatMainArea.innerHTML = "";
     }
   }
 
-if (threadRootPostId) {
-  renderThreadHeaderSection(chatMainArea, {
-    memoText: "この欄は非公開メモ用です。"
-  });
-} else {
-  renderPlaceInfoSection(chatMainArea, {
-    place,
-    aroundBasePlace,
-    places,
-    onMoveToPlace: moveToPlace,
-    isFavorite: isFavoritePlace(place?.placeId ?? ""),
-    onToggleFavorite: (targetPlace) => {
-      const result = toggleFavoritePlace(targetPlace?.placeId ?? "");
+renderPlaceInfoSection(chatMainArea, {
+  place,
+  aroundBasePlace,
+  places,
+  onMoveToPlace: moveToPlace,
+  isFavorite: isFavoritePlace(place?.placeId ?? ""),
+  onToggleFavorite: (targetPlace) => {
+    const result = toggleFavoritePlace(targetPlace?.placeId ?? "");
 
-      renderChatPlaceInfo();
+    renderChatPlaceInfo();
 
-      showToast(
-        result.isFavorite
-          ? "現在地をお気に入り登録しました"
-          : "現在地のお気に入りを解除しました",
-        {
-          type: result.isFavorite ? "success" : "info"
-        }
-      );
-    }
-  });
-}
+    showToast(
+      result.isFavorite
+        ? "現在地をお気に入り登録しました"
+        : "現在地のお気に入りを解除しました",
+      {
+        type: result.isFavorite ? "success" : "info"
+      }
+    );
+  }
+});
 
 if (!place) {
   return;
 }
 
 const allPosts = getAllPosts();
-const threadPosts = getThreadPosts(allPosts, threadRootPostId);
-const threadRootPost =
-  threadRootPostId
-    ? allPosts.find(post => post.postId === threadRootPostId) || null
-    : null;
 const composerDraft = loadComposerDraft();
 const replySourcePost = findReplySourcePost(allPosts, composerDraft);
 
@@ -473,7 +411,7 @@ if (placeTabs.length > 0) {
 let composerRefs = null;
 
 if (isShopOpen) {
-  renderShopPlaceholderSection(centerPanel);
+  renderShopPlaceholderSection(chatMainArea);
 } else {
   composerRefs = renderChatComposerSection(chatMainArea, {
     composerDraft,
@@ -495,15 +433,19 @@ if (isShopOpen) {
     }
   });
 
-setupRenderedComposer({
-  composerRefs,
-  composerDraft,
-  character,
-  chatIconPicker
-});
+  setupRenderedComposer({
+    composerRefs,
+    composerDraft,
+    character,
+    chatIconPicker
+  });
 }
 
 const handleReply = (post) => {
+  if (!composerRefs) {
+    return;
+  }
+
   const currentDraft = saveComposerDraft(
     readComposerDraftFromRefs(composerRefs)
   );
@@ -544,12 +486,8 @@ renderViewTabsSection(chatMainArea, {
 });
 
 
-const rawDisplayPosts = threadRootPostId
-  ? threadPosts.map(post => ({
-      ...post,
-      displayType: "normal"
-    }))
-  : currentViewMode === "reply"
+const rawDisplayPosts =
+  currentViewMode === "reply"
     ? getReplyPostsForEno(allPosts, eno)
     : currentViewMode === "self"
       ? getSelfPostsForEno(allPosts, eno)
@@ -581,10 +519,8 @@ if (composerRefs) {
     composerRefs,
     allPosts,
     getPlaceLabel,
-    onMoveToPlace: moveToPlace,
     postActions,
     getQuotePreviewPostById,
-    threadRootPostId,
     currentEno: eno
   });
 
