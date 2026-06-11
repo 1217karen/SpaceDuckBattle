@@ -31,11 +31,3 @@ export function getThreadPosts(allPosts = [], threadRootPostId = null) {
     })
     .sort((a, b) => a.postId - b.postId);
 }
-
-export function buildThreadViewLabel(rootPost) {
-  if (!rootPost) {
-    return "ツリー表示";
-  }
-
-  return `ツリー表示 / No.${rootPost.postId}`;
-}
