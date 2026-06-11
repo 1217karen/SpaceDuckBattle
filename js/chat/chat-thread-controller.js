@@ -224,10 +224,67 @@ function renderThreadPage() {
 
   const composerDraft = loadComposerDraft();
   const replySourcePost = findReplySourcePost(allPosts, composerDraft);
-
   const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
 
-  const composerRefs = renderChatComposerSection(chatMainArea, {
+  let composerRefs = null;
+
+  const handleReply = (post) => {
+    if (!composerRefs) {
+      return;
+    }
+
+    const currentDraft = saveComposerDraft(
+      readComposerDraftFromRefs(composerRefs)
+    );
+
+    const replyState = createReplyStateFromPost(post);
+    const nextDraft = applyReplyStateToDraft(currentDraft, replyState);
+
+    saveComposerDraft(nextDraft);
+    renderThreadPage();
+  };
+
+  const handleDelete = createDeleteHandler({
+    currentEno: eno,
+    rerender: renderThreadPage
+  });
+
+  const handleHide = createHideHandler({
+    hiddenPostIds: hiddenThreadPostIds,
+    rerender: renderThreadPage
+  });
+
+  const handleQuote = (post) => {
+    if (!composerRefs) {
+      return;
+    }
+
+    createQuoteHandler({
+      composerRefs
+    })(post);
+  };
+
+  const postActions = createPostActions({
+    onReply: handleReply,
+    onDelete: handleDelete,
+    onOpenThread: (post) => {
+      openThreadFromPost(post, getPlaceIdFromQuery() || "F1-1");
+    },
+    onQuote: handleQuote,
+    onHide: handleHide
+  });
+
+  const postListRefs = renderPostListSection(chatMainArea, {
+    posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
+    getPlaceLabel,
+    onMoveToPlace: navigateToChatPlace,
+    postActions,
+    currentEno: eno,
+    getReplyTargetLabels,
+    getQuotePreviewPostById
+  });
+
+  composerRefs = renderChatComposerSection(chatMainArea, {
     composerDraft,
     replySourcePost,
     getPlaceLabel,
@@ -252,52 +309,6 @@ function renderThreadPage() {
     composerDraft,
     character,
     chatIconPicker
-  });
-
-  const handleReply = (post) => {
-    const currentDraft = saveComposerDraft(
-      readComposerDraftFromRefs(composerRefs)
-    );
-
-    const replyState = createReplyStateFromPost(post);
-    const nextDraft = applyReplyStateToDraft(currentDraft, replyState);
-
-    saveComposerDraft(nextDraft);
-    renderThreadPage();
-  };
-
-  const handleDelete = createDeleteHandler({
-    currentEno: eno,
-    rerender: renderThreadPage
-  });
-
-  const handleHide = createHideHandler({
-    hiddenPostIds: hiddenThreadPostIds,
-    rerender: renderThreadPage
-  });
-
-  const handleQuote = createQuoteHandler({
-    composerRefs
-  });
-
-  const postActions = createPostActions({
-    onReply: handleReply,
-    onDelete: handleDelete,
-    onOpenThread: (post) => {
-      openThreadFromPost(post, getPlaceIdFromQuery() || "F1-1");
-    },
-    onQuote: handleQuote,
-    onHide: handleHide
-  });
-
-  const postListRefs = renderPostListSection(chatMainArea, {
-    posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
-    getPlaceLabel,
-    onMoveToPlace: navigateToChatPlace,
-    postActions,
-    currentEno: eno,
-    getReplyTargetLabels,
-    getQuotePreviewPostById
   });
 
   setupDraftPreview({
