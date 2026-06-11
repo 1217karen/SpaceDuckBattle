@@ -1,7 +1,5 @@
 //chat-thread-controller.js
 
-
-import { places } from "../data/places-data.js";
 import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
