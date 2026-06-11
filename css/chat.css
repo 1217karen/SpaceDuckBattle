@@ -347,6 +347,8 @@ body {
 }
 
 .chatPostReplyLabelButton:hover .chatPostReplyLabel {
+  color: #ffe38a;
+  background: none;
   text-decoration: underline;
 }
 
