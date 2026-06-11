@@ -5,6 +5,23 @@ import { getNoImageUrl, normalizeCommIcons, setButtonPreview } from "../common/i
 import { bindSpeakerNameSync } from "../common/speaker-name-sync.js";
 import { saveComposerDraft, readComposerDraftFromRefs, applyComposerDraftToRefs } from "./chat-composer-state.js";
 
+
+const POST_BODY_MAX_LENGTH = 600;
+
+function updateComposerBodyCount(composerRefs) {
+  const textarea = composerRefs?.textarea;
+  const bodyCount = composerRefs?.bodyCount;
+
+  if (!textarea || !bodyCount) {
+    return;
+  }
+
+  const length = String(textarea.value ?? "").length;
+
+  bodyCount.textContent = `${length} / ${POST_BODY_MAX_LENGTH}`;
+  bodyCount.classList.toggle("is-over-limit", length > POST_BODY_MAX_LENGTH);
+}
+
 function getInitialComposerIcon(character) {
   const commIcons = normalizeCommIcons(character?.commIcons);
   const defaultIconUrl =
@@ -132,4 +149,10 @@ export function setupRenderedComposer({
   setupComposerDraftPersistence(composerRefs);
   applyComposerDraftToRefs(composerRefs, composerDraft);
   applyComposerDraftIconPreview(composerRefs, composerDraft);
+
+  updateComposerBodyCount(composerRefs);
+
+  composerRefs.textarea?.addEventListener("input", () => {
+    updateComposerBodyCount(composerRefs);
+  });
 }
