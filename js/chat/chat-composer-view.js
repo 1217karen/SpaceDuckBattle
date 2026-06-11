@@ -219,7 +219,14 @@ submitButton.type = "button";
 submitButton.className = "chatComposerSubmitButton button-primary";
 submitButton.textContent = "投稿";
 
-  toolRow.appendChild(createRichTextToolbarButtons());
+  const richTextButtons = createRichTextToolbarButtons();
+
+  const bodyCount = document.createElement("span");
+  bodyCount.className = "chatComposerBodyCount";
+  bodyCount.textContent = "0 / 600";
+
+  toolRow.appendChild(richTextButtons);
+  toolRow.appendChild(bodyCount);
   
   actionLeft.appendChild(postPlaceInfo);
   actionRight.appendChild(submitButton);
@@ -256,6 +263,7 @@ submitButton.textContent = "投稿";
     additionalTargetSection,
     replyTargetInput,
     textarea,
+    bodyCount,
     submitButton,
     useCurrentPlaceCheckbox,
     replySourcePost
