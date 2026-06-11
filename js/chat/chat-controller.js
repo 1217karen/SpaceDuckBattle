@@ -19,6 +19,7 @@ import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-
 import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
+import { filterHiddenPosts,getHerePosts,getReplyPostsForEno,getSelfPostsForEno } from "./chat-post-filter.js";
 
 
 const centerPanel = document.querySelector(".center-panel");
@@ -162,76 +163,6 @@ function buildPlaceTabs(place, options = {}) {
   return tabs;
 }
 
-function getHerePosts(currentPlace, allPosts) {
-  if (!currentPlace?.placeId) {
-    return [];
-  }
-
-  return allPosts
-    .filter(post =>
-      post.placeId === currentPlace.placeId &&
-      !post.isDeleted
-    )
-    .map(post => ({
-      ...post,
-      displayType: "normal"
-    }))
-    .sort((a, b) => b.postId - a.postId);
-}
-
-function getReplyPostsForEno(allPosts, eno) {
-  const normalizedEno =
-    typeof eno === "number"
-      ? eno
-      : Number(eno || 0);
-
-  if (!normalizedEno) {
-    return [];
-  }
-
-  return allPosts
-    .filter(post => {
-      if (post?.isDeleted) {
-        return false;
-      }
-
-      if (!Array.isArray(post?.targetEnoList)) {
-        return false;
-      }
-
-      return post.targetEnoList.some(item =>
-        Number(item) === normalizedEno
-      );
-    })
-    .map(post => ({
-      ...post,
-      displayType: "normal"
-    }))
-    .sort((a, b) => b.postId - a.postId);
-}
-
-function getSelfPostsForEno(allPosts, eno) {
-  const normalizedEno =
-    typeof eno === "number"
-      ? eno
-      : Number(eno || 0);
-
-  if (!normalizedEno) {
-    return [];
-  }
-
-  return allPosts
-    .filter(post =>
-      !post.isDeleted &&
-      Number(post.authorEno) === normalizedEno
-    )
-    .map(post => ({
-      ...post,
-      displayType: "normal"
-    }))
-    .sort((a, b) => b.postId - a.postId);
-}
-
 function buildViewTabs(options = {}) {
   const {
     currentMode = "chat",
@@ -339,9 +270,7 @@ const rawDisplayPosts = threadRootPostId
             places
           });
 
-    const displayPosts = rawDisplayPosts.filter(post =>
-      !hiddenPostIds.has(post.postId)
-    );
+    const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
 
     const draftPreviewPost = buildDraftPreviewPost({
       place,
@@ -655,9 +584,7 @@ const rawDisplayPosts = threadRootPostId
             places
           });
 
-const displayPosts = rawDisplayPosts.filter(post =>
-  !hiddenPostIds.has(post.postId)
-);
+const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
 
 const postListRefs = renderPostListSection(chatMainArea, {
   posts: displayPosts,
