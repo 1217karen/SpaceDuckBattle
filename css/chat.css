@@ -320,7 +320,8 @@ body {
 
 .chatPostEnoLink:hover {
   color: var(--theme-text-main);
-  text-decoration: underline;
+  background: none;
+  text-decoration: none;
 }
 
 .chatPostReplyLabel {
@@ -389,9 +390,10 @@ body {
 }
 
 .chatPostPlaceButton:hover {
-  text-decoration: underline;
+  color: var(--theme-text-main);
+  background: none;
+  text-decoration: none;
 }
-
 .chatPostBottomRow {
   display: flex;
   align-items: center;
