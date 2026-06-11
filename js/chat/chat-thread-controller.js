@@ -12,7 +12,7 @@ import { createPostCard,renderPostListSection,renderPostListContent } from "./ch
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs} from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost} from "./chat-composer-post.js";
-import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-view.js";
+import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-utils.js";
 import { showToast } from "../common/toast.js";
 import { loadThreadPrivateNote,saveThreadPrivateNote} from "./chat-thread-private-note.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
