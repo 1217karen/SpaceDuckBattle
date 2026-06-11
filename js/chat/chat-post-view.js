@@ -163,11 +163,21 @@ export function createPostCard(post, options = {}) {
     headerLeft.appendChild(nameRow);
   }
 
-  const postNo = document.createElement("div");
-  postNo.className = "chatPostNo";
-  postNo.textContent = `No.${post.postId}`;
+const postMetaTop = document.createElement("div");
+postMetaTop.className = "chatPostMetaTop";
 
-  headerRight.appendChild(postNo);
+const createdAtTopText = document.createElement("span");
+createdAtTopText.className = "chatPostCreatedAt";
+createdAtTopText.textContent = post.createdAt ?? "";
+
+const postNo = document.createElement("span");
+postNo.className = "chatPostNo";
+postNo.textContent = `No.${post.postId}`;
+
+postMetaTop.appendChild(createdAtTopText);
+postMetaTop.appendChild(postNo);
+
+headerRight.appendChild(postMetaTop);
   header.appendChild(headerLeft);
   header.appendChild(headerRight);
 
@@ -269,33 +279,34 @@ export function createPostCard(post, options = {}) {
     actions.appendChild(hideButton);
   }
 
-  const footer = document.createElement("div");
-  footer.className = "chatPostFooter";
+const footer = document.createElement("div");
+footer.className = "chatPostFooter";
 
-  const createdAtText = document.createElement("span");
-  createdAtText.textContent = `${post.createdAt} / `;
+const placeButton = document.createElement("button");
+placeButton.type = "button";
+placeButton.className = "chatPostPlaceButton";
+placeButton.textContent = getPlaceLabel(post.placeId);
 
-  const placeButton = document.createElement("button");
-  placeButton.type = "button";
-  placeButton.className = "chatPostPlaceButton";
-  placeButton.textContent = getPlaceLabel(post.placeId);
+if (typeof onMoveToPlace === "function") {
+  placeButton.addEventListener("click", () => {
+    onMoveToPlace(post.placeId);
+  });
+} else {
+  placeButton.disabled = true;
+}
 
-  if (typeof onMoveToPlace === "function") {
-    placeButton.addEventListener("click", () => {
-      onMoveToPlace(post.placeId);
-    });
-  } else {
-    placeButton.disabled = true;
-  }
+footer.appendChild(placeButton);
 
-  footer.appendChild(createdAtText);
-  footer.appendChild(placeButton);
+const bottomRow = document.createElement("div");
+bottomRow.className = "chatPostBottomRow";
 
-  right.appendChild(header);
-  right.appendChild(divider);
-  right.appendChild(body);
-  right.appendChild(actions);
-  right.appendChild(footer);
+bottomRow.appendChild(footer);
+bottomRow.appendChild(actions);
+
+right.appendChild(header);
+right.appendChild(divider);
+right.appendChild(body);
+right.appendChild(bottomRow);
 
   const contentRow = document.createElement("div");
   contentRow.className = "chatPostCardContentRow";
