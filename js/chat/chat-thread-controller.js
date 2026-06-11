@@ -20,6 +20,8 @@ import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
 import { getThreadDisplayPosts } from "./chat-post-filter.js";
+import { navigateToChatPlace } from "./chat-navigation.js";
+
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -34,8 +36,7 @@ function getPlaceIdFromQuery() {
 
 function closeThread() {
   const placeId = getPlaceIdFromQuery() || "F1-1";
-  window.location.href =
-    `./chat.html?placeId=${encodeURIComponent(placeId)}`;
+  navigateToChatPlace(placeId);
 }
 
 
@@ -301,7 +302,7 @@ const handleQuote = createQuoteHandler({
   const postListRefs = renderPostListSection(chatMainArea, {
     posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
     getPlaceLabel,
-    onMoveToPlace: null,
+    onMoveToPlace: navigateToChatPlace,
     postActions,
     currentEno: eno,
     getReplyTargetLabels,
@@ -327,14 +328,7 @@ setupDraftPreview({
   });
 renderFavoritePlacesSidePanel(rightPanel, {
   favoritePlaces: getFavoritePlaces(),
-  onMoveToPlace: (placeId) => {
-    if (!placeId) {
-      return;
-    }
-
-    window.location.href =
-      `./chat.html?placeId=${encodeURIComponent(placeId)}`;
-  }
+  onMoveToPlace: navigateToChatPlace
 });
 }
 
