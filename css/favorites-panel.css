@@ -1,0 +1,52 @@
+/* =======================================================
+   お気に入りパネル
+======================================================= */
+.favoritesPanelSection {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.favoritesPanelHeading {
+  margin: 0 0 10px;
+  font-size: var(--font-size-md);
+  color: var(--theme-text-main);
+}
+
+.favoritesPanelTabRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.favoritesPanelTabButton {
+  padding: 4px 10px;
+  font-size: var(--font-size-sm);
+}
+
+.favoritesPanelContent,
+.favoritesPanelItem {
+  width: 100%;
+}
+
+.favoritesPanelItemButton {
+  width: 100%;
+  color: var(--theme-text-main);
+  text-align: left;
+}
+
+.favoritesPanelItemButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.favoritesPanelDivider {
+  margin: 8px 0;
+  border-top: 1px dotted var(--theme-border-soft);
+}
+
+.favoritesPanelEmptyText {
+  margin: 0;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
