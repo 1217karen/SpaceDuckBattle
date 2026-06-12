@@ -6,72 +6,72 @@ export function createRichTextToolbarButtons() {
   const buttonDefs = [
     {
       textContent: "B",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonBold",
+      className: "richTextToolButtonIconLike richTextToolButtonBold",
       insertOpenTag: "<b>",
       insertCloseTag: "</b>"
     },
     {
       textContent: "I",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonItalic",
+      className: "richTextToolButtonIconLike richTextToolButtonItalic",
       insertOpenTag: "<i>",
       insertCloseTag: "</i>"
     },
     {
       textContent: "U",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonUnderline",
+      className: "richTextToolButtonIconLike richTextToolButtonUnderline",
       insertOpenTag: "<u>",
       insertCloseTag: "</u>"
     },
     {
       textContent: "S",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonStrike",
+      className: "richTextToolButtonIconLike richTextToolButtonStrike",
       insertOpenTag: "<s>",
       insertCloseTag: "</s>"
     },
     {
       textContent: "rb",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonRuby",
+      className: "richTextToolButtonIconLike richTextToolButtonRuby",
       rubyTemplate: "true"
     },
     {
       textContent: "F1",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont",
+      className: "richTextToolButtonIconLike richTextToolButtonFont",
       insertOpenTag: "<f1>",
       insertCloseTag: "</f1>"
     },
     {
       textContent: "F2",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont",
+      className: "richTextToolButtonIconLike richTextToolButtonFont",
       insertOpenTag: "<f2>",
       insertCloseTag: "</f2>"
     },
     {
       textContent: "F3",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont",
+      className: "richTextToolButtonIconLike richTextToolButtonFont",
       insertOpenTag: "<f3>",
       insertCloseTag: "</f3>"
     },
     {
       textContent: "F4",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont",
+      className: "richTextToolButtonIconLike richTextToolButtonFont",
       insertOpenTag: "<f4>",
       insertCloseTag: "</f4>"
     },
     {
       textContent: "F5",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont",
+      className: "richTextToolButtonIconLike richTextToolButtonFont",
       insertOpenTag: "<f5>",
       insertCloseTag: "</f5>"
     },
     {
       textContent: "F6",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont",
+      className: "richTextToolButtonIconLike richTextToolButtonFont",
       insertOpenTag: "<f6>",
       insertCloseTag: "</f6>"
     },
     {
       textContent: "F7",
-      className: "chatComposerToolButton richTextToolButtonIconLike richTextToolButtonFont",
+      className: "richTextToolButtonIconLike richTextToolButtonFont",
       insertOpenTag: "<f7>",
       insertCloseTag: "</f7>"
     }
@@ -80,7 +80,7 @@ export function createRichTextToolbarButtons() {
   buttonDefs.forEach(def => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = def.className;
+    button.className = `chatComposerToolButton button-tool ${def.className}`;
     button.textContent = def.textContent;
 
     if (def.insertOpenTag) {
