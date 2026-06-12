@@ -140,7 +140,7 @@ export function createPostCard(post, options = {}) {
 
     const enoLink = document.createElement("button");
     enoLink.type = "button";
-    enoLink.className = "chatPostEnoLink";
+    enoLink.className = "chatPostEnoLink button-plain";
     enoLink.textContent =
       typeof post?.authorEno === "number" && post.authorEno > 0
         ? ` / Eno.${post.authorEno}`
@@ -209,7 +209,7 @@ headerRight.appendChild(postMetaTop);
 
     const replyButton = document.createElement("button");
     replyButton.type = "button";
-    replyButton.className = "chatPostActionButton chatPostActionButtonReply";
+    replyButton.className = "chatPostActionButton chatPostActionButtonReply button-icon";
     replyButton.title = "返信";
     replyButton.setAttribute("aria-label", "返信");
 
@@ -225,7 +225,7 @@ headerRight.appendChild(postMetaTop);
 
     const quoteButton = document.createElement("button");
     quoteButton.type = "button";
-    quoteButton.className = "chatPostActionButton chatPostActionButtonQuote";
+    quoteButton.className = "chatPostActionButton chatPostActionButtonQuote button-icon";
     quoteButton.title = "引用";
     quoteButton.setAttribute("aria-label", "引用");
 
@@ -240,7 +240,7 @@ headerRight.appendChild(postMetaTop);
 
     const hideButton = document.createElement("button");
     hideButton.type = "button";
-    hideButton.className = "chatPostActionButton chatPostActionButtonHide";
+    hideButton.className = "chatPostActionButton chatPostActionButtonHide button-icon";
     hideButton.title = "非表示";
     hideButton.setAttribute("aria-label", "非表示");
 
@@ -260,7 +260,7 @@ headerRight.appendChild(postMetaTop);
     if (isOwnPost) {
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
-      deleteButton.className = "chatPostActionButton chatPostActionButtonDelete";
+      deleteButton.className = "chatPostActionButton chatPostActionButtonDelete button-icon";
       deleteButton.title = "削除";
       deleteButton.setAttribute("aria-label", "削除");
 
@@ -284,7 +284,7 @@ footer.className = "chatPostFooter";
 
 const placeButton = document.createElement("button");
 placeButton.type = "button";
-placeButton.className = "chatPostPlaceButton";
+placeButton.className = "chatPostPlaceButton button-plain";
 placeButton.textContent = getPlaceLabel(post.placeId);
 
 if (typeof onMoveToPlace === "function") {
@@ -328,7 +328,7 @@ right.appendChild(bottomRow);
 
       const replyLabelButton = document.createElement("button");
       replyLabelButton.type = "button";
-      replyLabelButton.className = "chatPostReplyLabelButton";
+      replyLabelButton.className = "chatPostReplyLabelButton button-link";
 
       const replyLabel = document.createElement("div");
       replyLabel.className = "chatPostReplyLabel";
