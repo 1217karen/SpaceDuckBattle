@@ -133,12 +133,12 @@ body {
 ======================================================= */
 .chatAroundPanel {
   margin: 0 0 12px 0;
-  padding: 10px 12px;
+  padding: 4px 0 8px 1em;
   max-width: 480px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-md);
-  background: var(--theme-surface-1);
-  box-shadow: var(--theme-shadow-soft);
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   color: var(--theme-text-main);
   box-sizing: border-box;
 }
