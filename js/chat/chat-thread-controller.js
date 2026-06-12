@@ -14,7 +14,7 @@ import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-util
 import { showToast } from "../common/toast.js";
 import { loadThreadPrivateNote,saveThreadPrivateNote} from "./chat-thread-private-note.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
-import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
+import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
 import { getThreadDisplayPosts } from "./chat-post-filter.js";
@@ -327,9 +327,12 @@ function renderThreadPage() {
     composerRefs,
     threadPosts
   });
-  renderFavoritePlacesSidePanel(rightPanel, {
+  renderFavoritesSidePanel(rightPanel, {
+    defaultTab: "place",
     favoritePlaces: getFavoritePlaces(),
-    onMoveToPlace: navigateToChatPlace
+    favoriteCharacters: [],
+    onMoveToPlace: moveToPlace,
+    onOpenCharacter: null
   });
 }
 
