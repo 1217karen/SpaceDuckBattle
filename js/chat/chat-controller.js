@@ -236,7 +236,6 @@ const rawDisplayPosts =
     renderPostListContent(postListRefs.list, {
       posts: postsForRender,
       getPlaceLabel,
-      onMoveToPlace: null,
       postActions,
       currentEno,
       getReplyTargetLabels,
