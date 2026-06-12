@@ -20,6 +20,9 @@ import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteH
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
 import { filterHiddenPosts,getHerePosts,getReplyPostsForEno,getSelfPostsForEno } from "./chat-post-filter.js";
 import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
+import { buildTestActionLogPostInput } from "./chat-action-post.js";
+
+
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -28,6 +31,7 @@ const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
 let currentViewMode = "chat";
 let isShopOpen = false;
+let isActionOpen = false;
 
 function getPlacesInSameGroup(place) {
   if (!place?.groupId) return [];
@@ -48,6 +52,7 @@ function moveToPlace(placeId) {
   moveToChatPlace(placeId, {
     onBeforeMove: () => {
       isShopOpen = false;
+      isActionOpen = false;
     }
   });
 }
@@ -75,23 +80,23 @@ function getAroundBasePlace(place) {
 function buildPlaceTabs(place, options = {}) {
   const {
     isShopOpen = false,
-    onToggleShop = null
+    isActionOpen = false,
+    onToggleShop = null,
+    onToggleAction = null
   } = options;
 
   if (!place) {
     return [];
   }
 
-  if (place.kind === "room") {
-    return [];
-  }
-
   const sameGroupPlaces =
-    getPlacesInSameGroup(place)
-      .slice()
-      .sort((a, b) =>
-        getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
-      );
+    place.kind === "room"
+      ? []
+      : getPlacesInSameGroup(place)
+          .slice()
+          .sort((a, b) =>
+            getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
+          );
 
   const tabs = sameGroupPlaces.map(item => ({
     key: `layer-${item.layer}`,
@@ -104,14 +109,28 @@ function buildPlaceTabs(place, options = {}) {
     }
   }));
 
+  if (place.kind !== "room") {
+    tabs.push({
+      key: "shop",
+      label: "SHOP",
+      isActive: isShopOpen,
+      isDisabled: typeof onToggleShop !== "function",
+      onClick: () => {
+        if (typeof onToggleShop === "function") {
+          onToggleShop();
+        }
+      }
+    });
+  }
+
   tabs.push({
-    key: "shop",
-    label: "SHOP",
-    isActive: isShopOpen,
-    isDisabled: typeof onToggleShop !== "function",
+    key: "action",
+    label: "ACTION",
+    isActive: isActionOpen,
+    isDisabled: typeof onToggleAction !== "function",
     onClick: () => {
-      if (typeof onToggleShop === "function") {
-        onToggleShop();
+      if (typeof onToggleAction === "function") {
+        onToggleAction();
       }
     }
   });
@@ -394,8 +413,15 @@ const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
 
 const placeTabs = buildPlaceTabs(place, {
   isShopOpen,
+  isActionOpen,
   onToggleShop: () => {
     isShopOpen = !isShopOpen;
+    isActionOpen = false;
+    renderChatPlaceInfo();
+  },
+  onToggleAction: () => {
+    isActionOpen = !isActionOpen;
+    isShopOpen = false;
     renderChatPlaceInfo();
   }
 });
@@ -418,6 +444,27 @@ let composerRefs = null;
 
 if (isShopOpen) {
   renderShopPlaceholderSection(chatMainArea);
+} else if (isActionOpen) {
+  renderActionTestSection(chatMainArea, {
+    onTestAction: () => {
+      const actionPostInput = buildTestActionLogPostInput({
+        place,
+        character
+      });
+
+      if (!actionPostInput) {
+        alert("アクションを実行できません");
+        return;
+      }
+
+      createPost(actionPostInput);
+      isActionOpen = false;
+      renderChatPlaceInfo();
+      showToast("アクションログを送信しました", {
+        type: "success"
+      });
+    }
+  });
 } else {
   composerRefs = renderChatComposerSection(chatMainArea, {
     composerDraft,
@@ -542,6 +589,44 @@ if (composerRefs) {
     favoritePlaces: getFavoritePlaces(),
     onMoveToPlace: moveToPlace
   });
+}
+
+//仮　あとで外に出す
+
+function renderActionTestSection(container, options = {}) {
+  const {
+    onTestAction = null
+  } = options;
+
+  if (!container) {
+    return null;
+  }
+
+  const section = document.createElement("section");
+  section.className = "chatActionSection";
+
+  const inner = document.createElement("div");
+  inner.className = "chatActionInner";
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "chatActionTestButton button-box";
+  button.textContent = "テストアクション";
+
+  if (typeof onTestAction === "function") {
+    button.addEventListener("click", onTestAction);
+  } else {
+    button.disabled = true;
+  }
+
+  inner.appendChild(button);
+  section.appendChild(inner);
+  container.appendChild(section);
+
+  return {
+    section,
+    button
+  };
 }
 
 renderChatPlaceInfo();
