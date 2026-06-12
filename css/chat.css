@@ -304,24 +304,13 @@ body {
 }
 
 .chatPostEnoLink {
-  padding: 0;
-  border: none;
-  background: none;
   color: var(--theme-text-muted);
-  font: inherit;
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   text-align: left;
-  cursor: pointer;
 }
 
 .chatPostEnoLink:disabled {
   cursor: default;
-}
-
-.chatPostEnoLink:hover {
-  color: var(--theme-text-main);
-  background: none;
-  text-decoration: none;
 }
 
 .chatPostReplyLabel {
@@ -333,27 +322,16 @@ body {
 .chatPostReplyLabelButton {
   display: inline-block;
   width: auto;
-  padding: 0;
-  border: none;
-  background: none;
   color: inherit;
-  font: inherit;
   text-align: left;
-  cursor: pointer;
 }
 
 .chatPostReplyLabelButton:disabled {
   cursor: default;
 }
 
-.chatPostReplyLabelButton:hover {
-  background: none;
-}
-
 .chatPostReplyLabelButton:hover .chatPostReplyLabel {
   color: #ffe38a;
-  background: none;
-  text-decoration: underline;
 }
 
 .chatPostNo {
@@ -387,19 +365,9 @@ body {
 }
 
 .chatPostPlaceButton {
-  padding: 0;
-  border: none;
-  background: none;
   color: inherit;
-  font: inherit;
-  cursor: pointer;
 }
 
-.chatPostPlaceButton:hover {
-  color: var(--theme-text-main);
-  background: none;
-  text-decoration: none;
-}
 .chatPostBottomRow {
   display: flex;
   align-items: center;
@@ -423,18 +391,10 @@ body {
 .chatPostActionButton {
   width: 28px;
   height: 28px;
-  padding: 0;
-  border: none;
-  background: transparent;
   color: var(--theme-text-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-}
-
-.chatPostActionButton:hover {
-  color: var(--theme-text-strong);
 }
 
 .chatPostActionButtonDelete:hover {
