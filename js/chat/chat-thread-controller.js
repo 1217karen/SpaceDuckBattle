@@ -41,7 +41,8 @@ function setupDraftPreview({
   threadPosts,
   currentEno,
   postActions,
-  getQuotePreviewPostById
+  getQuotePreviewPostById,
+  onMoveToPlace
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea || !composerRefs?.section) {
     return;
@@ -65,7 +66,7 @@ function setupDraftPreview({
     renderPostListContent(postListRefs.list, {
       posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
       getPlaceLabel,
-      onMoveToPlace: null,
+      onMoveToPlace,
       postActions,
       currentEno,
       getReplyTargetLabels,
