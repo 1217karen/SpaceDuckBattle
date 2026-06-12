@@ -69,17 +69,17 @@
   width: 28px;
   height: 28px;
   color: var(--theme-text-muted);
-  cursor: grab;
   font-size: 18px;
   line-height: 1;
+  flex: 0 0 auto;
 }
 
-.skillDragHandle:active {
+.skillDragHandle[draggable="true"] {
+  cursor: grab;
+}
+
+.skillDragHandle[draggable="true"]:active {
   cursor: grabbing;
-}
-
-.skillBlock.is-dragging {
-  opacity: 0.55;
 }
 
 .skillSelect {
@@ -115,7 +115,11 @@
 ========================= */
 
 .skillPerformanceToggle {
+  display: inline-block;
   margin: 8px 0;
+  color: var(--theme-text-subtle);
+  font-size: var(--font-size-sm);
+  text-align: left;
 }
 
 .skillPerformanceArea {
@@ -144,6 +148,8 @@
 
 .addSkillDialogueLine {
   align-self: flex-start;
+  padding: 4px 10px;
+  font-size: var(--font-size-sm);
 }
 
 .commIconPickerButton {
@@ -160,6 +166,12 @@
   display: block;
 }
 
+.skillDialogueRemoveButton {
+  width: 24px;
+  height: 24px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
 
 /* =========================
    右側：スキル一覧
@@ -195,18 +207,8 @@
 
 .skillGuideMatchModeButton {
   padding: 2px 6px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--theme-text-accent);
   font-size: var(--font-size-xs);
   line-height: 1.2;
-}
-
-.skillGuideMatchModeButton:hover {
-  border-color: var(--theme-border-strong);
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--theme-text-main);
 }
 
 .skillGuideFilterItems {
