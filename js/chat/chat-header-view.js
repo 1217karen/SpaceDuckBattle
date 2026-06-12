@@ -35,7 +35,7 @@ export function renderPlaceInfoSection(container, options = {}) {
   if (place) {
     favoriteButton = document.createElement("button");
     favoriteButton.type = "button";
-    favoriteButton.className = "chatHeaderFavoriteButton";
+    favoriteButton.className = "chatHeaderFavoriteButton button-icon";
     favoriteButton.textContent = isFavorite ? "★" : "☆";
     favoriteButton.title = isFavorite ? "お気に入り解除" : "お気に入り登録";
     favoriteButton.setAttribute(
@@ -66,7 +66,7 @@ export function renderPlaceInfoSection(container, options = {}) {
 
   const aroundToggle = document.createElement("button");
   aroundToggle.type = "button";
-  aroundToggle.className = "chatHeaderLinkButton chatHeaderAroundToggle button-toggle";
+  aroundToggle.className = "chatHeaderLinkButton chatHeaderAroundToggle button-plain";
   aroundToggle.textContent = "▶周辺を表示";
 
   titleGroup.appendChild(aroundToggle);
@@ -94,7 +94,7 @@ export function renderPlaceInfoSection(container, options = {}) {
 
   const detailToggle = document.createElement("button");
   detailToggle.type = "button";
-  detailToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-toggle";
+  detailToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-plain";
   detailToggle.textContent = "▶詳細を表示";
 
   const detailContent = document.createElement("div");
@@ -186,7 +186,7 @@ let closeThreadButton = null;
 if (typeof onCloseThread === "function") {
   closeThreadButton = document.createElement("button");
   closeThreadButton.type = "button";
-  closeThreadButton.className = "chatHeaderLinkButton chatThreadCloseButton";
+  closeThreadButton.className = "chatHeaderLinkButton chatThreadCloseButton button-link";
   closeThreadButton.textContent = "×チャット画面に戻る";
 
   closeThreadButton.addEventListener("click", () => {
@@ -206,7 +206,7 @@ topRow.appendChild(titleGroup);
 
   const memoToggle = document.createElement("button");
   memoToggle.type = "button";
-  memoToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-toggle";
+  memoToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-plain";
   memoToggle.textContent = isMemoOpen
     ? "▶非公開メモを閉じる"
     : "▼非公開メモを表示";
@@ -226,7 +226,7 @@ topRow.appendChild(titleGroup);
 
   const memoSaveButton = document.createElement("button");
   memoSaveButton.type = "button";
-  memoSaveButton.className = "chatThreadPrivateNoteSaveButton";
+  memoSaveButton.className = "chatThreadPrivateNoteSaveButton button-box";
   memoSaveButton.textContent = "保存";
 
   memoToggle.addEventListener("click", () => {
@@ -297,7 +297,7 @@ function renderAroundTree(container, options = {}) {
     } else {
       const linkButton = document.createElement("button");
       linkButton.type = "button";
-      linkButton.className = "chatAroundLinkButton";
+      linkButton.className = "chatAroundLinkButton button-plain";
       linkButton.textContent = line.label;
       linkButton.addEventListener("click", () => {
         onMoveToPlace(line.placeId);
