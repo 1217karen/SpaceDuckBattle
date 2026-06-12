@@ -55,6 +55,26 @@
 
 
 /* =========================
+   スキルパターン
+========================= */
+
+#patternTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.patternTab {
+  padding: 8px 14px;
+  font-size: var(--font-size-sm);
+}
+
+#saveUnit {
+  padding: 6px 14px;
+}
+
+/* =========================
    スキルブロック
 ========================= */
 
