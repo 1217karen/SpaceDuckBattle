@@ -1,5 +1,23 @@
 //favorites-panel.js
 
+function navigateToFavoritePlace(placeId) {
+  if (!placeId) {
+    return;
+  }
+
+  window.location.href =
+    `chat.html?placeId=${encodeURIComponent(placeId)}`;
+}
+
+function navigateToFavoriteCharacter(eno) {
+  if (!eno) {
+    return;
+  }
+
+  window.location.href =
+    `profile.html?eno=${encodeURIComponent(eno)}`;
+}
+
 function getFavoritePlaceLabel(place = {}) {
   return typeof place?.name === "string" && place.name.trim() !== ""
     ? place.name.trim()
@@ -42,9 +60,14 @@ function createFavoritePlaceButton(place, options = {}) {
   button.className = "favoritesPanelItemButton button-link";
   button.textContent = getFavoritePlaceLabel(place);
 
-  if (typeof onMoveToPlace === "function" && place?.placeId) {
+  const moveHandler =
+    typeof onMoveToPlace === "function"
+      ? onMoveToPlace
+      : navigateToFavoritePlace;
+
+  if (place?.placeId) {
     button.addEventListener("click", () => {
-      onMoveToPlace(place.placeId);
+      moveHandler(place.placeId);
     });
   } else {
     button.disabled = true;
@@ -63,9 +86,14 @@ function createFavoriteCharacterButton(character, options = {}) {
   button.className = "favoritesPanelItemButton button-link";
   button.textContent = getFavoriteCharacterLabel(character);
 
-  if (typeof onOpenCharacter === "function" && character?.eno) {
+  const openHandler =
+    typeof onOpenCharacter === "function"
+      ? onOpenCharacter
+      : navigateToFavoriteCharacter;
+
+  if (character?.eno) {
     button.addEventListener("click", () => {
-      onOpenCharacter(character.eno);
+      openHandler(character.eno);
     });
   } else {
     button.disabled = true;
