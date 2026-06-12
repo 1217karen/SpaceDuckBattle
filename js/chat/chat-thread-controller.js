@@ -319,7 +319,8 @@ function renderThreadPage() {
     threadPosts,
     currentEno: eno,
     postActions,
-    getQuotePreviewPostById
+    getQuotePreviewPostById,
+    onMoveToPlace: navigateToChatPlace
   });
 
   setupComposerSubmit({
