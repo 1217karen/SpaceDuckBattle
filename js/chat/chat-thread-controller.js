@@ -331,7 +331,7 @@ function renderThreadPage() {
     defaultTab: "place",
     favoritePlaces: getFavoritePlaces(),
     favoriteCharacters: [],
-    onMoveToPlace: moveToPlace,
+    onMoveToPlace: navigateToChatPlace,
     onOpenCharacter: null
   });
 }
