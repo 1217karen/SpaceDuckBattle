@@ -15,7 +15,7 @@ import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findRep
 import { buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForPost } from "./chat-composer-post.js";
 import { showToast } from "../common/toast.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
-import { renderFavoritePlacesSidePanel } from "./chat-favorites-panel.js";
+import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
 import { filterHiddenPosts,getHerePosts,getReplyPostsForEno,getSelfPostsForEno } from "./chat-post-filter.js";
@@ -538,9 +538,12 @@ if (composerRefs) {
   });
 }
 
-renderFavoritePlacesSidePanel(rightPanel, {
+renderFavoritesSidePanel(rightPanel, {
+  defaultTab: "place",
   favoritePlaces: getFavoritePlaces(),
-  onMoveToPlace: moveToPlace
+  favoriteCharacters: [],
+  onMoveToPlace: moveToPlace,
+  onOpenCharacter: null
 });
 }
 
