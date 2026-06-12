@@ -26,6 +26,118 @@ button:hover{
   background:var(--theme-button-bg-hover);
 }
 
+/* =======================================================
+   共通ボタン：新体系
+   ※サイズ・余白は各ページCSSで指定する
+======================================================= */
+
+/* 枠あり・背景ありの標準ボタン */
+.button-box {
+  padding: 0;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  box-shadow: var(--theme-shadow-soft);
+  font: inherit;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.button-box:hover {
+  background: var(--theme-button-bg-hover);
+}
+
+/* 強い実行ボタン */
+.button-primaryNew {
+  padding: 0;
+  border: 1px solid var(--theme-border-strong);
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-button-text);
+  color: #0b1628;
+  box-shadow: var(--theme-shadow-soft);
+  font: inherit;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.button-primaryNew:hover {
+  background: var(--theme-text-strong);
+}
+
+/* 背景なし・下線なし・hoverで文字色だけ変わる */
+.button-plain {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--theme-text-subtle);
+  box-shadow: none;
+  font: inherit;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.button-plain:hover {
+  color: var(--theme-text-main);
+  background: none;
+  text-decoration: none;
+}
+
+/* 背景なし・hoverで下線が出るリンク風ボタン */
+.button-link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--theme-text-accent);
+  box-shadow: none;
+  font: inherit;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.button-link:hover {
+  color: var(--theme-text-strong);
+  background: none;
+  text-decoration: underline;
+}
+
+/* 文字装飾などのツールボタン */
+.button-tool {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--theme-button-text);
+  box-shadow: none;
+  font: inherit;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.button-tool:hover {
+  color: var(--theme-text-strong);
+  background: var(--theme-button-bg-hover);
+  text-decoration: none;
+}
+
+/* アイコン専用ボタン */
+.button-icon {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--theme-text-accent);
+  box-shadow: none;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.button-icon:hover {
+  color: var(--theme-text-strong);
+  background: transparent;
+  text-decoration: none;
+}
+
 .button-primary{
   padding:6px 14px;
   border:1px solid var(--theme-border-strong);
