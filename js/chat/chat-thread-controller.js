@@ -41,8 +41,7 @@ function setupDraftPreview({
   threadPosts,
   currentEno,
   postActions,
-  getQuotePreviewPostById,
-  onMoveToPlace
+  getQuotePreviewPostById
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea || !composerRefs?.section) {
     return;
@@ -66,7 +65,6 @@ function setupDraftPreview({
     renderPostListContent(postListRefs.list, {
       posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
       getPlaceLabel,
-      onMoveToPlace,
       postActions,
       currentEno,
       getReplyTargetLabels,
@@ -89,7 +87,6 @@ function setupDraftPreview({
     const previewCard = createPostCard(draftPreviewPost, {
       isPreview: false,
       getPlaceLabel,
-      onMoveToPlace: null,
       currentEno,
       hideActions: true,
       getReplyTargetLabels
@@ -277,7 +274,6 @@ function renderThreadPage() {
   const postListRefs = renderPostListSection(chatMainArea, {
     posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
     getPlaceLabel,
-    onMoveToPlace: navigateToChatPlace,
     postActions,
     currentEno: eno,
     getReplyTargetLabels,
