@@ -867,7 +867,7 @@ body {
 .chatPostCardActionLog {
   max-width: 520px;
   border: none;
-  background: var(--theme-surface-2);
+  background: rgba(72, 76, 84, 0.38);
   box-shadow: none;
 }
 
