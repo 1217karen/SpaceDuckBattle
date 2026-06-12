@@ -138,13 +138,17 @@ export function createPostCard(post, options = {}) {
         ? post.speakerName
         : "";
 
+    const enoSeparator = document.createElement("span");
+    enoSeparator.className = "chatPostEnoSeparator";
+    enoSeparator.textContent = " / ";
+
     const enoLink = document.createElement("button");
     enoLink.type = "button";
     enoLink.className = "chatPostEnoLink button-plain";
     enoLink.textContent =
       typeof post?.authorEno === "number" && post.authorEno > 0
-        ? ` / Eno.${post.authorEno}`
-        : " / Eno.?";
+        ? `Eno.${post.authorEno}`
+        : "Eno.?";
 
     if (
       typeof post?.authorEno === "number" &&
@@ -159,6 +163,7 @@ export function createPostCard(post, options = {}) {
     }
 
     nameRow.appendChild(name);
+    nameRow.appendChild(enoSeparator);
     nameRow.appendChild(enoLink);
     headerLeft.appendChild(nameRow);
   }
