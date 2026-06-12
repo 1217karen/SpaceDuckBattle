@@ -3,7 +3,7 @@
 import { renderRichText } from "../common/rich-text.js";
 import { getNoImageUrl } from "../common/icon-picker.js";
 import { renderPostBodyWithQuoteAnchors } from "./chat-quote-view.js";
-
+import { navigateToChatPlace } from "./chat-navigation.js";
 
 
 function stripRichTextTags(text) {
@@ -292,9 +292,16 @@ placeButton.type = "button";
 placeButton.className = "chatPostPlaceButton button-plain";
 placeButton.textContent = getPlaceLabel(post.placeId);
 
-if (typeof onMoveToPlace === "function") {
+const moveToPlace =
+  typeof onMoveToPlace === "function"
+    ? onMoveToPlace
+    : navigateToChatPlace;
+
+if (post.isDraftPreview) {
+  placeButton.disabled = true;
+} else if (post.placeId) {
   placeButton.addEventListener("click", () => {
-    onMoveToPlace(post.placeId);
+    moveToPlace(post.placeId);
   });
 } else {
   placeButton.disabled = true;
