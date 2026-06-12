@@ -78,6 +78,16 @@
    スキルブロック
 ========================= */
 
+.skillBlock {
+  display: flex;
+  gap: 10px;
+}
+
+.skillBlockBody {
+  flex: 1;
+  min-width: 0;
+}
+
 .skillBlockHeader {
   display: flex;
   align-items: stretch;
@@ -86,12 +96,16 @@
 }
 
 .skillDragHandle {
-  width: 28px;
-  height: 28px;
+  align-self: stretch;
+  width: 38px;
+  min-height: 100%;
   color: var(--theme-text-muted);
   font-size: 18px;
   line-height: 1;
-  flex: 0 0 auto;
+  flex: 0 0 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .skillDragHandle[draggable="true"] {
