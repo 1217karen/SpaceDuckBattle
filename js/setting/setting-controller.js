@@ -252,6 +252,7 @@ function createSkillDialogueRow(dialogueData = {}) {
 
   const removeButton = document.createElement("button");
   removeButton.type = "button";
+  removeButton.className = "skillDialogueRemoveButton button-icon";
   removeButton.textContent = "×";
 
   removeButton.addEventListener("click", () => {
@@ -284,7 +285,7 @@ function createSkillDialogueList(dialogues = []) {
 
   const addButton = document.createElement("button");
   addButton.type = "button";
-  addButton.className = "addSkillDialogueLine";
+  addButton.className = "addSkillDialogueLine button-box";
   addButton.textContent = "＋";
 
   addButton.addEventListener("click", () => {
@@ -355,7 +356,7 @@ wrapper.dataset.index = String(index);
 
   const dragHandle = document.createElement("button");
   dragHandle.type = "button";
-  dragHandle.className = "skillDragHandle button-small";
+  dragHandle.className = "skillDragHandle button-icon";
   dragHandle.textContent = "☰";
 
   const emptyOption = document.createElement("option");
@@ -443,7 +444,7 @@ wrapper.dataset.index = String(index);
 
   const performanceToggle = document.createElement("button");
   performanceToggle.type = "button";
-  performanceToggle.className = "button-toggle skillPerformanceToggle";
+  performanceToggle.className = "skillPerformanceToggle button-plain";
   performanceToggle.textContent = "▶ 演出設定";
 
   const performanceArea = document.createElement("div");
