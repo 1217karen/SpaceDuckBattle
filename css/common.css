@@ -116,7 +116,6 @@ button:hover{
 .button-tool:hover {
   color: var(--theme-text-strong);
   background: var(--theme-button-bg-hover);
-  text-decoration: none;
 }
 
 /* アイコン専用ボタン */
