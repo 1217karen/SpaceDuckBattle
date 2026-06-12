@@ -454,6 +454,15 @@ body {
   font-size: calc(var(--chat-font-base) * 0.93);
 }
 
+.chatPlaceTabButton.is-current {
+  position: relative;
+  border-width: 2px;
+  border-color: var(--theme-border-strong);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 0 10px rgba(120, 180, 255, 0.45);
+}
+
 .chatPlaceTabButton.is-current::after {
   content: "(現在地)";
   display: inline-block;
