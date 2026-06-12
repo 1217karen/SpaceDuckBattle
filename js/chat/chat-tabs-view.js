@@ -60,16 +60,16 @@ function createChatTabButton(tab = {}, buttonClassName = "") {
   }
 
   if (tab.isActive) {
-    classNames.push("chatTabButtonActive", "is-active");
+    classNames.push("is-active");
   }
 
   if (tab.isDisabled) {
-    classNames.push("chatTabButtonDisabled");
+    classNames.push("is-disabled");
     button.disabled = true;
   }
 
   if (tab.isCurrent) {
-    classNames.push("chatTabButtonCurrent", "is-current");
+    classNames.push("is-current");
   }
 
   button.className = classNames.join(" ");
