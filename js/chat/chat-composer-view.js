@@ -42,7 +42,7 @@ export function renderChatComposerSection(container, options = {}) {
 
   const iconButton = document.createElement("button");
   iconButton.type = "button";
-  iconButton.className = "chatComposerIconButton";
+  iconButton.className = "chatComposerIconButton button-box";
 
   const iconImg = document.createElement("img");
   iconImg.className = "chatComposerIconImage";
@@ -71,7 +71,7 @@ if (replySourcePost) {
   if (typeof onClearReply === "function") {
     const clearReplyButton = document.createElement("button");
     clearReplyButton.type = "button";
-    clearReplyButton.className = "chatComposerReplyClearButton button-small";
+    clearReplyButton.className = "chatComposerReplyClearButton button-icon";
     clearReplyButton.textContent = "×";
     clearReplyButton.title = "返信を解除";
     clearReplyButton.setAttribute("aria-label", "返信を解除");
@@ -216,7 +216,7 @@ if (replySourcePost) {
 
 const submitButton = document.createElement("button");
 submitButton.type = "button";
-submitButton.className = "chatComposerSubmitButton button-primary";
+submitButton.className = "chatComposerSubmitButton button-primaryNew";
 submitButton.textContent = "投稿";
 
   const richTextButtons = createRichTextToolbarButtons();
