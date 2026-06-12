@@ -329,10 +329,7 @@ function renderThreadPage() {
   });
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "place",
-    favoritePlaces: getFavoritePlaces(),
-    favoriteCharacters: [],
-    onMoveToPlace: navigateToChatPlace,
-    onOpenCharacter: null
+    favoritePlaces: getFavoritePlaces()
   });
 }
 
