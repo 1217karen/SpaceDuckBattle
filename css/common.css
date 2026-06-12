@@ -13,17 +13,17 @@ textarea{
 }
 
 button{
-  padding:6px 10px;
-  border:1px solid var(--theme-border-main);
-  border-radius:var(--theme-radius-sm);
-  background:var(--theme-button-bg);
-  color:var(--theme-button-text);
+  padding:0;
+  border:none;
+  background:none;
+  color:inherit;
+  font:inherit;
   cursor:pointer;
   box-sizing:border-box;
 }
 
 button:hover{
-  background:var(--theme-button-bg-hover);
+  background:none;
 }
 
 /* =======================================================
@@ -169,144 +169,9 @@ button:hover{
   text-decoration: none;
 }
 
-.button-primary{
-  padding:6px 14px;
-  border:1px solid var(--theme-border-strong);
-  border-radius:var(--theme-radius-sm);
-  background:var(--theme-button-text);
-  color:#0b1628;
-  box-shadow:var(--theme-shadow-soft);
-  cursor:pointer;
-}
-
-.button-primary:hover{
-  background:var(--theme-text-strong);
-}
-
-.button-secondary{
-  padding:6px 14px;
-  border:1px solid var(--theme-border-main);
-  border-radius:var(--theme-radius-sm);
-  background:var(--theme-button-bg);
-  color:var(--theme-button-text);
-  box-shadow:var(--theme-shadow-soft);
-  cursor:pointer;
-}
-
-.button-secondary:hover{
-  background:var(--theme-button-bg-hover);
-}
-
-.button-small{
-  padding:0;
-  border:none;
-  background:none;
-  color:var(--theme-text-accent);
-  box-shadow:none;
-  font:inherit;
-  line-height:1;
-  cursor:pointer;
-}
-
-.button-small:hover{
-  color:var(--theme-text-strong);
-  background:none;
-}
-
-.button-toggle{
-  padding:0;
-  border:none;
-  background:none;
-  color:var(--theme-text-subtle);
-  box-shadow:none;
-  font:inherit;
-  text-align:left;
-  cursor:pointer;
-}
-
-.button-toggle:hover{
-  color:var(--theme-text-main);
-  background:none;
-}
-
-.button-topbar-link{
-  padding:0;
-  border:none;
-  background:none;
-  color:#e7d38a;
-  box-shadow:none;
-  font:inherit;
-  text-align:left;
-  cursor:pointer;
-}
-
-.button-topbar-link:hover{
-  color:#f6e7b0;
-  background:none;
-  text-decoration:underline;
-}
-
-.button-tab{
-  min-width:88px;
-  padding:8px 14px;
-  border:1px solid var(--theme-border-main);
-  border-radius:8px;
-  background:var(--theme-button-bg);
-  color:var(--theme-button-text);
-  box-shadow:var(--theme-shadow-soft);
-  cursor:pointer;
-}
-
-.button-tab:hover{
-  background:var(--theme-button-bg-hover);
-}
-
-.button-tab.is-active{
-  border-color:var(--theme-border-strong);
-  background:var(--theme-button-bg-hover);
-  color:var(--theme-text-main);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-    0 0 10px rgba(120, 180, 255, 0.45);
-  font-weight:bold;
-}
-
-.button-place-tab{
-  min-width:88px;
-  padding:8px 14px;
-  border:1px solid var(--theme-border-main);
-  border-radius:999px;
-  background:var(--theme-button-bg);
-  color:var(--theme-button-text);
-  box-shadow:var(--theme-shadow-soft);
-  cursor:pointer;
-}
-
-.button-place-tab:hover{
-  background:var(--theme-button-bg-hover);
-}
-
-.button-place-tab.is-active{
-  border-color:var(--theme-border-strong);
-  font-weight:bold;
-}
-
-.button-place-tab.is-current{
-  position:relative;
-  border-width:2px;
-  border-color:var(--theme-border-strong);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-    0 0 10px rgba(120, 180, 255, 0.45);
-}
-
-.button-place-tab.is-current::after{
-  content:"(現在地)";
-  display:inline-block;
-  margin-left:8px;
-  font-size:var(--font-size-xs);
-  color:var(--theme-text-subtle);
-}
+/* =======================================================
+   こっからテキスト？
+======================================================= */
 
 select,
 input,
