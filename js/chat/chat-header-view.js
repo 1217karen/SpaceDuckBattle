@@ -346,6 +346,14 @@ function buildAroundTreeLines(place, places) {
       item.placeId === place.parentId
     );
 
+    const siblingAreas = parentMainField
+      ? places.filter(item =>
+          item.kind === "area" &&
+          item.layer === "main" &&
+          item.parentId === parentMainField.placeId
+        )
+      : [];
+
     const childRooms = places.filter(item =>
       item.kind === "room" &&
       item.parentId === place.placeId
@@ -363,74 +371,97 @@ function buildAroundTreeLines(place, places) {
       });
     }
 
-    lines.push({
-      depth: 1,
-      prefix: "└",
-      label: `${place.name}（現在地）`,
-      placeId: place.placeId,
-      isCurrentPlace: true
-    });
+    siblingAreas.forEach((sibling, index) => {
+      const isCurrentArea = sibling.placeId === place.placeId;
 
-    childRooms.forEach((child, index) => {
       lines.push({
-        depth: 2,
-        prefix: getTreeBranch(index, childRooms.length),
-        label: child.name,
-        placeId: child.placeId,
-        isCurrentPlace: false
+        depth: 1,
+        prefix: getTreeBranch(index, siblingAreas.length),
+        label: isCurrentArea
+          ? `${sibling.name}（現在地）`
+          : sibling.name,
+        placeId: sibling.placeId,
+        isCurrentPlace: isCurrentArea
+      });
+
+      if (!isCurrentArea) {
+        return;
+      }
+
+      childRooms.forEach((child, childIndex) => {
+        lines.push({
+          depth: 2,
+          prefix: getTreeBranch(childIndex, childRooms.length),
+          label: child.name,
+          placeId: child.placeId,
+          isCurrentPlace: false
+        });
       });
     });
 
     return lines;
   }
 
-if (place.kind === "room") {
-  const parentMainArea = places.find(item =>
-    item.kind === "area" &&
-    item.layer === "main" &&
-    item.placeId === place.parentId
-  );
+  if (place.kind === "room") {
+    const parentMainArea = places.find(item =>
+      item.kind === "area" &&
+      item.layer === "main" &&
+      item.placeId === place.parentId
+    );
 
-  const parentMainField = parentMainArea
-    ? places.find(item =>
-        item.kind === "field" &&
-        item.layer === "main" &&
-        item.placeId === parentMainArea.parentId
-      )
-    : null;
+    const parentMainField = parentMainArea
+      ? places.find(item =>
+          item.kind === "field" &&
+          item.layer === "main" &&
+          item.placeId === parentMainArea.parentId
+        )
+      : null;
 
-  const lines = [];
+    const siblingRooms = parentMainArea
+      ? places.filter(item =>
+          item.kind === "room" &&
+          item.parentId === parentMainArea.placeId
+        )
+      : [];
 
-  if (parentMainField) {
-    lines.push({
-      depth: 0,
-      prefix: "",
-      label: parentMainField.name,
-      placeId: parentMainField.placeId,
-      isCurrentPlace: false
+    const lines = [];
+
+    if (parentMainField) {
+      lines.push({
+        depth: 0,
+        prefix: "",
+        label: parentMainField.name,
+        placeId: parentMainField.placeId,
+        isCurrentPlace: false
+      });
+    }
+
+    if (parentMainArea) {
+      lines.push({
+        depth: 1,
+        prefix: "└",
+        label: parentMainArea.name,
+        placeId: parentMainArea.placeId,
+        isCurrentPlace: false
+      });
+    }
+
+    siblingRooms.forEach((sibling, index) => {
+      const isCurrentRoom = sibling.placeId === place.placeId;
+
+      lines.push({
+        depth: 2,
+        prefix: getTreeBranch(index, siblingRooms.length),
+        label: isCurrentRoom
+          ? `${sibling.name}（現在地）`
+          : sibling.name,
+        placeId: sibling.placeId,
+        isCurrentPlace: isCurrentRoom
+      });
     });
+
+    return lines;
   }
-
-  if (parentMainArea) {
-    lines.push({
-      depth: 1,
-      prefix: "└",
-      label: parentMainArea.name,
-      placeId: parentMainArea.placeId,
-      isCurrentPlace: false
-    });
-  }
-
-  lines.push({
-    depth: 2,
-    prefix: "└",
-    label: `${place.name}（現在地）`,
-    placeId: place.placeId,
-    isCurrentPlace: true
-  });
-
-  return lines;
-}
 
   return [];
 }
