@@ -29,7 +29,10 @@ const hiddenThreadPostIds = new Set();
 
 function closeThread() {
   const placeId = getPlaceIdFromQuery() || "F1-1";
-  navigateToChatPlace(placeId);
+
+  navigateToChatPlace(placeId, {
+    withToast: false
+  });
 }
 
 
