@@ -529,20 +529,11 @@ body {
 .chatComposerIconButton {
   width: 60px;
   height: 60px;
-  padding: 0;
-  border: 1px solid var(--theme-border-main);
   background: rgba(0, 0, 0, 0.35);
-  box-shadow: var(--theme-shadow-soft);
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  box-sizing: border-box;
-}
-
-.chatComposerIconButton:hover {
-  background: var(--theme-button-bg-hover);
 }
 
 .chatComposerIconImage {
@@ -585,11 +576,9 @@ body {
 }
 
 .chatComposerReplyClearButton {
-  line-height: 1.4;
-}
-
-.chatComposerReplyClearButton:hover {
-  background: var(--theme-button-bg-hover);
+  width: 20px;
+  height: 20px;
+  line-height: 1;
 }
 
 .chatComposerReplyPreviewCard {
@@ -761,19 +750,14 @@ body {
   color: var(--theme-text-subtle);
 }
 
-.chatComposerToolButton:not(.richTextToolButtonIconLike) {
-  padding: 4px 12px;
-  border: 1px solid var(--theme-border-main);
+.chatComposerToolButton {
+  padding: 4px 8px;
   border-radius: var(--theme-radius-sm);
-  background: var(--theme-button-bg);
-  color: var(--theme-button-text);
-  box-shadow: var(--theme-shadow-soft);
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
-  cursor: pointer;
 }
 
-.chatComposerToolButton:not(.richTextToolButtonIconLike):hover {
-  background: var(--theme-button-bg-hover);
+.chatComposerSubmitButton {
+  padding: 6px 14px;
 }
 
 /* =======================================================
