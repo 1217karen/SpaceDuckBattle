@@ -359,13 +359,16 @@ wrapper.dataset.index = String(index);
   const select = document.createElement("select");
   select.className = "skillSelect";
 
-  const skillHeader = document.createElement("div");
-  skillHeader.className = "skillBlockHeader";
-
   const dragHandle = document.createElement("button");
   dragHandle.type = "button";
   dragHandle.className = "skillDragHandle button-icon";
   dragHandle.textContent = "☰";
+
+  const skillBlockBody = document.createElement("div");
+  skillBlockBody.className = "skillBlockBody";
+
+  const skillHeader = document.createElement("div");
+  skillHeader.className = "skillBlockHeader";
 
   const emptyOption = document.createElement("option");
   emptyOption.value = "";
@@ -514,12 +517,14 @@ wrapper.dataset.index = String(index);
 
   bindSkillBlockDrag(wrapper, dragHandle);
 
-  skillHeader.appendChild(dragHandle);
   skillHeader.appendChild(select);
   skillHeader.appendChild(skillInfo);
 
-  wrapper.appendChild(skillHeader);
-  wrapper.appendChild(detailArea);
+  skillBlockBody.appendChild(skillHeader);
+  skillBlockBody.appendChild(detailArea);
+
+  wrapper.appendChild(dragHandle);
+  wrapper.appendChild(skillBlockBody);
 
   updateDetailVisibility();
 
@@ -711,8 +716,6 @@ function saveCurrentPattern() {
     return normalizeSkill(p.skills[i]);
   });
 }
-
-loadDuck();
 
 function loadDuck() {
   const account = getCurrentAccount();
