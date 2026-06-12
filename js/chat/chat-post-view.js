@@ -76,7 +76,11 @@ export function createPostCard(post, options = {}) {
 
   const classNames = ["chatPostCard"];
 
-    if (
+  if (post.type === "actionLog") {
+    classNames.push("chatPostCardActionLog");
+  }
+
+  if (
     typeof post?.parentPostId === "number" &&
     post.parentPostId > 0
   ) {
@@ -93,29 +97,34 @@ export function createPostCard(post, options = {}) {
 
   postBox.className = classNames.join(" ");
 
+
   const left = document.createElement("div");
   left.className = "chatPostCardLeft";
 
   const right = document.createElement("div");
   right.className = "chatPostCardRight";
 
-  if (!isPreview) {
-    const iconBox = document.createElement("div");
-    iconBox.className = "chatPostIcon";
+const shouldShowIcon =
+  !isPreview &&
+  post.type !== "actionLog";
 
-    const iconUrl =
-      typeof post.iconUrl === "string"
-        ? post.iconUrl.trim()
-        : "";
+if (shouldShowIcon) {
+  const iconBox = document.createElement("div");
+  iconBox.className = "chatPostIcon";
 
-    const iconImg = document.createElement("img");
-    iconImg.className = "chatPostIconImage";
-    iconImg.src = iconUrl || getNoImageUrl();
-    iconImg.alt = "post icon";
-    iconBox.appendChild(iconImg);
+  const iconUrl =
+    typeof post.iconUrl === "string"
+      ? post.iconUrl.trim()
+      : "";
 
-    left.appendChild(iconBox);
-  }
+  const iconImg = document.createElement("img");
+  iconImg.className = "chatPostIconImage";
+  iconImg.src = iconUrl || getNoImageUrl();
+  iconImg.alt = "post icon";
+  iconBox.appendChild(iconImg);
+
+  left.appendChild(iconBox);
+}
 
   const header = document.createElement("div");
   header.className = "chatPostHeader";
@@ -323,8 +332,11 @@ right.appendChild(bottomRow);
   const contentRow = document.createElement("div");
   contentRow.className = "chatPostCardContentRow";
 
-  contentRow.appendChild(left);
-  contentRow.appendChild(right);
+  if (shouldShowIcon) {
+    contentRow.appendChild(left);
+  }
+
+contentRow.appendChild(right);
 
   if (
     !isPreview &&
