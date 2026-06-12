@@ -70,10 +70,6 @@ body {
   font-size: calc(var(--chat-font-base) * 0.93);
 }
 
-.chatHeaderLinkButton:hover {
-  text-decoration: underline;
-}
-
 .chatHeaderAroundToggle,
 .chatThreadCloseButton,
 .chatHeaderFavoriteButton {
@@ -82,14 +78,8 @@ body {
 
 /* お気に入りボタン */
 .chatHeaderFavoriteButton {
-  padding: 0;
-  border: none;
-  background: none;
   color: #f3d36a;
-  font: inherit;
   font-size: calc(var(--chat-font-base) * 1.2);
-  line-height: 1;
-  cursor: pointer;
 }
 
 .chatHeaderFavoriteButton:hover {
@@ -167,16 +157,8 @@ body {
 }
 
 .chatAroundLinkButton {
-  padding: 0;
-  border: none;
-  background: none;
   color: var(--theme-text-accent);
   text-align: left;
-  cursor: pointer;
-}
-
-.chatAroundLinkButton:hover {
-  text-decoration: underline;
 }
 
 /* =======================================================
@@ -820,16 +802,6 @@ body {
 
 .chatThreadPrivateNoteSaveButton {
   padding: 6px 14px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-sm);
-  background: var(--theme-button-bg);
-  color: var(--theme-button-text);
-  box-shadow: var(--theme-shadow-soft);
-  cursor: pointer;
-}
-
-.chatThreadPrivateNoteSaveButton:hover {
-  background: var(--theme-button-bg-hover);
 }
 
 .chatShopSection {
