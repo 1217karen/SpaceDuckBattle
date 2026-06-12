@@ -33,6 +33,10 @@ function clonePost(post) {
 
   return {
     postId: Number.isInteger(postId) && postId > 0 ? postId : 0,
+    type:
+      typeof post?.type === "string"
+        ? post.type
+        : "chat",
     placeId:
       typeof post?.placeId === "string"
         ? post.placeId
@@ -171,6 +175,10 @@ export function createPost(input = {}) {
 
   const post = clonePost({
     postId: nextPostId,
+    type:
+      typeof input.type === "string"
+        ? input.type
+        : "chat",
     placeId:
       typeof input.placeId === "string"
         ? input.placeId
