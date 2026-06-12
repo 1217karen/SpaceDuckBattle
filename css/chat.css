@@ -471,21 +471,10 @@ body {
   color: var(--theme-text-subtle);
 }
 
-.chatTabButtonActive {
-  border-color: var(--theme-border-strong);
-  font-weight: bold;
-}
-
-.chatTabButtonDisabled {
+.chatTabButton.is-disabled {
   opacity: 1;
   cursor: default;
 }
-
-/* 表示切替タブだけは(現在地)を出さない */
-.chatViewTabsSection .chatTabButtonCurrent::after {
-  content: none;
-}
-
 
 /* =======================================================
    投稿入力欄
