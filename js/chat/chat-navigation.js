@@ -5,9 +5,25 @@ export function buildChatPlaceUrl(placeId) {
   return `./chat.html?placeId=${encodeURIComponent(placeId)}`;
 }
 
-export function navigateToChatPlace(placeId) {
+export function navigateToChatPlace(placeId, options = {}) {
+  const {
+    withToast = true
+  } = options;
+
   if (!placeId) {
     return;
+  }
+
+  if (withToast) {
+    const placeLabel = getPlaceLabel(placeId);
+
+    sessionStorage.setItem(
+      "chatToastMessage",
+      JSON.stringify({
+        message: `${placeLabel}に移動しました`,
+        type: "info"
+      })
+    );
   }
 
   window.location.href = buildChatPlaceUrl(placeId);
@@ -40,16 +56,6 @@ export function moveToChatPlace(placeId, options = {}) {
     ...character,
     currentPlaceId: placeId
   });
-
-  const placeLabel = getPlaceLabel(placeId);
-
-  sessionStorage.setItem(
-    "chatToastMessage",
-    JSON.stringify({
-      message: `${placeLabel}に移動しました`,
-      type: "info"
-    })
-  );
 
   navigateToChatPlace(placeId);
 
