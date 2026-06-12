@@ -843,11 +843,6 @@ body {
   line-height: 1.6;
 }
 
-
-/* =======================================================
-   ログカード(仮)
-======================================================= */
-
 .chatActionSection {
   width: 100%;
   margin-bottom: 12px;
@@ -862,4 +857,36 @@ body {
 
 .chatActionTestButton {
   padding: 8px 14px;
+}
+
+
+/* =======================================================
+   ログカード(仮)
+======================================================= */
+
+.chatPostCardActionLog {
+  max-width: 520px;
+  border: none;
+  background: var(--theme-surface-2);
+  box-shadow: none;
+}
+
+.chatPostCardActionLog .chatPostCardContentRow {
+  gap: 0;
+}
+
+.chatPostCardActionLog .chatPostCardRight {
+  width: 100%;
+}
+
+.chatPostCardActionLog .chatPostHeader {
+  margin-bottom: 3px;
+}
+
+.chatPostCardActionLog .chatPostDivider {
+  margin-bottom: 5px;
+}
+
+.chatPostCardActionLog .chatPostActions {
+  display: none;
 }
