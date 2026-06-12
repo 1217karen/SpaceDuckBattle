@@ -7,7 +7,7 @@ export function renderPlaceTabsSection(container, options = {}) {
 
   renderChatTabSection(container, {
     sectionClassName: "chatPlaceTabsSection",
-    buttonClassName: "chatPlaceTabButton button-place-tab",
+    buttonClassName: "chatPlaceTabButton button-pill",
     tabs
   });
 }
@@ -19,7 +19,7 @@ export function renderViewTabsSection(container, options = {}) {
 
   renderChatTabSection(container, {
     sectionClassName: "chatViewTabsSection",
-    buttonClassName: "chatViewTabButton button-tab",
+    buttonClassName: "chatViewTabButton button-box",
     tabs
   });
 }
