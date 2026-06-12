@@ -95,7 +95,7 @@ export function renderPostBodyWithQuoteAnchors(bodyElement, post, options = {}) 
 
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "chatQuoteAnchor";
+    button.className = "chatQuoteAnchor button-link";
     button.textContent = part;
 
     button.addEventListener("click", () => {
