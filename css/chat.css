@@ -303,6 +303,11 @@ body {
   white-space: nowrap;
 }
 
+.chatPostEnoSeparator {
+  color: var(--theme-text-muted);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
 .chatPostEnoLink {
   color: var(--theme-text-muted);
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
