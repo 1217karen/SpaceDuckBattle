@@ -842,3 +842,24 @@ body {
   margin: 0;
   line-height: 1.6;
 }
+
+
+/* =======================================================
+   ログカード(仮)
+======================================================= */
+
+.chatActionSection {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.chatActionInner {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chatActionTestButton {
+  padding: 8px 14px;
+}
