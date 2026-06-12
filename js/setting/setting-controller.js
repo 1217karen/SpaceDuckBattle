@@ -96,8 +96,16 @@ tabs.forEach(tab => {
     saveCurrentPattern();
     currentSlot = Number(tab.dataset.slot);
     loadPattern(currentSlot);
+    updatePatternTabsActiveState();
   });
 });
+
+function updatePatternTabsActiveState() {
+  tabs.forEach(tab => {
+    const slot = Number(tab.dataset.slot);
+    tab.classList.toggle("is-active", slot === currentSlot);
+  });
+}
 
 function normalizeDialogueList(dialogue) {
   if (Array.isArray(dialogue)) {
@@ -858,4 +866,5 @@ saveBtn.addEventListener("click", () => {
   location.reload();
 });
 
-loadPattern(currentSlot);
+loadDuck();
+updatePatternTabsActiveState();
