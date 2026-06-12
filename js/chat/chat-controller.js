@@ -538,13 +538,11 @@ if (composerRefs) {
   });
 }
 
-renderFavoritesSidePanel(rightPanel, {
-  defaultTab: "place",
-  favoritePlaces: getFavoritePlaces(),
-  favoriteCharacters: [],
-  onMoveToPlace: moveToPlace,
-  onOpenCharacter: null
-});
+  renderFavoritesSidePanel(rightPanel, {
+    defaultTab: "place",
+    favoritePlaces: getFavoritePlaces(),
+    onMoveToPlace: moveToPlace
+  });
 }
 
 renderChatPlaceInfo();
