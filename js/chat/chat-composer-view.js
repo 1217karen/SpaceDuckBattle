@@ -64,7 +64,7 @@ if (replySourcePost) {
   replyPreviewHeader.className = "chatComposerReplyPreviewHeader";
 
   const replyPreviewHeaderLabel = document.createElement("span");
-  replyPreviewHeaderLabel.textContent = "返信元";
+  replyPreviewHeaderLabel.textContent = "返信先";
 
   replyPreviewHeader.appendChild(replyPreviewHeaderLabel);
 
