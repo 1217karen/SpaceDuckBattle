@@ -14,7 +14,6 @@ export function renderChatActionSection(container, options = {}) {
 
   const selectedAction =
     actions.find(action => action.actionId === selectedActionId) ||
-    actions[0] ||
     null;
 
   const section = document.createElement("section");
@@ -70,12 +69,12 @@ export function renderChatActionSection(container, options = {}) {
     selectedLabel.textContent =
       selectedAction
         ? `選択中：${selectedAction.label ?? "アクション"}`
-        : "アクションが選択されていません。";
+        : "選択中：未選択";
 
     const description = document.createElement("p");
     description.className = "chatActionDescription";
     description.textContent =
-      selectedAction?.description ?? "";
+      selectedAction?.description ?? "実行したいアクションを選択してください。";
 
     detail.appendChild(selectedLabel);
 
