@@ -33,6 +33,7 @@ const hiddenPostIds = new Set();
 let currentViewMode = "chat";
 let isShopOpen = false;
 let isActionOpen = false;
+let selectedActionId = "";
 
 function getPlacesInSameGroup(place) {
   if (!place?.groupId) return [];
@@ -54,6 +55,7 @@ function moveToPlace(placeId) {
     onBeforeMove: () => {
       isShopOpen = false;
       isActionOpen = false;
+      selectedActionId = "";
     }
   });
 }
@@ -99,16 +101,28 @@ function buildPlaceTabs(place, options = {}) {
             getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
           );
 
-  const tabs = sameGroupPlaces.map(item => ({
-    key: `layer-${item.layer}`,
-    label: String(item.layer ?? "").toUpperCase(),
-    isActive: item.placeId === place.placeId,
-    isCurrent: item.placeId === place.placeId,
-    isDisabled: item.placeId === place.placeId,
-    onClick: () => {
-      moveToPlace(item.placeId);
-    }
-  }));
+  const tabs = sameGroupPlaces.map(item => {
+    const isCurrentPlace = item.placeId === place.placeId;
+
+    return {
+      key: `layer-${item.layer}`,
+      label: String(item.layer ?? "").toUpperCase(),
+      isActive: isCurrentPlace,
+      isCurrent: isCurrentPlace,
+      isDisabled: false,
+      onClick: () => {
+        if (isCurrentPlace) {
+          isShopOpen = false;
+          isActionOpen = false;
+          selectedActionId = "";
+          renderChatPlaceInfo();
+          return;
+        }
+
+        moveToPlace(item.placeId);
+      }
+    };
+  });
 
   if (place.kind !== "room") {
     tabs.push({
@@ -443,11 +457,17 @@ const placeTabs = buildPlaceTabs(place, {
   onToggleShop: () => {
     isShopOpen = !isShopOpen;
     isActionOpen = false;
+    selectedActionId = "";
     renderChatPlaceInfo();
   },
   onToggleAction: () => {
     isActionOpen = !isActionOpen;
     isShopOpen = false;
+
+    if (!isActionOpen) {
+      selectedActionId = "";
+    }
+
     renderChatPlaceInfo();
   }
 });
@@ -479,28 +499,41 @@ if (isShopOpen) {
     character
   });
 
-  renderChatActionSection(interactionPanel, {
-    actions: availableActions,
-    onSelectAction: (action) => {
-      const actionPostInput = buildActionLogPostInput({
-        action,
-        place,
-        character
-      });
+if (
+  !selectedActionId ||
+  !availableActions.some(action => action.actionId === selectedActionId)
+) {
+  selectedActionId = availableActions[0]?.actionId ?? "";
+}
 
-      if (!actionPostInput) {
-        alert("アクションを実行できません");
-        return;
-      }
+renderChatActionSection(interactionPanel, {
+  actions: availableActions,
+  selectedActionId,
+  onSelectAction: (action) => {
+    selectedActionId = action.actionId ?? "";
+    renderChatPlaceInfo();
+  },
+  onExecuteAction: (action) => {
+    const actionPostInput = buildActionLogPostInput({
+      action,
+      place,
+      character
+    });
 
-      createPost(actionPostInput);
-      isActionOpen = false;
-      renderChatPlaceInfo();
-      showToast("アクションログを送信しました", {
-        type: "success"
-      });
+    if (!actionPostInput) {
+      alert("アクションを実行できません");
+      return;
     }
-  });
+
+    createPost(actionPostInput);
+    isActionOpen = false;
+    selectedActionId = "";
+    renderChatPlaceInfo();
+    showToast("アクションログを送信しました", {
+      type: "success"
+    });
+  }
+});
 } else {
   composerRefs = renderChatComposerSection(interactionPanel, {
     composerDraft,
