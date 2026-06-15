@@ -345,6 +345,31 @@ function renderShopPlaceholderSection(container) {
   };
 }
 
+function renderInteractionPanel(container) {
+  if (!container) {
+    return null;
+  }
+
+  const section = document.createElement("section");
+  section.className = "chatInteractionSection";
+
+  const inner = document.createElement("div");
+  inner.className = "chatInteractionInner";
+
+  const panel = document.createElement("div");
+  panel.className = "chatInteractionPanel";
+
+  inner.appendChild(panel);
+  section.appendChild(inner);
+  container.appendChild(section);
+
+  return {
+    section,
+    inner,
+    panel
+  };
+}
+
 
 function renderChatPlaceInfo() {
   if (!centerPanel || !chatMainArea) return;
@@ -443,38 +468,41 @@ if (placeTabs.length > 0) {
 
 let composerRefs = null;
 
+const interactionPanelRefs = renderInteractionPanel(chatMainArea);
+const interactionPanel = interactionPanelRefs?.panel ?? chatMainArea;
+
 if (isShopOpen) {
-  renderShopPlaceholderSection(chatMainArea);
+  renderShopPlaceholderSection(interactionPanel);
 } else if (isActionOpen) {
-const availableActions = getAvailableChatActions({
-  place,
-  character
-});
+  const availableActions = getAvailableChatActions({
+    place,
+    character
+  });
 
-renderChatActionSection(chatMainArea, {
-  actions: availableActions,
-  onSelectAction: (action) => {
-    const actionPostInput = buildActionLogPostInput({
-      action,
-      place,
-      character
-    });
+  renderChatActionSection(interactionPanel, {
+    actions: availableActions,
+    onSelectAction: (action) => {
+      const actionPostInput = buildActionLogPostInput({
+        action,
+        place,
+        character
+      });
 
-    if (!actionPostInput) {
-      alert("アクションを実行できません");
-      return;
+      if (!actionPostInput) {
+        alert("アクションを実行できません");
+        return;
+      }
+
+      createPost(actionPostInput);
+      isActionOpen = false;
+      renderChatPlaceInfo();
+      showToast("アクションログを送信しました", {
+        type: "success"
+      });
     }
-
-    createPost(actionPostInput);
-    isActionOpen = false;
-    renderChatPlaceInfo();
-    showToast("アクションログを送信しました", {
-      type: "success"
-    });
-  }
-});
+  });
 } else {
-  composerRefs = renderChatComposerSection(chatMainArea, {
+  composerRefs = renderChatComposerSection(interactionPanel, {
     composerDraft,
     replySourcePost,
     getPlaceLabel,
