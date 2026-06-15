@@ -637,9 +637,43 @@ const handleHide = createHideHandler({
   rerender: renderChatPlaceInfo
 });
 
-const handleQuote = createQuoteHandler({
-  composerRefs
-});
+const handleQuote = (post) => {
+  if (!post || typeof post.postId !== "number") {
+    return;
+  }
+
+  if (composerRefs?.textarea) {
+    createQuoteHandler({
+      composerRefs
+    })(post);
+
+    return;
+  }
+
+  const currentDraft = loadComposerDraft();
+  const quoteText = `>>${post.postId}`;
+
+  const currentBody =
+    typeof currentDraft.body === "string"
+      ? currentDraft.body
+      : "";
+
+  const nextBody =
+    currentBody.trim() === ""
+      ? quoteText
+      : `${currentBody}\n${quoteText}`;
+
+  saveComposerDraft({
+    ...currentDraft,
+    body: nextBody
+  });
+
+  isShopOpen = false;
+  isActionOpen = false;
+  selectedActionId = "";
+
+  renderChatPlaceInfo();
+};
 
 const postActions = createPostActions({
   onReply: handleReply,
