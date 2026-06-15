@@ -515,6 +515,18 @@ body {
   box-sizing: border-box;
 }
 
+.chatInteractionHeading {
+  margin-bottom: 8px;
+  color: var(--theme-text-subtle);
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+  letter-spacing: 0.08em;
+}
+
+.chatInteractionBody {
+  width: 100%;
+}
+
 /* =======================================================
    投稿入力欄
 ======================================================= */
