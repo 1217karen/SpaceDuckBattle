@@ -337,6 +337,13 @@ body {
   word-break: break-word;
 }
 
+.chatPostLogLabel {
+  font-size: var(--font-size-sm);
+  font-weight: normal;
+  color: var(--theme-text-muted);
+  letter-spacing: 0.08em;
+}
+
 /* 発言カード下部 */
 .chatPostActions {
   display: flex;
