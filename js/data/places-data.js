@@ -1,7 +1,5 @@
 // places-data.js
 
-// places-data.js
-
 export const places = [
   {
     placeId: "F1-1",
@@ -14,6 +12,10 @@ export const places = [
     shortDescription: "中層生活区に整備された、コロニー住民たちの憩いの公園。",
     longDescription: "人工空と環境制御の光に包まれた公共公園。遊歩道や休憩所、遊具広場が整備され、様々な人が気軽に立ち寄る。",
     lookAroundText: "{name}は周囲を見渡した。人工空の下に、整えられた緑地と遊歩道が広がっている。",
+    actionIds: [
+      "park-walk",
+      "park-fountain-coin"
+    ],
     accessType: null
   },
   {
@@ -48,6 +50,11 @@ export const places = [
     shortDescription: "色とりどりの遊具が並ぶ、公園のにぎやかな一角。",
     longDescription: "低重力環境にも対応した遊具が並ぶ遊具広場。子どもたちの遊び場としてだけでなく、大人たちの軽い運動や息抜きにも使われている。",
     lookAroundText: "{name}は周囲を見渡した。低重力対応の遊具が並び、楽しげな声があちこちから聞こえてくる。",
+    actionIds: [
+      "play-swing",
+      "play-slide",
+      "play-jungle-gym"
+    ],
     accessType: null
   },
   {
@@ -82,6 +89,10 @@ export const places = [
     shortDescription: "公園を見渡せる、静かな休憩スペース。",
     longDescription: "遊具広場を一望できる休憩所。ベンチや自動販売機が置かれ、待ち合わせや雑談の場に使われている。",
     lookAroundText: "{name}は周囲を見渡した。ベンチと小さなテーブルが並び、穏やかな環境音が流れている。",
+    actionIds: [
+      "deck-buy-drink",
+      "deck-sit-chair"
+    ],
     accessType: null
   },
   {
