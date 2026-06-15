@@ -1,122 +1,140 @@
-//places-data.js
+// places-data.js
+
+// places-data.js
 
 export const places = [
-{
-  placeId: "F1-1",
-  groupId: "F1",
-  parentId: null,
-  kind: "field",
-  layer: "main",
-  name: "テストフィールド",
-  shortDescription: "ここはテスト用のフィールドです。",
-  longDescription: "ここには詳細説明文が入ります。あとで場所ごとの案内や特徴を書けるようにします。",
-  lookAroundText: "{name}は周囲を見渡した。広々としたテスト用のフィールドが広がっている。",
-  accessType: null
-},
+  {
+    placeId: "F1-1",
+    groupId: "F1",
+    zoneId: "middle",
+    parentId: null,
+    kind: "field",
+    layer: "main",
+    name: "セントラルパーク",
+    shortDescription: "中層生活区に整備された、コロニー住民たちの憩いの公園。",
+    longDescription: "人工空と環境制御の光に包まれた公共公園。遊歩道や休憩所、遊具広場が整備され、様々な人が気軽に立ち寄る。",
+    lookAroundText: "{name}は周囲を見渡した。人工空の下に、整えられた緑地と遊歩道が広がっている。",
+    accessType: null
+  },
   {
     placeId: "F1-2",
     groupId: "F1",
+    zoneId: "middle",
     parentId: null,
     kind: "field",
     layer: "side",
-    name: "テストフィールド サイド",
+    name: "セントラルパーク サイド",
     accessType: null
   },
   {
     placeId: "F1-3",
     groupId: "F1",
+    zoneId: "middle",
     parentId: null,
     kind: "field",
     layer: "local",
-    name: "テストフィールド ローカル",
+    name: "セントラルパーク ローカル",
     accessType: null
   },
 
-{
-  placeId: "E1-1",
-  groupId: "E1",
-  parentId: "F1-1",
-  kind: "area",
-  layer: "main",
-  name: "テストエリア1",
-  lookAroundText: "{name}は周囲を見回した。フィールドから少し奥まったエリアだ。",
-  accessType: null
-},
+  {
+    placeId: "E1-1",
+    groupId: "E1",
+    zoneId: "middle",
+    parentId: "F1-1",
+    kind: "area",
+    layer: "main",
+    name: "遊具広場",
+    shortDescription: "色とりどりの遊具が並ぶ、公園のにぎやかな一角。",
+    longDescription: "低重力環境にも対応した遊具が並ぶ遊具広場。子どもたちの遊び場としてだけでなく、大人たちの軽い運動や息抜きにも使われている。",
+    lookAroundText: "{name}は周囲を見渡した。低重力対応の遊具が並び、楽しげな声があちこちから聞こえてくる。",
+    accessType: null
+  },
   {
     placeId: "E1-2",
     groupId: "E1",
+    zoneId: "middle",
     parentId: "F1-1",
     kind: "area",
     layer: "side",
-    name: "テストエリア1 サイド",
+    name: "遊具広場 サイド",
     accessType: null
   },
   {
     placeId: "E1-3",
     groupId: "E1",
+    zoneId: "middle",
     parentId: "F1-1",
     kind: "area",
     layer: "local",
-    name: "テストエリア1 ローカル",
+    name: "遊具広場 ローカル",
     accessType: null
   },
 
-{
-  placeId: "E2-1",
-  groupId: "E2",
-  parentId: "F1-1",
-  kind: "area",
-  layer: "main",
-  name: "テストエリア2",
-  lookAroundText: "{name}は周囲を見回した。エリア１とは逆方向の分岐だ。",
-  accessType: null
-},
+  {
+    placeId: "E2-1",
+    groupId: "E2",
+    zoneId: "middle",
+    parentId: "F1-1",
+    kind: "area",
+    layer: "main",
+    name: "休憩デッキ",
+    shortDescription: "公園を見渡せる、静かな休憩スペース。",
+    longDescription: "遊具広場を一望できる休憩所。ベンチや自動販売機が置かれ、待ち合わせや雑談の場に使われている。",
+    lookAroundText: "{name}は周囲を見渡した。ベンチと小さなテーブルが並び、穏やかな環境音が流れている。",
+    accessType: null
+  },
   {
     placeId: "E2-2",
     groupId: "E2",
+    zoneId: "middle",
     parentId: "F1-1",
     kind: "area",
     layer: "side",
-    name: "テストエリア2 サイド",
+    name: "休憩デッキ サイド",
     accessType: null
   },
   {
     placeId: "E2-3",
     groupId: "E2",
+    zoneId: "middle",
     parentId: "F1-1",
     kind: "area",
     layer: "local",
-    name: "テストエリア2 ローカル",
+    name: "休憩デッキ ローカル",
     accessType: null
   },
 
   {
     placeId: "R1",
     groupId: "R1",
+    zoneId: "middle",
     parentId: "E1-1",
     kind: "room",
     layer: null,
-    name: "テストルーム1",
+    name: "公開ルーム",
     accessType: "public",
     showParentMainAreaPreview: true
   },
   {
     placeId: "R2",
     groupId: "R2",
+    zoneId: "middle",
     parentId: "E1-1",
     kind: "room",
     layer: null,
-    name: "テストルーム2",
+    name: "鍵付きルーム",
     accessType: "password",
     showParentMainAreaPreview: false
   },
   {
     placeId: "R3",
     groupId: "R3",
+    zoneId: "middle",
     parentId: "E2-1",
     kind: "room",
     layer: null,
-    name: "テストルーム3",
+    name: "非公開ルーム",
     accessType: "private",
     showParentMainAreaPreview: true
   }
