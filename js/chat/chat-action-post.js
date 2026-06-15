@@ -34,8 +34,15 @@ export function buildActionLogPostInput({
   const name = getCharacterActionName(character);
   const placeName = getPlaceLabel(place.placeId);
 
-  const body = applyActionTemplate(action.resultText, {
-    name,
+  const resultText =
+    action.actionId === "look-around" &&
+    typeof place.lookAroundText === "string" &&
+    place.lookAroundText.trim() !== ""
+      ? place.lookAroundText
+      : action.resultText;
+
+  const body = applyActionTemplate(resultText, {
+   name,
     placeName
   });
 
