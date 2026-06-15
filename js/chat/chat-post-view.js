@@ -148,7 +148,7 @@ if (shouldShowIcon) {
 
     name.textContent =
       post.type === "actionLog"
-        ? "LOG"
+        ? "ACTION LOG"
         : typeof post.speakerName === "string"
           ? post.speakerName
           : "";
