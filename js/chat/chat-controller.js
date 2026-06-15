@@ -532,17 +532,23 @@ if (isShopOpen) {
   });
 
 if (
-  !selectedActionId ||
+  selectedActionId &&
   !availableActions.some(action => action.actionId === selectedActionId)
 ) {
-  selectedActionId = availableActions[0]?.actionId ?? "";
+  selectedActionId = "";
 }
 
 renderChatActionSection(interactionPanel, {
   actions: availableActions,
   selectedActionId,
   onSelectAction: (action) => {
-    selectedActionId = action.actionId ?? "";
+    const actionId = action.actionId ?? "";
+
+    selectedActionId =
+      selectedActionId === actionId
+        ? ""
+        : actionId;
+
     renderChatPlaceInfo();
   },
   onExecuteAction: (action) => {
