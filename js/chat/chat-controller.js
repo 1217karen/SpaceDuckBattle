@@ -60,6 +60,18 @@ function moveToPlace(placeId) {
   });
 }
 
+function reloadChatPageWithToast(message, type = "success") {
+  sessionStorage.setItem(
+    "chatToastMessage",
+    JSON.stringify({
+      message,
+      type
+    })
+  );
+
+  window.location.reload();
+}
+
 function getAroundBasePlace(place) {
   if (!place) {
     return null;
@@ -325,10 +337,12 @@ function setupComposerSubmit({
 
     saveComposerDraft(clearedDraft);
     isShopOpen = false;
-    renderChatPlaceInfo();
-    showToast("発言を投稿しました", { type: "success" });
-  });
-}
+    isActionOpen = false;
+    selectedActionId = "";
+
+    reloadChatPageWithToast("発言を投稿しました", "success");
+      });
+    }
 
 
 function renderShopPlaceholderSection(container) {
@@ -564,15 +578,14 @@ renderChatActionSection(interactionPanel, {
     }
 
     createPost(actionPostInput);
+    isShopOpen = false;
     isActionOpen = false;
     selectedActionId = "";
-    renderChatPlaceInfo();
-    showToast("アクションログを送信しました", {
-      type: "success"
+
+    reloadChatPageWithToast("アクションを実行しました", "success");
+      }
     });
-  }
-});
-} else {
+    } else {
   composerRefs = renderChatComposerSection(interactionPanel, {
     composerDraft,
     replySourcePost,
