@@ -141,11 +141,17 @@ if (shouldShowIcon) {
     nameRow.className = "chatPostNameRow";
 
     const name = document.createElement("span");
-    name.className = "chatPostName";
+    name.className =
+      post.type === "actionLog"
+        ? "chatPostName chatPostLogLabel"
+        : "chatPostName";
+
     name.textContent =
-      typeof post.speakerName === "string"
-        ? post.speakerName
-        : "";
+      post.type === "actionLog"
+        ? "LOG"
+        : typeof post.speakerName === "string"
+          ? post.speakerName
+          : "";
 
     const enoSeparator = document.createElement("span");
     enoSeparator.className = "chatPostEnoSeparator";
