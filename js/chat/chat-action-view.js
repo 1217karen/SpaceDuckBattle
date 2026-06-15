@@ -3,12 +3,19 @@
 export function renderChatActionSection(container, options = {}) {
   const {
     actions = [],
-    onSelectAction = null
+    selectedActionId = "",
+    onSelectAction = null,
+    onExecuteAction = null
   } = options;
 
   if (!container) {
     return null;
   }
+
+  const selectedAction =
+    actions.find(action => action.actionId === selectedActionId) ||
+    actions[0] ||
+    null;
 
   const section = document.createElement("section");
   section.className = "chatActionSection";
@@ -16,16 +23,30 @@ export function renderChatActionSection(container, options = {}) {
   const inner = document.createElement("div");
   inner.className = "chatActionInner";
 
+  const heading = document.createElement("div");
+  heading.className = "chatActionHeading";
+  heading.textContent = "アクションを選択";
+
+  inner.appendChild(heading);
+
   if (actions.length === 0) {
     const emptyText = document.createElement("p");
     emptyText.className = "chatActionEmptyText";
     emptyText.textContent = "実行できるアクションはありません。";
     inner.appendChild(emptyText);
   } else {
+    const buttonList = document.createElement("div");
+    buttonList.className = "chatActionButtonList";
+
     actions.forEach(action => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "chatActionButton button-box";
+
+      if (selectedAction?.actionId === action.actionId) {
+        button.classList.add("is-active");
+      }
+
       button.textContent = action.label ?? "アクション";
 
       if (typeof onSelectAction === "function") {
@@ -36,8 +57,52 @@ export function renderChatActionSection(container, options = {}) {
         button.disabled = true;
       }
 
-      inner.appendChild(button);
+      buttonList.appendChild(button);
     });
+
+    inner.appendChild(buttonList);
+
+    const detail = document.createElement("div");
+    detail.className = "chatActionDetail";
+
+    const selectedLabel = document.createElement("div");
+    selectedLabel.className = "chatActionSelectedLabel";
+    selectedLabel.textContent =
+      selectedAction
+        ? `選択中：${selectedAction.label ?? "アクション"}`
+        : "アクションが選択されていません。";
+
+    const description = document.createElement("p");
+    description.className = "chatActionDescription";
+    description.textContent =
+      selectedAction?.description ?? "";
+
+    detail.appendChild(selectedLabel);
+
+    if (description.textContent) {
+      detail.appendChild(description);
+    }
+
+    inner.appendChild(detail);
+
+    const footer = document.createElement("div");
+    footer.className = "chatActionFooter";
+
+    const executeButton = document.createElement("button");
+    executeButton.type = "button";
+    executeButton.className = "chatActionExecuteButton button-primaryNew";
+    executeButton.textContent = "実行";
+
+    if (selectedAction && typeof onExecuteAction === "function") {
+      executeButton.addEventListener("click", () => {
+        onExecuteAction(selectedAction);
+      });
+    } else {
+      executeButton.disabled = true;
+    }
+
+    footer.appendChild(executeButton);
+    inner.appendChild(footer);
   }
 
   section.appendChild(inner);
