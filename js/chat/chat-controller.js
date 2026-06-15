@@ -359,7 +359,11 @@ function renderShopPlaceholderSection(container) {
   };
 }
 
-function renderInteractionPanel(container) {
+function renderInteractionPanel(container, options = {}) {
+  const {
+    title = ""
+  } = options;
+
   if (!container) {
     return null;
   }
@@ -373,6 +377,17 @@ function renderInteractionPanel(container) {
   const panel = document.createElement("div");
   panel.className = "chatInteractionPanel";
 
+  if (title) {
+    const heading = document.createElement("div");
+    heading.className = "chatInteractionHeading";
+    heading.textContent = title;
+    panel.appendChild(heading);
+  }
+
+  const body = document.createElement("div");
+  body.className = "chatInteractionBody";
+
+  panel.appendChild(body);
   inner.appendChild(panel);
   section.appendChild(inner);
   container.appendChild(section);
@@ -380,7 +395,8 @@ function renderInteractionPanel(container) {
   return {
     section,
     inner,
-    panel
+    panel,
+    body
   };
 }
 
@@ -494,8 +510,18 @@ if (placeTabs.length > 0) {
 
 let composerRefs = null;
 
-const interactionPanelRefs = renderInteractionPanel(chatMainArea);
-const interactionPanel = interactionPanelRefs?.panel ?? chatMainArea;
+const interactionTitle =
+  isShopOpen
+    ? "SHOP"
+    : isActionOpen
+      ? "ACTION"
+      : "POST";
+
+const interactionPanelRefs = renderInteractionPanel(chatMainArea, {
+  title: interactionTitle
+});
+
+const interactionPanel = interactionPanelRefs?.body ?? chatMainArea;
 
 if (isShopOpen) {
   renderShopPlaceholderSection(interactionPanel);
