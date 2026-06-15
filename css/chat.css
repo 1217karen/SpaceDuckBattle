@@ -534,15 +534,11 @@ body {
   display: flex;
   gap: 12px;
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-md);
-  background: linear-gradient(
-    to right,
-    var(--theme-surface-2),
-    var(--theme-surface-3)
-  );
-  box-shadow: var(--theme-shadow-panel);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   color: var(--theme-text-main);
   box-sizing: border-box;
 }
@@ -869,13 +865,13 @@ body {
 
 .chatActionSelectedLabel {
   margin-bottom: 4px;
-  color: var(--theme-text-main);
+  color: var(--theme-text-subtle);
   font-size: var(--font-size-sm);
 }
 
 .chatActionDescription {
   margin: 0;
-  color: var(--theme-text-subtle);
+  color: var(--theme-text-main);
   font-size: var(--font-size-sm);
   line-height: 1.6;
 }
