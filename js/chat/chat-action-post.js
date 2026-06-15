@@ -8,6 +8,20 @@ function applyActionTemplate(template, values = {}) {
   });
 }
 
+function getCharacterActionName(character = {}) {
+  const fullName =
+    typeof character.fullName === "string"
+      ? character.fullName.trim()
+      : "";
+
+  const defaultName =
+    typeof character.defaultName === "string"
+      ? character.defaultName.trim()
+      : "";
+
+  return fullName || defaultName || "誰か";
+}
+
 export function buildActionLogPostInput({
   action,
   place,
@@ -17,11 +31,7 @@ export function buildActionLogPostInput({
     return null;
   }
 
-  const name =
-    typeof character.name === "string" && character.name.trim()
-      ? character.name.trim()
-      : "name";
-
+  const name = getCharacterActionName(character);
   const placeName = getPlaceLabel(place.placeId);
 
   const body = applyActionTemplate(action.resultText, {
