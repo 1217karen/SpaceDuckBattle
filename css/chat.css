@@ -162,37 +162,6 @@ body {
 }
 
 /* =======================================================
-   入力・ショップ・アクション共通枠
-======================================================= */
-.chatInteractionSection {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.chatInteractionInner {
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.chatInteractionPanel {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid rgba(120, 160, 190, 0.55);
-  border-radius: var(--theme-radius-lg);
-  background: linear-gradient(
-    to right,
-    rgba(38, 52, 66, 0.72),
-    rgba(48, 58, 72, 0.72)
-  );
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-    var(--theme-shadow-panel);
-  box-sizing: border-box;
-}
-
-/* =======================================================
    発言カード
 ======================================================= */
 .chatPostCard {
@@ -514,6 +483,38 @@ body {
   cursor: default;
 }
 
+
+/* =======================================================
+   入力・ショップ・アクション共通枠
+======================================================= */
+.chatInteractionSection {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.chatInteractionInner {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chatInteractionPanel {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(120, 160, 190, 0.55);
+  border-radius: var(--theme-radius-lg);
+  background: linear-gradient(
+    to right,
+    rgba(38, 52, 66, 0.72),
+    rgba(48, 58, 72, 0.72)
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    var(--theme-shadow-panel);
+  box-sizing: border-box;
+}
+
 /* =======================================================
    投稿入力欄
 ======================================================= */
@@ -788,8 +789,108 @@ body {
   padding: 6px 14px;
 }
 
+
 /* =======================================================
-   下書き・引用・ツリーメモ・ショップ
+   ショップ（仮）
+======================================================= */
+
+.chatShopSection {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.chatShopInner {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chatShopCard {
+  padding: 14px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: linear-gradient(
+    to right,
+    var(--theme-surface-2),
+    var(--theme-surface-3)
+  );
+  box-shadow: var(--theme-shadow-panel);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+}
+
+.chatShopPlaceholderText {
+  margin: 0;
+  line-height: 1.6;
+}
+
+
+/* =======================================================
+   アクション
+======================================================= */
+
+.chatActionSection {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.chatActionInner {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.chatActionHeading {
+  margin-bottom: 8px;
+  color: var(--theme-text-subtle);
+  font-size: var(--font-size-sm);
+}
+
+.chatActionButtonList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.chatActionButton {
+  padding: 7px 12px;
+  font-size: var(--font-size-sm);
+}
+
+.chatActionDetail {
+  padding: 10px 12px;
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.18);
+  margin-bottom: 10px;
+}
+
+.chatActionSelectedLabel {
+  margin-bottom: 4px;
+  color: var(--theme-text-main);
+  font-size: var(--font-size-sm);
+}
+
+.chatActionDescription {
+  margin: 0;
+  color: var(--theme-text-subtle);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.chatActionFooter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.chatActionExecuteButton {
+  padding: 6px 14px;
+}
+
+/* =======================================================
+   下書き・引用・ツリーメモ
 ======================================================= */
 .chatThreadDraftPreviewSection {
   width: 100%;
@@ -850,56 +951,9 @@ body {
   padding: 6px 14px;
 }
 
-.chatShopSection {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.chatShopInner {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.chatShopCard {
-  padding: 14px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-md);
-  background: linear-gradient(
-    to right,
-    var(--theme-surface-2),
-    var(--theme-surface-3)
-  );
-  box-shadow: var(--theme-shadow-panel);
-  color: var(--theme-text-main);
-  box-sizing: border-box;
-}
-
-.chatShopPlaceholderText {
-  margin: 0;
-  line-height: 1.6;
-}
-
-.chatActionSection {
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.chatActionInner {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.chatActionTestButton {
-  padding: 8px 14px;
-}
-
 
 /* =======================================================
-   ログカード(仮)
+   ログカード
 ======================================================= */
 
 .chatPostCardActionLog {
