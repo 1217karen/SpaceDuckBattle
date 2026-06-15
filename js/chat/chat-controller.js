@@ -20,7 +20,8 @@ import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteH
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
 import { filterHiddenPosts,getHerePosts,getReplyPostsForEno,getSelfPostsForEno } from "./chat-post-filter.js";
 import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
-import { buildTestActionLogPostInput } from "./chat-action-post.js";
+import { getAvailableChatActions } from "./chat-action-resolver.js";
+import { buildActionLogPostInput } from "./chat-action-post.js";
 
 
 
@@ -445,26 +446,33 @@ let composerRefs = null;
 if (isShopOpen) {
   renderShopPlaceholderSection(chatMainArea);
 } else if (isActionOpen) {
-  renderActionTestSection(chatMainArea, {
-    onTestAction: () => {
-      const actionPostInput = buildTestActionLogPostInput({
-        place,
-        character
-      });
+const availableActions = getAvailableChatActions({
+  place,
+  character
+});
 
-      if (!actionPostInput) {
-        alert("アクションを実行できません");
-        return;
-      }
+renderActionTestSection(chatMainArea, {
+  actions: availableActions,
+  onSelectAction: (action) => {
+    const actionPostInput = buildActionLogPostInput({
+      action,
+      place,
+      character
+    });
 
-      createPost(actionPostInput);
-      isActionOpen = false;
-      renderChatPlaceInfo();
-      showToast("アクションログを送信しました", {
-        type: "success"
-      });
+    if (!actionPostInput) {
+      alert("アクションを実行できません");
+      return;
     }
-  });
+
+    createPost(actionPostInput);
+    isActionOpen = false;
+    renderChatPlaceInfo();
+    showToast("アクションログを送信しました", {
+      type: "success"
+    });
+  }
+});
 } else {
   composerRefs = renderChatComposerSection(chatMainArea, {
     composerDraft,
@@ -595,7 +603,8 @@ if (composerRefs) {
 
 function renderActionTestSection(container, options = {}) {
   const {
-    onTestAction = null
+    actions = [],
+    onSelectAction = null
   } = options;
 
   if (!container) {
@@ -608,24 +617,35 @@ function renderActionTestSection(container, options = {}) {
   const inner = document.createElement("div");
   inner.className = "chatActionInner";
 
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "chatActionTestButton button-box";
-  button.textContent = "テストアクション";
-
-  if (typeof onTestAction === "function") {
-    button.addEventListener("click", onTestAction);
+  if (actions.length === 0) {
+    const emptyText = document.createElement("p");
+    emptyText.className = "chatActionEmptyText";
+    emptyText.textContent = "実行できるアクションはありません。";
+    inner.appendChild(emptyText);
   } else {
-    button.disabled = true;
+    actions.forEach(action => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "chatActionButton button-box";
+      button.textContent = action.label ?? "アクション";
+
+      if (typeof onSelectAction === "function") {
+        button.addEventListener("click", () => {
+          onSelectAction(action);
+        });
+      } else {
+        button.disabled = true;
+      }
+
+      inner.appendChild(button);
+    });
   }
 
-  inner.appendChild(button);
   section.appendChild(inner);
   container.appendChild(section);
 
   return {
-    section,
-    button
+    section
   };
 }
 
