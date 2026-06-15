@@ -7,7 +7,7 @@ import { createPost,getAllPosts} from "../services/post-service.js";
 import { renderThreadHeaderSection } from "./chat-header-view.js";
 import { renderChatComposerSection } from "./chat-composer-view.js";
 import { createPostCard,renderPostListSection,renderPostListContent } from "./chat-post-view.js";
-import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs} from "./chat-composer-state.js";
+import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost} from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForPost } from "./chat-composer-post.js";
 import { getThreadRootPostIdFromQuery, getThreadPosts } from "./chat-thread-utils.js";
@@ -149,19 +149,52 @@ function setupComposerSubmit({
 
     createPost(postInput);
 
-    const clearedDraft = clearReplyState({
-      ...currentDraft,
-      body: "",
-      additionalTargetEnoText: ""
-    });
-
-    saveComposerDraft(clearedDraft);
+    clearComposerDraft();
     renderThreadPage();
     showToast("発言を投稿しました", { type: "success" });
-  });
+      });
+    }
+
+function renderInteractionPanel(container, options = {}) {
+  const {
+    title = ""
+  } = options;
+
+  if (!container) {
+    return null;
+  }
+
+  const section = document.createElement("section");
+  section.className = "chatInteractionSection";
+
+  const inner = document.createElement("div");
+  inner.className = "chatInteractionInner";
+
+  const panel = document.createElement("div");
+  panel.className = "chatInteractionPanel";
+
+  if (title) {
+    const heading = document.createElement("div");
+    heading.className = "chatInteractionHeading";
+    heading.textContent = title;
+    panel.appendChild(heading);
+  }
+
+  const body = document.createElement("div");
+  body.className = "chatInteractionBody";
+
+  panel.appendChild(body);
+  inner.appendChild(panel);
+  section.appendChild(inner);
+  container.appendChild(section);
+
+  return {
+    section,
+    inner,
+    panel,
+    body
+  };
 }
-
-
 
 function renderThreadPage() {
   if (!centerPanel || !chatMainArea) {
@@ -283,7 +316,13 @@ function renderThreadPage() {
     getQuotePreviewPostById
   });
 
-  composerRefs = renderChatComposerSection(chatMainArea, {
+  const interactionPanelRefs = renderInteractionPanel(chatMainArea, {
+    title: "REPLY"
+  });
+
+  const interactionPanel = interactionPanelRefs?.body ?? chatMainArea;
+
+  composerRefs = renderChatComposerSection(interactionPanel, {
     composerDraft,
     replySourcePost,
     getPlaceLabel,
@@ -303,12 +342,12 @@ function renderThreadPage() {
     }
   });
 
-  setupRenderedComposer({
-    composerRefs,
-    composerDraft,
-    character,
-    chatIconPicker
-  });
+    setupRenderedComposer({
+      composerRefs,
+      composerDraft,
+      character,
+      chatIconPicker
+    });
 
   setupDraftPreview({
     postListRefs,
