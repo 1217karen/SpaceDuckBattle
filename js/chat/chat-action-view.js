@@ -22,12 +22,6 @@ export function renderChatActionSection(container, options = {}) {
   const inner = document.createElement("div");
   inner.className = "chatActionInner";
 
-  const heading = document.createElement("div");
-  heading.className = "chatActionHeading";
-  heading.textContent = "アクションを選択";
-
-  inner.appendChild(heading);
-
   if (actions.length === 0) {
     const emptyText = document.createElement("p");
     emptyText.className = "chatActionEmptyText";
