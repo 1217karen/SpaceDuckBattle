@@ -451,7 +451,7 @@ const availableActions = getAvailableChatActions({
   character
 });
 
-renderActionTestSection(chatMainArea, {
+renderChatActionSection(chatMainArea, {
   actions: availableActions,
   onSelectAction: (action) => {
     const actionPostInput = buildActionLogPostInput({
