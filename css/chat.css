@@ -527,6 +527,45 @@ body {
   width: 100%;
 }
 
+.chatSectionTitle {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 0 18px 2px 4px;
+  font-size: calc(var(--chat-font-base) * 1.15);
+  font-weight: bold;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  color: var(--theme-text-main);
+  isolation: isolate;
+}
+
+.chatSectionTitle::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0.8em;
+  background: #72d8dd;
+  z-index: -2;
+}
+
+.chatSectionTitle::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 26px;
+  height: 0.8em;
+  background: repeating-linear-gradient(
+    60deg,
+    transparent 0 5px,
+    rgba(255, 255, 255, 0.95) 5px 9px
+  );
+  z-index: -1;
+}
+
 /* =======================================================
    投稿入力欄
 ======================================================= */
