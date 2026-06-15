@@ -860,12 +860,6 @@ body {
   box-sizing: border-box;
 }
 
-.chatActionHeading {
-  margin-bottom: 8px;
-  color: var(--theme-text-subtle);
-  font-size: var(--font-size-sm);
-}
-
 .chatActionButtonList {
   display: flex;
   flex-wrap: wrap;
