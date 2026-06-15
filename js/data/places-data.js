@@ -10,6 +10,7 @@ export const places = [
   name: "テストフィールド",
   shortDescription: "ここはテスト用のフィールドです。",
   longDescription: "ここには詳細説明文が入ります。あとで場所ごとの案内や特徴を書けるようにします。",
+  lookAroundText: "{name}は周囲を見渡した。広々としたテスト用のフィールドが広がっている。",
   accessType: null
 },
   {
@@ -31,15 +32,16 @@ export const places = [
     accessType: null
   },
 
-  {
-    placeId: "E1-1",
-    groupId: "E1",
-    parentId: "F1-1",
-    kind: "area",
-    layer: "main",
-    name: "テストエリア1",
-    accessType: null
-  },
+{
+  placeId: "E1-1",
+  groupId: "E1",
+  parentId: "F1-1",
+  kind: "area",
+  layer: "main",
+  name: "テストエリア1",
+  lookAroundText: "{name}は周囲を見渡した。フィールドから少し奥まったエリアだ。",
+  accessType: null
+},
   {
     placeId: "E1-2",
     groupId: "E1",
@@ -59,15 +61,16 @@ export const places = [
     accessType: null
   },
 
-  {
-    placeId: "E2-1",
-    groupId: "E2",
-    parentId: "F1-1",
-    kind: "area",
-    layer: "main",
-    name: "テストエリア2",
-    accessType: null
-  },
+{
+  placeId: "E2-1",
+  groupId: "E2",
+  parentId: "F1-1",
+  kind: "area",
+  layer: "main",
+  name: "テストエリア2",
+  lookAroundText: "{name}は周囲を見渡した。エリア１とは逆方向の分岐だ。",
+  accessType: null
+},
   {
     placeId: "E2-2",
     groupId: "E2",
