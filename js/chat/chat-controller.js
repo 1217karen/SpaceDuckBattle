@@ -22,7 +22,7 @@ import { filterHiddenPosts,getHerePosts,getReplyPostsForEno,getSelfPostsForEno }
 import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 import { getAvailableChatActions } from "./chat-action-resolver.js";
 import { buildActionLogPostInput } from "./chat-action-post.js";
-
+import { renderChatActionSection } from "./chat-action-view.js";
 
 
 const centerPanel = document.querySelector(".center-panel");
@@ -599,54 +599,5 @@ if (composerRefs) {
   });
 }
 
-//仮　あとで外に出す
-
-function renderActionTestSection(container, options = {}) {
-  const {
-    actions = [],
-    onSelectAction = null
-  } = options;
-
-  if (!container) {
-    return null;
-  }
-
-  const section = document.createElement("section");
-  section.className = "chatActionSection";
-
-  const inner = document.createElement("div");
-  inner.className = "chatActionInner";
-
-  if (actions.length === 0) {
-    const emptyText = document.createElement("p");
-    emptyText.className = "chatActionEmptyText";
-    emptyText.textContent = "実行できるアクションはありません。";
-    inner.appendChild(emptyText);
-  } else {
-    actions.forEach(action => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "chatActionButton button-box";
-      button.textContent = action.label ?? "アクション";
-
-      if (typeof onSelectAction === "function") {
-        button.addEventListener("click", () => {
-          onSelectAction(action);
-        });
-      } else {
-        button.disabled = true;
-      }
-
-      inner.appendChild(button);
-    });
-  }
-
-  section.appendChild(inner);
-  container.appendChild(section);
-
-  return {
-    section
-  };
-}
 
 renderChatPlaceInfo();
