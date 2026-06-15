@@ -227,18 +227,18 @@ function setupDraftPreview({
   function refreshDraftPreview() {
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
-const rawDisplayPosts =
-  currentViewMode === "reply"
-    ? getReplyPostsForEno(allPosts, currentEno)
-    : currentViewMode === "self"
-      ? getSelfPostsForEno(allPosts, currentEno)
-      : currentViewMode === "here"
-        ? getHerePosts(place, allPosts)
-        : getDisplayPosts({
-            currentPlace: place,
-            allPosts,
-            places
-          });
+  const rawDisplayPosts =
+    currentViewMode === "reply"
+      ? getReplyPostsForEno(allPosts, currentEno)
+      : currentViewMode === "self"
+        ? getSelfPostsForEno(allPosts, currentEno)
+        : currentViewMode === "here"
+          ? getHerePosts(place, allPosts)
+          : getDisplayPosts({
+              currentPlace: place,
+              allPosts,
+              places
+            });
 
     const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
 
