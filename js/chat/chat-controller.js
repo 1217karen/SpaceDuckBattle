@@ -609,18 +609,21 @@ renderChatActionSection(interactionPanel, {
 }
 
 const handleReply = (post) => {
-  if (!composerRefs) {
-    return;
-  }
-
-  const currentDraft = saveComposerDraft(
-    readComposerDraftFromRefs(composerRefs)
-  );
+  const currentDraft = composerRefs
+    ? saveComposerDraft(
+        readComposerDraftFromRefs(composerRefs)
+      )
+    : loadComposerDraft();
 
   const replyState = createReplyStateFromPost(post);
   const nextDraft = applyReplyStateToDraft(currentDraft, replyState);
 
   saveComposerDraft(nextDraft);
+
+  isShopOpen = false;
+  isActionOpen = false;
+  selectedActionId = "";
+
   renderChatPlaceInfo();
 };
 
