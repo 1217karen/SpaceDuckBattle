@@ -2,14 +2,19 @@
 
 const POSTS_STORAGE_KEY = "chatPosts";
 
-function clonePost(post) {
-  const rawTargetEnoList = Array.isArray(post?.targetEnoList)
-    ? post.targetEnoList
+function normalizeEnoList(list) {
+  const rawList = Array.isArray(list)
+    ? list
     : [];
 
-  const targetEnoList = rawTargetEnoList
+  return rawList
     .map(item => Number(item))
     .filter(item => Number.isInteger(item) && item > 0);
+}
+
+function clonePost(post) {
+  const targetEnoList = normalizeEnoList(post?.targetEnoList);
+  const visibleToEnoList = normalizeEnoList(post?.visibleToEnoList);
 
   const postId =
     typeof post?.postId === "number"
@@ -63,6 +68,11 @@ function clonePost(post) {
         : "",
     authorEno: Number.isInteger(authorEno) ? authorEno : 0,
     targetEnoList,
+    visibility:
+      post?.visibility === "private"
+        ? "private"
+        : "public",
+    visibleToEnoList,
     parentPostId:
       Number.isInteger(parentPostId) && parentPostId > 0
         ? parentPostId
@@ -165,13 +175,8 @@ export function createPost(input = {}) {
   const allPosts = getSourcePosts();
   const nextPostId = getNextPostId(allPosts);
 
-  const rawTargetEnoList = Array.isArray(input.targetEnoList)
-    ? input.targetEnoList
-    : [];
-
-  const targetEnoList = rawTargetEnoList
-    .map(item => Number(item))
-    .filter(item => Number.isInteger(item) && item > 0);
+  const targetEnoList = normalizeEnoList(input.targetEnoList);
+  const visibleToEnoList = normalizeEnoList(input.visibleToEnoList);
 
   const post = clonePost({
     postId: nextPostId,
@@ -205,6 +210,11 @@ export function createPost(input = {}) {
         ? input.authorEno
         : Number(input.authorEno || 0),
     targetEnoList,
+    visibility:
+      input.visibility === "private"
+        ? "private"
+        : "public",
+    visibleToEnoList,
     parentPostId:
       typeof input.parentPostId === "number" && input.parentPostId > 0
         ? input.parentPostId
