@@ -85,7 +85,8 @@ function buildPlaceTabs(place, options = {}) {
     isShopOpen = false,
     isActionOpen = false,
     onToggleShop = null,
-    onToggleAction = null
+    onToggleAction = null,
+    onSelectCurrentPlace = null
   } = options;
 
   if (!place) {
@@ -112,10 +113,9 @@ function buildPlaceTabs(place, options = {}) {
       isDisabled: false,
       onClick: () => {
         if (isCurrentPlace) {
-          isShopOpen = false;
-          isActionOpen = false;
-          selectedActionId = "";
-          renderChatPlaceInfo();
+          if (typeof onSelectCurrentPlace === "function") {
+            onSelectCurrentPlace();
+          }
           return;
         }
 
@@ -468,6 +468,12 @@ const placeTabs = buildPlaceTabs(place, {
       selectedActionId = "";
     }
 
+    renderChatPlaceInfo();
+  },
+  onSelectCurrentPlace: () => {
+    isShopOpen = false;
+    isActionOpen = false;
+    selectedActionId = "";
     renderChatPlaceInfo();
   }
 });
