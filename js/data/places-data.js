@@ -39,7 +39,7 @@ export const places = [
   kind: "area",
   layer: "main",
   name: "テストエリア1",
-  lookAroundText: "{name}は周囲を見渡した。フィールドから少し奥まったエリアだ。",
+  lookAroundText: "{name}は周囲を見回した。フィールドから少し奥まったエリアだ。",
   accessType: null
 },
   {
@@ -68,7 +68,7 @@ export const places = [
   kind: "area",
   layer: "main",
   name: "テストエリア2",
-  lookAroundText: "{name}は周囲を見渡した。エリア１とは逆方向の分岐だ。",
+  lookAroundText: "{name}は周囲を見回した。エリア１とは逆方向の分岐だ。",
   accessType: null
 },
   {
