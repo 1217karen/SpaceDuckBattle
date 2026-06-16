@@ -1,51 +1,54 @@
 // chat-display-rules.js
 
+import { canViewPost } from "./chat-post-filter.js";
+
 export function getDisplayPosts({
   currentPlace,
   allPosts,
-  places
+  places,
+  viewerEno = null
 }) {
   if (!currentPlace) {
     return [];
   }
 
   const normalPosts =
-    getPostsByPlaceId(allPosts, currentPlace.placeId)
+    getPostsByPlaceId(allPosts, currentPlace.placeId, viewerEno)
       .map(post => ({
         ...post,
         displayType: "normal"
       }));
 
   const sideFieldPreviewPosts =
-    getSideFieldPreviewPosts(currentPlace, allPosts, places)
+    getSideFieldPreviewPosts(currentPlace, allPosts, places, viewerEno)
       .map(post => ({
         ...post,
         displayType: "preview"
       }));
 
   const mainFieldPreviewPosts =
-    getMainFieldPreviewPosts(currentPlace, allPosts, places)
+    getMainFieldPreviewPosts(currentPlace, allPosts, places, viewerEno)
       .map(post => ({
         ...post,
         displayType: "preview"
       }));
 
   const mainAreaPreviewPosts =
-    getMainAreaPreviewPosts(currentPlace, allPosts, places)
+    getMainAreaPreviewPosts(currentPlace, allPosts, places, viewerEno)
       .map(post => ({
         ...post,
         displayType: "preview"
       }));
 
   const sideAreaPreviewPosts =
-    getSideAreaPreviewPosts(currentPlace, allPosts, places)
+    getSideAreaPreviewPosts(currentPlace, allPosts, places, viewerEno)
       .map(post => ({
         ...post,
         displayType: "preview"
       }));
 
   const roomPreviewPosts =
-    getRoomPreviewPosts(currentPlace, allPosts, places)
+    getRoomPreviewPosts(currentPlace, allPosts, places, viewerEno)
       .map(post => ({
         ...post,
         displayType: "preview"
@@ -61,14 +64,15 @@ export function getDisplayPosts({
   ].sort((a, b) => b.postId - a.postId);
 }
 
-function getPostsByPlaceId(allPosts = [], placeId) {
+function getPostsByPlaceId(allPosts = [], placeId, viewerEno = null) {
   return allPosts.filter(post =>
     post.placeId === placeId &&
-    !post.isDeleted
+    !post.isDeleted &&
+    canViewPost(post, viewerEno)
   );
 }
 
-function getMainFieldPreviewPosts(currentPlace, allPosts = [], places = []) {
+function getMainFieldPreviewPosts(currentPlace, allPosts = [], places = [], viewerEno = null) {
   if (!currentPlace) return [];
   if (currentPlace.kind !== "field") return [];
   if (currentPlace.layer !== "main") return [];
@@ -82,13 +86,13 @@ function getMainFieldPreviewPosts(currentPlace, allPosts = [], places = []) {
   const previewPosts = [];
 
   childMainAreas.forEach(areaPlace => {
-    previewPosts.push(...getPostsByPlaceId(allPosts, areaPlace.placeId));
+    previewPosts.push(...getPostsByPlaceId(allPosts, areaPlace.placeId, viewerEno));
   });
 
   return previewPosts;
 }
 
-function getSideFieldPreviewPosts(currentPlace, allPosts = [], places = []) {
+function getSideFieldPreviewPosts(currentPlace, allPosts = [], places = [], viewerEno = null) {
   if (!currentPlace) return [];
   if (currentPlace.kind !== "field") return [];
   if (currentPlace.layer !== "side") return [];
@@ -103,10 +107,10 @@ function getSideFieldPreviewPosts(currentPlace, allPosts = [], places = []) {
     return [];
   }
 
-  return getPostsByPlaceId(allPosts, mainField.placeId);
+  return getPostsByPlaceId(allPosts, mainField.placeId, viewerEno);
 }
 
-function getMainAreaPreviewPosts(currentPlace, allPosts = [], places = []) {
+function getMainAreaPreviewPosts(currentPlace, allPosts = [], places = [], viewerEno = null) {
   if (!currentPlace) return [];
   if (currentPlace.kind !== "area") return [];
   if (currentPlace.layer !== "main") return [];
@@ -120,13 +124,13 @@ function getMainAreaPreviewPosts(currentPlace, allPosts = [], places = []) {
   );
 
   if (parentMainField) {
-    previewPosts.push(...getPostsByPlaceId(allPosts, parentMainField.placeId));
+    previewPosts.push(...getPostsByPlaceId(allPosts, parentMainField.placeId, viewerEno));
   }
 
   return previewPosts;
 }
 
-function getSideAreaPreviewPosts(currentPlace, allPosts = [], places = []) {
+function getSideAreaPreviewPosts(currentPlace, allPosts = [], places = [], viewerEno = null) {
   if (!currentPlace) return [];
   if (currentPlace.kind !== "area") return [];
   if (currentPlace.layer !== "side") return [];
@@ -141,10 +145,10 @@ function getSideAreaPreviewPosts(currentPlace, allPosts = [], places = []) {
     return [];
   }
 
-  return getPostsByPlaceId(allPosts, mainArea.placeId);
+  return getPostsByPlaceId(allPosts, mainArea.placeId, viewerEno);
 }
 
-function getRoomPreviewPosts(currentPlace, allPosts = [], places = []) {
+function getRoomPreviewPosts(currentPlace, allPosts = [], places = [], viewerEno = null) {
   if (!currentPlace) return [];
   if (currentPlace.kind !== "room") return [];
 
@@ -162,5 +166,5 @@ function getRoomPreviewPosts(currentPlace, allPosts = [], places = []) {
     return [];
   }
 
-  return getPostsByPlaceId(allPosts, parentMainArea.placeId);
+  return getPostsByPlaceId(allPosts, parentMainArea.placeId, viewerEno);
 }
