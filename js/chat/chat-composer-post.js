@@ -145,6 +145,25 @@ function buildTargetEnoList(draft = {}) {
   return [...targetEnoSet];
 }
 
+function buildVisibleToEnoList(draft = {}, character = {}) {
+  const visibleToEnoSet = new Set();
+
+  const authorEno =
+    typeof character?.eno === "number" && character.eno > 0
+      ? character.eno
+      : null;
+
+  if (authorEno) {
+    visibleToEnoSet.add(authorEno);
+  }
+
+  buildTargetEnoList(draft).forEach(eno => {
+    visibleToEnoSet.add(eno);
+  });
+
+  return [...visibleToEnoSet];
+}
+
 export function buildComposerPostInput({
   place,
   character,
@@ -159,6 +178,12 @@ export function buildComposerPostInput({
 
   const { iconId, iconUrl } = getIconData(draft);
 
+  const targetEnoList = buildTargetEnoList(draft);
+  const isPrivate = Boolean(draft?.isPrivate);
+  const visibleToEnoList = isPrivate
+    ? buildVisibleToEnoList(draft, character)
+    : [];
+
   return {
     placeId: getPostPlaceId({
       place,
@@ -170,7 +195,9 @@ export function buildComposerPostInput({
     iconUrl,
     body: normalizeSubmittedBody(rawBody),
     authorEno: character?.eno ?? 0,
-    targetEnoList: buildTargetEnoList(draft),
+    targetEnoList,
+    visibility: isPrivate ? "private" : "public",
+    visibleToEnoList,
     parentPostId:
       typeof draft?.replyParentPostId === "number"
         ? draft.replyParentPostId
@@ -195,6 +222,7 @@ export function buildDraftPreviewPost({
   }
 
   const { iconId, iconUrl } = getIconData(draft);
+  const isPrivate = Boolean(draft?.isPrivate);
 
   return {
     postId: "xxx",
@@ -209,6 +237,10 @@ export function buildDraftPreviewPost({
     body: formatDraftBody(rawBody),
     createdAt: "----/--/-- --:--",
     authorEno: character?.eno ?? "---",
+    visibility: isPrivate ? "private" : "public",
+    visibleToEnoList: isPrivate
+      ? buildVisibleToEnoList(draft, character)
+      : [],
     isDraftPreview: true,
     displayType: "normal",
     parentPostId:
