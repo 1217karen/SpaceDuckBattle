@@ -1,7 +1,7 @@
 //chat-post-action-helpers.js
 
 
-import { deletePost, getAllPostsIncludingDeleted } from "../services/post-service.js";
+import { deletePost, getPostForQuotePreviewById } from "../services/post-service.js";
 import { showToast } from "../common/toast.js";
 import { loadCharacter } from "../services/storage-service.js";
 
@@ -44,8 +44,7 @@ export function createHideHandler({ hiddenPostIds, rerender }) {
 }
 
 export function getQuotePreviewPostById(postId) {
-  const allPostsIncludingDeleted = getAllPostsIncludingDeleted();
-  return allPostsIncludingDeleted.find(post => post.postId === postId) || null;
+  return getPostForQuotePreviewById(postId);
 }
 
 export function createQuoteHandler({ composerRefs }) {
