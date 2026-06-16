@@ -4,14 +4,14 @@ import { places } from "../data/places-data.js";
 import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
-import { createPost,getAllPosts } from "../services/post-service.js";
+import { createPost,getAllPosts,getReplySourcePostForDraft } from "../services/post-service.js";
 import { getDisplayPosts } from "./chat-display-rules.js";
 import { renderPlaceInfoSection } from "./chat-header-view.js";
 import { renderChatComposerSection } from "./chat-composer-view.js";
 import { renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.js";
 import { renderPostListSection,renderPostListContent } from "./chat-post-view.js";
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
-import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost } from "./chat-reply-state.js";
+import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft } from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForPost } from "./chat-composer-post.js";
 import { showToast } from "../common/toast.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
@@ -273,7 +273,7 @@ function setupDraftPreview({
       place,
       character,
       draft: currentDraft,
-      replySourcePost: findReplySourcePost(allPosts, currentDraft)
+      replySourcePost: getReplySourcePostForDraft(currentDraft)
     });
 
     const postsForRender = draftPreviewPost
@@ -320,7 +320,7 @@ function setupComposerSubmit({
       place,
       character,
       draft: currentDraft,
-      replySourcePost: findReplySourcePost(getAllPosts(), currentDraft)
+      replySourcePost: getReplySourcePostForDraft(currentDraft)
     });
 
     if (!postInput) {
@@ -486,7 +486,7 @@ if (!place) {
 
 const allPosts = getAllPosts();
 const composerDraft = loadComposerDraft();
-const replySourcePost = findReplySourcePost(allPosts, composerDraft);
+const replySourcePost = getReplySourcePostForDraft(composerDraft);
 
 const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
 
