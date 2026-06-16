@@ -1,143 +1,166 @@
 // chat-display-rules.js
 
-export function withNormalDisplayType(posts = []) {
-  return posts.map(post => ({
-    ...post,
-    displayType: "normal"
-  }));
-}
-
-export function filterHiddenPosts(posts = [], hiddenPostIds) {
-  if (!hiddenPostIds) {
-    return posts;
-  }
-
-  return posts.filter(post =>
-    !hiddenPostIds.has(post.postId)
-  );
-}
-
-function normalizeEno(eno) {
-  const normalizedEno =
-    typeof eno === "number"
-      ? eno
-      : Number(eno || 0);
-
-  return Number.isInteger(normalizedEno) && normalizedEno > 0
-    ? normalizedEno
-    : 0;
-}
-
-export function canViewPost(post, viewerEno) {
-  if (!post) {
-    return false;
-  }
-
-  if (post.visibility !== "private") {
-    return true;
-  }
-
-  const normalizedViewerEno = normalizeEno(viewerEno);
-
-  if (!normalizedViewerEno) {
-    return false;
-  }
-
-  if (!Array.isArray(post.visibleToEnoList)) {
-    return false;
-  }
-
-  return post.visibleToEnoList.some(eno =>
-    Number(eno) === normalizedViewerEno
-  );
-}
-
-export function filterVisiblePosts(posts = [], viewerEno) {
-  return posts.filter(post =>
-    canViewPost(post, viewerEno)
-  );
-}
-
-export function sortPostsNewestFirst(posts = []) {
-  return posts.slice().sort((a, b) => b.postId - a.postId);
-}
-
-export function getHerePosts(currentPlace, allPosts = [], viewerEno = null) {
-  if (!currentPlace?.placeId) {
+export function getDisplayPosts({
+  currentPlace,
+  allPosts,
+  places
+}) {
+  if (!currentPlace) {
     return [];
   }
 
-  return sortPostsNewestFirst(
-    withNormalDisplayType(
-      filterVisiblePosts(
-        allPosts.filter(post =>
-          post.placeId === currentPlace.placeId &&
-          !post.isDeleted
-        ),
-        viewerEno
-      )
-    )
+  const normalPosts =
+    getPostsByPlaceId(allPosts, currentPlace.placeId)
+      .map(post => ({
+        ...post,
+        displayType: "normal"
+      }));
+
+  const sideFieldPreviewPosts =
+    getSideFieldPreviewPosts(currentPlace, allPosts, places)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
+  const mainFieldPreviewPosts =
+    getMainFieldPreviewPosts(currentPlace, allPosts, places)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
+  const mainAreaPreviewPosts =
+    getMainAreaPreviewPosts(currentPlace, allPosts, places)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
+  const sideAreaPreviewPosts =
+    getSideAreaPreviewPosts(currentPlace, allPosts, places)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
+  const roomPreviewPosts =
+    getRoomPreviewPosts(currentPlace, allPosts, places)
+      .map(post => ({
+        ...post,
+        displayType: "preview"
+      }));
+
+  return [
+    ...normalPosts,
+    ...sideFieldPreviewPosts,
+    ...mainFieldPreviewPosts,
+    ...mainAreaPreviewPosts,
+    ...sideAreaPreviewPosts,
+    ...roomPreviewPosts
+  ].sort((a, b) => b.postId - a.postId);
+}
+
+function getPostsByPlaceId(allPosts = [], placeId) {
+  return allPosts.filter(post =>
+    post.placeId === placeId &&
+    !post.isDeleted
   );
 }
 
-export function getReplyPostsForEno(allPosts = [], eno) {
-  const normalizedEno = normalizeEno(eno);
+function getMainFieldPreviewPosts(currentPlace, allPosts = [], places = []) {
+  if (!currentPlace) return [];
+  if (currentPlace.kind !== "field") return [];
+  if (currentPlace.layer !== "main") return [];
 
-  if (!normalizedEno) {
+  const childMainAreas = places.filter(place =>
+    place.kind === "area" &&
+    place.layer === "main" &&
+    place.parentId === currentPlace.placeId
+  );
+
+  const previewPosts = [];
+
+  childMainAreas.forEach(areaPlace => {
+    previewPosts.push(...getPostsByPlaceId(allPosts, areaPlace.placeId));
+  });
+
+  return previewPosts;
+}
+
+function getSideFieldPreviewPosts(currentPlace, allPosts = [], places = []) {
+  if (!currentPlace) return [];
+  if (currentPlace.kind !== "field") return [];
+  if (currentPlace.layer !== "side") return [];
+
+  const mainField = places.find(place =>
+    place.kind === "field" &&
+    place.groupId === currentPlace.groupId &&
+    place.layer === "main"
+  );
+
+  if (!mainField) {
     return [];
   }
 
-  return sortPostsNewestFirst(
-    withNormalDisplayType(
-      filterVisiblePosts(
-        allPosts.filter(post => {
-          if (post?.isDeleted) {
-            return false;
-          }
-
-          if (!Array.isArray(post?.targetEnoList)) {
-            return false;
-          }
-
-          return post.targetEnoList.some(item =>
-            Number(item) === normalizedEno
-          );
-        }),
-        normalizedEno
-      )
-    )
-  );
+  return getPostsByPlaceId(allPosts, mainField.placeId);
 }
 
-export function getSelfPostsForEno(allPosts = [], eno) {
-  const normalizedEno = normalizeEno(eno);
+function getMainAreaPreviewPosts(currentPlace, allPosts = [], places = []) {
+  if (!currentPlace) return [];
+  if (currentPlace.kind !== "area") return [];
+  if (currentPlace.layer !== "main") return [];
 
-  if (!normalizedEno) {
+  const previewPosts = [];
+
+  const parentMainField = places.find(place =>
+    place.kind === "field" &&
+    place.layer === "main" &&
+    place.placeId === currentPlace.parentId
+  );
+
+  if (parentMainField) {
+    previewPosts.push(...getPostsByPlaceId(allPosts, parentMainField.placeId));
+  }
+
+  return previewPosts;
+}
+
+function getSideAreaPreviewPosts(currentPlace, allPosts = [], places = []) {
+  if (!currentPlace) return [];
+  if (currentPlace.kind !== "area") return [];
+  if (currentPlace.layer !== "side") return [];
+
+  const mainArea = places.find(place =>
+    place.kind === "area" &&
+    place.groupId === currentPlace.groupId &&
+    place.layer === "main"
+  );
+
+  if (!mainArea) {
     return [];
   }
 
-  return sortPostsNewestFirst(
-    withNormalDisplayType(
-      filterVisiblePosts(
-        allPosts.filter(post =>
-          !post.isDeleted &&
-          Number(post.authorEno) === normalizedEno
-        ),
-        normalizedEno
-      )
-    )
-  );
+  return getPostsByPlaceId(allPosts, mainArea.placeId);
 }
 
-export function getThreadDisplayPosts(
-  threadPosts = [],
-  hiddenPostIds = null,
-  viewerEno = null
-) {
-  return filterHiddenPosts(
-    withNormalDisplayType(
-      filterVisiblePosts(threadPosts, viewerEno)
-    ),
-    hiddenPostIds
+function getRoomPreviewPosts(currentPlace, allPosts = [], places = []) {
+  if (!currentPlace) return [];
+  if (currentPlace.kind !== "room") return [];
+
+  if (!currentPlace.showParentMainAreaPreview) {
+    return [];
+  }
+
+  const parentMainArea = places.find(place =>
+    place.kind === "area" &&
+    place.layer === "main" &&
+    place.placeId === currentPlace.parentId
   );
+
+  if (!parentMainArea) {
+    return [];
+  }
+
+  return getPostsByPlaceId(allPosts, parentMainArea.placeId);
 }
