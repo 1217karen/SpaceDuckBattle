@@ -136,15 +136,6 @@ export function getReplyTargetLabels(post) {
 
   const targetEnoSet = new Set();
 
-  const fixedReplyTargetEno =
-    typeof post.authorEno === "number" && post.authorEno > 0
-      ? post.authorEno
-      : null;
-
-  if (fixedReplyTargetEno) {
-    targetEnoSet.add(fixedReplyTargetEno);
-  }
-
   if (Array.isArray(post.targetEnoList)) {
     post.targetEnoList.forEach(item => {
       const eno = Number(item);
@@ -152,6 +143,14 @@ export function getReplyTargetLabels(post) {
         targetEnoSet.add(eno);
       }
     });
+  }
+
+  if (
+    targetEnoSet.size === 0 &&
+    typeof post.authorEno === "number" &&
+    post.authorEno > 0
+  ) {
+    targetEnoSet.add(post.authorEno);
   }
 
   return [...targetEnoSet].map(eno => {
