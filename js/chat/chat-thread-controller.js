@@ -232,8 +232,7 @@ function renderThreadPage() {
     return;
   }
 
-  const allPosts = getAllPosts();
-  const threadPosts = getThreadPosts(allPosts, threadRootPostId);
+  const threadPosts = getThreadPostsByRootId(threadRootPostId);
 
   if (threadPosts.length === 0) {
     const errorText = document.createElement("p");
