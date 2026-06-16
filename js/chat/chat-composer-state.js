@@ -57,7 +57,8 @@ function normalizeDraft(raw = {}) {
       typeof raw.replyThreadRootPostId === "number" && raw.replyThreadRootPostId > 0
         ? raw.replyThreadRootPostId
         : null,
-    useCurrentPlaceForReply: Boolean(raw.useCurrentPlaceForReply)
+    useCurrentPlaceForReply: Boolean(raw.useCurrentPlaceForReply),
+    isPrivate: Boolean(raw.isPrivate)
   };
 }
 
@@ -103,7 +104,8 @@ export function readComposerDraftFromRefs(composerRefs) {
     replySourcePostId: Number(composerRefs?.section?.dataset.replySourcePostId || 0) || null,
     replyParentPostId: Number(composerRefs?.section?.dataset.replyParentPostId || 0) || null,
     replyThreadRootPostId: Number(composerRefs?.section?.dataset.replyThreadRootPostId || 0) || null,
-    useCurrentPlaceForReply: Boolean(composerRefs?.useCurrentPlaceCheckbox?.checked)
+    useCurrentPlaceForReply: Boolean(composerRefs?.useCurrentPlaceCheckbox?.checked),
+    isPrivate: Boolean(composerRefs?.privateCheckbox?.checked)
   });
 }
 
@@ -130,6 +132,11 @@ export function applyComposerDraftToRefs(composerRefs, draft = {}) {
   if (composerRefs?.useCurrentPlaceCheckbox) {
     composerRefs.useCurrentPlaceCheckbox.checked =
       Boolean(normalized.useCurrentPlaceForReply);
+  }
+
+  if (composerRefs?.privateCheckbox) {
+    composerRefs.privateCheckbox.checked =
+      Boolean(normalized.isPrivate);
   }
 
   if (composerRefs?.section) {
