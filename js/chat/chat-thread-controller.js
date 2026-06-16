@@ -3,7 +3,7 @@
 import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
-import { createPost,getAllPosts} from "../services/post-service.js";
+import { createPost,getAllPosts,getReplySourcePostForDraft} from "../services/post-service.js";
 import { renderThreadHeaderSection } from "./chat-header-view.js";
 import { renderChatComposerSection } from "./chat-composer-view.js";
 import { createPostCard,renderPostListSection,renderPostListContent } from "./chat-post-view.js";
@@ -270,7 +270,7 @@ function renderThreadPage() {
   }
 
   const composerDraft = loadComposerDraft();
-  const replySourcePost = findReplySourcePost(allPosts, composerDraft);
+  const replySourcePost = getReplySourcePostForDraft(composerDraft);
   const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
 
   let composerRefs = null;
