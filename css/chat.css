@@ -300,6 +300,23 @@ body {
   cursor: default;
 }
 
+.chatPostCardPrivate {
+  border-color: rgba(175, 145, 220, 0.55);
+  background: linear-gradient(
+    to right,
+    rgba(54, 48, 72, 0.92),
+    rgba(44, 48, 66, 0.92)
+  );
+}
+
+.chatPostPrivateIcon {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--theme-text-subtle);
+  font-size: 0.9em;
+  vertical-align: baseline;
+}
+
 .chatPostReplyLabel {
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   color: #f3d36a;
