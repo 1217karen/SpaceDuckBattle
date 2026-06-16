@@ -259,7 +259,7 @@ function setupDraftPreview({
       : currentViewMode === "self"
         ? getSelfPostsForEno(allPosts, currentEno)
         : currentViewMode === "here"
-          getHerePosts(place, allPosts, eno)
+          ? getHerePosts(place, allPosts, eno)
           : getDisplayPosts({
               currentPlace: place,
               allPosts,
