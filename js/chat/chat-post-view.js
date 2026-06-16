@@ -80,6 +80,10 @@ export function createPostCard(post, options = {}) {
     classNames.push("chatPostCardActionLog");
   }
 
+  if (post.visibility === "private") {
+    classNames.push("chatPostCardPrivate");
+  }
+
   if (
     typeof post?.parentPostId === "number" &&
     post.parentPostId > 0
@@ -192,7 +196,21 @@ createdAtTopText.textContent = post.createdAt ?? "";
 
 const postNo = document.createElement("span");
 postNo.className = "chatPostNo";
-postNo.textContent = `No.${post.postId}`;
+
+const postNoText = document.createElement("span");
+postNoText.textContent = `No.${post.postId}`;
+
+postNo.appendChild(postNoText);
+
+if (post.visibility === "private") {
+  const privateIcon = document.createElement("span");
+  privateIcon.className = "chatPostPrivateIcon";
+  privateIcon.textContent = "🔒";
+  privateIcon.title = "秘話";
+  privateIcon.setAttribute("aria-label", "秘話");
+
+  postNo.appendChild(privateIcon);
+}
 
 postMetaTop.appendChild(createdAtTopText);
 postMetaTop.appendChild(postNo);
