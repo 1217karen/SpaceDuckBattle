@@ -180,6 +180,31 @@ export function getReplySourcePostForDraft(draft = {}) {
   return getSourcePosts().find(post => post.postId === replySourcePostId) || null;
 }
 
+export function getThreadPostsByRootId(threadRootPostId = null) {
+  const normalizedThreadRootPostId =
+    typeof threadRootPostId === "number"
+      ? threadRootPostId
+      : Number(threadRootPostId || 0);
+
+  if (!normalizedThreadRootPostId) {
+    return [];
+  }
+
+  return getSourcePosts()
+    .filter(post => {
+      if (!post || post.isDeleted) {
+        return false;
+      }
+
+      if (post.postId === normalizedThreadRootPostId) {
+        return true;
+      }
+
+      return post.threadRootPostId === normalizedThreadRootPostId;
+    })
+    .sort((a, b) => a.postId - b.postId);
+}
+
 
 export function getPostsByPlaceId(placeId) {
   return getAllPosts().filter(post => post.placeId === placeId);
