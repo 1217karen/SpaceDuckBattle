@@ -696,7 +696,7 @@ const rawDisplayPosts =
     : currentViewMode === "self"
       ? getSelfPostsForEno(allPosts, eno)
       : currentViewMode === "here"
-        getHerePosts(place, allPosts, eno)
+        ? getHerePosts(place, allPosts, eno)
         : getDisplayPosts({
             currentPlace: place,
             allPosts,
