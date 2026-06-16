@@ -66,7 +66,7 @@ function setupDraftPreview({
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
     renderPostListContent(postListRefs.list, {
-      posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, currentEno)
+      posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, currentEno),
       getPlaceLabel,
       postActions,
       currentEno,
@@ -142,12 +142,26 @@ function setupComposerSubmit({
       replySourcePost: findReplySourcePost(threadPosts, currentDraft)
     });
 
-    if (!postInput) {
-      alert("本文を入力してください");
-      return;
-    }
+if (!postInput) {
+  alert("本文を入力してください");
+  return;
+}
 
-    createPost(postInput);
+if (
+  postInput.visibility === "private" &&
+  Array.isArray(postInput.visibleToEnoList) &&
+  postInput.visibleToEnoList.length <= 1
+) {
+  const ok = window.confirm(
+    "返信先が設定されていません。\nこの秘話は自分にしか見えません。投稿しますか？"
+  );
+
+  if (!ok) {
+    return;
+  }
+}
+
+createPost(postInput);
 
     clearComposerDraft();
     renderThreadPage();
@@ -308,7 +322,7 @@ function renderThreadPage() {
   });
 
   const postListRefs = renderPostListSection(chatMainArea, {
-    posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, eno)
+    posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, eno),
     getPlaceLabel,
     postActions,
     currentEno: eno,
@@ -358,7 +372,6 @@ function renderThreadPage() {
     currentEno: eno,
     postActions,
     getQuotePreviewPostById,
-    onMoveToPlace: navigateToChatPlace
   });
 
   setupComposerSubmit({
