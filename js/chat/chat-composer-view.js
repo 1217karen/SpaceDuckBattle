@@ -191,6 +191,13 @@ if (replySourcePost) {
   actionRight.className = "chatComposerToolbarActionRight";
 
   let useCurrentPlaceCheckbox = null;
+  let privateCheckbox = null;
+
+  const postPlaceInfo = document.createElement("div");
+  postPlaceInfo.className = "chatComposerPostPlaceInfo";
+  postPlaceInfo.textContent = `現在地: ${currentPlaceLabel}`;
+
+  actionLeft.appendChild(postPlaceInfo);
 
   if (replySourcePost) {
     const useCurrentPlaceLabel = document.createElement("label");
@@ -210,9 +217,21 @@ if (replySourcePost) {
     actionLeft.appendChild(useCurrentPlaceLabel);
   }
 
-  const postPlaceInfo = document.createElement("div");
-  postPlaceInfo.className = "chatComposerPostPlaceInfo";
-  postPlaceInfo.textContent = `現在地: ${currentPlaceLabel}`;
+  const privateLabel = document.createElement("label");
+  privateLabel.className = "chatComposerPlaceToggleLabel chatComposerPrivateToggleLabel";
+
+  privateCheckbox = document.createElement("input");
+  privateCheckbox.type = "checkbox";
+  privateCheckbox.className = "chatComposerPlaceToggleCheckbox chatComposerPrivateToggleCheckbox";
+  privateCheckbox.checked = Boolean(composerDraft.isPrivate);
+
+  const privateText = document.createElement("span");
+  privateText.textContent = "秘話にする";
+
+  privateLabel.appendChild(privateCheckbox);
+  privateLabel.appendChild(privateText);
+
+  actionLeft.appendChild(privateLabel);
 
 const submitButton = document.createElement("button");
 submitButton.type = "button";
@@ -227,8 +246,7 @@ submitButton.textContent = "投稿";
 
   toolRow.appendChild(richTextButtons);
   toolRow.appendChild(bodyCount);
-  
-  actionLeft.appendChild(postPlaceInfo);
+
   actionRight.appendChild(submitButton);
 
   actionRow.appendChild(actionLeft);
@@ -266,6 +284,7 @@ submitButton.textContent = "投稿";
     bodyCount,
     submitButton,
     useCurrentPlaceCheckbox,
+    privateCheckbox,
     replySourcePost
   };
 }
