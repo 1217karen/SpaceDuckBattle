@@ -264,7 +264,7 @@ function setupDraftPreview({
               currentPlace: place,
               allPosts,
               places,
-              viewerEno: eno
+              viewerEno: currentEno
             });
 
     const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
@@ -324,11 +324,25 @@ function setupComposerSubmit({
     });
 
     if (!postInput) {
-      alert("本文を入力してください");
-      return;
-    }
+  alert("本文を入力してください");
+  return;
+}
 
-    createPost(postInput);
+if (
+  postInput.visibility === "private" &&
+  Array.isArray(postInput.visibleToEnoList) &&
+  postInput.visibleToEnoList.length <= 1
+) {
+  const ok = window.confirm(
+    "返信先が設定されていません。\nこの発言は自分にしか見えませんが投稿しますか？"
+  );
+
+  if (!ok) {
+    return;
+  }
+}
+
+createPost(postInput);
 
     clearComposerDraft();
     isShopOpen = false;
