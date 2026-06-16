@@ -66,7 +66,7 @@ function setupDraftPreview({
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
     renderPostListContent(postListRefs.list, {
-      posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
+      posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, currentEno)
       getPlaceLabel,
       postActions,
       currentEno,
@@ -308,7 +308,7 @@ function renderThreadPage() {
   });
 
   const postListRefs = renderPostListSection(chatMainArea, {
-    posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds),
+    posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, eno)
     getPlaceLabel,
     postActions,
     currentEno: eno,
