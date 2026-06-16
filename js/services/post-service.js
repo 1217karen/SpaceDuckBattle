@@ -154,6 +154,20 @@ export function getAllPostsIncludingDeleted() {
   return getSourcePosts();
 }
 
+export function getPostForQuotePreviewById(postId) {
+  const normalizedPostId =
+    typeof postId === "number"
+      ? postId
+      : Number(postId || 0);
+
+  if (!normalizedPostId) {
+    return null;
+  }
+
+  return getSourcePosts().find(post => post.postId === normalizedPostId) || null;
+}
+
+
 export function getPostsByPlaceId(placeId) {
   return getAllPosts().filter(post => post.placeId === placeId);
 }
