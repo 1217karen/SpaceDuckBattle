@@ -1,4 +1,4 @@
-// chat-post-filter.js
+// chat-post-rules.js
 
 export function withNormalDisplayType(posts = []) {
   return posts.map(post => ({
