@@ -7,7 +7,8 @@ export function createReplyStateFromPost(post) {
       additionalTargetEnoText: "",
       replySourcePostId: null,
       replyParentPostId: null,
-      replyThreadRootPostId: null
+      replyThreadRootPostId: null,
+      isPrivateReply: false
     };
   }
 
@@ -47,7 +48,8 @@ export function createReplyStateFromPost(post) {
     additionalTargetEnoText,
     replySourcePostId: post.postId,
     replyParentPostId: post.postId,
-    replyThreadRootPostId: threadRootPostId
+    replyThreadRootPostId: threadRootPostId,
+    isPrivateReply: post.visibility === "private"
   };
 }
 
@@ -84,7 +86,11 @@ export function applyReplyStateToDraft(draft = {}, replyState = {}) {
     replyThreadRootPostId:
       typeof replyState.replyThreadRootPostId === "number"
         ? replyState.replyThreadRootPostId
-        : null
+        : null,
+    isPrivate:
+      replyState.isPrivateReply
+        ? true
+        : Boolean(draft.isPrivate)
   };
 }
 
