@@ -259,11 +259,12 @@ function setupDraftPreview({
       : currentViewMode === "self"
         ? getSelfPostsForEno(allPosts, currentEno)
         : currentViewMode === "here"
-          ? getHerePosts(place, allPosts, eno)
+          ? getHerePosts(place, allPosts, currentEno)
           : getDisplayPosts({
               currentPlace: place,
               allPosts,
-              places
+              places,
+              viewerEno: eno
             });
 
     const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
@@ -700,7 +701,8 @@ const rawDisplayPosts =
         : getDisplayPosts({
             currentPlace: place,
             allPosts,
-            places
+            places,
+            viewerEno: eno
           });
 
 const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
