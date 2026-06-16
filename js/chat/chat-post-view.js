@@ -261,19 +261,24 @@ headerRight.appendChild(postMetaTop);
     replyIcon.className = "chatPostActionIcon chatPostActionIconReply";
     replyButton.appendChild(replyIcon);
 
-    const quoteButton = document.createElement("button");
-    quoteButton.type = "button";
-    quoteButton.className = "chatPostActionButton chatPostActionButtonQuote button-icon";
-    quoteButton.title = "引用";
-    quoteButton.setAttribute("aria-label", "引用");
+    let quoteButton = null;
 
-    const quoteIcon = document.createElement("span");
-    quoteIcon.className = "chatPostActionIcon chatPostActionIconQuote";
-    quoteButton.appendChild(quoteIcon);
-    if (typeof onQuote === "function") {
-      quoteButton.addEventListener("click", () => {
-        onQuote(post);
-      });
+    if (post.visibility !== "private") {
+      quoteButton = document.createElement("button");
+      quoteButton.type = "button";
+      quoteButton.className = "chatPostActionButton chatPostActionButtonQuote button-icon";
+      quoteButton.title = "引用";
+      quoteButton.setAttribute("aria-label", "引用");
+
+      const quoteIcon = document.createElement("span");
+      quoteIcon.className = "chatPostActionIcon chatPostActionIconQuote";
+      quoteButton.appendChild(quoteIcon);
+
+      if (typeof onQuote === "function") {
+        quoteButton.addEventListener("click", () => {
+          onQuote(post);
+        });
+      }
     }
 
     const hideButton = document.createElement("button");
@@ -293,7 +298,10 @@ headerRight.appendChild(postMetaTop);
     }
 
     actions.appendChild(replyButton);
-    actions.appendChild(quoteButton);
+
+    if (quoteButton) {
+      actions.appendChild(quoteButton);
+    }
 
     if (isOwnPost) {
       const deleteButton = document.createElement("button");
