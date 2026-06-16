@@ -167,6 +167,19 @@ export function getPostForQuotePreviewById(postId) {
   return getSourcePosts().find(post => post.postId === normalizedPostId) || null;
 }
 
+export function getReplySourcePostForDraft(draft = {}) {
+  const replySourcePostId =
+    typeof draft.replySourcePostId === "number"
+      ? draft.replySourcePostId
+      : Number(draft.replySourcePostId || 0);
+
+  if (!replySourcePostId) {
+    return null;
+  }
+
+  return getSourcePosts().find(post => post.postId === replySourcePostId) || null;
+}
+
 
 export function getPostsByPlaceId(placeId) {
   return getAllPosts().filter(post => post.placeId === placeId);
