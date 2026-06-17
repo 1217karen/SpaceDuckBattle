@@ -77,6 +77,20 @@ function updateReplyTargetNamePreview(composerRefs) {
   preview.textContent = `${labelText}： ${label}`;
 }
 
+function updateComposerStyleState(composerRefs) {
+  const section = composerRefs?.section;
+
+  if (!section) {
+    return;
+  }
+
+  const hasReplySource = Number(section.dataset.replySourcePostId || 0) > 0;
+  const isPrivate = Boolean(composerRefs?.privateCheckbox?.checked);
+
+  section.classList.toggle("chatComposerSectionReply", hasReplySource);
+  section.classList.toggle("chatComposerSectionPrivate", isPrivate);
+}
+
 function updateComposerBodyCount(composerRefs) {
   const textarea = composerRefs?.textarea;
   const bodyCount = composerRefs?.bodyCount;
@@ -162,6 +176,7 @@ export function setupComposerDraftPersistence(composerRefs) {
       readComposerDraftFromRefs(composerRefs)
     );
     updateReplyTargetNamePreview(composerRefs);
+    updateComposerStyleState(composerRefs);
   }
 
   composerRefs.nameInput?.addEventListener("input", persistDraft);
@@ -170,6 +185,7 @@ export function setupComposerDraftPersistence(composerRefs) {
   composerRefs.iconButton?.addEventListener("iconchange", persistDraft);
   composerRefs.useCurrentPlaceCheckbox?.addEventListener("change", persistDraft);
   composerRefs.additionalTargetSection?.addEventListener("toggle", persistDraft);
+  composerRefs.privateCheckbox?.addEventListener("change", persistDraft);
 }
 
 export function getFixedReplyTargetName(replySourcePost) {
@@ -220,6 +236,7 @@ export function setupRenderedComposer({
   applyComposerDraftToRefs(composerRefs, composerDraft);
   applyComposerDraftIconPreview(composerRefs, composerDraft);
 
+  updateComposerStyleState(composerRefs);
   updateComposerBodyCount(composerRefs);
   updateReplyTargetNamePreview(composerRefs);
   
