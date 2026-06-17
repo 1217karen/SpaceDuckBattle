@@ -4,8 +4,7 @@ import { places } from "../data/places-data.js";
 import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { createIconPicker } from "../common/icon-picker.js";
-import { createPost,getAllPosts,getReplySourcePostForDraft } from "../services/post-service.js";
-import { getDisplayPosts } from "./chat-display-rules.js";
+import { createPost,getReplySourcePostForDraft } from "../services/post-service.js";
 import { renderPlaceInfoSection } from "./chat-header-view.js";
 import { renderChatComposerSection } from "./chat-composer-view.js";
 import { renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.js";
@@ -18,11 +17,12 @@ import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
-import { filterHiddenPosts,getHerePosts,getReplyPostsForEno,getSelfPostsForEno } from "./chat-post-filter.js";
+import { filterHiddenPosts } from "./chat-post-filter.js";
 import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 import { getAvailableChatActions } from "./chat-action-resolver.js";
 import { buildActionLogPostInput } from "./chat-action-post.js";
 import { renderChatActionSection } from "./chat-action-view.js";
+import { filterHiddenPosts } from "./chat-post-filter.js";
 
 
 const centerPanel = document.querySelector(".center-panel");
@@ -240,7 +240,6 @@ function setupDraftPreview({
   place,
   character,
   composerRefs,
-  allPosts,
   getPlaceLabel,
   postActions,
   getQuotePreviewPostById,
@@ -253,19 +252,12 @@ function setupDraftPreview({
   function refreshDraftPreview() {
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
-  const rawDisplayPosts =
-    currentViewMode === "reply"
-      ? getReplyPostsForEno(allPosts, currentEno)
-      : currentViewMode === "self"
-        ? getSelfPostsForEno(allPosts, currentEno)
-        : currentViewMode === "here"
-          ? getHerePosts(place, allPosts, currentEno)
-          : getDisplayPosts({
-              currentPlace: place,
-              allPosts,
-              places,
-              viewerEno: currentEno
-            });
+    const rawDisplayPosts = getChatPostsForViewMode({
+      viewMode: currentViewMode,
+      currentPlace: place,
+      places,
+      viewerEno: currentEno
+    });
 
     const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
 
@@ -484,7 +476,6 @@ if (!place) {
   return;
 }
 
-const allPosts = getAllPosts();
 const composerDraft = loadComposerDraft();
 const replySourcePost = getReplySourcePostForDraft(composerDraft);
 
@@ -705,19 +696,13 @@ renderViewTabsSection(chatMainArea, {
 });
 
 
-const rawDisplayPosts =
-  currentViewMode === "reply"
-    ? getReplyPostsForEno(allPosts, eno)
-    : currentViewMode === "self"
-      ? getSelfPostsForEno(allPosts, eno)
-      : currentViewMode === "here"
-        ? getHerePosts(place, allPosts, eno)
-        : getDisplayPosts({
-            currentPlace: place,
-            allPosts,
-            places,
-            viewerEno: eno
-          });
+const rawDisplayPosts = getChatPostsForViewMode({
+  viewMode: currentViewMode,
+  currentPlace: place,
+  places,
+  viewerEno: eno
+});
+
 
 const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
 
@@ -737,7 +722,6 @@ if (composerRefs) {
     place,
     character,
     composerRefs,
-    allPosts,
     getPlaceLabel,
     postActions,
     getQuotePreviewPostById,
