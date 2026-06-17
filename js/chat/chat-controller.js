@@ -22,7 +22,7 @@ import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 import { getAvailableChatActions } from "./chat-action-resolver.js";
 import { buildActionLogPostInput } from "./chat-action-post.js";
 import { renderChatActionSection } from "./chat-action-view.js";
-
+import { getChatPostsForViewMode } from "../services/chat-post-query-service.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
