@@ -363,6 +363,8 @@ function renderThreadPage() {
       renderThreadPage();
     }
   });
+  
+  composerRefs.interactionPanel = interactionPanelRefs?.panel ?? null;
 
     setupRenderedComposer({
       composerRefs,
