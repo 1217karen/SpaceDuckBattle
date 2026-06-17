@@ -35,36 +35,48 @@ function canViewMessagePost(post, viewerEno) {
   );
 }
 
+function excludeMessagePosts(posts = []) {
+  return posts.filter(post => post?.type !== "message");
+}
+
 export function getChatTimelinePosts({
   currentPlace = null,
   places = [],
   viewerEno = null
 } = {}) {
-  return getDisplayPosts({
-    currentPlace,
-    allPosts: getAllPosts(),
-    places,
-    viewerEno
-  });
+  return excludeMessagePosts(
+    getDisplayPosts({
+      currentPlace,
+      allPosts: getAllPosts(),
+      places,
+      viewerEno
+    })
+  );
 }
 
 export function getReplyPostsForViewer({
   viewerEno = null
 } = {}) {
-  return getReplyPostsForEno(getAllPosts(), viewerEno);
+  return excludeMessagePosts(
+    getReplyPostsForEno(getAllPosts(), viewerEno)
+  );
 }
 
 export function getSelfPostsForViewer({
   viewerEno = null
 } = {}) {
-  return getSelfPostsForEno(getAllPosts(), viewerEno);
+  return excludeMessagePosts(
+    getSelfPostsForEno(getAllPosts(), viewerEno)
+  );
 }
 
 export function getHerePostsForPlace({
   currentPlace = null,
   viewerEno = null
 } = {}) {
-  return getHerePosts(currentPlace, getAllPosts(), viewerEno);
+  return excludeMessagePosts(
+    getHerePosts(currentPlace, getAllPosts(), viewerEno)
+  );
 }
 
 export function getMessagePostsForViewer({
