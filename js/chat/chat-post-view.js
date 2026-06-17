@@ -208,7 +208,15 @@ postNoText.textContent = `No.${post.postId}`;
 
 postNo.appendChild(postNoText);
 
-if (post.visibility === "private") {
+if (post.type === "message") {
+  const messageIcon = document.createElement("span");
+  messageIcon.className = "chatPostPrivateIcon chatPostMessageIcon";
+  messageIcon.textContent = "✉";
+  messageIcon.title = "MESSAGE";
+  messageIcon.setAttribute("aria-label", "MESSAGE");
+
+  postNo.appendChild(messageIcon);
+} else if (post.visibility === "private") {
   const privateIcon = document.createElement("span");
   privateIcon.className = "chatPostPrivateIcon";
   privateIcon.textContent = "🔒";
@@ -329,6 +337,33 @@ headerRight.appendChild(postMetaTop);
     }
 
     actions.appendChild(hideButton);
+  }
+  
+  if (!isPreview && !post.isDraftPreview && !hideActions && post.type === "message") {
+    const isOwnMessage =
+      currentEno !== null &&
+      currentEno !== undefined &&
+      String(post.authorEno) === String(currentEno);
+
+    if (isOwnMessage) {
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "chatPostActionButton chatPostActionButtonDelete button-icon";
+      deleteButton.title = "削除";
+      deleteButton.setAttribute("aria-label", "削除");
+
+      const deleteIcon = document.createElement("span");
+      deleteIcon.className = "chatPostActionIcon chatPostActionIconDelete";
+      deleteButton.appendChild(deleteIcon);
+
+      if (typeof onDelete === "function") {
+        deleteButton.addEventListener("click", () => {
+          onDelete(post);
+        });
+      }
+
+      actions.appendChild(deleteButton);
+    }
   }
 
 const footer = document.createElement("div");
