@@ -14,11 +14,23 @@ export function renderChatComposerSection(container, options = {}) {
     useCurrentPlaceForReply = false,
     fixedReplyTargetEno = null,
     fixedReplyTargetName = "",
-    isAdditionalTargetOpen = false
+    isAdditionalTargetOpen = false,
+    composerMode = "chat",
+    targetLabelText = "追加返信先",
+    targetInputPlaceholder = "返信先Enoを入力　,区切りで複数指定可能",
+    isTargetAlwaysOpen = false,
+    hidePlaceInfo = false,
+    hidePrivateToggle = false,
+    submitButtonText = "投稿"
   } = options;
 
+  const isMessageMode = composerMode === "message";
+
   const section = document.createElement("section");
-  section.className = "chatComposerSection";
+  section.className = isMessageMode
+    ? "chatComposerSection chatComposerSectionMessage"
+    : "chatComposerSection";
+  section.dataset.composerMode = composerMode;
   section.dataset.replySourcePostId =
     composerDraft.replySourcePostId ?? "";
 
@@ -140,13 +152,24 @@ if (replySourcePost) {
     fixedReplyTargetInfo.appendChild(fixedReplyTargetValue);
   }
 
-  const additionalTargetSection = document.createElement("details");
-  additionalTargetSection.className = "chatComposerAdditionalTargetSection";
-  additionalTargetSection.open = Boolean(isAdditionalTargetOpen);
+  const additionalTargetSection = document.createElement(
+    isTargetAlwaysOpen ? "div" : "details"
+  );
+  additionalTargetSection.className = isTargetAlwaysOpen
+    ? "chatComposerAdditionalTargetSection chatComposerAdditionalTargetSectionAlwaysOpen"
+    : "chatComposerAdditionalTargetSection";
 
-  const additionalTargetSummary = document.createElement("summary");
+  if (isTargetAlwaysOpen) {
+    additionalTargetSection.open = true;
+  } else {
+    additionalTargetSection.open = Boolean(isAdditionalTargetOpen);
+  }
+
+  const additionalTargetSummary = document.createElement(
+    isTargetAlwaysOpen ? "div" : "summary"
+  );
   additionalTargetSummary.className = "chatComposerAdditionalTargetSummary";
-  additionalTargetSummary.textContent = "追加返信先";
+  additionalTargetSummary.textContent = targetLabelText;
 
   const additionalTargetBody = document.createElement("div");
   additionalTargetBody.className = "chatComposerAdditionalTargetBody";
@@ -158,9 +181,13 @@ if (replySourcePost) {
     typeof composerDraft.additionalTargetEnoText === "string"
       ? composerDraft.additionalTargetEnoText
       : "";
-  replyTargetInput.placeholder = "返信先Enoを入力　,区切りで複数指定可能";
+  replyTargetInput.placeholder = targetInputPlaceholder;
+
+  const replyTargetNamePreview = document.createElement("span");
+  replyTargetNamePreview.className = "chatComposerReplyTargetNamePreview";
 
   additionalTargetBody.appendChild(replyTargetInput);
+  additionalTargetBody.appendChild(replyTargetNamePreview);
   additionalTargetSection.appendChild(additionalTargetSummary);
   additionalTargetSection.appendChild(additionalTargetBody);
 
@@ -197,7 +224,9 @@ if (replySourcePost) {
   postPlaceInfo.className = "chatComposerPostPlaceInfo";
   postPlaceInfo.textContent = `現在地: ${currentPlaceLabel}`;
 
-  actionLeft.appendChild(postPlaceInfo);
+  if (!hidePlaceInfo) {
+    actionLeft.appendChild(postPlaceInfo);
+  }
 
   if (replySourcePost) {
     const useCurrentPlaceLabel = document.createElement("label");
@@ -217,26 +246,28 @@ if (replySourcePost) {
     actionLeft.appendChild(useCurrentPlaceLabel);
   }
 
-  const privateLabel = document.createElement("label");
-  privateLabel.className = "chatComposerPlaceToggleLabel chatComposerPrivateToggleLabel";
+  if (!hidePrivateToggle) {
+    const privateLabel = document.createElement("label");
+    privateLabel.className = "chatComposerPlaceToggleLabel chatComposerPrivateToggleLabel";
 
-  privateCheckbox = document.createElement("input");
-  privateCheckbox.type = "checkbox";
-  privateCheckbox.className = "chatComposerPlaceToggleCheckbox chatComposerPrivateToggleCheckbox";
-  privateCheckbox.checked = Boolean(composerDraft.isPrivate);
+    privateCheckbox = document.createElement("input");
+    privateCheckbox.type = "checkbox";
+    privateCheckbox.className = "chatComposerPlaceToggleCheckbox chatComposerPrivateToggleCheckbox";
+    privateCheckbox.checked = Boolean(composerDraft.isPrivate);
 
-  const privateText = document.createElement("span");
-  privateText.textContent = "秘話にする";
+    const privateText = document.createElement("span");
+    privateText.textContent = "秘話にする";
 
-  privateLabel.appendChild(privateCheckbox);
-  privateLabel.appendChild(privateText);
+    privateLabel.appendChild(privateCheckbox);
+    privateLabel.appendChild(privateText);
 
-  actionLeft.appendChild(privateLabel);
+    actionLeft.appendChild(privateLabel);
+  }
 
 const submitButton = document.createElement("button");
 submitButton.type = "button";
 submitButton.className = "chatComposerSubmitButton button-primaryNew";
-submitButton.textContent = "投稿";
+submitButton.textContent = submitButtonText;
 
   const richTextButtons = createRichTextToolbarButtons();
 
@@ -280,6 +311,7 @@ submitButton.textContent = "投稿";
     nameInput,
     additionalTargetSection,
     replyTargetInput,
+    replyTargetNamePreview,
     textarea,
     bodyCount,
     submitButton,
