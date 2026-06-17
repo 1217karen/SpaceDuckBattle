@@ -14,7 +14,6 @@ import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavo
 import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
-s";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft } from "./chat-reply-state.js";
 import { buildComposerMessageInput,buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForMessage,validateComposerDraftForPost } from "./chat-composer-post.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
