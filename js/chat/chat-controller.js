@@ -14,8 +14,9 @@ import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavo
 import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
+s";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft } from "./chat-reply-state.js";
-import { buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForPost } from "./chat-composer-post.js";
+import { buildComposerMessageInput,buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForMessage,validateComposerDraftForPost } from "./chat-composer-post.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
 import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
 
@@ -218,8 +219,14 @@ function buildViewTabs(options = {}) {
     {
       key: "message",
       label: "MESSAGE",
-      isActive: false,
-      isDisabled: true
+      isActive: currentMode === "message",
+      isCurrent: currentMode === "message",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("message");
+        }
+      }
     },
     {
       key: "favorite",
@@ -297,7 +304,8 @@ function setupDraftPreview({
 function setupComposerSubmit({
   place,
   character,
-  composerRefs
+  composerRefs,
+  isMessageMode = false
 }) {
   if (!composerRefs?.submitButton) {
     return;
@@ -308,19 +316,26 @@ function setupComposerSubmit({
       readComposerDraftFromRefs(composerRefs)
     );
 
-    const validationError = validateComposerDraftForPost(currentDraft, character);
+    const validationError = isMessageMode
+      ? validateComposerDraftForMessage(currentDraft, character)
+      : validateComposerDraftForPost(currentDraft, character);
 
     if (validationError) {
       alert(validationError);
       return;
     }
 
-    const postInput = buildComposerPostInput({
-      place,
-      character,
-      draft: currentDraft,
-      replySourcePost: getReplySourcePostForDraft(currentDraft)
-    });
+    const postInput = isMessageMode
+      ? buildComposerMessageInput({
+          character,
+          draft: currentDraft
+        })
+      : buildComposerPostInput({
+          place,
+          character,
+          draft: currentDraft,
+          replySourcePost: getReplySourcePostForDraft(currentDraft)
+        });
 
     if (!postInput) {
   alert("本文を入力してください");
@@ -328,6 +343,7 @@ function setupComposerSubmit({
 }
 
 if (
+  !isMessageMode &&
   postInput.visibility === "private" &&
   Array.isArray(postInput.visibleToEnoList) &&
   postInput.visibleToEnoList.length <= 1
@@ -348,6 +364,13 @@ createPost(postInput);
     isActionOpen = false;
     selectedActionId = "";
 
+    if (isMessageMode) {
+      currentViewMode = "message";
+      renderChatPlaceInfo();
+      showToast("メッセージを送信しました", { type: "success" });
+      return;
+    }
+    
     reloadChatPageWithToast("発言を投稿しました", "success");
       });
     }
@@ -519,6 +542,9 @@ const viewTabs = buildViewTabs({
   currentMode: currentViewMode,
   onSelectMode: (mode) => {
     currentViewMode = mode;
+    isShopOpen = false;
+    isActionOpen = false;
+    selectedActionId = "";
     renderChatPlaceInfo();
   }
 });
@@ -531,16 +557,24 @@ if (placeTabs.length > 0) {
 
 let composerRefs = null;
 
+const isMessageMode = currentViewMode === "message";
+
 const interactionTitle =
   isShopOpen
     ? "SHOP"
     : isActionOpen
       ? "ACTION"
-      : "POST";
+      : isMessageMode
+        ? "MESSAGE"
+        : "POST";
 
 const interactionPanelRefs = renderInteractionPanel(chatMainArea, {
   title: interactionTitle
 });
+
+if (isMessageMode) {
+  interactionPanelRefs?.panel?.classList.add("chatInteractionPanelMessage");
+}
 
 const interactionPanel = interactionPanelRefs?.body ?? chatMainArea;
 
@@ -595,13 +629,20 @@ renderChatActionSection(interactionPanel, {
     } else {
   composerRefs = renderChatComposerSection(interactionPanel, {
     composerDraft,
-    replySourcePost,
+    replySourcePost: isMessageMode ? null : replySourcePost,
     getPlaceLabel,
     currentPlaceLabel: getPlaceLabel(place.placeId),
     useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
-    fixedReplyTargetEno: composerDraft.fixedReplyTargetEno,
-    fixedReplyTargetName,
-    isAdditionalTargetOpen: composerDraft.isAdditionalTargetOpen,
+    fixedReplyTargetEno: isMessageMode ? null : composerDraft.fixedReplyTargetEno,
+    fixedReplyTargetName: isMessageMode ? "" : fixedReplyTargetName,
+    isAdditionalTargetOpen: isMessageMode ? true : composerDraft.isAdditionalTargetOpen,
+    composerMode: isMessageMode ? "message" : "chat",
+    targetLabelText: isMessageMode ? "送信先" : "追加返信先",
+    targetInputPlaceholder: isMessageMode ? "送信先Enoを入力" : "返信先Enoを入力　,区切りで複数指定可能",
+    isTargetAlwaysOpen: isMessageMode,
+    hidePlaceInfo: isMessageMode,
+    hidePrivateToggle: isMessageMode,
+    submitButtonText: isMessageMode ? "送信" : "投稿",
     onClearReply: () => {
       const currentDraft = saveComposerDraft(
         readComposerDraftFromRefs(composerRefs)
@@ -724,21 +765,24 @@ const postListRefs = renderPostListSection(chatMainArea, {
 });
 
 if (composerRefs) {
-  setupDraftPreview({
-    postListRefs,
-    place,
-    character,
-    composerRefs,
-    getPlaceLabel,
-    postActions,
-    getQuotePreviewPostById,
-    currentEno: eno
-  });
+  if (!isMessageMode) {
+    setupDraftPreview({
+      postListRefs,
+      place,
+      character,
+      composerRefs,
+      getPlaceLabel,
+      postActions,
+      getQuotePreviewPostById,
+      currentEno: eno
+    });
+  }
 
   setupComposerSubmit({
     place,
     character,
-    composerRefs
+    composerRefs,
+    isMessageMode
   });
 }
 
