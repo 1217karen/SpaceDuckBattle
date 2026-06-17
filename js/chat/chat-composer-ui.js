@@ -89,6 +89,7 @@ function updateComposerStyleState(composerRefs) {
 
   section.classList.toggle("chatComposerSectionReply", hasReplySource);
   section.classList.toggle("chatComposerSectionPrivate", isPrivate);
+  composerRefs?.interactionPanel?.classList.toggle("chatInteractionPanelPrivate", isPrivate);
 }
 
 function updateComposerBodyCount(composerRefs) {
