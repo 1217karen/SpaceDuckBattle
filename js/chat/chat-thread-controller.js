@@ -340,6 +340,8 @@ function renderThreadPage() {
     title: "REPLY"
   });
 
+  interactionPanelRefs?.panel?.classList.add("chatInteractionPanelReply");
+
   const interactionPanel = interactionPanelRefs?.body ?? chatMainArea;
 
   composerRefs = renderChatComposerSection(interactionPanel, {
