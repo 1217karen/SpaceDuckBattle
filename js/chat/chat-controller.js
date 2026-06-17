@@ -573,6 +573,8 @@ const interactionPanelRefs = renderInteractionPanel(chatMainArea, {
 
 if (isMessageMode) {
   interactionPanelRefs?.panel?.classList.add("chatInteractionPanelMessage");
+} else if (!isShopOpen && !isActionOpen && replySourcePost) {
+  interactionPanelRefs?.panel?.classList.add("chatInteractionPanelReply");
 }
 
 const interactionPanel = interactionPanelRefs?.body ?? chatMainArea;
