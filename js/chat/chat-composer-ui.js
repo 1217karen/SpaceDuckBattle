@@ -8,6 +8,75 @@ import { saveComposerDraft, readComposerDraftFromRefs, applyComposerDraftToRefs 
 
 const POST_BODY_MAX_LENGTH = 600;
 
+function parseTargetEnoList(value) {
+  if (typeof value !== "string") {
+    return [];
+  }
+
+  const uniqueEnos = new Set();
+
+  value
+    .split(",")
+    .map(item => item.trim())
+    .filter(item => item !== "")
+    .forEach(item => {
+      if (/^\d+$/.test(item)) {
+        uniqueEnos.add(Number(item));
+      }
+    });
+
+  return [...uniqueEnos];
+}
+
+function getCharacterDisplayNameByEno(eno) {
+  const character = loadCharacter(eno);
+  const fullName =
+    typeof character?.fullName === "string"
+      ? character.fullName.trim()
+      : "";
+
+  if (fullName) {
+    return fullName;
+  }
+
+  const defaultName =
+    typeof character?.defaultName === "string"
+      ? character.defaultName.trim()
+      : "";
+
+  if (defaultName) {
+    return defaultName;
+  }
+
+  return "不明なキャラ";
+}
+
+function updateReplyTargetNamePreview(composerRefs) {
+  const input = composerRefs?.replyTargetInput;
+  const preview = composerRefs?.replyTargetNamePreview;
+
+  if (!input || !preview) {
+    return;
+  }
+
+  const targetEnoList = parseTargetEnoList(input.value);
+  const labelText =
+    composerRefs?.section?.dataset.composerMode === "message"
+      ? "送信先"
+      : "追加返信先";
+
+  if (targetEnoList.length === 0) {
+    preview.textContent = "";
+    return;
+  }
+
+  const label = targetEnoList
+    .map(eno => `${getCharacterDisplayNameByEno(eno)}(Eno.${eno})`)
+    .join("、");
+
+  preview.textContent = `${labelText}： ${label}`;
+}
+
 function updateComposerBodyCount(composerRefs) {
   const textarea = composerRefs?.textarea;
   const bodyCount = composerRefs?.bodyCount;
@@ -92,6 +161,7 @@ export function setupComposerDraftPersistence(composerRefs) {
     saveComposerDraft(
       readComposerDraftFromRefs(composerRefs)
     );
+    updateReplyTargetNamePreview(composerRefs);
   }
 
   composerRefs.nameInput?.addEventListener("input", persistDraft);
@@ -151,7 +221,8 @@ export function setupRenderedComposer({
   applyComposerDraftIconPreview(composerRefs, composerDraft);
 
   updateComposerBodyCount(composerRefs);
-
+  updateReplyTargetNamePreview(composerRefs);
+  
   composerRefs.textarea?.addEventListener("input", () => {
     updateComposerBodyCount(composerRefs);
   });
