@@ -766,13 +766,8 @@ body {
   margin-bottom: 6px;
 }
 
-.chatComposerSectionReply .chatComposerCard {
-  padding: 8px;
-  border: 1px solid var(--chat-reply-accent);
-  border-radius: var(--theme-radius-lg);
-  background: rgba(243, 211, 106, 0.08);
-  box-shadow: 0 0 0 1px rgba(243, 211, 106, 0.12) inset;
-}
+.chatComposerSectionReply .chatComposerTextarea {
+  border-color: var(--chat-reply-accent);
 
 .chatComposerSectionPrivate .chatComposerTextarea {
   background: linear-gradient(
