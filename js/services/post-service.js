@@ -207,7 +207,7 @@ export function getThreadPostsByRootId(threadRootPostId = null) {
 
 
 export function getPostsByPlaceId(placeId) {
-  return getAllPosts().filter(post => post.placeId === placeId);
+  return getSourcePosts().filter(post => post.placeId === placeId);
 }
 
 export function getPostById(postId) {
@@ -220,7 +220,7 @@ export function getPostById(postId) {
     return null;
   }
 
-  return getAllPosts().find(post => post.postId === normalizedPostId) || null;
+  return getSourcePosts().find(post => post.postId === normalizedPostId) || null;
 }
 
 export function createPost(input = {}) {
