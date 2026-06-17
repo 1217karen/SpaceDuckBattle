@@ -1008,3 +1008,61 @@ body {
   margin-bottom: 5px;
 }
 
+
+/* =======================================================
+   メッセージ
+======================================================= */
+.chatPostCardMessage {
+  border-color: rgba(120, 190, 230, 0.7);
+  background: linear-gradient(
+    to right,
+    rgba(38, 58, 78, 0.94),
+    rgba(42, 50, 72, 0.94)
+  );
+}
+
+.chatPostMessageName {
+  color: #a8dcff;
+}
+
+.chatInteractionPanelMessage {
+  border-color: rgba(120, 190, 230, 0.7);
+  background: linear-gradient(
+    to right,
+    rgba(34, 54, 74, 0.76),
+    rgba(44, 52, 76, 0.76)
+  );
+}
+
+.chatInteractionPanelMessage .chatInteractionHeading {
+  background: linear-gradient(
+    to right,
+    rgba(120, 190, 255, 0.82),
+    rgba(120, 190, 255, 0.38),
+    rgba(120, 190, 255, 0)
+  );
+}
+
+.chatComposerSectionMessage .chatComposerReplyTargetInput {
+  max-width: 220px;
+}
+
+.chatComposerAdditionalTargetSectionAlwaysOpen .chatComposerAdditionalTargetSummary {
+  cursor: default;
+}
+
+.chatComposerAdditionalTargetSectionAlwaysOpen .chatComposerAdditionalTargetSummary::before {
+  content: "";
+}
+
+.chatComposerAdditionalTargetBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.chatComposerReplyTargetNamePreview {
+  color: var(--theme-text-subtle);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
