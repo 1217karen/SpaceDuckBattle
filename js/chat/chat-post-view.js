@@ -80,6 +80,10 @@ export function createPostCard(post, options = {}) {
     classNames.push("chatPostCardActionLog");
   }
 
+  if (post.type === "message") {
+    classNames.push("chatPostCardMessage");
+  }
+
   if (post.visibility === "private") {
     classNames.push("chatPostCardPrivate");
   }
@@ -148,7 +152,9 @@ if (shouldShowIcon) {
     name.className =
       post.type === "actionLog"
         ? "chatPostName chatPostLogLabel"
-        : "chatPostName";
+        : post.type === "message"
+          ? "chatPostName chatPostMessageName"
+          : "chatPostName";
 
     name.textContent =
       post.type === "actionLog"
@@ -239,7 +245,7 @@ headerRight.appendChild(postMetaTop);
   const actions = document.createElement("div");
   actions.className = "chatPostActions";
 
-  if (!isPreview && !post.isDraftPreview && !hideActions) {
+  if (!isPreview && !post.isDraftPreview && !hideActions && post.type !== "message") {
     const isOwnPost =
       currentEno !== null &&
       currentEno !== undefined &&
