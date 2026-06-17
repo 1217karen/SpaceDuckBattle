@@ -30,6 +30,8 @@ export function renderChatComposerSection(container, options = {}) {
   section.className = isMessageMode
     ? "chatComposerSection chatComposerSectionMessage"
     : "chatComposerSection";
+  section.classList.toggle("chatComposerSectionReply", Boolean(replySourcePost));
+  section.classList.toggle("chatComposerSectionPrivate", Boolean(composerDraft.isPrivate));
   section.dataset.composerMode = composerMode;
   section.dataset.replySourcePostId =
     composerDraft.replySourcePostId ?? "";
