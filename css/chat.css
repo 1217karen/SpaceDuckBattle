@@ -4,6 +4,11 @@
   --chat-font-scale-body: 1;
   --chat-font-scale-small: 0.86;
   --chat-font-scale-xs: 0.79;
+  --chat-reply-accent: rgba(243, 211, 106, 0.9);
+  --chat-private-bg-start: rgba(70, 42, 66, 0.94);
+  --chat-private-bg-end: rgba(52, 42, 64, 0.94);
+  --chat-message-surface: rgba(255, 255, 255, 0.92);
+  --chat-message-text: #172033;
 }
 
 /* =======================================================
@@ -185,7 +190,7 @@ body {
 }
 
 .chatPostCardReply {
-  border-color: rgba(243, 211, 106, 0.9);
+  border-color: var(--chat-reply-accent);
   box-shadow:
     0 0 0 1px rgba(243, 211, 106, 0.18) inset,
     0 0 12px rgba(243, 211, 106, 0.18);
@@ -304,8 +309,8 @@ body {
   border-color: rgba(210, 120, 180, 0.65);
   background: linear-gradient(
     to right,
-    rgba(70, 42, 66, 0.94),
-    rgba(52, 42, 64, 0.94)
+    var(--chat-private-bg-start),
+    var(--chat-private-bg-end)
   );
 }
 
@@ -761,6 +766,18 @@ body {
   margin-bottom: 6px;
 }
 
+.chatComposerSectionReply .chatComposerTextarea {
+  border-color: var(--chat-reply-accent);
+}
+
+.chatComposerSectionPrivate .chatComposerTextarea {
+  background: linear-gradient(
+    to right,
+    var(--chat-private-bg-start),
+    var(--chat-private-bg-end)
+  );
+}
+
 /* ツールバー */
 .chatComposerToolbar {
   display: flex;
@@ -1013,16 +1030,25 @@ body {
    メッセージ
 ======================================================= */
 .chatPostCardMessage {
-  border-color: rgba(120, 190, 230, 0.7);
-  background: linear-gradient(
-    to right,
-    rgba(38, 58, 78, 0.94),
-    rgba(42, 50, 72, 0.94)
-  );
+  border: none;
+  background: var(--chat-message-surface);
+  color: var(--chat-message-text);
+}
+
+.chatPostCardMessage .chatPostDivider {
+  border-top-color: rgba(23, 32, 51, 0.16);
+}
+
+.chatPostCardMessage .chatPostFooter,
+.chatPostCardMessage .chatPostCreatedAt,
+.chatPostCardMessage .chatPostNo,
+.chatPostCardMessage .chatPostEnoSeparator,
+.chatPostCardMessage .chatPostReplyLabel {
+  color: rgba(23, 32, 51, 0.66);
 }
 
 .chatPostMessageName {
-  color: #a8dcff;
+  color: #223149;
 }
 
 .chatInteractionPanelMessage {
@@ -1041,6 +1067,16 @@ body {
     rgba(120, 190, 255, 0.38),
     rgba(120, 190, 255, 0)
   );
+}
+
+.chatComposerSectionMessage .chatComposerTextarea {
+  border: none;
+  background: var(--chat-message-surface);
+  color: var(--chat-message-text);
+}
+
+.chatComposerSectionMessage .chatComposerTextarea::placeholder {
+  color: rgba(23, 32, 51, 0.52);
 }
 
 .chatComposerSectionMessage .chatComposerReplyTargetInput {
