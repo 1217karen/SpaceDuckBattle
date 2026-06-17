@@ -537,6 +537,18 @@ body {
   box-sizing: border-box;
 }
 
+.chatInteractionPanelReply {
+  border-color: var(--chat-reply-accent);
+  background: linear-gradient(
+    to right,
+    rgba(76, 64, 28, 0.76),
+    rgba(60, 56, 42, 0.76)
+  );
+  box-shadow:
+    0 0 0 1px rgba(243, 211, 106, 0.14) inset,
+    var(--theme-shadow-panel);
+}
+
 .chatInteractionHeading {
   display: inline-block;
   min-width: 180px;
@@ -765,9 +777,6 @@ body {
   line-height: 1.6;
   margin-bottom: 6px;
 }
-
-.chatComposerSectionReply .chatComposerTextarea {
-  border-color: var(--chat-reply-accent);
 
 .chatComposerSectionPrivate .chatComposerTextarea {
   background: linear-gradient(
