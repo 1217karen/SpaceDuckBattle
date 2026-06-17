@@ -565,7 +565,9 @@ const interactionTitle =
       ? "ACTION"
       : isMessageMode
         ? "MESSAGE"
-        : "POST";
+        : replySourcePost
+          ? "REPLY"
+          : "POST";
 
 const interactionPanelRefs = renderInteractionPanel(chatMainArea, {
   title: interactionTitle
