@@ -38,6 +38,15 @@ function parseTargetEnoList(value) {
   return [...uniqueEnos];
 }
 
+function getSingleMessageTargetEno(draft = {}) {
+  const targetEnoList = parseTargetEnoList(draft?.additionalTargetEnoText ?? "");
+
+  return targetEnoList.length === 1
+    ? targetEnoList[0]
+    : null;
+}
+
+
 function getSpeakerName(draft = {}, character = {}) {
   const draftName =
     typeof draft.speakerName === "string"
@@ -80,6 +89,31 @@ export function validateComposerDraftForPost(draft = {}, character = {}) {
 
   return "";
 }
+
+export function validateComposerDraftForMessage(draft = {}, character = {}) {
+  const baseError = validateComposerDraftForPost(draft, character);
+
+  if (baseError) {
+    return baseError;
+  }
+
+  const targetEnoList = parseTargetEnoList(draft?.additionalTargetEnoText ?? "");
+
+  if (targetEnoList.length === 0) {
+    return "送信先Enoを入力してください";
+  }
+
+  if (targetEnoList.length > 1) {
+    return "MESSAGEの送信先は1人だけ指定してください";
+  }
+
+  if (!character?.eno) {
+    return "送信するキャラクターが見つかりません";
+  }
+
+  return "";
+}
+
 
 function getIconData(draft = {}) {
   const iconId =
@@ -206,6 +240,43 @@ export function buildComposerPostInput({
       typeof draft?.replyThreadRootPostId === "number"
         ? draft.replyThreadRootPostId
         : null
+  };
+}
+
+export function buildComposerMessageInput({
+  character,
+  draft
+}) {
+  const rawBody = String(draft?.body ?? "");
+
+  if (rawBody.length === 0) {
+    return null;
+  }
+
+  const targetEno = getSingleMessageTargetEno(draft);
+
+  if (!targetEno) {
+    return null;
+  }
+
+  const authorEno = character?.eno ?? 0;
+  const { iconId, iconUrl } = getIconData(draft);
+
+  return {
+    type: "message",
+    placeId: "",
+    speakerName: getSpeakerName(draft, character),
+    iconId,
+    iconUrl,
+    body: normalizeSubmittedBody(rawBody),
+    authorEno,
+    targetEnoList: [targetEno],
+    visibility: "private",
+    visibleToEnoList: Array.from(new Set([authorEno, targetEno])).filter(eno =>
+      Number.isInteger(eno) && eno > 0
+    ),
+    parentPostId: null,
+    threadRootPostId: null
   };
 }
 
