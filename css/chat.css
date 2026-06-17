@@ -541,6 +541,14 @@ body {
   border-color: var(--chat-reply-accent);
 }
 
+.chatInteractionPanelPrivate {
+  background: linear-gradient(
+    to right,
+    var(--chat-private-bg-start),
+    var(--chat-private-bg-end)
+  );
+}
+
 .chatInteractionHeading {
   display: inline-block;
   min-width: 180px;
@@ -768,14 +776,6 @@ body {
   resize: vertical;
   line-height: 1.6;
   margin-bottom: 6px;
-}
-
-.chatComposerSectionPrivate .chatComposerTextarea {
-  background: linear-gradient(
-    to right,
-    var(--chat-private-bg-start),
-    var(--chat-private-bg-end)
-  );
 }
 
 /* ツールバー */
