@@ -3,7 +3,7 @@
 import { places } from "../data/places-data.js";
 
 import { createPost,getReplySourcePostForDraft } from "../services/post-service.js";
-import { getChatPostsForViewMode } from "./chat-post-query-service.js";
+import { getChatPostsForViewMode } from "../services/chat-post-query-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
