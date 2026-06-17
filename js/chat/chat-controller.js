@@ -1,28 +1,36 @@
 //chat-controller.js
 
 import { places } from "../data/places-data.js";
-import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
-import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
-import { createIconPicker } from "../common/icon-picker.js";
+
 import { createPost,getReplySourcePostForDraft } from "../services/post-service.js";
+import { getChatPostsForViewMode } from "../services/chat-post-query-service.js";
+import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
+
+import { createIconPicker } from "../common/icon-picker.js";
+import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
+import { showToast } from "../common/toast.js";
+
+import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
+import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
+
+import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
+import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft } from "./chat-reply-state.js";
+import { buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForPost } from "./chat-composer-post.js";
+import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
+import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
+
+import { filterHiddenPosts } from "./chat-post-filter.js";
+import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
+
+import { getAvailableChatActions } from "./chat-action-resolver.js";
+import { buildActionLogPostInput } from "./chat-action-post.js";
+
 import { renderPlaceInfoSection } from "./chat-header-view.js";
 import { renderChatComposerSection } from "./chat-composer-view.js";
 import { renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.js";
 import { renderPostListSection,renderPostListContent } from "./chat-post-view.js";
-import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
-import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft } from "./chat-reply-state.js";
-import { buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForPost } from "./chat-composer-post.js";
-import { showToast } from "../common/toast.js";
-import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
-import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
-import { createPostActions,openThreadFromPost,getReplyTargetLabels,createDeleteHandler,createHideHandler,createQuoteHandler,getQuotePreviewPostById } from "./chat-post-action-helpers.js";
-import { bindComposerDraftPreviewEvents } from "./chat-composer-events.js";
-import { filterHiddenPosts } from "./chat-post-filter.js";
-import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
-import { getAvailableChatActions } from "./chat-action-resolver.js";
-import { buildActionLogPostInput } from "./chat-action-post.js";
 import { renderChatActionSection } from "./chat-action-view.js";
-import { getChatPostsForViewMode } from "../services/chat-post-query-service.js";
+
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
