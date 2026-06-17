@@ -657,6 +657,8 @@ renderChatActionSection(interactionPanel, {
     }
   });
 
+  composerRefs.interactionPanel = interactionPanelRefs?.panel ?? null;
+
   setupRenderedComposer({
     composerRefs,
     composerDraft,
