@@ -205,57 +205,6 @@ export function getThreadPostsByRootId(threadRootPostId = null) {
     .sort((a, b) => a.postId - b.postId);
 }
 
-export function getPostForQuotePreviewById(postId) {
-  const normalizedPostId =
-    typeof postId === "number"
-      ? postId
-      : Number(postId || 0);
-
-  if (!normalizedPostId) {
-    return null;
-  }
-
-  return getSourcePosts().find(post => post.postId === normalizedPostId) || null;
-}
-
-export function getReplySourcePostForDraft(draft = {}) {
-  const replySourcePostId =
-    typeof draft.replySourcePostId === "number"
-      ? draft.replySourcePostId
-      : Number(draft.replySourcePostId || 0);
-
-  if (!replySourcePostId) {
-    return null;
-  }
-
-  return getSourcePosts().find(post => post.postId === replySourcePostId) || null;
-}
-
-export function getThreadPostsByRootId(threadRootPostId = null) {
-  const normalizedThreadRootPostId =
-    typeof threadRootPostId === "number"
-      ? threadRootPostId
-      : Number(threadRootPostId || 0);
-
-  if (!normalizedThreadRootPostId) {
-    return [];
-  }
-
-  return getSourcePosts()
-    .filter(post => {
-      if (!post || post.isDeleted) {
-        return false;
-      }
-
-      if (post.postId === normalizedThreadRootPostId) {
-        return true;
-      }
-
-      return post.threadRootPostId === normalizedThreadRootPostId;
-    })
-    .sort((a, b) => a.postId - b.postId);
-}
-
 export function getPostsByPlaceId(placeId) {
   return getSourcePosts().filter(post => post.placeId === placeId);
 }
