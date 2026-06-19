@@ -45,3 +45,7 @@
 #saveManagement {
   padding: 6px 14px;
 }
+#bulkCommIconUrls {
+  width: min(100%, 720px);
+  box-sizing: border-box;
+}
