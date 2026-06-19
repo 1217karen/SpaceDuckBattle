@@ -4,6 +4,7 @@ import { getPlaceById, getPlaceLabel, getFavoritePlaces } from "./chat-place-uti
 import { getPlaceIdFromQuery, navigateToChatPlace } from "./chat-navigation.js";
 
 import { createPost,getReplySourcePostForDraft,getThreadPostsByRootId } from "../services/post-service.js";
+import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
@@ -11,6 +12,7 @@ import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { showToast } from "../common/toast.js";
 
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
+import { addEnoToTargetText } from "./chat-target-utils.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft,findReplySourcePost } from "./chat-reply-state.js";
 import { buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForPost } from "./chat-composer-post.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
@@ -317,6 +319,27 @@ function renderThreadPage() {
     })(post);
   };
 
+  const handleFavoriteCharacterReply = (favoriteCharacter) => {
+    if (!composerRefs) {
+      return;
+    }
+
+    const currentDraft = saveComposerDraft(
+      readComposerDraftFromRefs(composerRefs)
+    );
+
+    saveComposerDraft({
+      ...currentDraft,
+      additionalTargetEnoText: addEnoToTargetText(
+        currentDraft.additionalTargetEnoText,
+        favoriteCharacter?.eno
+      ),
+      isAdditionalTargetOpen: true
+    });
+
+    renderThreadPage();
+  };
+
   const postActions = createPostActions({
     onReply: handleReply,
     onDelete: handleDelete,
@@ -392,7 +415,11 @@ function renderThreadPage() {
   });
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "place",
-    favoritePlaces: getFavoritePlaces()
+    favoritePlaces: getFavoritePlaces(),
+    favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
+    showCharacterReplyAction: true,
+    showCharacterMessageAction: false,
+    onReplyToCharacter: handleFavoriteCharacterReply
   });
 }
 
