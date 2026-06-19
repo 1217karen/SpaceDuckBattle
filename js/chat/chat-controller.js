@@ -851,12 +851,13 @@ if (composerRefs) {
 
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "place",
+    favoritePlaces: getFavoritePlaces(),
     favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
+    onMoveToPlace: moveToPlace,
     showCharacterReplyAction: true,
     showCharacterMessageAction: true,
     onReplyToCharacter: handleFavoriteCharacterReply,
     onMessageToCharacter: handleFavoriteCharacterMessage
-    onMoveToPlace: moveToPlace
   });
 }
 
