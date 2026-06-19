@@ -40,6 +40,7 @@ const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
 let currentViewMode = "chat";
+let currentFavoritesTab = "place";
 let isShopOpen = false;
 let isActionOpen = false;
 let selectedActionId = "";
@@ -857,7 +858,10 @@ if (composerRefs) {
     showCharacterReplyAction: true,
     showCharacterMessageAction: true,
     onReplyToCharacter: handleFavoriteCharacterReply,
-    onMessageToCharacter: handleFavoriteCharacterMessage
+    onMessageToCharacter: handleFavoriteCharacterMessage,
+    onTabChange: (tab) => {
+      currentFavoritesTab = tab;
+    }
   });
 }
 
