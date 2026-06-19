@@ -97,6 +97,7 @@ function createCommRowElement(typeKey, rowData = {}) {
 
   const input = document.createElement("input");
   input.className = "commTextInput";
+  input.placeholder = "セリフを入力";
   input.value = rowData.text || "";
 
   const preview = document.createElement("div");
