@@ -190,7 +190,6 @@
   width: 60px;
   height: 60px;
   padding: 0;
-  flex-shrink: 0;
 }
 
 .commIconPickerButton img {
