@@ -48,7 +48,7 @@ function createFilterCheckboxGroup(titleText, stateKey, options, matchModeKey = 
   if (matchModeKey) {
     const modeButton = document.createElement("button");
     modeButton.type = "button";
-    modeButton.className = "skillGuideMatchModeButton";
+    modeButton.className = "skillGuideMatchModeButton button-box";
     modeButton.textContent =
       filterState[matchModeKey] === "all"
         ? "すべてを含む"
