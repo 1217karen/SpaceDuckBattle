@@ -7,9 +7,9 @@
   --chat-reply-accent: rgba(243, 211, 106, 0.9);
   --chat-private-bg-start: rgba(70, 42, 66, 0.94);
   --chat-private-bg-end: rgba(52, 42, 64, 0.94);
-  --chat-message-surface: rgba(225, 240, 246, 0.50);
-  --chat-message-surface-end: rgba(200, 226, 238, 0.46);
-  --chat-message-text: #142033;
+  --chat-message-surface: rgba(185, 224, 240, 0.58);
+  --chat-message-surface-end: rgba(145, 200, 225, 0.52);
+  --chat-message-text: #102033;
 }
 
 /* =======================================================
