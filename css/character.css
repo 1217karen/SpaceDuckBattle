@@ -54,3 +54,8 @@
   width: min(100%, 640px);
   box-sizing: border-box;
 }
+
+.commNameInput {
+  width: 120px;
+  box-sizing: border-box;
+}
