@@ -49,3 +49,13 @@
   width: min(100%, 720px);
   box-sizing: border-box;
 }
+
+.commNameInput {
+  width: 120px;
+  box-sizing: border-box;
+}
+
+.commTextInput {
+  width: 100%;
+  box-sizing: border-box;
+}
