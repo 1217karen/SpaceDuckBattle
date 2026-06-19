@@ -7,9 +7,8 @@
   --chat-reply-accent: rgba(243, 211, 106, 0.9);
   --chat-private-bg-start: rgba(70, 42, 66, 0.94);
   --chat-private-bg-end: rgba(52, 42, 64, 0.94);
-  --chat-message-surface: rgba(185, 224, 240, 0.58);
-  --chat-message-surface-end: rgba(145, 200, 225, 0.52);
-  --chat-message-text: #102033;
+  --chat-message-surface: rgba(185, 224, 240, 0.42);
+  --chat-message-surface-end: rgba(145, 200, 225, 0.38);
 }
 
 /* =======================================================
@@ -1047,19 +1046,6 @@ body {
 .chatPostCardMessage .chatPostDivider {
   border-top-color: rgba(23, 32, 51, 0.16);
 }
-
-.chatPostCardMessage .chatPostFooter,
-.chatPostCardMessage .chatPostCreatedAt,
-.chatPostCardMessage .chatPostNo,
-.chatPostCardMessage .chatPostEnoSeparator,
-.chatPostCardMessage .chatPostReplyLabel {
-  color: rgba(23, 32, 51, 0.66);
-}
-
-.chatPostMessageName {
-  color: #223149;
-}
-
 
 .chatInteractionPanelMessage {
   border-color: rgba(190, 215, 235, 0.48);
