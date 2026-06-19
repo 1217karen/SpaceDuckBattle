@@ -1053,11 +1053,8 @@ body {
 
 .chatInteractionPanelMessage {
   border-color: rgba(120, 190, 230, 0.7);
-  background: linear-gradient(
-    to right,
-    rgba(34, 54, 74, 0.76),
-    rgba(44, 52, 76, 0.76)
-  );
+  background: var(--chat-message-surface);
+  color: var(--chat-message-text);
 }
 
 .chatInteractionPanelMessage .chatInteractionHeading {
@@ -1067,16 +1064,6 @@ body {
     rgba(120, 190, 255, 0.38),
     rgba(120, 190, 255, 0)
   );
-}
-
-.chatComposerSectionMessage .chatComposerTextarea {
-  border: none;
-  background: var(--chat-message-surface);
-  color: var(--chat-message-text);
-}
-
-.chatComposerSectionMessage .chatComposerTextarea::placeholder {
-  color: rgba(23, 32, 51, 0.52);
 }
 
 .chatComposerSectionMessage .chatComposerReplyTargetInput {
