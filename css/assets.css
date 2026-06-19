@@ -39,3 +39,9 @@
 .commIconNameInput {
   width: min(100%, 300px);
 }
+
+#addProfileImage,
+#addCommIcon,
+#saveManagement {
+  padding: 6px 14px;
+}
