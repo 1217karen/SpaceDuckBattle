@@ -259,6 +259,7 @@ export function renderFavoritesPanel(container, options = {}) {
     onMessageToCharacter = null,
     showCharacterReplyAction = false,
     showCharacterMessageAction = false,
+    onTabChange = null,
     emptyPlaceText,
     emptyCharacterText
   } = options;
@@ -318,11 +319,21 @@ export function renderFavoritesPanel(container, options = {}) {
 
   placeTabButton.addEventListener("click", () => {
     currentTab = "place";
+
+    if (typeof onTabChange === "function") {
+      onTabChange(currentTab);
+    }
+
     refreshContent();
   });
 
   characterTabButton.addEventListener("click", () => {
     currentTab = "character";
+
+    if (typeof onTabChange === "function") {
+      onTabChange(currentTab);
+    }
+    
     refreshContent();
   });
 
