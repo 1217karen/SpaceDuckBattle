@@ -10,8 +10,15 @@
 }
 
 .commInputArea input {
-  width: 100%;
   box-sizing: border-box;
+}
+
+.commInputArea .commNameInput {
+  width: 120px;
+}
+
+.commInputArea .commTextInput {
+  width: 100%;
 }
 
 .commLabelText {
@@ -52,10 +59,5 @@
 
 .characterProfileTextarea {
   width: min(100%, 640px);
-  box-sizing: border-box;
-}
-
-.commNameInput {
-  width: 120px;
   box-sizing: border-box;
 }
