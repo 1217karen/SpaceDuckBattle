@@ -1,10 +1,12 @@
 .commIconPickerButton {
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   padding: 0;
-  border: 1px solid #888;
-  background: #fff;
-  cursor: pointer;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   flex-shrink: 0;
 }
 
