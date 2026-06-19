@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="./css/layout.css">
 <link rel="stylesheet" href="./css/common.css">
 <link rel="stylesheet" href="./css/common-theme.css">
+<link rel="stylesheet" href="./css/favorites-panel.css">
 </head>
 
 <body>
@@ -35,9 +36,22 @@
 <script type="module">
   import { initCenterTopbar } from "./js/common/center-topbar.js";
   import { initLayoutPanelToggles } from "./js/common/layout.js";
+  import { renderFavoritesSidePanel } from "./js/common/favorites-panel.js";
+  import { getFavoritePlaces } from "./js/chat/chat-place-utils.js";
+  import { getFavoriteCharacters } from "./js/services/character-favorite-service.js";
+  import { getCurrentAccount } from "./js/services/storage-service.js";
 
   initCenterTopbar();
   initLayoutPanelToggles();
+
+  const account = getCurrentAccount();
+  renderFavoritesSidePanel(document.querySelector(".right-panel"), {
+    defaultTab: "place",
+    favoritePlaces: getFavoritePlaces(),
+    favoriteCharacters: getFavoriteCharacters({
+      currentEno: account?.eno ?? null
+    })
+  });
 </script>
 </body>
 </html>
