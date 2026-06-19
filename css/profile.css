@@ -123,3 +123,16 @@
   margin: 0;
   line-height: 1.6;
 }
+
+
+.profileNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profileFavoriteButton {
+  flex: 0 0 auto;
+  font-size: 22px;
+  line-height: 1;
+}
