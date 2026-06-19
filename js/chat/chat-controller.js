@@ -852,7 +852,6 @@ if (composerRefs) {
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "place",
     favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
-    onMoveToPlace: moveToPlace,
     showCharacterReplyAction: true,
     showCharacterMessageAction: true,
     onReplyToCharacter: handleFavoriteCharacterReply,
