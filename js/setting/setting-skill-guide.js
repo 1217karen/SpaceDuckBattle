@@ -175,7 +175,7 @@ controls.appendChild(
 
   const resetButton = document.createElement("button");
   resetButton.type = "button";
-  resetButton.className = "skillGuideResetButton";
+  resetButton.className = "skillGuideResetButton button-box";
   resetButton.textContent = "リセット";
 
 resetButton.addEventListener("click", () => {
