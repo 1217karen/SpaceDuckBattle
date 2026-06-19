@@ -33,3 +33,24 @@
 #saveCharacter {
   padding: 6px 14px;
 }
+.characterNameForm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 720px;
+}
+
+.characterFormLabel {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.characterNameInput {
+  width: min(100%, 360px);
+  box-sizing: border-box;
+}
+
+.characterProfileTextarea {
+  width: min(100%, 640px);
+  box-sizing: border-box;
+}
