@@ -4,7 +4,7 @@ import { getAllPosts } from "./post-service.js";
 import { getDisplayPosts } from "../chat/chat-display-rules.js";
 import { getHerePosts, getReplyPostsForEno, getSelfPostsForEno, sortPostsNewestFirst, withNormalDisplayType } from "../chat/chat-post-filter.js";
 
-function normalizeEno(eno) {
+export function normalizeEno(eno) {
   const normalizedEno =
     typeof eno === "number"
       ? eno
@@ -93,11 +93,46 @@ export function getMessagePostsForViewer({
   );
 }
 
+export function getFavoritePostsForViewer({
+  viewerEno = null,
+  favoriteEnos = []
+} = {}) {
+  const normalizedViewerEno = normalizeEno(viewerEno);
+  const favoriteEnoSet = new Set(
+    (Array.isArray(favoriteEnos) ? favoriteEnos : [])
+      .map(eno => normalizeEno(eno))
+      .filter(eno => eno > 0 && eno !== normalizedViewerEno)
+  );
+
+  if (favoriteEnoSet.size === 0) {
+    return [];
+  }
+
+  return sortPostsNewestFirst(
+    withNormalDisplayType(
+      getAllPosts().filter(post => {
+        if (!post || post.isDeleted || post.type === "message") {
+          return false;
+        }
+
+        if (post.visibility === "private") {
+          return false;
+        }
+
+        const authorEno = normalizeEno(post.authorEno);
+
+        return favoriteEnoSet.has(authorEno);
+      })
+    )
+  );
+}
+
 export function getChatPostsForViewMode({
   viewMode = "chat",
   currentPlace = null,
   places = [],
-  viewerEno = null
+  viewerEno = null,
+  favoriteEnos = []
 } = {}) {
   if (viewMode === "reply") {
     return getReplyPostsForViewer({
@@ -108,6 +143,13 @@ export function getChatPostsForViewMode({
   if (viewMode === "message") {
     return getMessagePostsForViewer({
       viewerEno
+    });
+  }
+
+  if (viewMode === "favorite") {
+    return getFavoritePostsForViewer({
+      viewerEno,
+      favoriteEnos
     });
   }
 
