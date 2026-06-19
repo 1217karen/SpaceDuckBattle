@@ -31,29 +31,27 @@
 <div class="section-divider"></div>
 <h2>名前</h2>
 
-<label>
-  キャラクターフルネーム（30文字以内）
-  <input id="characterFullName" maxlength="30">
-</label>
+<div class="characterNameForm">
+  <label class="characterFormLabel" for="characterFullName">
+    キャラクターフルネーム（30文字以内）
+  </label>
+  <input id="characterFullName" class="characterNameInput" maxlength="30">
 
-<br>
+  <label class="characterFormLabel" for="defaultCharacterName">
+    キャラクターのデフォルト名（10文字以内）
+  </label>
+  <input id="defaultCharacterName" class="characterNameInput" maxlength="10">
 
-<label>
-  キャラクターのデフォルト名（10文字以内）
-  <input id="defaultCharacterName" maxlength="10">
-</label>
+  <label class="characterFormLabel" for="unitName">
+    アヒル名（15文字以内）
+  </label>
+  <input id="unitName" class="characterNameInput" maxlength="15">
 
-<br>
-
-<label>
-  アヒル名（15文字以内）
-  <input id="unitName" maxlength="15">
-</label>
-
-<label>
-  キャラ説明
-  <textarea id="characterProfileText" maxlength="500" rows="6"></textarea>
-</label>
+  <label class="characterFormLabel" for="characterProfileText">
+    キャラ説明
+  </label>
+  <textarea id="characterProfileText" class="characterProfileTextarea" maxlength="500" rows="6"></textarea>
+</div>
 
 <br><br>
 
