@@ -35,6 +35,7 @@ const chatMainArea = document.querySelector("#chatMainArea");
 const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenThreadPostIds = new Set();
+let currentFavoritesTab = "place";
 
 function closeThread() {
   const placeId = getPlaceIdFromQuery() || "F1-1";
@@ -414,12 +415,15 @@ function renderThreadPage() {
     threadPosts
   });
   renderFavoritesSidePanel(rightPanel, {
-    defaultTab: "place",
+    defaultTab: currentFavoritesTab,
     favoritePlaces: getFavoritePlaces(),
     favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
     showCharacterReplyAction: true,
     showCharacterMessageAction: false,
-    onReplyToCharacter: handleFavoriteCharacterReply
+    onReplyToCharacter: handleFavoriteCharacterReply,
+    onTabChange: (tab) => {
+      currentFavoritesTab = tab;
+    }
   });
 }
 
