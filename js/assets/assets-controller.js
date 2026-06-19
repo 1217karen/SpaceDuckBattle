@@ -243,7 +243,7 @@ function createCommIconRow(item) {
   nameInput.type = "text";
   nameInput.className = "commIconNameInput imageInputControl";
   nameInput.value = item.name ?? "";
-  nameInput.placeholder = "発言者名（未入力ならデフォルト名）";
+  nameInput.placeholder = "発言者名（未入力時はニックネーム）";
 
   const urlInput = document.createElement("input");
   urlInput.type = "text";
