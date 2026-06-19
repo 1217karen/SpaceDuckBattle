@@ -7,7 +7,8 @@
   --chat-reply-accent: rgba(243, 211, 106, 0.9);
   --chat-private-bg-start: rgba(70, 42, 66, 0.94);
   --chat-private-bg-end: rgba(52, 42, 64, 0.94);
-  --chat-message-surface: rgba(255, 255, 255, 0.92);
+  --chat-message-surface: rgba(218, 226, 236, 0.74);
+  --chat-message-surface-end: rgba(196, 208, 222, 0.68);
   --chat-message-text: #172033;
 }
 
@@ -1030,10 +1031,18 @@ body {
    メッセージ
 ======================================================= */
 .chatPostCardMessage {
-  border: none;
-  background: var(--chat-message-surface);
+  border: 1px solid rgba(220, 232, 245, 0.42);
+  background: linear-gradient(
+    to right,
+    var(--chat-message-surface),
+    var(--chat-message-surface-end)
+  );
   color: var(--chat-message-text);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    var(--theme-shadow-panel);
 }
+
 
 .chatPostCardMessage .chatPostDivider {
   border-top-color: rgba(23, 32, 51, 0.16);
@@ -1051,10 +1060,18 @@ body {
   color: #223149;
 }
 
+
 .chatInteractionPanelMessage {
-  border-color: rgba(120, 190, 230, 0.7);
-  background: var(--chat-message-surface);
+  border-color: rgba(190, 215, 235, 0.48);
+  background: linear-gradient(
+    to right,
+    var(--chat-message-surface),
+    var(--chat-message-surface-end)
+  );
   color: var(--chat-message-text);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    var(--theme-shadow-panel);
 }
 
 .chatInteractionPanelMessage .chatInteractionHeading {
