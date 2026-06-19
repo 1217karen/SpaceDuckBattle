@@ -24,30 +24,25 @@ function getFavoritePlaceLabel(place = {}) {
     : String(place?.placeId ?? "");
 }
 
-function getFavoriteCharacterLabel(character = {}) {
-  const name =
-    typeof character?.name === "string"
-      ? character.name.trim()
-      : "";
+function getFavoriteCharacterName(character = {}) {
+  return typeof character?.name === "string" && character.name.trim() !== ""
+    ? character.name.trim()
+    : "不明なキャラ";
+}
 
+function getFavoriteCharacterEno(character = {}) {
   const eno =
-    typeof character?.eno === "number" && character.eno > 0
+    typeof character?.eno === "number"
       ? character.eno
-      : null;
+      : Number(character?.eno || 0);
 
-  if (name && eno) {
-    return `${name}(Eno.${eno})`;
-  }
+  return Number.isInteger(eno) && eno > 0 ? eno : null;
+}
 
-  if (name) {
-    return name;
-  }
-
-  if (eno) {
-    return `Eno.${eno}`;
-  }
-
-  return "不明なキャラ";
+function getFavoriteCharacterIconUrl(character = {}) {
+  return typeof character?.iconUrl === "string" && character.iconUrl.trim() !== ""
+    ? character.iconUrl.trim()
+    : "https://placehold.co/60x60?text=NO+IMG";
 }
 
 function createFavoritePlaceButton(place, options = {}) {
@@ -81,19 +76,59 @@ function createFavoriteCharacterButton(character, options = {}) {
     onOpenCharacter = null
   } = options;
 
+  const eno = getFavoriteCharacterEno(character);
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "favoritesPanelItemButton button-link";
-  button.textContent = getFavoriteCharacterLabel(character);
+  button.className = "favoritesPanelCharacterMainButton button-plain";
+
+  const icon = document.createElement("img");
+  icon.className = "favoritesPanelCharacterIcon";
+  icon.src = getFavoriteCharacterIconUrl(character);
+  icon.alt = getFavoriteCharacterName(character);
+
+  const label = document.createElement("span");
+  label.className = "favoritesPanelCharacterLabel";
+  label.textContent = eno
+    ? `Eno.${eno} ${getFavoriteCharacterName(character)}`
+    : getFavoriteCharacterName(character);
+
+  button.appendChild(icon);
+  button.appendChild(label);
 
   const openHandler =
     typeof onOpenCharacter === "function"
       ? onOpenCharacter
       : navigateToFavoriteCharacter;
 
-  if (character?.eno) {
+  if (eno) {
     button.addEventListener("click", () => {
-      openHandler(character.eno);
+      openHandler(eno);
+    });
+  } else {
+    button.disabled = true;
+  }
+
+  return button;
+}
+
+function createFavoriteCharacterActionButton(character, options = {}) {
+  const {
+    label,
+    title,
+    onClick
+  } = options;
+
+  const eno = getFavoriteCharacterEno(character);
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "favoritesPanelCharacterActionButton button-icon";
+  button.textContent = label;
+  button.title = title;
+  button.setAttribute("aria-label", title);
+
+  if (eno && typeof onClick === "function") {
+    button.addEventListener("click", () => {
+      onClick(character);
     });
   } else {
     button.disabled = true;
@@ -149,6 +184,10 @@ function renderFavoriteCharactersContent(container, options = {}) {
   const {
     favoriteCharacters = [],
     onOpenCharacter = null,
+    onReplyToCharacter = null,
+    onMessageToCharacter = null,
+    showCharacterReplyAction = false,
+    showCharacterMessageAction = false,
     emptyCharacterText = "お気に入りキャラはまだありません"
   } = options;
 
@@ -165,7 +204,7 @@ function renderFavoriteCharactersContent(container, options = {}) {
 
   favoriteCharacters.forEach((character, index) => {
     const item = document.createElement("div");
-    item.className = "favoritesPanelItem";
+    item.className = "favoritesPanelItem favoritesPanelCharacterItem";
 
     item.appendChild(
       createFavoriteCharacterButton(character, {
@@ -173,6 +212,33 @@ function renderFavoriteCharactersContent(container, options = {}) {
       })
     );
 
+    if (showCharacterReplyAction || showCharacterMessageAction) {
+      const actionGroup = document.createElement("div");
+      actionGroup.className = "favoritesPanelCharacterActions";
+
+      if (showCharacterReplyAction) {
+        actionGroup.appendChild(
+          createFavoriteCharacterActionButton(character, {
+            label: "💬",
+            title: "返信先に追加",
+            onClick: onReplyToCharacter
+          })
+        );
+      }
+
+      if (showCharacterMessageAction) {
+        actionGroup.appendChild(
+          createFavoriteCharacterActionButton(character, {
+            label: "✉",
+            title: "MESSAGE送信先に設定",
+            onClick: onMessageToCharacter
+          })
+        );
+      }
+
+      item.appendChild(actionGroup);
+    }
+    
     container.appendChild(item);
     appendDividerIfNeeded(container, index, favoriteCharacters.length);
   });
@@ -189,6 +255,10 @@ export function renderFavoritesPanel(container, options = {}) {
     favoriteCharacters = [],
     onMoveToPlace = null,
     onOpenCharacter = null,
+    onReplyToCharacter = null,
+    onMessageToCharacter = null,
+    showCharacterReplyAction = false,
+    showCharacterMessageAction = false,
     emptyPlaceText,
     emptyCharacterText
   } = options;
@@ -238,6 +308,10 @@ export function renderFavoritesPanel(container, options = {}) {
     renderFavoriteCharactersContent(content, {
       favoriteCharacters,
       onOpenCharacter,
+      onReplyToCharacter,
+      onMessageToCharacter,
+      showCharacterReplyAction,
+      showCharacterMessageAction,
       emptyCharacterText
     });
   }
