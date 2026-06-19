@@ -72,7 +72,7 @@ function createCommRowElement(typeKey, rowData = {}) {
 
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "commIconPickerButton";
+  button.className = "commIconPickerButton button-box";
   button.dataset.selectedId =
     rowData.iconId ? String(rowData.iconId) : "";
   button.dataset.selectedUrl =
@@ -120,6 +120,7 @@ function createCommRowElement(typeKey, rowData = {}) {
   
   const removeButton = document.createElement("button");
   removeButton.type = "button";
+  removeButton.className = "commRemoveButton button-icon";
   removeButton.textContent = "×";
 
   removeButton.addEventListener("click", () => {
