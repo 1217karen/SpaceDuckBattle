@@ -1,12 +1,17 @@
 //profile-controller.js
 
-import { loadCharacter, loadUnit } from "../services/storage-service.js";
+import { getCurrentAccount, loadCharacter, loadUnit } from "../services/storage-service.js";
 import { skillHandlers } from "../data/skills.js";
 import { getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
+import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
+import { showToast } from "../common/toast.js";
+import { getFavoritePlaces } from "../chat/chat-place-utils.js";
+import { getFavoriteCharacters, isFavoriteCharacter, toggleFavoriteCharacter } from "../services/character-favorite-service.js";
 
 const MAX_CHARACTER_ICONS = 10;
 
 const profilePage = document.getElementById("profilePage");
+const rightPanel = document.querySelector(".right-panel");
 
 function getEnoFromQuery() {
   const params = new URLSearchParams(window.location.search);
@@ -95,7 +100,8 @@ function renderNotFound(message) {
   `;
 }
 
-function renderProfile(eno, character, unit) {
+function renderProfile(eno, character, unit, options = {}) {
+  const { currentEno = null } = options;
   const fullName = character?.fullName?.trim() || "未設定";
   const profileText = character?.profileText?.trim() || "未設定";
   const duckIconUrl = getSafeImageUrl(unit?.icon?.default || "");
@@ -103,6 +109,8 @@ function renderProfile(eno, character, unit) {
 
   const characterIcons = buildCharacterIconList(character);
   const publicPatterns = getPublicPatterns(unit);
+  const isOwnProfile = Number(currentEno) === Number(eno);
+  const isFavorite = isFavoriteCharacter(eno, { currentEno });
 
   const characterIconHtml = characterIcons.length > 0
     ? characterIcons.map(icon => `
@@ -156,7 +164,18 @@ function renderProfile(eno, character, unit) {
         </div>
         <div class="profileHeaderText">
           <div class="enoText">Eno.${escapeHtml(eno)}</div>
-          <h2 class="characterName">${escapeHtml(fullName)}</h2>
+          <div class="profileNameRow">
+            <h2 class="characterName">${escapeHtml(fullName)}</h2>
+            ${isOwnProfile ? "" : `
+              <button
+                type="button"
+                class="profileFavoriteButton button-icon"
+                title="${isFavorite ? "お気に入り解除" : "お気に入り登録"}"
+                aria-label="${isFavorite ? "お気に入り解除" : "お気に入り登録"}"
+                data-favorite-character-button
+              >${isFavorite ? "★" : "☆"}</button>
+            `}
+          </div>
         </div>
       </div>
 
@@ -183,13 +202,50 @@ function renderProfile(eno, character, unit) {
       ${publicPatternHtml}
     </section>
   `;
+  
+  const favoriteButton = profilePage.querySelector("[data-favorite-character-button]");
+
+  if (favoriteButton) {
+    favoriteButton.addEventListener("click", () => {
+      const result = toggleFavoriteCharacter(eno, { currentEno });
+
+      favoriteButton.textContent = result.isFavorite ? "★" : "☆";
+      favoriteButton.title = result.isFavorite ? "お気に入り解除" : "お気に入り登録";
+      favoriteButton.setAttribute(
+        "aria-label",
+        result.isFavorite ? "お気に入り解除" : "お気に入り登録"
+      );
+
+      showToast(
+        result.isFavorite
+          ? "お気に入りキャラに登録しました"
+          : "お気に入りキャラを解除しました",
+        {
+          type: result.isFavorite ? "success" : "info"
+        }
+      );
+
+      renderProfileFavoritesPanel(currentEno);
+    });
+  }
+}
+
+function renderProfileFavoritesPanel(currentEno = null) {
+  renderFavoritesSidePanel(rightPanel, {
+    defaultTab: "character",
+    favoritePlaces: getFavoritePlaces(),
+    favoriteCharacters: getFavoriteCharacters({ currentEno })
+  });
 }
 
 function initProfilePage() {
+  const account = getCurrentAccount();
+  const currentEno = account?.eno ?? null;
   const eno = getEnoFromQuery();
 
   if (!eno) {
     renderNotFound("Enoが指定されていません");
+    renderProfileFavoritesPanel(currentEno);
     return;
   }
 
@@ -197,10 +253,12 @@ function initProfilePage() {
   const unit = loadUnit(eno, 1);
 
   if (!character && !unit) {
-    renderNotFound("このEnoのプロフィールは存在しません");
+    renderNotFound("このEnoは存在しません");
+    renderProfileFavoritesPanel(currentEno);
     return;
   }
 
+    renderProfileFavoritesPanel(currentEno);
   renderProfile(eno, character || {}, unit || {});
 }
 
