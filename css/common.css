@@ -184,6 +184,16 @@ textarea{
   box-sizing:border-box;
 }
 
+select {
+  background: rgba(0, 0, 0, 0.42);
+  color: var(--theme-text-main);
+}
+
+select option {
+  background: #1b2230;
+  color: #f3f6fb;
+}
+
 textarea{
   line-height:var(--line-height-base);
 }
