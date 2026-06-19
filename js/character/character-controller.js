@@ -93,6 +93,7 @@ function createCommRowElement(typeKey, rowData = {}) {
 
   const nameInput = document.createElement("input");
   nameInput.className = "commNameInput";
+  nameInput.maxLength = 10;
   nameInput.value = rowData.name || "";
 
   const input = document.createElement("input");
