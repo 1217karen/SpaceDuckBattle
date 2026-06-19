@@ -4,6 +4,7 @@ import { places } from "../data/places-data.js";
 
 import { createPost,getReplySourcePostForDraft } from "../services/post-service.js";
 import { getChatPostsForViewMode } from "../services/chat-post-query-service.js";
+import { getFavoriteCharacters, loadFavoriteCharacterEnos } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
@@ -14,6 +15,7 @@ import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavo
 import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
+import { addEnoToTargetText } from "./chat-target-utils.js";
 import { createReplyStateFromPost,clearReplyState,applyReplyStateToDraft } from "./chat-reply-state.js";
 import { buildComposerMessageInput,buildComposerPostInput,buildDraftPreviewPost,validateComposerDraftForMessage,validateComposerDraftForPost } from "./chat-composer-post.js";
 import { setupRenderedComposer, getFixedReplyTargetName } from "./chat-composer-ui.js";
@@ -230,8 +232,14 @@ function buildViewTabs(options = {}) {
     {
       key: "favorite",
       label: "FAVORITE",
-      isActive: false,
-      isDisabled: true
+      isActive: currentMode === "favorite",
+      isCurrent: currentMode === "favorite",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("favorite");
+        }
+      }
     },
     {
       key: "self",
@@ -734,6 +742,55 @@ const handleQuote = (post) => {
   renderChatPlaceInfo();
 };
 
+const readCurrentComposerDraft = () => composerRefs
+  ? saveComposerDraft(
+      readComposerDraftFromRefs(composerRefs)
+    )
+  : loadComposerDraft();
+
+const handleFavoriteCharacterReply = (favoriteCharacter) => {
+  const currentDraft = readCurrentComposerDraft();
+
+  saveComposerDraft({
+    ...currentDraft,
+    additionalTargetEnoText: addEnoToTargetText(
+      currentDraft.additionalTargetEnoText,
+      favoriteCharacter?.eno
+    ),
+    isAdditionalTargetOpen: true
+  });
+
+  currentViewMode = "chat";
+  isShopOpen = false;
+  isActionOpen = false;
+  selectedActionId = "";
+
+  renderChatPlaceInfo();
+};
+
+const handleFavoriteCharacterMessage = (favoriteCharacter) => {
+  const targetEno = Number(favoriteCharacter?.eno || 0);
+
+  if (!Number.isInteger(targetEno) || targetEno <= 0) {
+    return;
+  }
+
+  const currentDraft = readCurrentComposerDraft();
+
+  saveComposerDraft({
+    ...currentDraft,
+    additionalTargetEnoText: String(targetEno),
+    isAdditionalTargetOpen: true
+  });
+
+  currentViewMode = "message";
+  isShopOpen = false;
+  isActionOpen = false;
+  selectedActionId = "";
+
+  renderChatPlaceInfo();
+};
+
 const postActions = createPostActions({
   onReply: handleReply,
   onDelete: handleDelete,
@@ -753,7 +810,8 @@ const rawDisplayPosts = getChatPostsForViewMode({
   viewMode: currentViewMode,
   currentPlace: place,
   places,
-  viewerEno: eno
+  viewerEno: eno,
+  favoriteEnos: loadFavoriteCharacterEnos({ currentEno: eno })
 });
 
 
@@ -793,7 +851,12 @@ if (composerRefs) {
 
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "place",
-    favoritePlaces: getFavoritePlaces(),
+    favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
+    onMoveToPlace: moveToPlace,
+    showCharacterReplyAction: true,
+    showCharacterMessageAction: true,
+    onReplyToCharacter: handleFavoriteCharacterReply,
+    onMessageToCharacter: handleFavoriteCharacterMessage
     onMoveToPlace: moveToPlace
   });
 }
