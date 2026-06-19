@@ -50,3 +50,54 @@
   font-size: var(--font-size-sm);
   line-height: 1.6;
 }
+
+.favoritesPanelCharacterItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.favoritesPanelCharacterMainButton {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 8px;
+  color: var(--theme-text-main);
+  text-align: left;
+}
+
+.favoritesPanelCharacterMainButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.favoritesPanelCharacterIcon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  object-fit: cover;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.favoritesPanelCharacterLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.favoritesPanelCharacterActions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+.favoritesPanelCharacterActionButton {
+  min-width: 28px;
+  padding: 2px 4px;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
