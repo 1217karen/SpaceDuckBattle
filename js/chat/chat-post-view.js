@@ -507,7 +507,7 @@ export function renderPostListContent(listContainer, options = {}) {
 
   if (posts.length === 0) {
     const emptyPosts = document.createElement("p");
-    emptyPosts.textContent = "発言はありません";
+    emptyPosts.textContent = "表示する投稿がありません";
     listContainer.appendChild(emptyPosts);
     return;
   }
