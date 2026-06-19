@@ -19,3 +19,17 @@
   margin-bottom: 6px;
   font-weight: bold;
 }
+
+.commBlock > .button-box {
+  padding: 4px 10px;
+  font-size: var(--font-size-sm);
+}
+
+.commRemoveButton {
+  width: 24px;
+  height: 24px;
+}
+
+#saveCharacter {
+  padding: 6px 14px;
+}
