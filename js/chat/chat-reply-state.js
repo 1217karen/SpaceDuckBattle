@@ -1,6 +1,11 @@
 //chat-reply-state.js
 
-export function createReplyStateFromPost(post) {
+export function createReplyStateFromPost(post, options = {}) {
+  const currentEno =
+    typeof options.currentEno === "number"
+      ? options.currentEno
+      : Number(options.currentEno || 0);
+
   if (!post || typeof post.postId !== "number") {
     return {
       fixedReplyTargetEno: null,
@@ -39,6 +44,10 @@ export function createReplyStateFromPost(post) {
 
   if (fixedReplyTargetEno) {
     targetEnoSet.delete(fixedReplyTargetEno);
+  }
+
+  if (Number.isInteger(currentEno) && currentEno > 0) {
+    targetEnoSet.delete(currentEno);
   }
 
   const additionalTargetEnoText = [...targetEnoSet].join(",");
