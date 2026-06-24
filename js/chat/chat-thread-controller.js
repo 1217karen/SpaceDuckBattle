@@ -293,7 +293,9 @@ function renderThreadPage() {
       readComposerDraftFromRefs(composerRefs)
     );
 
-    const replyState = createReplyStateFromPost(post);
+    const replyState = createReplyStateFromPost(post, {
+      currentEno: eno
+    });
     const nextDraft = applyReplyStateToDraft(currentDraft, replyState);
 
     saveComposerDraft(nextDraft);
