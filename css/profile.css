@@ -67,6 +67,10 @@
   align-items: flex-start;
 }
 
+.profileRow + .profileRow {
+  margin-top: 8px;
+}
+
 .label {
   min-width: 80px;
   font-weight: bold;
