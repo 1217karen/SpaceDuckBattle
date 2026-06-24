@@ -342,16 +342,31 @@ document.getElementById("saveCharacter")
       loadUnit(eno, 1) || {};
 
     const fullName =
-      document.getElementById("characterFullName").value;
+      document.getElementById("characterFullName").value.trim();
 
     const defaultName =
-      document.getElementById("defaultCharacterName").value;
+      document.getElementById("defaultCharacterName").value.trim();
 
     const unitName =
-      document.getElementById("unitName").value;
+      document.getElementById("unitName").value.trim();
 
     const profileText =
       document.getElementById("characterProfileText").value;
+
+    if (!fullName) {
+      alert("フルネームを入力してください");
+      return;
+    }
+
+    if (!defaultName) {
+      alert("デフォルトネームを入力してください");
+      return;
+    }
+
+    if (!unitName) {
+      alert("ユニット名を入力してください");
+      return;
+    }
 
     const battleStartList =
       collectDialogueList("battleStart");
