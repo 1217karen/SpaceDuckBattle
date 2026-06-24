@@ -7,6 +7,7 @@ import { NPCS } from "../data/battle-npcs.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit } from "../services/storage-service.js";
 import { initUnitList } from "./unitlist-controller.js";
 import { loadPublicBattleEntries } from "./public-unit-source.js";
+import { getFavoriteUnitEntries, getFavoriteUnitKey } from "../services/unit-favorite-service.js";
 
 requireLogin();
 
@@ -80,6 +81,47 @@ function isPlaceableCell(stage, x, y) {
 }
 
 let selectedCell = null;
+
+function shuffleEntries(entries) {
+  const result = [...entries];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function createUnitListSections() {
+  const favoriteEntries = getFavoriteUnitEntries({ currentEno });
+  const favoriteKeys = new Set(
+    favoriteEntries.map(entry =>
+      getFavoriteUnitKey(entry.eno, entry.unitNo ?? 1)
+    )
+  );
+
+  const otherEntries = shuffleEntries(
+    loadPublicBattleEntries()
+      .filter((entry) => entry.eno !== currentEno)
+      .filter((entry) => {
+        const key = getFavoriteUnitKey(entry.eno, entry.unitNo ?? 1);
+        return key && !favoriteKeys.has(key);
+      })
+  ).slice(0, 5);
+
+  return [
+    {
+      title: "お気に入りユニット",
+      entries: favoriteEntries,
+      isFavoriteSection: true
+    },
+    {
+      title: "その他のユニット",
+      entries: otherEntries
+    }
+  ];
+}
 
 function clearPlacedSlot(slotIndex) {
   if (!placedSlots[slotIndex]) return;
@@ -180,17 +222,15 @@ function resetPlacement() {
   selectedCell = null;
 }
 
-const publicUnitEntries = loadPublicBattleEntries()
-  .filter((entry) => entry.eno !== currentEno);
-
 const unitListController = initUnitList({
   unitListDiv,
-  entries: publicUnitEntries,
+  sections: createUnitListSections(),
   onPatternConfirm: (selectedEntry) => {
     const alreadyInParty = partySlots.some((slotEntry) => {
       return (
         slotEntry &&
         slotEntry.eno === selectedEntry.eno &&
+        (slotEntry.unitNo ?? 1) === (selectedEntry.unitNo ?? 1) &&
         slotEntry.patternIndex === selectedEntry.patternIndex
       );
     });
