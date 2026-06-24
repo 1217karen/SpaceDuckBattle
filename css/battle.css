@@ -82,6 +82,17 @@
   gap:12px;
 }
 
+.unitlist-section{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.unitlist-section-heading{
+  margin:0;
+  font-size:15px;
+}
+
 .eno-unit-row{
   border:1px solid #888;
   padding:8px;
@@ -89,6 +100,12 @@
   align-items:flex-start;
   gap:10px;
 }
+
+.eno-unit-row.is-favorite-unit{
+  background:#fff8df;
+  border-color:#e0b64f;
+}
+
 
 .eno-character-area{
   width:84px;
@@ -147,5 +164,3 @@
   border:2px solid #ff9900;
   box-shadow:0 0 6px #ff9900;
 }
-
-
