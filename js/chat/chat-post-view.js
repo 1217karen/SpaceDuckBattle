@@ -51,6 +51,21 @@ function formatReplyTargetLabel(target = {}) {
   return "不明";
 }
 
+function hasReplyTarget(post = {}) {
+  if (
+    typeof post?.parentPostId === "number" &&
+    post.parentPostId > 0
+  ) {
+    return true;
+  }
+
+  return Array.isArray(post?.targetEnoList) &&
+    post.targetEnoList.some(item => {
+      const eno = Number(item);
+      return Number.isInteger(eno) && eno > 0;
+    });
+}
+
 export function createPostCard(post, options = {}) {
   const {
     isPreview = false,
@@ -88,10 +103,7 @@ export function createPostCard(post, options = {}) {
     classNames.push("chatPostCardPrivate");
   }
 
-  if (
-    typeof post?.parentPostId === "number" &&
-    post.parentPostId > 0
-  ) {
+  if (hasReplyTarget(post)) {
     classNames.push("chatPostCardReply");
   }
 
@@ -414,8 +426,7 @@ contentRow.appendChild(right);
   if (
     !isPreview &&
     typeof getReplyTargetLabels === "function" &&
-    typeof post?.parentPostId === "number" &&
-    post.parentPostId > 0
+    hasReplyTarget(post)
   ) {
     const replyTargets = getReplyTargetLabels(post);
 
@@ -434,7 +445,7 @@ contentRow.appendChild(right);
 
       replyLabelButton.appendChild(replyLabel);
 
-      if (typeof onOpenThread === "function") {
+      if (!post.isDraftPreview && typeof onOpenThread === "function") {
         replyLabelButton.addEventListener("click", () => {
           onOpenThread(post);
         });
