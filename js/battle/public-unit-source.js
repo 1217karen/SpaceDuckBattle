@@ -35,6 +35,7 @@ export function loadPublicBattleEntries() {
 
     results.push({
       eno,
+      unitNo: 1,
       characterData,
       unitData,
       publicPatterns
