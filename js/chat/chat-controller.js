@@ -278,7 +278,8 @@ function setupDraftPreview({
       viewMode: currentViewMode,
       currentPlace: place,
       places,
-      viewerEno: currentEno
+      viewerEno: currentEno,
+      favoriteEnos: loadFavoriteCharacterEnos({ currentEno })
     });
 
     const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
