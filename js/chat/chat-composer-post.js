@@ -294,6 +294,7 @@ export function buildDraftPreviewPost({
 
   const { iconId, iconUrl } = getIconData(draft);
   const isPrivate = Boolean(draft?.isPrivate);
+  const targetEnoList = buildTargetEnoList(draft);
 
   return {
     postId: "xxx",
@@ -308,6 +309,7 @@ export function buildDraftPreviewPost({
     body: formatDraftBody(rawBody),
     createdAt: "----/--/-- --:--",
     authorEno: character?.eno ?? "---",
+    targetEnoList,
     visibility: isPrivate ? "private" : "public",
     visibleToEnoList: isPrivate
       ? buildVisibleToEnoList(draft, character)
