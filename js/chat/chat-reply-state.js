@@ -74,16 +74,22 @@ export function clearReplyState(draft = {}) {
 }
 
 export function applyReplyStateToDraft(draft = {}, replyState = {}) {
+  const additionalTargetEnoText =
+    typeof replyState.additionalTargetEnoText === "string"
+      ? replyState.additionalTargetEnoText
+      : "";
+
   return {
     ...draft,
     fixedReplyTargetEno:
       typeof replyState.fixedReplyTargetEno === "number"
         ? replyState.fixedReplyTargetEno
         : null,
-    additionalTargetEnoText:
-      typeof replyState.additionalTargetEnoText === "string"
-        ? replyState.additionalTargetEnoText
-        : "",
+    additionalTargetEnoText,
+    isAdditionalTargetOpen:
+      additionalTargetEnoText.trim() !== ""
+        ? true
+        : Boolean(draft.isAdditionalTargetOpen),
     replySourcePostId:
       typeof replyState.replySourcePostId === "number"
         ? replyState.replySourcePostId
