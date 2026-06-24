@@ -1042,11 +1042,6 @@ body {
     var(--theme-shadow-panel);
 }
 
-
-.chatPostCardMessage .chatPostDivider {
-  border-top-color: rgba(23, 32, 51, 0.16);
-}
-
 .chatInteractionPanelMessage {
   border-color: rgba(190, 215, 235, 0.48);
   background: linear-gradient(
