@@ -7,6 +7,7 @@ import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { showToast } from "../common/toast.js";
 import { getFavoritePlaces } from "../chat/chat-place-utils.js";
 import { getFavoriteCharacters, isFavoriteCharacter, toggleFavoriteCharacter } from "../services/character-favorite-service.js";
+import { isFavoriteUnit, toggleFavoriteUnit } from "../services/unit-favorite-service.js";
 
 const MAX_CHARACTER_ICONS = 10;
 
@@ -105,12 +106,18 @@ function renderProfile(eno, character, unit, options = {}) {
   const fullName = character?.fullName?.trim() || "未設定";
   const profileText = character?.profileText?.trim() || "未設定";
   const duckIconUrl = getSafeImageUrl(unit?.icon?.default || "");
+  const unitName = unit?.name?.trim() || "未設定";
   const unitType = unit?.type?.trim() || "未設定";
+  const unitNo = Number(unit?.unitNo || 1);
+  const hasUnit = !!unit;
 
   const characterIcons = buildCharacterIconList(character);
   const publicPatterns = getPublicPatterns(unit);
   const isOwnProfile = Number(currentEno) === Number(eno);
   const isFavorite = isFavoriteCharacter(eno, { currentEno });
+  const isUnitFavorite = hasUnit
+    ? isFavoriteUnit(eno, unitNo, { currentEno })
+    : false;
 
   const characterIconHtml = characterIcons.length > 0
     ? characterIcons.map(icon => `
@@ -194,6 +201,19 @@ function renderProfile(eno, character, unit, options = {}) {
       <section class="profileSection">
         <h3>アヒル情報</h3>
         <div class="profileRow">
+          <span class="label">ユニット名</span>
+          <span class="value profileUnitNameValue">${escapeHtml(unitName)}</span>
+          ${isOwnProfile || !hasUnit ? "" : `
+            <button
+              type="button"
+              class="profileFavoriteButton button-icon"
+              title="${isUnitFavorite ? "ユニットのお気に入り解除" : "ユニットをお気に入り登録"}"
+              aria-label="${isUnitFavorite ? "ユニットのお気に入り解除" : "ユニットをお気に入り登録"}"
+              data-favorite-unit-button
+            >${isUnitFavorite ? "★" : "☆"}</button>
+          `}
+        </div>
+        <div class="profileRow">
           <span class="label">タイプ</span>
           <span class="value">${escapeHtml(unitType)}</span>
         </div>
@@ -228,6 +248,34 @@ function renderProfile(eno, character, unit, options = {}) {
       renderProfileFavoritesPanel(currentEno);
     });
   }
+
+  const favoriteUnitButton = profilePage.querySelector("[data-favorite-unit-button]");
+
+  if (favoriteUnitButton) {
+    favoriteUnitButton.addEventListener("click", () => {
+      const result = toggleFavoriteUnit(eno, unitNo, { currentEno });
+
+      favoriteUnitButton.textContent = result.isFavorite ? "★" : "☆";
+      favoriteUnitButton.title = result.isFavorite
+        ? "ユニットのお気に入り解除"
+        : "ユニットをお気に入り登録";
+      favoriteUnitButton.setAttribute(
+        "aria-label",
+        result.isFavorite
+          ? "ユニットのお気に入り解除"
+          : "ユニットをお気に入り登録"
+      );
+
+      showToast(
+        result.isFavorite
+          ? "お気に入りユニットに登録しました"
+          : "お気に入りユニットを解除しました",
+        {
+          type: result.isFavorite ? "success" : "info"
+        }
+      );
+    });
+  }
 }
 
 function renderProfileFavoritesPanel(currentEno = null) {
@@ -258,8 +306,8 @@ function initProfilePage() {
     return;
   }
 
-    renderProfileFavoritesPanel(currentEno);
-  renderProfile(eno, character || {}, unit || {});
+  renderProfileFavoritesPanel(currentEno);
+  renderProfile(eno, character || {}, unit || {}, { currentEno });
 }
 
 initProfilePage();
