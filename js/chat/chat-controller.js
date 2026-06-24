@@ -684,7 +684,9 @@ const handleReply = (post) => {
       )
     : loadComposerDraft();
 
-  const replyState = createReplyStateFromPost(post);
+  const replyState = createReplyStateFromPost(post, {
+    currentEno: eno
+  });
   const nextDraft = applyReplyStateToDraft(currentDraft, replyState);
 
   saveComposerDraft(nextDraft);
