@@ -360,6 +360,18 @@ function renderMoveConfirmModal() {
   return overlay;
 }
 
+function renderMoveConfirmModalIfNeeded() {
+  if (!moveConfirmPlaceId) {
+    return;
+  }
+
+  const modal = renderMoveConfirmModal();
+
+  if (modal) {
+    mapContent.appendChild(modal);
+  }
+}
+
 function renderMapTree() {
   if (!mapContent) return;
 
@@ -384,40 +396,39 @@ function renderMapTree() {
   const tree = document.createElement("div");
   tree.className = "mapTree";
 
-if (!selectedFieldId) {
-  const empty = document.createElement("p");
-  empty.className = "mapTreeEmpty";
-  empty.textContent = "移動したい階層を選んでください";
-  tree.appendChild(empty);
-  mapContent.appendChild(tree);
-    if (moveConfirmPlaceId) {
-    const modal = renderMoveConfirmModal();
+  if (!selectedFieldId) {
+    const empty = document.createElement("p");
+    empty.className = "mapTreeEmpty";
+    empty.textContent = "移動したい階層を選んでください";
+    tree.appendChild(empty);
+    mapContent.appendChild(tree);
 
-    if (modal) {
-      mapContent.appendChild(modal);
-    }
+    renderMoveConfirmModalIfNeeded();
+    return;
   }
-  return;
-}
 
-const selectedField = findPlaceById(selectedFieldId);
+  const selectedField = findPlaceById(selectedFieldId);
 
-if (!selectedField) {
-  const empty = document.createElement("p");
-  empty.className = "mapTreeEmpty";
-  empty.textContent = "表示できる階層がありません";
-  tree.appendChild(empty);
+  if (!selectedField) {
+    const empty = document.createElement("p");
+    empty.className = "mapTreeEmpty";
+    empty.textContent = "表示できる階層がありません";
+    tree.appendChild(empty);
+    mapContent.appendChild(tree);
+
+    renderMoveConfirmModalIfNeeded();
+    return;
+  }
+
+  expandedFieldIds.add(selectedField.placeId);
+
+  tree.appendChild(
+    renderFieldNode(selectedField, currentPlaceId)
+  );
+
   mapContent.appendChild(tree);
-  return;
-}
 
-expandedFieldIds.add(selectedField.placeId);
-
-tree.appendChild(
-  renderFieldNode(selectedField, currentPlaceId)
-);
-
-mapContent.appendChild(tree);
+  renderMoveConfirmModalIfNeeded();
 }
 
 renderMapTree();
