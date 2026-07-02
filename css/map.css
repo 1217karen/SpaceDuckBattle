@@ -1,0 +1,133 @@
+#mapContent {
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.mapTitle {
+  margin-bottom: 8px;
+}
+
+.mapCurrentInfo {
+  margin: 0 0 14px;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.mapVisual {
+  position: relative;
+  width: min(100%, 760px);
+  margin: 0 auto 18px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.24);
+  box-shadow: var(--theme-shadow-soft);
+}
+
+.mapVisualImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.mapLayerHotspot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(20, 28, 42, 0.16);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(16px, 3vw, 30px);
+  font-weight: bold;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+  box-sizing: border-box;
+}
+
+.mapLayerHotspot:hover {
+  background: rgba(120, 180, 255, 0.18);
+  border-color: rgba(180, 220, 255, 0.58);
+}
+
+.mapLayerHotspot.is-active {
+  background: rgba(120, 180, 255, 0.26);
+  border-color: rgba(220, 240, 255, 0.82);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 0 12px rgba(120, 180, 255, 0.48);
+}
+
+.mapLayerUpper {
+  left: 6%;
+  top: 4%;
+  width: 40%;
+  height: 31%;
+}
+
+.mapLayerMiddle {
+  left: 15%;
+  top: 36%;
+  width: 77%;
+  height: 31%;
+}
+
+.mapLayerLower {
+  left: 15%;
+  top: 67%;
+  width: 77%;
+  height: 27%;
+}
+
+.mapTree {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: 12px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+}
+
+.mapTreeEmpty {
+  margin: 0;
+  color: var(--theme-text-muted);
+}
+
+.mapTreeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  margin: 2px 0;
+}
+
+.mapTreeToggle {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  color: var(--theme-text-accent);
+}
+
+.mapTreeToggle:disabled {
+  color: var(--theme-text-muted);
+  cursor: default;
+}
+
+.mapPlaceName {
+  min-height: 28px;
+  padding: 2px 6px;
+  text-align: left;
+  color: var(--theme-text-main);
+}
+
+.mapPlaceName:hover {
+  color: var(--theme-text-strong);
+  text-decoration: underline;
+}
+
+.mapCurrentMark {
+  color: var(--theme-text-accent);
+  font-size: var(--font-size-small);
+}
