@@ -183,3 +183,88 @@
   min-width: 88px;
   padding: 7px 14px;
 }
+
+.mapFieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
+}
+
+.mapListNameWrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mapListName {
+  color: var(--theme-text-main);
+  font-weight: bold;
+}
+
+.mapAreaList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.mapAreaCard {
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--theme-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+}
+
+.mapAreaMainRow,
+.mapRoomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mapRoomControlRow {
+  margin-top: 6px;
+  padding-left: 2px;
+}
+
+.mapRoomToggle {
+  font-size: var(--font-size-small);
+}
+
+.mapNoRoomText {
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.mapRoomList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px 0 0 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.mapRoomRow {
+  min-height: 30px;
+}
+
+.mapRoomRow .mapListName {
+  font-weight: normal;
+}
+
+.mapMoveButton {
+  flex-shrink: 0;
+  min-width: 58px;
+  padding: 4px 10px;
+  font-size: var(--font-size-small);
+}
