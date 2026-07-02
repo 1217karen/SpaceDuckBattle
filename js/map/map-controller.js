@@ -1,12 +1,24 @@
-//map-controller.js
+// map-controller.js
 
 import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 
 const mapContent = document.querySelector("#mapContent");
 
+const MAP_IMAGE_URL = "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=Map_BG.webp";
+
+const ZONE_LABELS = {
+  upper: "上層",
+  middle: "中層",
+  lower: "下層"
+};
+
+const ZONE_ORDER = ["upper", "middle", "lower"];
+
 const expandedFieldIds = new Set();
 const expandedAreaIds = new Set();
+
+let selectedFieldId = null;
 
 function getCurrentCharacter() {
   const account = getCurrentAccount();
@@ -42,11 +54,33 @@ function moveToPlace(placeId) {
     `./chat.html?placeId=${encodeURIComponent(placeId)}`;
 }
 
+function findPlaceById(placeId) {
+  return places.find(place => place.placeId === placeId) || null;
+}
+
+function findFieldByPlaceId(placeId) {
+  let place = findPlaceById(placeId);
+
+  while (place) {
+    if (place.kind === "field") {
+      return place;
+    }
+
+    place = findPlaceById(place.parentId);
+  }
+
+  return null;
+}
+
 function getMainFields() {
   return places.filter(place =>
     place.kind === "field" &&
     place.layer === "main"
   );
+}
+
+function getFieldByZoneId(zoneId) {
+  return getMainFields().find(place => place.zoneId === zoneId) || null;
 }
 
 function getMainAreasByFieldId(fieldPlaceId) {
@@ -64,22 +98,83 @@ function getRoomsByAreaId(areaPlaceId) {
   );
 }
 
-function createMoveButton(place) {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.textContent = "ここに移動する";
+function getDefaultFieldId(currentPlaceId) {
+  const currentField = findFieldByPlaceId(currentPlaceId);
 
-  button.addEventListener("click", () => {
-    moveToPlace(place.placeId);
-  });
+  if (currentField) {
+    return currentField.placeId;
+  }
 
-  return button;
+  const middleField = getFieldByZoneId("middle");
+
+  if (middleField) {
+    return middleField.placeId;
+  }
+
+  return getMainFields()[0]?.placeId ?? null;
 }
 
-function createToggleButton(isExpanded) {
+function createMapVisual() {
+  const wrapper = document.createElement("div");
+  wrapper.className = "mapVisual";
+
+  const image = document.createElement("img");
+  image.className = "mapVisualImage";
+  image.src = MAP_IMAGE_URL;
+  image.alt = "コロニーマップ";
+
+  wrapper.appendChild(image);
+
+  ZONE_ORDER.forEach(zoneId => {
+    const field = getFieldByZoneId(zoneId);
+
+    if (!field) {
+      return;
+    }
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `mapLayerHotspot mapLayer${capitalize(zoneId)}`;
+    button.textContent = ZONE_LABELS[zoneId] ?? field.name;
+
+    if (field.placeId === selectedFieldId) {
+      button.classList.add("is-active");
+    }
+
+    button.addEventListener("click", () => {
+      selectedFieldId = field.placeId;
+      expandedFieldIds.add(field.placeId);
+      renderMapTree();
+    });
+
+    wrapper.appendChild(button);
+  });
+
+  return wrapper;
+}
+
+function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function createToggleButton({
+  canToggle,
+  isExpanded,
+  onToggle
+}) {
   const button = document.createElement("button");
   button.type = "button";
+  button.className = "mapTreeToggle";
+
+  if (!canToggle) {
+    button.textContent = "・";
+    button.disabled = true;
+    return button;
+  }
+
   button.textContent = isExpanded ? "▼" : "▶";
+  button.addEventListener("click", onToggle);
+
   return button;
 }
 
@@ -95,34 +190,28 @@ function createPlaceLine({
   row.className = "mapTreeRow";
   row.style.marginLeft = `${depth * 20}px`;
 
-  const toggleButton = createToggleButton(isExpanded);
-
-  if (!canToggle) {
-    toggleButton.textContent = "・";
-    toggleButton.disabled = true;
-  } else {
-    toggleButton.addEventListener("click", onToggle);
-  }
+  const toggleButton = createToggleButton({
+    canToggle,
+    isExpanded,
+    onToggle
+  });
 
   const nameButton = document.createElement("button");
   nameButton.type = "button";
+  nameButton.className = "mapPlaceName";
   nameButton.textContent = place.name;
 
-  if (canToggle) {
-    nameButton.addEventListener("click", onToggle);
-  } else {
-    nameButton.disabled = true;
-  }
-
-  const moveButton = createMoveButton(place);
+  nameButton.addEventListener("click", () => {
+    moveToPlace(place.placeId);
+  });
 
   row.appendChild(toggleButton);
   row.appendChild(nameButton);
-  row.appendChild(moveButton);
 
   if (place.placeId === currentPlaceId) {
     const currentMark = document.createElement("span");
-    currentMark.textContent = " ← 現在地";
+    currentMark.className = "mapCurrentMark";
+    currentMark.textContent = "← 現在地";
     row.appendChild(currentMark);
   }
 
@@ -214,31 +303,48 @@ function renderMapTree() {
   const character = getCurrentCharacter();
   const currentPlaceId = character?.currentPlaceId ?? null;
 
+  if (!selectedFieldId) {
+    selectedFieldId = getDefaultFieldId(currentPlaceId);
+  }
+
+  if (selectedFieldId) {
+    expandedFieldIds.add(selectedFieldId);
+  }
+
   mapContent.innerHTML = "";
 
   const heading = document.createElement("h1");
+  heading.className = "mapTitle";
   heading.textContent = "マップ";
   mapContent.appendChild(heading);
 
   const info = document.createElement("p");
+  info.className = "mapCurrentInfo";
   info.textContent =
     `保存中の現在地: ${currentPlaceId ?? "なし"}`;
   mapContent.appendChild(info);
 
-  const mainFields = getMainFields();
+  mapContent.appendChild(createMapVisual());
 
-  if (mainFields.length === 0) {
+  const tree = document.createElement("div");
+  tree.className = "mapTree";
+
+  const selectedField = findPlaceById(selectedFieldId);
+
+  if (!selectedField) {
     const empty = document.createElement("p");
-    empty.textContent = "表示できるフィールドがありません";
-    mapContent.appendChild(empty);
+    empty.className = "mapTreeEmpty";
+    empty.textContent = "表示できる階層がありません";
+    tree.appendChild(empty);
+    mapContent.appendChild(tree);
     return;
   }
 
-  mainFields.forEach(fieldPlace => {
-    mapContent.appendChild(
-      renderFieldNode(fieldPlace, currentPlaceId)
-    );
-  });
+  tree.appendChild(
+    renderFieldNode(selectedField, currentPlaceId)
+  );
+
+  mapContent.appendChild(tree);
 }
 
 renderMapTree();
