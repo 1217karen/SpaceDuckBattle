@@ -287,14 +287,6 @@ function renderMapTree() {
   const character = getCurrentCharacter();
   const currentPlaceId = character?.currentPlaceId ?? null;
 
-  if (!selectedFieldId) {
-    selectedFieldId = getDefaultFieldId(currentPlaceId);
-  }
-
-  if (selectedFieldId) {
-    expandedFieldIds.add(selectedFieldId);
-  }
-
   mapContent.innerHTML = "";
 
   const heading = document.createElement("h1");
