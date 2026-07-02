@@ -131,3 +131,55 @@
   color: var(--theme-text-accent);
   font-size: var(--font-size-small);
 }
+
+.mapModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.56);
+  box-sizing: border-box;
+}
+
+.mapModal {
+  width: min(92vw, 420px);
+  padding: 18px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(24, 28, 38, 0.96);
+  color: var(--theme-text-main);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  box-sizing: border-box;
+}
+
+.mapModalTitle {
+  margin: 0 0 8px;
+  font-size: var(--font-size-heading-md);
+}
+
+.mapModalDescription {
+  margin: 0 0 14px;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+}
+
+.mapModalMessage {
+  margin: 0 0 18px;
+}
+
+.mapModalButtonRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.mapModalButton {
+  min-width: 88px;
+  padding: 7px 14px;
+}
