@@ -1,3 +1,7 @@
+/* =======================================================
+   マップページ全体
+======================================================= */
+
 #mapContent {
   padding: 16px;
   box-sizing: border-box;
@@ -12,6 +16,12 @@
   color: var(--theme-text-muted);
   font-size: var(--font-size-small);
 }
+
+
+/* =======================================================
+   マップ画像エリア
+   画像の上に、上層・中層・下層のクリック領域を重ねる
+======================================================= */
 
 .mapVisual {
   position: relative;
@@ -29,6 +39,12 @@
   width: 100%;
   height: auto;
 }
+
+
+/* =======================================================
+   階層ホットスポット
+   画像上の「上層 / 中層 / 下層」ボタン
+======================================================= */
 
 .mapLayerHotspot {
   position: absolute;
@@ -59,6 +75,7 @@
     0 0 12px rgba(120, 180, 255, 0.48);
 }
 
+/* 画像上のクリック領域。画像に合わせてここを微調整する */
 .mapLayerUpper {
   left: 10%;
   top: 4%;
@@ -80,6 +97,12 @@
   height: 27%;
 }
 
+
+/* =======================================================
+   場所一覧エリア
+   選択した階層のフィールド・エリア・ルームを表示する枠
+======================================================= */
+
 .mapTree {
   width: min(100%, 760px);
   margin: 0 auto;
@@ -95,42 +118,129 @@
   color: var(--theme-text-muted);
 }
 
-.mapTreeRow {
+
+/* =======================================================
+   フィールド表示
+   例：上層管制区 / 中層＊＊大通り / 下層管理区
+======================================================= */
+
+.mapFieldHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(120, 180, 255, 0.08);
+  box-sizing: border-box;
+}
+
+
+/* =======================================================
+   エリア一覧
+   フィールドより少し右に下げて、階層感を出す
+======================================================= */
+
+.mapAreaList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  margin-left: 24px;
+}
+
+.mapAreaCard {
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--theme-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+}
+
+.mapAreaMainRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+
+/* =======================================================
+   場所名・現在地表示・移動ボタン
+   フィールド / エリア / ルームで共通利用
+======================================================= */
+
+.mapListNameWrap {
+  display: flex;
+  align-items: baseline;
   gap: 8px;
-  min-height: 32px;
-  margin: 2px 0;
+  min-width: 0;
 }
 
-.mapTreeToggle {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  color: var(--theme-text-accent);
-}
-
-.mapTreeToggle:disabled {
-  color: var(--theme-text-muted);
-  cursor: default;
-}
-
-.mapPlaceName {
-  min-height: 28px;
-  padding: 2px 6px;
-  text-align: left;
+.mapListName {
   color: var(--theme-text-main);
-}
-
-.mapPlaceName:hover {
-  color: var(--theme-text-strong);
-  text-decoration: underline;
+  font-weight: bold;
 }
 
 .mapCurrentMark {
   color: var(--theme-text-accent);
   font-size: var(--font-size-small);
 }
+
+.mapMoveButton {
+  flex-shrink: 0;
+  min-width: 58px;
+  padding: 4px 10px;
+  font-size: var(--font-size-small);
+}
+
+
+/* =======================================================
+   ルーム表示
+   各エリアの下に折り畳みで表示するユーザー作成ルーム
+======================================================= */
+
+.mapRoomControlRow {
+  margin-top: 6px;
+  padding-left: 2px;
+}
+
+.mapRoomToggle {
+  font-size: var(--font-size-small);
+}
+
+.mapNoRoomText {
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.mapRoomList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px 0 0 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.mapRoomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+}
+
+.mapRoomRow .mapListName {
+  font-weight: normal;
+}
+
+
+/* =======================================================
+   移動確認モーダル
+   場所の「移動」ボタンを押した時に表示
+======================================================= */
 
 .mapModalOverlay {
   position: fixed;
@@ -184,97 +294,41 @@
   padding: 7px 14px;
 }
 
-.mapFieldHeader {
+
+/* =======================================================
+   旧ツリー表示用
+   現在のカード式一覧では未使用。
+   ツリー表示に戻す可能性がなければ削除してOK。
+======================================================= */
+
+.mapTreeRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-md);
-  background: rgba(255, 255, 255, 0.05);
-  box-sizing: border-box;
-}
-
-.mapListNameWrap {
-  display: flex;
-  align-items: baseline;
   gap: 8px;
-  min-width: 0;
+  min-height: 32px;
+  margin: 2px 0;
 }
 
-.mapListName {
-  color: var(--theme-text-main);
-  font-weight: bold;
-}
-
-.mapAreaList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 12px;
-  margin-left: 24px;
-}
-
-.mapAreaCard {
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: var(--theme-radius-md);
-  background: rgba(255, 255, 255, 0.03);
-  box-sizing: border-box;
-}
-
-.mapAreaMainRow,
-.mapRoomRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.mapRoomControlRow {
-  margin-top: 6px;
-  padding-left: 2px;
-}
-
-.mapRoomToggle {
-  font-size: var(--font-size-small);
-}
-
-.mapNoRoomText {
-  color: var(--theme-text-muted);
-  font-size: var(--font-size-small);
-}
-
-.mapRoomList {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
-  padding: 8px 0 0 14px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.12);
-}
-
-.mapRoomRow {
-  min-height: 30px;
-}
-
-.mapRoomRow .mapListName {
-  font-weight: normal;
-}
-
-.mapMoveButton {
+.mapTreeToggle {
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
-  min-width: 58px;
-  padding: 4px 10px;
-  font-size: var(--font-size-small);
+  color: var(--theme-text-accent);
 }
 
-.mapFieldHeader {
-  background: rgba(120, 180, 255, 0.08);
-  border-color: var(--theme-border-main);
+.mapTreeToggle:disabled {
+  color: var(--theme-text-muted);
+  cursor: default;
 }
 
-.mapAreaCard {
-  background: rgba(255, 255, 255, 0.03);
+.mapPlaceName {
+  min-height: 28px;
+  padding: 2px 6px;
+  text-align: left;
+  color: var(--theme-text-main);
+}
+
+.mapPlaceName:hover {
+  color: var(--theme-text-strong);
+  text-decoration: underline;
 }
