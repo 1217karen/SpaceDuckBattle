@@ -269,3 +269,12 @@
   padding: 4px 10px;
   font-size: var(--font-size-small);
 }
+
+.mapFieldHeader {
+  background: rgba(120, 180, 255, 0.08);
+  border-color: var(--theme-border-main);
+}
+
+.mapAreaCard {
+  background: rgba(255, 255, 255, 0.03);
+}
