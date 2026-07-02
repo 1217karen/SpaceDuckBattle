@@ -218,24 +218,24 @@ function renderMapTree() {
 
   const heading = document.createElement("h1");
   heading.textContent = "マップ";
-  mapContent.appendChild((heading);
+  mapContent.appendChild(heading);
 
   const info = document.createElement("p");
   info.textContent =
     `保存中の現在地: ${currentPlaceId ?? "なし"}`;
-  mapContent.appendChild((info);
+  mapContent.appendChild(info);
 
   const mainFields = getMainFields();
 
   if (mainFields.length === 0) {
     const empty = document.createElement("p");
     empty.textContent = "表示できるフィールドがありません";
-    mapContent.appendChild((empty);
+    mapContent.appendChild(empty);
     return;
   }
 
   mainFields.forEach(fieldPlace => {
-    mapContent.appendChild((
+    mapContent.appendChild(
       renderFieldNode(fieldPlace, currentPlaceId)
     );
   });
