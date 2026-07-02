@@ -3,7 +3,7 @@
 import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 
-const centerPanel = document.querySelector(".center-panel");
+const mapContent = document.querySelector("#mapContent");
 
 const expandedFieldIds = new Set();
 const expandedAreaIds = new Set();
@@ -209,33 +209,33 @@ function renderFieldNode(fieldPlace, currentPlaceId) {
 }
 
 function renderMapTree() {
-  if (!centerPanel) return;
+  if (!mapContent) return;
 
   const character = getCurrentCharacter();
   const currentPlaceId = character?.currentPlaceId ?? null;
 
-  centerPanel.innerHTML = "";
+  mapContent.innerHTML = "";
 
   const heading = document.createElement("h1");
   heading.textContent = "マップ";
-  centerPanel.appendChild(heading);
+  mapContent.appendChild((heading);
 
   const info = document.createElement("p");
   info.textContent =
     `保存中の現在地: ${currentPlaceId ?? "なし"}`;
-  centerPanel.appendChild(info);
+  mapContent.appendChild((info);
 
   const mainFields = getMainFields();
 
   if (mainFields.length === 0) {
     const empty = document.createElement("p");
     empty.textContent = "表示できるフィールドがありません";
-    centerPanel.appendChild(empty);
+    mapContent.appendChild((empty);
     return;
   }
 
   mainFields.forEach(fieldPlace => {
-    centerPanel.appendChild(
+    mapContent.appendChild((
       renderFieldNode(fieldPlace, currentPlaceId)
     );
   });
