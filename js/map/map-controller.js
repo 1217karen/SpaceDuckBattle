@@ -138,7 +138,6 @@ function createMapVisual() {
 
     button.addEventListener("click", () => {
       selectedFieldId = field.placeId;
-      expandedFieldIds.add(field.placeId);
       renderMapTree();
     });
 
@@ -213,81 +212,155 @@ function createPlaceLine({
   return row;
 }
 
-function renderAreaNode(areaPlace, depth, currentPlaceId) {
-  const fragment = document.createDocumentFragment();
-  const isExpanded = expandedAreaIds.has(areaPlace.placeId);
-  const roomList = getRoomsByAreaId(areaPlace.placeId);
-  const canToggle = roomList.length > 0;
+function createMoveButton(place) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "button-box mapMoveButton";
+  button.textContent = "移動";
 
-  fragment.appendChild(
-    createPlaceLine({
-      place: areaPlace,
-      depth,
-      canToggle,
-      isExpanded,
-      onToggle: () => {
-        if (expandedAreaIds.has(areaPlace.placeId)) {
-          expandedAreaIds.delete(areaPlace.placeId);
-        } else {
-          expandedAreaIds.add(areaPlace.placeId);
-        }
+  button.addEventListener("click", () => {
+    openMoveConfirm(place.placeId);
+  });
 
-        renderMapTree();
-      },
-      currentPlaceId
-    })
-  );
-
-  if (isExpanded) {
-    roomList.forEach(roomPlace => {
-      fragment.appendChild(
-        createPlaceLine({
-          place: roomPlace,
-          depth: depth + 1,
-          canToggle: false,
-          isExpanded: false,
-          onToggle: null,
-          currentPlaceId
-        })
-      );
-    });
-  }
-
-  return fragment;
+  return button;
 }
 
-function renderFieldNode(fieldPlace, currentPlaceId) {
-  const fragment = document.createDocumentFragment();
-  const isExpanded = expandedFieldIds.has(fieldPlace.placeId);
-  const areaList = getMainAreasByFieldId(fieldPlace.placeId);
-  const canToggle = areaList.length > 0;
+function createPlaceNameBlock(place, currentPlaceId) {
+  const nameWrap = document.createElement("div");
+  nameWrap.className = "mapListNameWrap";
 
-  fragment.appendChild(
-    createPlaceLine({
-      place: fieldPlace,
-      depth: 0,
-      canToggle,
-      isExpanded,
-      onToggle: () => {
-        if (expandedFieldIds.has(fieldPlace.placeId)) {
-          expandedFieldIds.delete(fieldPlace.placeId);
-        } else {
-          expandedFieldIds.add(fieldPlace.placeId);
-        }
+  const name = document.createElement("span");
+  name.className = "mapListName";
+  name.textContent = place.name;
+  nameWrap.appendChild(name);
 
-        renderMapTree();
-      },
-      currentPlaceId
-    })
+  if (place.placeId === currentPlaceId) {
+    const currentMark = document.createElement("span");
+    currentMark.className = "mapCurrentMark";
+    currentMark.textContent = "← 現在地";
+    nameWrap.appendChild(currentMark);
+  }
+
+  return nameWrap;
+}
+
+function renderRoomRow(roomPlace, currentPlaceId) {
+  const row = document.createElement("div");
+  row.className = "mapRoomRow";
+
+  row.appendChild(
+    createPlaceNameBlock(roomPlace, currentPlaceId)
   );
 
+  row.appendChild(
+    createMoveButton(roomPlace)
+  );
+
+  return row;
+}
+
+function renderAreaCard(areaPlace, currentPlaceId) {
+  const card = document.createElement("div");
+  card.className = "mapAreaCard";
+
+  const roomList = getRoomsByAreaId(areaPlace.placeId);
+  const isExpanded = expandedAreaIds.has(areaPlace.placeId);
+
+  const mainRow = document.createElement("div");
+  mainRow.className = "mapAreaMainRow";
+
+  mainRow.appendChild(
+    createPlaceNameBlock(areaPlace, currentPlaceId)
+  );
+
+  mainRow.appendChild(
+    createMoveButton(areaPlace)
+  );
+
+  card.appendChild(mainRow);
+
+  const roomControlRow = document.createElement("div");
+  roomControlRow.className = "mapRoomControlRow";
+
+  if (roomList.length > 0) {
+    const roomToggle = document.createElement("button");
+    roomToggle.type = "button";
+    roomToggle.className = "button-plain mapRoomToggle";
+    roomToggle.textContent =
+      `ルーム ${roomList.length}件 ${isExpanded ? "▲" : "▼"}`;
+
+    roomToggle.addEventListener("click", () => {
+      if (expandedAreaIds.has(areaPlace.placeId)) {
+        expandedAreaIds.delete(areaPlace.placeId);
+      } else {
+        expandedAreaIds.add(areaPlace.placeId);
+      }
+
+      renderMapTree();
+    });
+
+    roomControlRow.appendChild(roomToggle);
+  } else {
+    const noRoom = document.createElement("span");
+    noRoom.className = "mapNoRoomText";
+    noRoom.textContent = "ルームなし";
+    roomControlRow.appendChild(noRoom);
+  }
+
+  card.appendChild(roomControlRow);
+
   if (isExpanded) {
-    areaList.forEach(areaPlace => {
-      fragment.appendChild(
-        renderAreaNode(areaPlace, 1, currentPlaceId)
+    const roomListElement = document.createElement("div");
+    roomListElement.className = "mapRoomList";
+
+    roomList.forEach(roomPlace => {
+      roomListElement.appendChild(
+        renderRoomRow(roomPlace, currentPlaceId)
       );
     });
+
+    card.appendChild(roomListElement);
   }
+
+  return card;
+}
+
+function renderFieldList(fieldPlace, currentPlaceId) {
+  const fragment = document.createDocumentFragment();
+
+  const fieldHeader = document.createElement("div");
+  fieldHeader.className = "mapFieldHeader";
+
+  fieldHeader.appendChild(
+    createPlaceNameBlock(fieldPlace, currentPlaceId)
+  );
+
+  fieldHeader.appendChild(
+    createMoveButton(fieldPlace)
+  );
+
+  fragment.appendChild(fieldHeader);
+
+  const areaList = getMainAreasByFieldId(fieldPlace.placeId);
+
+  if (areaList.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "mapTreeEmpty";
+    empty.textContent = "この階層には表示できるエリアがありません";
+    fragment.appendChild(empty);
+    return fragment;
+  }
+
+  const areaListElement = document.createElement("div");
+  areaListElement.className = "mapAreaList";
+
+  areaList.forEach(areaPlace => {
+    areaListElement.appendChild(
+      renderAreaCard(areaPlace, currentPlaceId)
+    );
+  });
+
+  fragment.appendChild(areaListElement);
 
   return fragment;
 }
@@ -420,15 +493,13 @@ function renderMapTree() {
     return;
   }
 
-  expandedFieldIds.add(selectedField.placeId);
+tree.appendChild(
+  renderFieldList(selectedField, currentPlaceId)
+);
 
-  tree.appendChild(
-    renderFieldNode(selectedField, currentPlaceId)
-  );
+mapContent.appendChild(tree);
 
-  mapContent.appendChild(tree);
-
-  renderMoveConfirmModalIfNeeded();
+renderMoveConfirmModalIfNeeded();
 }
 
 renderMapTree();
