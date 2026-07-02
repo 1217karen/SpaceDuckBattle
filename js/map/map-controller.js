@@ -19,6 +19,7 @@ const expandedFieldIds = new Set();
 const expandedAreaIds = new Set();
 
 let selectedFieldId = null;
+let moveConfirmPlaceId = null;
 
 function getCurrentCharacter() {
   const account = getCurrentAccount();
@@ -52,6 +53,16 @@ function moveToPlace(placeId) {
 
   window.location.href =
     `./chat.html?placeId=${encodeURIComponent(placeId)}`;
+}
+
+function openMoveConfirm(placeId) {
+  moveConfirmPlaceId = placeId;
+  renderMapTree();
+}
+
+function closeMoveConfirm() {
+  moveConfirmPlaceId = null;
+  renderMapTree();
 }
 
 function findPlaceById(placeId) {
@@ -186,7 +197,7 @@ function createPlaceLine({
   nameButton.textContent = place.name;
 
   nameButton.addEventListener("click", () => {
-    moveToPlace(place.placeId);
+    openMoveConfirm(place.placeId);
   });
 
   row.appendChild(toggleButton);
@@ -281,6 +292,74 @@ function renderFieldNode(fieldPlace, currentPlaceId) {
   return fragment;
 }
 
+function renderMoveConfirmModal() {
+  const place = findPlaceById(moveConfirmPlaceId);
+
+  if (!place) {
+    return null;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "mapModalOverlay";
+
+  const modal = document.createElement("div");
+  modal.className = "mapModal";
+
+  const title = document.createElement("h2");
+  title.className = "mapModalTitle";
+  title.textContent = place.name;
+  modal.appendChild(title);
+
+  if (place.shortDescription) {
+    const description = document.createElement("p");
+    description.className = "mapModalDescription";
+    description.textContent = place.shortDescription;
+    modal.appendChild(description);
+  }
+
+  const message = document.createElement("p");
+  message.className = "mapModalMessage";
+  message.textContent = "この場所へ移動します。よろしいですか？";
+  modal.appendChild(message);
+
+  const buttonRow = document.createElement("div");
+  buttonRow.className = "mapModalButtonRow";
+
+  const confirmButton = document.createElement("button");
+  confirmButton.type = "button";
+  confirmButton.className = "button-primaryNew mapModalButton";
+  confirmButton.textContent = "移動する";
+
+  confirmButton.addEventListener("click", () => {
+    moveToPlace(place.placeId);
+  });
+
+  const cancelButton = document.createElement("button");
+  cancelButton.type = "button";
+  cancelButton.className = "button-box mapModalButton";
+  cancelButton.textContent = "戻る";
+
+  cancelButton.addEventListener("click", () => {
+    closeMoveConfirm();
+  });
+
+  buttonRow.appendChild(confirmButton);
+  buttonRow.appendChild(cancelButton);
+  modal.appendChild(buttonRow);
+
+  overlay.addEventListener("click", () => {
+    closeMoveConfirm();
+  });
+
+  modal.addEventListener("click", event => {
+    event.stopPropagation();
+  });
+
+  overlay.appendChild(modal);
+
+  return overlay;
+}
+
 function renderMapTree() {
   if (!mapContent) return;
 
@@ -311,6 +390,13 @@ if (!selectedFieldId) {
   empty.textContent = "移動したい階層を選んでください";
   tree.appendChild(empty);
   mapContent.appendChild(tree);
+    if (moveConfirmPlaceId) {
+    const modal = renderMoveConfirmModal();
+
+    if (modal) {
+      mapContent.appendChild(modal);
+    }
+  }
   return;
 }
 
