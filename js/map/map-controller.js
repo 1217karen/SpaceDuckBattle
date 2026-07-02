@@ -98,22 +98,6 @@ function getRoomsByAreaId(areaPlaceId) {
   );
 }
 
-function getDefaultFieldId(currentPlaceId) {
-  const currentField = findFieldByPlaceId(currentPlaceId);
-
-  if (currentField) {
-    return currentField.placeId;
-  }
-
-  const middleField = getFieldByZoneId("middle");
-
-  if (middleField) {
-    return middleField.placeId;
-  }
-
-  return getMainFields()[0]?.placeId ?? null;
-}
-
 function createMapVisual() {
   const wrapper = document.createElement("div");
   wrapper.className = "mapVisual";
@@ -329,22 +313,33 @@ function renderMapTree() {
   const tree = document.createElement("div");
   tree.className = "mapTree";
 
-  const selectedField = findPlaceById(selectedFieldId);
-
-  if (!selectedField) {
-    const empty = document.createElement("p");
-    empty.className = "mapTreeEmpty";
-    empty.textContent = "表示できる階層がありません";
-    tree.appendChild(empty);
-    mapContent.appendChild(tree);
-    return;
-  }
-
-  tree.appendChild(
-    renderFieldNode(selectedField, currentPlaceId)
-  );
-
+if (!selectedFieldId) {
+  const empty = document.createElement("p");
+  empty.className = "mapTreeEmpty";
+  empty.textContent = "移動したい階層を選んでください";
+  tree.appendChild(empty);
   mapContent.appendChild(tree);
+  return;
+}
+
+const selectedField = findPlaceById(selectedFieldId);
+
+if (!selectedField) {
+  const empty = document.createElement("p");
+  empty.className = "mapTreeEmpty";
+  empty.textContent = "表示できる階層がありません";
+  tree.appendChild(empty);
+  mapContent.appendChild(tree);
+  return;
+}
+
+expandedFieldIds.add(selectedField.placeId);
+
+tree.appendChild(
+  renderFieldNode(selectedField, currentPlaceId)
+);
+
+mapContent.appendChild(tree);
 }
 
 renderMapTree();
