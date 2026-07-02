@@ -287,7 +287,7 @@ function renderAreaCard(areaPlace, currentPlaceId) {
     roomToggle.type = "button";
     roomToggle.className = "button-plain mapRoomToggle";
     roomToggle.textContent =
-      `ルーム ${roomList.length}件 ${isExpanded ? "▲" : "▼"}`;
+      `ルーム ${roomList.length}件 ${isExpanded ? "▼" : "▶"}`;
 
     roomToggle.addEventListener("click", () => {
       if (expandedAreaIds.has(areaPlace.placeId)) {
