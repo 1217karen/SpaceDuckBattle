@@ -1,0 +1,95 @@
+.inventoryOwnerText {
+  color: var(--theme-text-subtle);
+  margin: 0 0 16px;
+}
+
+.inventorySection {
+  margin: 0 0 24px;
+  padding: 16px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: var(--theme-surface-2);
+  box-shadow: var(--theme-shadow-soft);
+}
+
+.inventorySection h2 {
+  margin: 0 0 12px;
+}
+
+.inventoryMoneyText {
+  margin-bottom: 12px;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: var(--theme-text-strong);
+}
+
+.inventoryDebugMoneyBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.inventoryDebugMoneyLabel {
+  color: var(--theme-text-subtle);
+}
+
+.inventoryDebugMoneyInput {
+  width: 140px;
+  box-sizing: border-box;
+}
+
+.inventoryDebugMoneyButton {
+  padding: 6px 14px;
+}
+
+.inventoryEmptyText {
+  margin: 0;
+  color: var(--theme-text-subtle);
+}
+
+.inventoryItemList,
+.inventoryLogList {
+  display: grid;
+  gap: 10px;
+}
+
+.inventoryItemRow,
+.inventoryLogRow {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-surface-3);
+}
+
+.inventoryItemMain,
+.inventoryLogMessage {
+  min-width: 0;
+}
+
+.inventoryItemName,
+.inventoryLogMessage {
+  font-weight: bold;
+  color: var(--theme-text-main);
+}
+
+.inventoryItemDescription,
+.inventoryItemMeta,
+.inventoryLogMeta {
+  margin-top: 4px;
+  color: var(--theme-text-subtle);
+  font-size: var(--font-size-small);
+}
+
+.inventoryItemCount {
+  flex: 0 0 auto;
+  font-weight: bold;
+  color: var(--theme-text-strong);
+}
+
+.inventoryLogRow.is-posted {
+  opacity: 0.65;
+}
