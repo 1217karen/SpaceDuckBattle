@@ -34,6 +34,7 @@ import { renderPostListSection,renderPostListContent } from "./chat-post-view.js
 import { renderChatActionSection } from "./chat-action-view.js";
 
 import { hasShopForPlace } from "../services/shop-service.js";
+import { purchaseItems as purchaseInventoryItems,getInventoryLogs,markInventoryLogPosted } from "../services/inventory-service.js";
 import { renderShopSection,renderShopPurchaseConfirmModalIfNeeded } from "./chat-shop-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
@@ -46,6 +47,7 @@ let currentFavoritesTab = "place";
 let isShopOpen = false;
 let isActionOpen = false;
 let selectedActionId = "";
+let selectedLogId = "";
 let pendingShopPurchaseItems = [];
 
 function getPlacesInSameGroup(place) {
@@ -79,6 +81,7 @@ function moveToPlace(placeId) {
       isShopOpen = false;
       isActionOpen = false;
       selectedActionId = "";
+      selectedLogId = "";
     }
   });
 }
@@ -385,6 +388,7 @@ createPost(postInput);
     isShopOpen = false;
     isActionOpen = false;
     selectedActionId = "";
+    selectedLogId = "";
 
     if (isMessageMode) {
       currentViewMode = "message";
@@ -515,6 +519,7 @@ const placeTabs = buildPlaceTabs(place, {
     isShopOpen = !isShopOpen;
     isActionOpen = false;
     selectedActionId = "";
+    selectedLogId = "";
     renderChatPlaceInfo();
   },
   onToggleAction: () => {
@@ -523,6 +528,7 @@ const placeTabs = buildPlaceTabs(place, {
 
     if (!isActionOpen) {
       selectedActionId = "";
+      selectedLogId = "";
     }
 
     renderChatPlaceInfo();
@@ -532,6 +538,7 @@ const placeTabs = buildPlaceTabs(place, {
     isActionOpen = false;
     selectedActionId = "";
     renderChatPlaceInfo();
+    selectedLogId = "";
   }
 });
 
@@ -543,6 +550,7 @@ const viewTabs = buildViewTabs({
     isActionOpen = false;
     selectedActionId = "";
     renderChatPlaceInfo();
+    selectedLogId = "";
   }
 });
 
@@ -590,16 +598,34 @@ if (isShopOpen) {
     character
   });
 
+  const actionChoices = [
+    ...availableActions,
+    {
+      actionId: "post-log",
+      label: "ログを流す",
+      type: "log",
+      description: "保存済みの購入ログなどを選んで、現在地のログへ流します。"
+    }
+  ];
+
 if (
   selectedActionId &&
-  !availableActions.some(action => action.actionId === selectedActionId)
+  !actionChoices.some(action => action.actionId === selectedActionId)
 ) {
   selectedActionId = "";
+  selectedLogId = "";
 }
 
+const logOptions = getInventoryLogs(eno).map(log => ({
+  ...log,
+  label: `${log.logType === "purchase" ? "購入ログ" : "ログ"}：${log.message ?? ""}${log.isPosted ? "（投稿済み）" : ""}`
+}));
+
 renderChatActionSection(interactionPanel, {
-  actions: availableActions,
+  actions: actionChoices,
   selectedActionId,
+  selectedLogId,
+  logOptions,
   onSelectAction: (action) => {
     const actionId = action.actionId ?? "";
 
@@ -608,9 +634,45 @@ renderChatActionSection(interactionPanel, {
         ? ""
         : actionId;
 
+    selectedLogId = "";
+    renderChatPlaceInfo();
+  },
+  onSelectLog: (logId) => {
+    selectedLogId = logId;
     renderChatPlaceInfo();
   },
   onExecuteAction: (action) => {
+    if (action.actionId === "post-log") {
+      const selectedLog = logOptions.find(log => log.logId === selectedLogId);
+
+      if (!selectedLog) {
+        alert("流すログを選択してください");
+        return;
+      }
+
+      if (selectedLog.isPosted) {
+        alert("このログはすでに流されています");
+        return;
+      }
+
+      createPost({
+        type: "actionLog",
+        placeId: place.placeId,
+        authorEno: character.eno,
+        speakerName: character.fullName || character.defaultName || "誰か",
+        body: selectedLog.message
+      });
+
+      markInventoryLogPosted(eno, selectedLog.logId);
+      isShopOpen = false;
+      isActionOpen = false;
+      selectedActionId = "";
+      selectedLogId = "";
+
+      reloadChatPageWithToast("ログを流しました", "success");
+      return;
+    }
+
     const actionPostInput = buildActionLogPostInput({
       action,
       place,
@@ -626,6 +688,7 @@ renderChatActionSection(interactionPanel, {
     isShopOpen = false;
     isActionOpen = false;
     selectedActionId = "";
+    selectedLogId = "";
 
     reloadChatPageWithToast("アクションを実行しました", "success");
       }
@@ -685,6 +748,7 @@ const handleReply = (post) => {
   isShopOpen = false;
   isActionOpen = false;
   selectedActionId = "";
+  selectedLogId = "";
 
   renderChatPlaceInfo();
 };
@@ -733,6 +797,7 @@ const handleQuote = (post) => {
   isShopOpen = false;
   isActionOpen = false;
   selectedActionId = "";
+  selectedLogId = "";
 
   renderChatPlaceInfo();
 };
@@ -759,6 +824,7 @@ const handleFavoriteCharacterReply = (favoriteCharacter) => {
   isShopOpen = false;
   isActionOpen = false;
   selectedActionId = "";
+  selectedLogId = "";
 
   renderChatPlaceInfo();
 };
@@ -782,6 +848,7 @@ const handleFavoriteCharacterMessage = (favoriteCharacter) => {
   isShopOpen = false;
   isActionOpen = false;
   selectedActionId = "";
+  selectedLogId = "";
 
   renderChatPlaceInfo();
 };
@@ -847,9 +914,25 @@ if (composerRefs) {
 renderShopPurchaseConfirmModalIfNeeded(chatMainArea, {
   purchaseItems: pendingShopPurchaseItems,
   onConfirm: () => {
+    const result = purchaseInventoryItems({
+      eno,
+      character,
+      purchaseItems: pendingShopPurchaseItems
+    });
+
     closeShopPurchaseConfirm();
-    showToast("購入処理はまだ実装されていません", {
-      type: "info"
+
+    if (!result.ok) {
+      showToast(result.message, {
+        type: "error"
+      });
+      return;
+    }
+
+    isShopOpen = false;
+    renderChatPlaceInfo();
+    showToast(`購入しました（${result.totalPrice} C）`, {
+      type: "success"
     });
   },
   onCancel: closeShopPurchaseConfirm
