@@ -1158,3 +1158,92 @@ body {
   color: var(--theme-text-accent);
   font-weight: bold;
 }
+
+/* =======================================================
+   SHOP：商品数量入力
+======================================================= */
+
+.chatShopItemBuyArea {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.chatShopQuantityInput {
+  width: 56px;
+  padding: 3px 5px;
+  text-align: right;
+}
+
+.chatShopFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.chatShopPurchaseButton {
+  min-width: 88px;
+  padding: 7px 14px;
+}
+
+
+/* =======================================================
+   SHOP：購入確認モーダル
+======================================================= */
+
+.chatShopModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.56);
+  box-sizing: border-box;
+}
+
+.chatShopModal {
+  width: min(92vw, 420px);
+  padding: 18px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(24, 28, 38, 0.96);
+  color: var(--theme-text-main);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  box-sizing: border-box;
+}
+
+.chatShopModalTitle {
+  margin: 0 0 10px;
+  font-size: var(--font-size-heading-md);
+}
+
+.chatShopModalItemList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.chatShopModalItemLine {
+  color: var(--theme-text-main);
+}
+
+.chatShopModalMessage {
+  margin: 0 0 18px;
+}
+
+.chatShopModalButtonRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.chatShopModalButton {
+  min-width: 88px;
+  padding: 7px 14px;
+}
