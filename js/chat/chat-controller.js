@@ -46,6 +46,7 @@ let currentFavoritesTab = "place";
 let isShopOpen = false;
 let isActionOpen = false;
 let selectedActionId = "";
+let pendingShopPurchaseItems = [];
 
 function getPlacesInSameGroup(place) {
   if (!place?.groupId) return [];
@@ -78,6 +79,16 @@ function getShopById(shopId) {
 
 function getItemById(itemId) {
   return items.find(item => item.itemId === itemId) || null;
+}
+
+function openShopPurchaseConfirm(purchaseItems) {
+  pendingShopPurchaseItems = purchaseItems;
+  renderChatPlaceInfo();
+}
+
+function closeShopPurchaseConfirm() {
+  pendingShopPurchaseItems = [];
+  renderChatPlaceInfo();
 }
 
 function moveToPlace(placeId) {
@@ -404,7 +415,6 @@ createPost(postInput);
       });
     }
 
-
 function renderShopSection(container, options = {}) {
   const {
     place = null
@@ -421,6 +431,7 @@ function renderShopSection(container, options = {}) {
   inner.className = "chatShopInner";
 
   const shopIds = getShopIds(place);
+  const purchaseTargets = [];
 
   if (shopIds.length === 0) {
     const card = document.createElement("div");
@@ -500,6 +511,9 @@ function renderShopSection(container, options = {}) {
         itemMain.appendChild(itemDescription);
       }
 
+      const buyArea = document.createElement("div");
+      buyArea.className = "chatShopItemBuyArea";
+
       const itemPrice = document.createElement("div");
       itemPrice.className = "chatShopItemPrice";
 
@@ -509,8 +523,25 @@ function renderShopSection(container, options = {}) {
         itemPrice.textContent = "-";
       }
 
+      const quantityInput = document.createElement("input");
+      quantityInput.type = "number";
+      quantityInput.className = "chatShopQuantityInput";
+      quantityInput.min = "0";
+      quantityInput.step = "1";
+      quantityInput.value = "0";
+      quantityInput.inputMode = "numeric";
+      quantityInput.setAttribute("aria-label", `${item.name}の購入数`);
+
+      buyArea.appendChild(itemPrice);
+      buyArea.appendChild(quantityInput);
+
+      purchaseTargets.push({
+        item,
+        quantityInput
+      });
+
       itemRow.appendChild(itemMain);
-      itemRow.appendChild(itemPrice);
+      itemRow.appendChild(buyArea);
       itemList.appendChild(itemRow);
     });
 
@@ -518,12 +549,127 @@ function renderShopSection(container, options = {}) {
     inner.appendChild(card);
   });
 
+  const footer = document.createElement("div");
+  footer.className = "chatShopFooter";
+
+  const purchaseButton = document.createElement("button");
+  purchaseButton.type = "button";
+  purchaseButton.className = "button-primaryNew chatShopPurchaseButton";
+  purchaseButton.textContent = "購入";
+
+  purchaseButton.addEventListener("click", () => {
+    const purchaseItems = purchaseTargets
+      .map(target => {
+        const quantity = Number.parseInt(target.quantityInput.value, 10);
+
+        return {
+          item: target.item,
+          quantity: Number.isInteger(quantity) && quantity > 0
+            ? quantity
+            : 0
+        };
+      })
+      .filter(target => target.quantity > 0);
+
+    if (purchaseItems.length === 0) {
+      alert("購入するアイテムの数を入力してください");
+      return;
+    }
+
+    openShopPurchaseConfirm(purchaseItems);
+  });
+
+  footer.appendChild(purchaseButton);
+  inner.appendChild(footer);
+
   section.appendChild(inner);
   container.appendChild(section);
 
   return {
     section
   };
+}
+
+function renderShopPurchaseConfirmModal() {
+  if (!Array.isArray(pendingShopPurchaseItems) || pendingShopPurchaseItems.length === 0) {
+    return null;
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "chatShopModalOverlay";
+
+  const modal = document.createElement("div");
+  modal.className = "chatShopModal";
+
+  const title = document.createElement("h2");
+  title.className = "chatShopModalTitle";
+  title.textContent = "購入確認";
+  modal.appendChild(title);
+
+  const itemList = document.createElement("div");
+  itemList.className = "chatShopModalItemList";
+
+  pendingShopPurchaseItems.forEach(({ item, quantity }) => {
+    const line = document.createElement("div");
+    line.className = "chatShopModalItemLine";
+    line.textContent = `${item.name}　${quantity}個`;
+    itemList.appendChild(line);
+  });
+
+  modal.appendChild(itemList);
+
+  const message = document.createElement("p");
+  message.className = "chatShopModalMessage";
+  message.textContent = "を購入します。よろしいですか？";
+  modal.appendChild(message);
+
+  const buttonRow = document.createElement("div");
+  buttonRow.className = "chatShopModalButtonRow";
+
+  const confirmButton = document.createElement("button");
+  confirmButton.type = "button";
+  confirmButton.className = "button-primaryNew chatShopModalButton";
+  confirmButton.textContent = "はい";
+
+  confirmButton.addEventListener("click", () => {
+    closeShopPurchaseConfirm();
+    showToast("購入処理はまだ実装されていません", {
+      type: "info"
+    });
+  });
+
+  const cancelButton = document.createElement("button");
+  cancelButton.type = "button";
+  cancelButton.className = "button-box chatShopModalButton";
+  cancelButton.textContent = "いいえ";
+
+  cancelButton.addEventListener("click", () => {
+    closeShopPurchaseConfirm();
+  });
+
+  buttonRow.appendChild(confirmButton);
+  buttonRow.appendChild(cancelButton);
+  modal.appendChild(buttonRow);
+
+  overlay.addEventListener("click", () => {
+    closeShopPurchaseConfirm();
+  });
+
+  modal.addEventListener("click", event => {
+    event.stopPropagation();
+  });
+
+  overlay.appendChild(modal);
+
+  return overlay;
+}
+
+function renderShopPurchaseConfirmModalIfNeeded(container) {
+  const modal = renderShopPurchaseConfirmModal();
+
+  if (modal) {
+    container.appendChild(modal);
+  }
 }
 
 function renderInteractionPanel(container, options = {}) {
@@ -972,6 +1118,8 @@ if (composerRefs) {
   });
 }
 
+renderShopPurchaseConfirmModalIfNeeded(chatMainArea);
+  
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: currentFavoritesTab,
     favoritePlaces: getFavoritePlaces(),
