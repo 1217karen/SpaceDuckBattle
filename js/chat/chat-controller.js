@@ -33,6 +33,8 @@ import { renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.j
 import { renderPostListSection,renderPostListContent } from "./chat-post-view.js";
 import { renderChatActionSection } from "./chat-action-view.js";
 
+import { shops } from "../data/shops-data.js";
+import { items } from "../data/items-data.js";
 
 const centerPanel = document.querySelector(".center-panel");
 const chatMainArea = document.querySelector("#chatMainArea");
@@ -58,6 +60,24 @@ function getLayerSortValue(layer) {
   if (layer === "side") return 2;
   if (layer === "local") return 3;
   return 999;
+}
+
+function getShopIds(place) {
+  return Array.isArray(place?.shopIds)
+    ? place.shopIds
+    : [];
+}
+
+function hasPlaceShop(place) {
+  return getShopIds(place).length > 0;
+}
+
+function getShopById(shopId) {
+  return shops.find(shop => shop.shopId === shopId) || null;
+}
+
+function getItemById(itemId) {
+  return items.find(item => item.itemId === itemId) || null;
 }
 
 function moveToPlace(placeId) {
@@ -146,19 +166,19 @@ function buildPlaceTabs(place, options = {}) {
     };
   });
 
-  if (place.kind !== "room") {
-    tabs.push({
-      key: "shop",
-      label: "SHOP",
-      isActive: isShopOpen,
-      isDisabled: typeof onToggleShop !== "function",
-      onClick: () => {
-        if (typeof onToggleShop === "function") {
-          onToggleShop();
-        }
+if (hasPlaceShop(place)) {
+  tabs.push({
+    key: "shop",
+    label: "SHOP",
+    isActive: isShopOpen,
+    isDisabled: typeof onToggleShop !== "function",
+    onClick: () => {
+      if (typeof onToggleShop === "function") {
+        onToggleShop();
       }
-    });
-  }
+    }
+  });
+}
 
   tabs.push({
     key: "action",
@@ -385,7 +405,11 @@ createPost(postInput);
     }
 
 
-function renderShopPlaceholderSection(container) {
+function renderShopSection(container, options = {}) {
+  const {
+    place = null
+  } = options;
+
   if (!container) {
     return null;
   }
@@ -396,15 +420,104 @@ function renderShopPlaceholderSection(container) {
   const inner = document.createElement("div");
   inner.className = "chatShopInner";
 
-  const card = document.createElement("div");
-  card.className = "chatShopCard";
+  const shopIds = getShopIds(place);
 
-  const text = document.createElement("p");
-  text.className = "chatShopPlaceholderText";
-  text.textContent = "ショップです";
+  if (shopIds.length === 0) {
+    const card = document.createElement("div");
+    card.className = "chatShopCard";
 
-  card.appendChild(text);
-  inner.appendChild(card);
+    const text = document.createElement("p");
+    text.className = "chatShopPlaceholderText";
+    text.textContent = "この場所には利用できるショップがありません";
+
+    card.appendChild(text);
+    inner.appendChild(card);
+    section.appendChild(inner);
+    container.appendChild(section);
+
+    return {
+      section
+    };
+  }
+
+  shopIds.forEach(shopId => {
+    const shop = getShopById(shopId);
+
+    const card = document.createElement("div");
+    card.className = "chatShopCard";
+
+    if (!shop) {
+      const missing = document.createElement("p");
+      missing.className = "chatShopPlaceholderText";
+      missing.textContent = `ショップ情報が見つかりません: ${shopId}`;
+      card.appendChild(missing);
+      inner.appendChild(card);
+      return;
+    }
+
+    const heading = document.createElement("h3");
+    heading.className = "chatShopTitle";
+    heading.textContent = shop.name;
+    card.appendChild(heading);
+
+    if (shop.description) {
+      const description = document.createElement("p");
+      description.className = "chatShopDescription";
+      description.textContent = shop.description;
+      card.appendChild(description);
+    }
+
+    const itemList = document.createElement("div");
+    itemList.className = "chatShopItemList";
+
+    shop.itemIds.forEach(itemId => {
+      const item = getItemById(itemId);
+
+      const itemRow = document.createElement("div");
+      itemRow.className = "chatShopItemRow";
+
+      if (!item) {
+        const missingItem = document.createElement("div");
+        missingItem.className = "chatShopItemMain";
+        missingItem.textContent = `アイテム情報が見つかりません: ${itemId}`;
+        itemRow.appendChild(missingItem);
+        itemList.appendChild(itemRow);
+        return;
+      }
+
+      const itemMain = document.createElement("div");
+      itemMain.className = "chatShopItemMain";
+
+      const itemName = document.createElement("div");
+      itemName.className = "chatShopItemName";
+      itemName.textContent = item.name;
+      itemMain.appendChild(itemName);
+
+      if (item.description) {
+        const itemDescription = document.createElement("div");
+        itemDescription.className = "chatShopItemDescription";
+        itemDescription.textContent = item.description;
+        itemMain.appendChild(itemDescription);
+      }
+
+      const itemPrice = document.createElement("div");
+      itemPrice.className = "chatShopItemPrice";
+
+      if (typeof item.price === "number") {
+        itemPrice.textContent = `${item.price} C`;
+      } else {
+        itemPrice.textContent = "-";
+      }
+
+      itemRow.appendChild(itemMain);
+      itemRow.appendChild(itemPrice);
+      itemList.appendChild(itemRow);
+    });
+
+    card.appendChild(itemList);
+    inner.appendChild(card);
+  });
+
   section.appendChild(inner);
   container.appendChild(section);
 
@@ -515,6 +628,10 @@ if (!place) {
   return;
 }
 
+if (isShopOpen && !hasPlaceShop(place)) {
+  isShopOpen = false;
+}
+
 const composerDraft = loadComposerDraft();
 const replySourcePost = getReplySourcePostForDraft(composerDraft);
 
@@ -592,7 +709,9 @@ if (isMessageMode) {
 const interactionPanel = interactionPanelRefs?.body ?? chatMainArea;
 
 if (isShopOpen) {
-  renderShopPlaceholderSection(interactionPanel);
+  renderShopSection(interactionPanel, {
+    place
+  });
 } else if (isActionOpen) {
   const availableActions = getAvailableChatActions({
     place,
