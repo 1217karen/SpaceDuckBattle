@@ -1088,3 +1088,73 @@ body {
   color: var(--theme-text-subtle);
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
 }
+
+
+/* =======================================================
+   ショップ
+======================================================= */
+
+.chatShopInner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chatShopCard {
+  padding: 12px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+}
+
+.chatShopTitle {
+  margin: 0 0 6px;
+  font-size: var(--font-size-heading-sm);
+}
+
+.chatShopDescription {
+  margin: 0 0 12px;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+}
+
+.chatShopItemList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chatShopItemRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.16);
+  box-sizing: border-box;
+}
+
+.chatShopItemMain {
+  min-width: 0;
+}
+
+.chatShopItemName {
+  color: var(--theme-text-main);
+  font-weight: bold;
+}
+
+.chatShopItemDescription {
+  margin-top: 2px;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+}
+
+.chatShopItemPrice {
+  flex-shrink: 0;
+  color: var(--theme-text-accent);
+  font-weight: bold;
+}
