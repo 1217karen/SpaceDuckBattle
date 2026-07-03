@@ -310,6 +310,11 @@ a{
   background: rgba(28, 52, 40, 0.95);
 }
 
+.commonToast-error {
+  border-color: rgba(255, 130, 130, 0.55);
+  background: rgba(72, 28, 36, 0.95);
+}
+
 .section-divider {
   margin: 24px 0;
   border-top: 1px dashed var(--theme-border-main);
