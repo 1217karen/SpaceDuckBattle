@@ -927,6 +927,19 @@ body {
   line-height: 1.6;
 }
 
+.chatActionLogField {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--theme-text-subtle);
+  font-size: var(--font-size-sm);
+}
+
+.chatActionLogSelect {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .chatActionFooter {
   display: flex;
   justify-content: flex-end;
