@@ -56,6 +56,7 @@ export const places = [
     longDescription: "人工空と環境制御の光に包まれた公共公園。遊具広場や遊歩道、休憩所が整備され、散歩、待ち合わせ、軽い運動などに使われている。",
     lookAroundText: "{name}は周囲を見渡した。人工空の下に、整えられた緑地と遊歩道が広がっている。",
     actionIds: [],
+    shopIds: ["vending-machine"],
     accessType: null
   },
   {
@@ -84,6 +85,7 @@ export const places = [
     longDescription: "日用品の店、飲食店、小さな雑貨屋などが並ぶ商店街。買い物や食事、待ち合わせ、雑談の場として多くの住民に使われている。",
     lookAroundText: "{name}は周囲を見渡した。店先の明かりと人の気配が通りに続いている。",
     actionIds: [],
+    shopIds: ["shopping-street"],
     accessType: null
   },
   {
@@ -98,6 +100,7 @@ export const places = [
     longDescription: "環境制御によって再現された人工海のあるエリア。砂浜や桟橋が整備され、散歩や休憩、住民同士の気軽な交流に使われている。",
     lookAroundText: "{name}は周囲を見渡した。人工海の水面が光を返し、遠くには桟橋と白い波が見える。",
     actionIds: [],
+    shopIds: ["vending-machine"],
     accessType: null
   },
   {
@@ -112,6 +115,7 @@ export const places = [
     longDescription: "中層生活区にある屋内型のイベント施設。多目的に使えるよう作られたはずだが、現在はほとんどアヒルバトルのために使われている。観客席と広めの対戦スペースがあり、勝負を眺めるだけの住民も少なくない。",
     lookAroundText: "{name}は周囲を見渡した。広い会場の中央にはアヒルバトルフィールドがあり、周囲には観客席とイベント用の設備が並んでいる。",
     actionIds: [],
+    shopIds: ["vending-machine"],
     accessType: null
   },
 
@@ -155,6 +159,7 @@ export const places = [
     longDescription: "装備、マイアヒル、出撃用装置などの点検や調整を行う場所。メカニックや技術担当の隊員が忙しく出入りしている。",
     lookAroundText: "{name}は周囲を見渡した。工具やパーツが並び、整備台の上で機械の光が瞬いている。",
     actionIds: [],
+    shopIds: ["equipment-shop"],
     accessType: null
   },
   {
@@ -184,6 +189,7 @@ export const places = [
     longDescription: "コロニーの食料生産を担う人工畑。光量、温度、水分、栄養状態が細かく制御され、整然と並んだ栽培棚が青白い光に照らされている。端に規格外品の直売所がある。",
     lookAroundText: "{name}は周囲を見渡した。青白い光の下に、管理された栽培棚が規則正しく並んでいる。",
     actionIds: [],
+    shopIds: ["vegetable-stand"],
     accessType: null
   },
   {
