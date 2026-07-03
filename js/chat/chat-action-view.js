@@ -4,7 +4,10 @@ export function renderChatActionSection(container, options = {}) {
   const {
     actions = [],
     selectedActionId = "",
+    selectedLogId = "",
+    logOptions = [],
     onSelectAction = null,
+    onSelectLog = null,
     onExecuteAction = null
   } = options;
 
@@ -74,6 +77,44 @@ export function renderChatActionSection(container, options = {}) {
 
     if (description.textContent) {
       detail.appendChild(description);
+    }
+
+    if (selectedAction?.actionId === "post-log") {
+      const logField = document.createElement("label");
+      logField.className = "chatActionLogField";
+      logField.textContent = "流すログ";
+
+      const logSelect = document.createElement("select");
+      logSelect.className = "chatActionLogSelect";
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "ログを選択してください";
+      logSelect.appendChild(placeholder);
+
+      logOptions.forEach(log => {
+        const option = document.createElement("option");
+        option.value = log.logId;
+        option.textContent = log.label ?? log.message ?? "ログ";
+        option.disabled = !!log.isPosted;
+
+        if (log.logId === selectedLogId) {
+          option.selected = true;
+        }
+
+        logSelect.appendChild(option);
+      });
+
+      if (typeof onSelectLog === "function") {
+        logSelect.addEventListener("change", () => {
+          onSelectLog(logSelect.value);
+        });
+      } else {
+        logSelect.disabled = true;
+      }
+
+      logField.appendChild(logSelect);
+      detail.appendChild(logField);
     }
 
     inner.appendChild(detail);
