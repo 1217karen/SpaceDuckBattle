@@ -1,0 +1,32 @@
+.chatQuoteAnchor {
+  color: #9ecbff;
+}
+
+.chatQuoteAnchor:hover {
+  color: #c8e1ff;
+}
+
+.chatQuotePreviewArea {
+  margin-top: 10px;
+}
+
+.chatQuotePreviewCardWrap {
+  width: 100%;
+}
+
+.chatQuotePreviewCard {
+  border-style: dotted;
+  border-color: rgba(158, 203, 255, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(158, 203, 255, 0.14) inset,
+    0 0 10px rgba(158, 203, 255, 0.12);
+}
+
+.chatQuotePreviewPlaceholder {
+  padding: 10px 12px;
+  border: 1px dotted rgba(158, 203, 255, 0.8);
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--theme-text-subtle);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
