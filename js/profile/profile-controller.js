@@ -1,7 +1,6 @@
 //profile-controller.js
 
 import { getCurrentAccount, loadCharacter, loadUnit } from "../services/storage-service.js";
-import { skillHandlers } from "../data/skills.js";
 import { getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { showToast } from "../common/toast.js";
@@ -9,10 +8,37 @@ import { getFavoritePlaces } from "../chat/chat-place-utils.js";
 import { getFavoriteCharacters, isFavoriteCharacter, toggleFavoriteCharacter } from "../services/character-favorite-service.js";
 import { isFavoriteUnit, toggleFavoriteUnit } from "../services/unit-favorite-service.js";
 
-const MAX_CHARACTER_ICONS = 10;
+const MAX_CHARACTER_ICONS = 20;
 
 const profilePage = document.getElementById("profilePage");
 const rightPanel = document.querySelector(".right-panel");
+
+const unitTypeLabels = {
+  attack: "アタック",
+  defense: "ディフェンス",
+  heal: "ヒール",
+  speed: "スピード",
+  technical: "テクニカル",
+  support: "サポート"
+};
+
+const unitTypeDescriptions = {
+  attack: "自分から一番近い敵に向かって進みます。",
+  defense: "敵に一番近い味方の前に向かって進みます。",
+  heal: "一番HPが低い味方に向かって進みます。",
+  speed: "自陣から一番遠くにいる敵に向かって進みます。また、１度に最大２マス動けます。",
+  technical: "自分から一番近い敵と１マス開けた場所を維持します。",
+  support: "敵に一番近い味方の隣に向かって進みます。"
+};
+
+const unitStatItems = [
+  { key: "atk", label: "ATK" },
+  { key: "def", label: "DEF" },
+  { key: "heal", label: "HEAL" },
+  { key: "speed", label: "SPEED" },
+  { key: "cri", label: "CRI" },
+  { key: "tec", label: "TEC" }
+];
 
 function getEnoFromQuery() {
   const params = new URLSearchParams(window.location.search);
@@ -42,16 +68,31 @@ function getSafeImageUrl(url) {
   return getNoImageUrl();
 }
 
+function getPublicProfileImageUrl(character) {
+  const images = Array.isArray(character?.profileImages)
+    ? character.profileImages
+    : [];
+
+  const publicImages = images
+    .filter(image =>
+      typeof image?.url === "string" &&
+      image.url.trim() !== "" &&
+      image.enabled !== false
+    );
+
+  if (publicImages.length === 0) {
+    return getNoImageUrl();
+  }
+
+  const index =
+    Math.floor(Math.random() * publicImages.length);
+
+  return publicImages[index].url.trim();
+}
+
 function buildCharacterIconList(character) {
   const result = [];
-  const usedKeys = new Set();
-
-  const defaultIconUrl = getSafeImageUrl(character?.defaultIcon || "");
-  result.push({
-    url: defaultIconUrl,
-    name: "デフォルト"
-  });
-  usedKeys.add(`url:${defaultIconUrl}`);
+  const usedUrls = new Set();
 
   const commIcons = normalizeCommIcons(character?.commIcons);
 
@@ -60,37 +101,128 @@ function buildCharacterIconList(character) {
       break;
     }
 
-    const key = `id:${icon.id}:url:${icon.url}`;
+    const url = getSafeImageUrl(icon.url);
 
-    if (usedKeys.has(key)) {
+    if (url === getNoImageUrl()) {
       continue;
     }
 
-    usedKeys.add(key);
+    if (usedUrls.has(url)) {
+      continue;
+    }
+
+    usedUrls.add(url);
 
     result.push({
-      url: getSafeImageUrl(icon.url),
+      url,
       name: icon.name?.trim() || `アイコン${icon.id}`
     });
   }
 
-  return result.slice(0, MAX_CHARACTER_ICONS);
+  return result;
 }
 
-function getPublicPatterns(unit) {
-  if (!Array.isArray(unit?.patterns)) {
-    return [];
-  }
+function getUnitStats(unit) {
+  const source = unit?.stats || {};
 
-  return unit.patterns.filter(pattern => pattern?.public);
+  return {
+    atk: Math.max(0, Number(source.atk) || 0),
+    def: Math.max(0, Number(source.def) || 0),
+    heal: Math.max(0, Number(source.heal) || 0),
+    speed: Math.max(0, Number(source.speed) || 0),
+    cri: Math.max(0, Number(source.cri) || 0),
+    tec: Math.max(0, Number(source.tec) || 0)
+  };
 }
 
-function getPatternSkillList(pattern) {
-  if (!Array.isArray(pattern?.skills)) {
-    return [];
-  }
+function renderStatRadar(stats) {
+  const values =
+    unitStatItems.map(item => stats[item.key]);
 
-  return pattern.skills.filter(skill => skill?.type);
+  const maxValue =
+    Math.max(10, Math.ceil(Math.max(...values) / 10) * 10);
+
+  const center = 60;
+  const radius = 38;
+  const labelRadius = 50;
+  const count = unitStatItems.length;
+
+  const getPoint = (index, rateRadius) => {
+    const angle =
+      -Math.PI / 2 + (Math.PI * 2 * index) / count;
+
+    return {
+      x: center + Math.cos(angle) * rateRadius,
+      y: center + Math.sin(angle) * rateRadius
+    };
+  };
+
+  const gridHtml = [0.25, 0.5, 0.75, 1]
+    .map(rate => {
+      const points = unitStatItems
+        .map((_, index) => {
+          const point = getPoint(index, radius * rate);
+          return `${point.x.toFixed(1)},${point.y.toFixed(1)}`;
+        })
+        .join(" ");
+
+      return `<polygon class="profileStatRadarGrid" points="${points}"></polygon>`;
+    })
+    .join("");
+
+  const axisHtml = unitStatItems
+    .map((_, index) => {
+      const point = getPoint(index, radius);
+      return `
+        <line
+          class="profileStatRadarAxis"
+          x1="${center}"
+          y1="${center}"
+          x2="${point.x.toFixed(1)}"
+          y2="${point.y.toFixed(1)}"
+        ></line>
+      `;
+    })
+    .join("");
+
+  const valuePoints = unitStatItems
+    .map((item, index) => {
+      const value = Math.min(stats[item.key], maxValue);
+      const rate = value / maxValue;
+      const point = getPoint(index, radius * rate);
+      return `${point.x.toFixed(1)},${point.y.toFixed(1)}`;
+    })
+    .join(" ");
+
+  const labelHtml = unitStatItems
+    .map((item, index) => {
+      const point = getPoint(index, labelRadius);
+
+      return `
+        <text
+          class="profileStatRadarLabel"
+          x="${point.x.toFixed(1)}"
+          y="${point.y.toFixed(1)}"
+          text-anchor="middle"
+          dominant-baseline="middle"
+        >${escapeHtml(item.label)}</text>
+      `;
+    })
+    .join("");
+
+  return `
+    <svg
+      class="profileStatRadar"
+      viewBox="0 0 120 120"
+      role="img"
+      aria-label="ユニットステータス"
+    >
+      ${gridHtml}
+      ${axisHtml}
+      <polygon class="profileStatRadarShape" points="${valuePoints}"></polygon>
+      ${labelHtml}
+    </svg>
+  `;
 }
 
 function renderNotFound(message) {
@@ -103,134 +235,193 @@ function renderNotFound(message) {
 
 function renderProfile(eno, character, unit, options = {}) {
   const { currentEno = null } = options;
-  const fullName = character?.fullName?.trim() || "未設定";
-  const profileText = character?.profileText?.trim() || "未設定";
-  const duckIconUrl = getSafeImageUrl(unit?.icon?.default || "");
-  const unitName = unit?.name?.trim() || "未設定";
-  const unitType = unit?.type?.trim() || "未設定";
-  const unitNo = Number(unit?.unitNo || 1);
-  const hasUnit = !!unit;
 
-  const characterIcons = buildCharacterIconList(character);
-  const publicPatterns = getPublicPatterns(unit);
-  const isOwnProfile = Number(currentEno) === Number(eno);
-  const isFavorite = isFavoriteCharacter(eno, { currentEno });
-  const isUnitFavorite = hasUnit
-    ? isFavoriteUnit(eno, unitNo, { currentEno })
-    : false;
+  const fullName =
+    character?.fullName?.trim() || "未設定";
+
+  const profileText =
+    character?.profileText?.trim() || "未設定";
+
+  const profileImageUrl =
+    getPublicProfileImageUrl(character);
+
+  const hasUnit =
+    !!unit;
+
+  const duckIconUrl =
+    getSafeImageUrl(unit?.icon?.default || "");
+
+  const unitName =
+    unit?.name?.trim() || "未設定";
+
+  const unitType =
+    unit?.type?.trim() || "";
+
+  const unitTypeLabel =
+    unitTypeLabels[unitType] || unitType || "未設定";
+
+  const unitTypeDescription =
+    unitTypeDescriptions[unitType] || "";
+
+  const unitNo =
+    Number(unit?.unitNo || 1);
+
+  const unitStats =
+    getUnitStats(unit);
+
+  const isOwnProfile =
+    Number(currentEno) === Number(eno);
+
+  const isFavorite =
+    isFavoriteCharacter(eno, { currentEno });
+
+  const isUnitFavorite =
+    hasUnit
+      ? isFavoriteUnit(eno, unitNo, { currentEno })
+      : false;
+
+  const characterIcons =
+    buildCharacterIconList(character);
 
   const characterIconHtml = characterIcons.length > 0
     ? characterIcons.map(icon => `
-        <div class="iconCard">
-          <img src="${escapeHtml(icon.url)}" alt="${escapeHtml(icon.name)}">
-          <div class="iconName">${escapeHtml(icon.name)}</div>
-        </div>
+        <img
+          class="profileCommIcon"
+          src="${escapeHtml(icon.url)}"
+          alt="${escapeHtml(icon.name)}"
+        >
       `).join("")
-    : `<p class="emptyText">キャラアイコンはありません</p>`;
+    : `<p class="emptyText">公開されているアイコンはありません</p>`;
 
-  const publicPatternHtml = publicPatterns.length > 0
-    ? publicPatterns.map((pattern, index) => {
-        const skills = getPatternSkillList(pattern);
-
-        const skillHtml = skills.length > 0
-          ? `
-            <ul class="skillList">
-              ${skills.map(skill => {
-                const skillName =
-                  skillHandlers[skill.type]?.name || skill.type;
-
-                return `<li>${escapeHtml(skillName)}</li>`;
-              }).join("")}
-            </ul>
-          `
-          : `<p class="emptyText">スキル未設定</p>`;
-
-        return `
-          <section class="profileSection">
-            <h3>公開設定${index + 1}</h3>
-            <div class="profileRow">
-              <span class="label">設定名</span>
-              <span class="value">${escapeHtml(pattern?.name?.trim() || "未設定")}</span>
-            </div>
-            ${skillHtml}
-          </section>
-        `;
-      }).join("")
-    : `
-      <section class="profileSection">
-        <h3>公開スキル設定</h3>
-        <p class="emptyText">公開されている設定はありません</p>
-      </section>
-    `;
+  const statValueHtml = unitStatItems
+    .map(item => `
+      <div class="profileStatValue">
+        <span class="profileStatLabel">${escapeHtml(item.label)}</span>
+        <span class="profileStatNumber">${escapeHtml(unitStats[item.key])}</span>
+      </div>
+    `)
+    .join("");
 
   profilePage.innerHTML = `
     <section class="profileCard">
-      <div class="profileHeader">
-        <div class="duckIconWrap">
-          <img class="duckIcon" src="${escapeHtml(duckIconUrl)}" alt="アヒルデフォルトアイコン">
-        </div>
-        <div class="profileHeaderText">
-          <div class="enoText">Eno.${escapeHtml(eno)}</div>
-          <div class="profileNameRow">
+      <header class="profileIdBar">
+        <div class="profileIdMain">
+          <div class="profileKicker">PROFILE</div>
+          <div class="profileIdentityRow">
+            <span class="profileEnoText">Eno.${escapeHtml(eno)}</span>
             <h2 class="characterName">${escapeHtml(fullName)}</h2>
-            ${isOwnProfile ? "" : `
-              <button
-                type="button"
-                class="profileFavoriteButton button-icon"
-                title="${isFavorite ? "お気に入り解除" : "お気に入り登録"}"
-                aria-label="${isFavorite ? "お気に入り解除" : "お気に入り登録"}"
-                data-favorite-character-button
-              >${isFavorite ? "★" : "☆"}</button>
-            `}
           </div>
+        </div>
+
+        ${isOwnProfile ? "" : `
+          <button
+            type="button"
+            class="profileFavoriteButton button-icon"
+            title="${isFavorite ? "お気に入り解除" : "お気に入り登録"}"
+            aria-label="${isFavorite ? "お気に入り解除" : "お気に入り登録"}"
+            data-favorite-character-button
+          >${isFavorite ? "★" : "☆"}</button>
+        `}
+      </header>
+
+      <div class="profileMainGrid">
+        <div class="profileImageFrame">
+          <img
+            class="profileMainImage"
+            src="${escapeHtml(profileImageUrl)}"
+            alt="${escapeHtml(fullName)} プロフィール画像"
+          >
+        </div>
+
+        <div class="profileSidePanel">
+          <section class="profileInfoBlock">
+            <h3>CHARACTER DATA</h3>
+            <div class="profileInfoGrid">
+              <div class="profileInfoLabel">Name</div>
+              <div class="profileInfoValue">${escapeHtml(fullName)}</div>
+              <div class="profileInfoLabel">Eno</div>
+              <div class="profileInfoValue">${escapeHtml(eno)}</div>
+            </div>
+          </section>
+
+          <section class="profileInfoBlock profileUnitBlock">
+            <h3>UNIT DATA</h3>
+
+            ${hasUnit ? `
+              <div class="profileUnitHeader">
+                <img
+                  class="profileUnitIcon"
+                  src="${escapeHtml(duckIconUrl)}"
+                  alt="ユニットアイコン"
+                >
+
+                <div class="profileUnitTitle">
+                  <div class="profileUnitNameRow">
+                    <div class="profileUnitName">${escapeHtml(unitName)}</div>
+
+                    ${isOwnProfile ? "" : `
+                      <button
+                        type="button"
+                        class="profileFavoriteButton profileUnitFavoriteButton button-icon"
+                        title="${isUnitFavorite ? "ユニットのお気に入り解除" : "ユニットをお気に入り登録"}"
+                        aria-label="${isUnitFavorite ? "ユニットのお気に入り解除" : "ユニットをお気に入り登録"}"
+                        data-favorite-unit-button
+                      >${isUnitFavorite ? "★" : "☆"}</button>
+                    `}
+                  </div>
+
+                  <div class="profileUnitType">${escapeHtml(unitTypeLabel)}</div>
+                </div>
+              </div>
+
+              ${unitTypeDescription ? `
+                <p class="profileUnitDescription">${escapeHtml(unitTypeDescription)}</p>
+              ` : ""}
+
+              <div class="profileStatsLayout">
+                <div class="profileStatRadarWrap">
+                  ${renderStatRadar(unitStats)}
+                </div>
+
+                <div class="profileStatValueGrid">
+                  ${statValueHtml}
+                </div>
+              </div>
+            ` : `
+              <p class="emptyText">ユニット情報はありません</p>
+            `}
+          </section>
         </div>
       </div>
 
-      <section class="profileSection">
-        <h3>キャラ設定文</h3>
+      <section class="profileSection profileTextSection">
+        <h3>PROFILE TEXT</h3>
         <p class="profileText">${escapeHtml(profileText)}</p>
       </section>
 
-      <section class="profileSection">
-        <h3>キャラアイコン一覧</h3>
-        <div class="iconGrid">
+      <section class="profileSection profileIconSection">
+        <h3>COMM ICONS</h3>
+        <div class="profileCommIconGrid">
           ${characterIconHtml}
         </div>
       </section>
-
-      <section class="profileSection">
-        <h3>アヒル情報</h3>
-        <div class="profileRow">
-          <span class="label">ユニット名</span>
-          <span class="value profileUnitNameValue">${escapeHtml(unitName)}</span>
-          ${isOwnProfile || !hasUnit ? "" : `
-            <button
-              type="button"
-              class="profileFavoriteButton button-icon"
-              title="${isUnitFavorite ? "ユニットのお気に入り解除" : "ユニットをお気に入り登録"}"
-              aria-label="${isUnitFavorite ? "ユニットのお気に入り解除" : "ユニットをお気に入り登録"}"
-              data-favorite-unit-button
-            >${isUnitFavorite ? "★" : "☆"}</button>
-          `}
-        </div>
-        <div class="profileRow">
-          <span class="label">タイプ</span>
-          <span class="value">${escapeHtml(unitType)}</span>
-        </div>
-      </section>
-
-      ${publicPatternHtml}
     </section>
   `;
-  
-  const favoriteButton = profilePage.querySelector("[data-favorite-character-button]");
+
+  const favoriteButton =
+    profilePage.querySelector("[data-favorite-character-button]");
 
   if (favoriteButton) {
     favoriteButton.addEventListener("click", () => {
-      const result = toggleFavoriteCharacter(eno, { currentEno });
+      const result =
+        toggleFavoriteCharacter(eno, { currentEno });
 
-      favoriteButton.textContent = result.isFavorite ? "★" : "☆";
-      favoriteButton.title = result.isFavorite ? "お気に入り解除" : "お気に入り登録";
+      favoriteButton.textContent =
+        result.isFavorite ? "★" : "☆";
+
+      favoriteButton.title =
+        result.isFavorite ? "お気に入り解除" : "お気に入り登録";
+
       favoriteButton.setAttribute(
         "aria-label",
         result.isFavorite ? "お気に入り解除" : "お気に入り登録"
@@ -249,16 +440,22 @@ function renderProfile(eno, character, unit, options = {}) {
     });
   }
 
-  const favoriteUnitButton = profilePage.querySelector("[data-favorite-unit-button]");
+  const favoriteUnitButton =
+    profilePage.querySelector("[data-favorite-unit-button]");
 
   if (favoriteUnitButton) {
     favoriteUnitButton.addEventListener("click", () => {
-      const result = toggleFavoriteUnit(eno, unitNo, { currentEno });
+      const result =
+        toggleFavoriteUnit(eno, unitNo, { currentEno });
 
-      favoriteUnitButton.textContent = result.isFavorite ? "★" : "☆";
-      favoriteUnitButton.title = result.isFavorite
-        ? "ユニットのお気に入り解除"
-        : "ユニットをお気に入り登録";
+      favoriteUnitButton.textContent =
+        result.isFavorite ? "★" : "☆";
+
+      favoriteUnitButton.title =
+        result.isFavorite
+          ? "ユニットのお気に入り解除"
+          : "ユニットをお気に入り登録";
+
       favoriteUnitButton.setAttribute(
         "aria-label",
         result.isFavorite
@@ -287,9 +484,14 @@ function renderProfileFavoritesPanel(currentEno = null) {
 }
 
 function initProfilePage() {
-  const account = getCurrentAccount();
-  const currentEno = account?.eno ?? null;
-  const eno = getEnoFromQuery();
+  const account =
+    getCurrentAccount();
+
+  const currentEno =
+    account?.eno ?? null;
+
+  const eno =
+    getEnoFromQuery();
 
   if (!eno) {
     renderNotFound("Enoが指定されていません");
@@ -297,8 +499,11 @@ function initProfilePage() {
     return;
   }
 
-  const character = loadCharacter(eno);
-  const unit = loadUnit(eno, 1);
+  const character =
+    loadCharacter(eno);
+
+  const unit =
+    loadUnit(eno, 1);
 
   if (!character && !unit) {
     renderNotFound("このEnoは存在しません");
@@ -307,7 +512,7 @@ function initProfilePage() {
   }
 
   renderProfileFavoritesPanel(currentEno);
-  renderProfile(eno, character || {}, unit || {}, { currentEno });
+  renderProfile(eno, character, unit, { currentEno });
 }
 
 initProfilePage();
