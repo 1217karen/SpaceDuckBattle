@@ -118,11 +118,12 @@ export function createIconPicker({
 
   function createIconCard(item) {
     const card = document.createElement("div");
-    card.className = "iconPickerCard";
+    card.className = "commonIcon60 iconPickerCard";
     card.dataset.id = String(item.id);
     card.dataset.url = item.url;
 
     const img = document.createElement("img");
+    img.className = "commonIcon60";
     img.src = item.url;
     img.alt = `icon ${item.id}`;
 
