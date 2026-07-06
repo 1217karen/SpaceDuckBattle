@@ -22,9 +22,6 @@ const unitTypeLabels = {
   support: "サポート"
 };
 
-const unitDescription =
-  unit?.description?.trim() || "";
-
 const unitStatItems = [
   { key: "atk", label: "ATK" },
   { key: "def", label: "DEF" },
