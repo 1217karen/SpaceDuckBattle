@@ -261,7 +261,7 @@ function renderRoomRow(roomPlace, currentPlaceId) {
 
 function renderAreaCard(areaPlace, currentPlaceId) {
   const card = document.createElement("div");
-  card.className = "mapAreaCard";
+  card.className = "common-card mapAreaCard";
 
   const roomList = getRoomsByAreaId(areaPlace.placeId);
   const isExpanded = expandedAreaIds.has(areaPlace.placeId);
@@ -373,10 +373,10 @@ function renderMoveConfirmModal() {
   }
 
   const overlay = document.createElement("div");
-  overlay.className = "mapModalOverlay";
+  overlay.className = "commonModalOverlay";
 
   const modal = document.createElement("div");
-  modal.className = "mapModal";
+  modal.className = "commonModal";
 
   const title = document.createElement("h2");
   title.className = "mapModalTitle";
