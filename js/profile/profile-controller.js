@@ -136,11 +136,7 @@ function getUnitStats(unit) {
 }
 
 function renderStatRadar(stats) {
-  const values =
-    unitStatItems.map(item => stats[item.key]);
-
-  const maxValue =
-    Math.max(10, Math.ceil(Math.max(...values) / 10) * 10);
+  const maxValue = 100;
 
   const center = 60;
   const radius = 38;
