@@ -56,7 +56,7 @@ export function renderShopSection(container, options = {}) {
 
   getShopsForPlace(place).forEach(({ shopId, shop, items }) => {
     const card = document.createElement("div");
-    card.className = "chatShopCard";
+    card.className = "common-card common-card-themed chatShopCard";
 
     if (!shop) {
       const missing = document.createElement("p");
@@ -191,10 +191,10 @@ export function renderShopPurchaseConfirmModal(purchaseItems, options = {}) {
   }
 
   const overlay = document.createElement("div");
-  overlay.className = "chatShopModalOverlay";
+  overlay.className = "commonModalOverlay";
 
   const modal = document.createElement("div");
-  modal.className = "chatShopModal";
+  modal.className = "commonModal";
 
   const title = document.createElement("h2");
   title.className = "chatShopModalTitle";
