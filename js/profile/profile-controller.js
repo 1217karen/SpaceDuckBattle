@@ -250,8 +250,8 @@ function renderProfile(eno, character, unit, options = {}) {
   const unitTypeLabel =
     unitTypeLabels[unitType] || unitType || "未設定";
 
-  const unitTypeDescription =
-    unitTypeDescriptions[unitType] || "";
+  const unitDescription =
+    unit?.description?.trim() || "";
 
   const unitNo =
     Number(unit?.unitNo || 1);
