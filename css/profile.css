@@ -62,22 +62,12 @@
 }
 
 .profileKicker {
-  display: inline-block;
   min-width: 160px;
   padding: 0 42px 2px 8px;
-  font-family: var(--font-family-display);
   font-size: 22px;
   font-weight: normal;
   line-height: 1.25;
   letter-spacing: 0.18em;
-  color: var(--theme-text-main);
-  background: linear-gradient(
-    to right,
-    rgba(95, 210, 245, 0.56),
-    rgba(95, 210, 245, 0.18),
-    rgba(95, 210, 245, 0)
-  );
-  box-sizing: border-box;
 }
 
 .profileIdentityRow {
@@ -188,34 +178,14 @@
    - COMM ICONS
 ======================================================= */
 
-.profileInfoBlock,
-.profileSection {
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.11);
-  border-radius: var(--theme-radius-md);
-  background: rgba(255, 255, 255, 0.035);
-  box-sizing: border-box;
-}
-
-.profileInfoBlock h3,
-.profileSection h3 {
-  display: inline-block;
+.profileSectionHeading {
   min-width: 160px;
   margin: 0 0 10px;
   padding: 0 36px 2px 8px;
-  font-family: var(--font-family-display);
   font-size: 17px;
   font-weight: normal;
   letter-spacing: 0.12em;
   line-height: 1.35;
-  color: var(--theme-text-main);
-  background: linear-gradient(
-    to right,
-    rgba(95, 210, 245, 0.56),
-    rgba(95, 210, 245, 0.18),
-    rgba(95, 210, 245, 0)
-  );
-  box-sizing: border-box;
 }
 
 
