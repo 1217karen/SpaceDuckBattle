@@ -370,7 +370,7 @@ document.getElementById("saveCharacter")
     }
 
     if (!unitName) {
-      alert("ユニット名を入力してください");
+      alert("アヒル名を入力してください");
       return;
     }
 
