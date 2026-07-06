@@ -176,6 +176,55 @@ button:hover{
 }
 
 /* =======================================================
+   共通カード・モーダル・装飾見出し
+======================================================= */
+
+.common-card {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--theme-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+}
+
+.common-card-themed {
+  border-color: var(--theme-border-main);
+}
+
+.commonModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.56);
+  box-sizing: border-box;
+}
+
+.commonModal {
+  width: min(92vw, 420px);
+  padding: 18px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(24, 28, 38, 0.96);
+  color: var(--theme-text-main);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  box-sizing: border-box;
+}
+
+.common-gradientHeading {
+  display: inline-block;
+  font-family: var(--font-family-display);
+  color: var(--theme-text-main);
+  background: var(--gradient-heading-bg, var(--theme-heading-gradient));
+  box-sizing: border-box;
+}
+
+/* =======================================================
    こっからテキスト？
 ======================================================= */
 
