@@ -97,7 +97,7 @@ function renderOwnedItemsSection(container, ownedItems) {
 
   ownedItems.forEach(({ item, itemId, quantity }) => {
     const row = document.createElement("div");
-    row.className = "inventoryItemRow";
+    row.className = "common-card-framed common-card-subtle inventoryItemRow";
 
     const main = document.createElement("div");
     main.className = "inventoryItemMain";
@@ -154,7 +154,7 @@ function renderLogsSection(container, logs) {
 
   logs.forEach(log => {
     const row = document.createElement("div");
-    row.className = "inventoryLogRow";
+    row.className = "common-card-framed common-card-subtle inventoryLogRow";
 
     if (log.isPosted) {
       row.classList.add("is-posted");
