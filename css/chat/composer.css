@@ -1,0 +1,292 @@
+/* =======================================================
+   投稿入力欄
+======================================================= */
+.chatComposerSection {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.chatComposerInner {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chatComposerCard {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+}
+
+.chatComposerLeft {
+  width: 60px;
+  flex: 0 0 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.chatComposerIconButton {
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.chatComposerIconImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.chatComposerRight {
+  flex: 1;
+  min-width: 0;
+}
+
+.chatComposerBodyCount {
+  margin-left: auto;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+  white-space: nowrap;
+}
+
+.chatComposerBodyCount.is-over-limit {
+  color: #ff8a8a;
+}
+
+/* 返信プレビュー */
+.chatComposerReplyPreview {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.chatComposerReplyPreviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+}
+
+.chatComposerReplyClearButton {
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+}
+
+.chatComposerReplyPreviewCard {
+  opacity: 0.72;
+  max-width: 100%;
+  margin: 0;
+}
+
+/* 投稿メタ情報 */
+.chatComposerMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.chatComposerNameInput {
+  min-width: 0;
+  width: 240px;
+  max-width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+}
+
+.chatComposerNameInput::placeholder,
+.chatComposerTextarea::placeholder {
+  color: var(--theme-text-muted);
+}
+
+.chatComposerFixedReplyTargetInfo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 0 0 auto;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+  white-space: nowrap;
+}
+
+.chatComposerFixedReplyTargetLabel {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+  white-space: nowrap;
+}
+
+.chatComposerFixedReplyTargetValue {
+  color: var(--theme-text-main);
+}
+
+/* 追加返信先 */
+.chatComposerAdditionalTargetSection {
+  margin-bottom: 8px;
+}
+
+.chatComposerAdditionalTargetSummary {
+  display: inline-flex;
+  align-items: center;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+}
+
+.chatComposerAdditionalTargetSummary::-webkit-details-marker {
+  display: none;
+}
+
+.chatComposerAdditionalTargetSummary::before {
+  content: "▶ ";
+  display: inline-block;
+}
+
+.chatComposerAdditionalTargetSection[open] > .chatComposerAdditionalTargetSummary::before {
+  content: "▼ ";
+}
+
+.chatComposerAdditionalTargetBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-top: 6px;
+}
+
+.chatComposerReplyTargetInput {
+  min-width: 0;
+  width: 100%;
+  max-width: 320px;
+  padding: 6px 8px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
+/* 本文 */
+.chatComposerTextarea {
+  width: 100%;
+  height: 76px;
+  min-height: 42px;
+  padding: 6px 10px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+  resize: vertical;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+/* ツールバー */
+.chatComposerToolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chatComposerToolbarRow {
+  display: flex;
+  align-items: center;
+}
+
+.chatComposerToolbarRowTools {
+  flex-wrap: wrap;
+  gap: 0 6px;
+  width: 100%;
+}
+
+.chatComposerToolbarRowActions {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.chatComposerToolbarActionLeft {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.chatComposerToolbarActionRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.chatComposerPlaceToggleLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-main);
+  cursor: pointer;
+}
+
+.chatComposerPlaceToggleCheckbox {
+  margin: 0;
+}
+
+.chatComposerPostPlaceInfo {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-subtle);
+}
+
+.chatComposerToolButton {
+  padding: 4px 8px;
+  border-radius: var(--theme-radius-sm);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
+.chatComposerSubmitButton {
+  padding: 6px 14px;
+}
+
+
+
+.chatComposerSectionMessage .chatComposerReplyTargetInput {
+  max-width: 220px;
+}
+
+.chatComposerAdditionalTargetSectionAlwaysOpen .chatComposerAdditionalTargetSummary {
+  cursor: default;
+}
+
+.chatComposerAdditionalTargetSectionAlwaysOpen .chatComposerAdditionalTargetSummary::before {
+  content: "";
+}
+
+.chatComposerReplyTargetNamePreview {
+  color: var(--theme-text-subtle);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
