@@ -13,7 +13,6 @@
 
 .chatTabButton,
 .chatHeaderTitle,
-.chatInteractionHeading,
 .chatPostLogLabel {
   font-family: var(--font-family-display);
   letter-spacing: 0.08em;
