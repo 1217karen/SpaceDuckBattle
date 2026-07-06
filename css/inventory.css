@@ -60,9 +60,6 @@
   gap: 12px;
   justify-content: space-between;
   padding: 12px;
-  border: 1px solid var(--theme-border-soft);
-  border-radius: var(--theme-radius-sm);
-  background: var(--theme-surface-3);
 }
 
 .inventoryItemMain,
