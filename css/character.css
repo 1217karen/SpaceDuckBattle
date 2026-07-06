@@ -4,24 +4,14 @@
    - BATTLER / DUCK / 戦闘セリフ
 ======================================================= */
 
-.center-panel > h2 {
-  display: inline-block;
+.characterSectionHeading {
   min-width: 160px;
   margin: 0 0 12px;
   padding: 0 36px 2px 8px;
-  font-family: var(--font-family-display);
   font-size: 20px;
   font-weight: normal;
   letter-spacing: 0.12em;
   line-height: 1.35;
-  color: var(--theme-text-main);
-  background: linear-gradient(
-    to right,
-    rgba(95, 210, 245, 0.56),
-    rgba(95, 210, 245, 0.18),
-    rgba(95, 210, 245, 0)
-  );
-  box-sizing: border-box;
 }
 
 
