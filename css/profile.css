@@ -307,10 +307,20 @@
   color: var(--theme-text-accent);
 }
 
+/* UNIT DATA：ユニット説明
+   - unit.description
+   - 未設定時はHTMLごと出さない想定
+   - 上下に点線罫線を入れて、タイプ・ステータスと区切る
+*/
 .profileUnitDescription {
-  margin: 10px 0 0;
+  margin: 12px 0 0;
+  padding: 10px 0;
+  border-top: 1px dashed var(--theme-border-main);
+  border-bottom: 1px dashed var(--theme-border-main);
   color: var(--theme-text-main);
-  line-height: 1.6;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 
