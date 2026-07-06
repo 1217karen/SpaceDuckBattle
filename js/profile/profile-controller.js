@@ -330,15 +330,6 @@ function renderProfile(eno, character, unit, options = {}) {
         </div>
 
         <div class="profileSidePanel">
-          <section class="profileInfoBlock">
-            <h3>CHARACTER DATA</h3>
-            <div class="profileInfoGrid">
-              <div class="profileInfoLabel">Name</div>
-              <div class="profileInfoValue">${escapeHtml(fullName)}</div>
-              <div class="profileInfoLabel">Eno</div>
-              <div class="profileInfoValue">${escapeHtml(eno)}</div>
-            </div>
-          </section>
 
           <section class="profileInfoBlock profileUnitBlock">
             <h3>UNIT DATA</h3>
