@@ -11,6 +11,14 @@
   --chat-message-surface-end: rgba(145, 200, 225, 0.38);
 }
 
+.chatTabButton,
+.chatHeaderTitle,
+.chatInteractionHeading,
+.chatPostLogLabel {
+  font-family: var(--font-family-display);
+  letter-spacing: 0.08em;
+}
+
 /* =======================================================
    全体背景
 ======================================================= */
