@@ -1,45 +1,39 @@
-.commRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
+/* =======================================================
+   キャラクター設定ページ：大見出し
+   - character.html の h2
+   - BATTLER / DUCK / 戦闘セリフ
+======================================================= */
 
-.commInputArea {
-  flex: 1;
-}
-
-.commInputArea input {
+.center-panel > h2 {
+  display: inline-block;
+  min-width: 160px;
+  margin: 0 0 12px;
+  padding: 0 36px 2px 8px;
+  font-family: var(--font-family-display);
+  font-size: 20px;
+  font-weight: normal;
+  letter-spacing: 0.12em;
+  line-height: 1.35;
+  color: var(--theme-text-main);
+  background: linear-gradient(
+    to right,
+    rgba(95, 210, 245, 0.56),
+    rgba(95, 210, 245, 0.18),
+    rgba(95, 210, 245, 0)
+  );
   box-sizing: border-box;
 }
 
-.commInputArea .commNameInput {
-  width: 300px;
-}
 
-.commInputArea .commTextInput {
-  width: 100%;
-}
+/* =======================================================
+   BATTLER / DUCK 入力フォーム
+   - バトラーフルネーム character.fullName
+   - バトラーニックネーム character.defaultName
+   - バトラー説明 character.profileText
+   - アヒル名 unit.name
+   - アヒル説明 unit.description
+======================================================= */
 
-.commLabelText {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-}
-
-.commBlock > .button-box {
-  padding: 4px 10px;
-  font-size: var(--font-size-sm);
-}
-
-.commRemoveButton {
-  width: 24px;
-  height: 24px;
-}
-
-#saveCharacter {
-  padding: 6px 14px;
-}
 .characterNameForm {
   display: flex;
   flex-direction: column;
@@ -60,4 +54,77 @@
 .characterProfileTextarea {
   width: min(100%, 640px);
   box-sizing: border-box;
+}
+
+
+/* =======================================================
+   戦闘セリフ：各行
+   - commDialogues 配下の各セリフ行
+   - アイコン選択ボタン + 名前入力 + セリフ入力 + 削除ボタン
+======================================================= */
+
+.commRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.commInputArea {
+  flex: 1;
+  min-width: 0;
+}
+
+.commInputArea input {
+  box-sizing: border-box;
+}
+
+.commInputArea .commNameInput {
+  width: 300px;
+  max-width: 100%;
+}
+
+.commInputArea .commTextInput {
+  width: 100%;
+}
+
+
+/* =======================================================
+   戦闘セリフ：ブロック見出し
+   - 戦闘開始時
+   - ターンチェンジ時
+   - クリティカル時
+   - 敵撃破時
+   - 勝利時
+======================================================= */
+
+.commLabelText {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+
+/* =======================================================
+   戦闘セリフ：追加・削除ボタン
+======================================================= */
+
+.commBlock > .button-box {
+  padding: 4px 10px;
+  font-size: var(--font-size-sm);
+}
+
+.commRemoveButton {
+  width: 24px;
+  height: 24px;
+}
+
+
+/* =======================================================
+   保存ボタン
+   - #saveCharacter
+======================================================= */
+
+#saveCharacter {
+  padding: 6px 14px;
 }
