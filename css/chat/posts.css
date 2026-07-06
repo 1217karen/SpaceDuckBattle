@@ -1,0 +1,316 @@
+/* =======================================================
+   発言カード
+======================================================= */
+.chatPostCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 8px;
+  padding: 10px;
+}
+
+.chatPostCardReply {
+  border-color: var(--chat-reply-accent);
+  box-shadow:
+    0 0 0 1px rgba(243, 211, 106, 0.18) inset,
+    0 0 12px rgba(243, 211, 106, 0.18);
+}
+
+.chatPostCardPreview,
+.chatPostCardDraftPreview {
+  opacity: var(--theme-preview-opacity);
+}
+
+.chatPostCardContentRow {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.chatPostReplyLabelRow {
+  width: 100%;
+  min-width: 0;
+  margin-top: -3px;
+  line-height: 1.2;
+}
+
+.chatPostCardLeft {
+  width: 60px;
+  flex: 0 0 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.chatPostIcon {
+  width: 60px;
+  height: 60px;
+  display: block;
+}
+
+.chatPostIconImage {
+  width: 100%;
+  height: 100%;
+}
+
+.chatPostCardRight {
+  flex: 1;
+  min-width: 0;
+}
+
+
+
+/* 発言ヘッダー */
+.chatPostHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 3px;
+}
+
+.chatPostHeaderLeft {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.chatPostHeaderRight {
+  flex: 0 0 auto;
+}
+
+.chatPostMetaTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-muted);
+  white-space: nowrap;
+}
+
+.chatPostCreatedAt {
+  color: var(--theme-text-muted);
+}
+
+.chatPostNameRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0;
+  min-width: 0;
+}
+
+.chatPostName {
+  font-weight: bold;
+  max-width: 15em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chatPostEnoSeparator {
+  color: var(--theme-text-muted);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
+.chatPostEnoLink {
+  color: var(--theme-text-muted);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  text-align: left;
+}
+
+.chatPostEnoLink:disabled {
+  cursor: default;
+}
+
+.chatPostCardPrivate {
+  border-color: rgba(210, 120, 180, 0.65);
+  background: linear-gradient(
+    to right,
+    var(--chat-private-bg-start),
+    var(--chat-private-bg-end)
+  );
+}
+
+.chatPostPrivateIcon {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--theme-text-subtle);
+  font-size: 0.9em;
+  vertical-align: baseline;
+}
+
+.chatPostReplyLabel {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: #f3d36a;
+  word-break: break-word;
+}
+
+.chatPostReplyLabelButton {
+  display: inline-block;
+  width: auto;
+  color: inherit;
+  text-align: left;
+}
+
+.chatPostReplyLabelButton:disabled {
+  cursor: default;
+}
+
+.chatPostReplyLabelButton:hover .chatPostReplyLabel {
+  color: #ffe38a;
+}
+
+.chatPostNo {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  color: var(--theme-text-muted);
+  white-space: nowrap;
+}
+
+.chatPostDivider {
+  border-top: 1px solid var(--theme-border-soft);
+  margin-bottom: 5px;
+}
+
+.chatPostBody {
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.chatPostLogLabel {
+  font-size: var(--font-size-sm);
+  font-weight: normal;
+  color: var(--theme-text-muted);
+  letter-spacing: 0.08em;
+}
+
+/* 発言カード下部 */
+.chatPostActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.chatPostFooter {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  text-align: left;
+  color: var(--theme-text-muted);
+}
+
+.chatPostPlaceButton {
+  color: inherit;
+}
+
+.chatPostBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.chatPostBottomRow .chatPostFooter {
+  min-width: 0;
+  flex: 0 1 auto;
+  text-align: right;
+}
+
+.chatPostBottomRow .chatPostActions {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+/* 発言操作ボタン */
+.chatPostActionButton {
+  width: 28px;
+  height: 28px;
+  color: var(--theme-text-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatPostActionButtonDelete:hover {
+  color: #ff8a8a;
+}
+
+.chatPostActionIcon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.chatPostActionIconReply {
+  mask-image: url("../../assets/icons/reply.svg");
+  -webkit-mask-image: url("../../assets/icons/reply.svg");
+}
+
+.chatPostActionIconQuote {
+  mask-image: url("../../assets/icons/quote.svg");
+  -webkit-mask-image: url("../../assets/icons/quote.svg");
+}
+
+.chatPostActionIconDelete {
+  mask-image: url("../../assets/icons/delete.svg");
+  -webkit-mask-image: url("../../assets/icons/delete.svg");
+}
+
+.chatPostActionIconHide {
+  mask-image: url("../../assets/icons/hide.svg");
+  -webkit-mask-image: url("../../assets/icons/hide.svg");
+}
+
+/* =======================================================
+   ログカード
+======================================================= */
+
+.chatPostCardActionLog {
+  max-width: 520px;
+  border: none;
+  background: rgba(72, 76, 84, 0.38);
+  box-shadow: none;
+}
+
+.chatPostCardActionLog .chatPostCardContentRow {
+  gap: 0;
+}
+
+.chatPostCardActionLog .chatPostCardRight {
+  width: 100%;
+}
+
+.chatPostCardActionLog .chatPostHeader {
+  margin-bottom: 3px;
+}
+
+.chatPostCardActionLog .chatPostDivider {
+  margin-bottom: 5px;
+}
+
+
+/* =======================================================
+   メッセージ
+======================================================= */
+.chatPostCardMessage {
+  border: 1px solid rgba(220, 232, 245, 0.42);
+  background: linear-gradient(
+    to right,
+    var(--chat-message-surface),
+    var(--chat-message-surface-end)
+  );
+  color: var(--chat-message-text);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    var(--theme-shadow-panel);
+}
