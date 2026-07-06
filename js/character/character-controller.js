@@ -236,9 +236,12 @@ function loadCharacterForm() {
 
   document.getElementById("unitName").value =
     unit?.name ?? "";
+  
+  document.getElementById("unitName").value =
+    unit?.name ?? "";
 
   document.getElementById("characterProfileText").value =
-  character?.profileText ?? "";
+    character?.profileText ?? "";
 
   currentCommIcons =
     normalizeCommIcons(character?.commIcons);
@@ -350,6 +353,9 @@ document.getElementById("saveCharacter")
     const unitName =
       document.getElementById("unitName").value.trim();
 
+    const unitDescription =
+      document.getElementById("unitDescription").value;
+
     const profileText =
       document.getElementById("characterProfileText").value;
 
@@ -417,7 +423,8 @@ document.getElementById("saveCharacter")
       ...oldUnit,
       eno,
       unitNo: oldUnit.unitNo ?? 1,
-      name: unitName
+      name: unitName,
+      description: unitDescription
     };
 
     saveCharacter(eno, character);
