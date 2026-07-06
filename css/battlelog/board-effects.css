@@ -1,0 +1,395 @@
+/* =======================================================
+   Battlelog board / cut-in / effects
+======================================================= */
+
+#boardFrame {
+width: 100%;
+max-width: 650px;
+height: 500px;
+
+display: block;
+
+flex-shrink: 0;
+
+border: none;
+box-shadow: none;
+
+padding: 0;
+
+position: relative;
+overflow: hidden;
+box-sizing: border-box;
+}
+
+#boardScaleWrap {
+width: 650px;
+height: 500px;
+
+position: absolute;
+top: 0;
+left: 50%;
+
+margin: 0;
+transform-origin: top center;
+will-change: transform;
+}
+
+#boardArea {
+display: flex;
+justify-content: center;
+align-items: center;
+
+width: 650px;
+height: 500px;
+
+background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=board.webp") no-repeat center / contain;
+
+padding: 6px;
+box-sizing: border-box;
+}
+
+#cutinOverlay {
+position: absolute;
+inset: 0;
+z-index: 20;
+
+display: flex;
+justify-content: center;
+align-items: center;
+
+background: rgba(0,0,0,0.35);
+
+pointer-events: none;
+}
+
+#cutinOverlay.hidden {
+display: none;
+}
+
+#cutinImage {
+display: block;
+
+width: 600px;
+height: auto;
+max-height: 400px;
+
+object-fit: contain;
+pointer-events: none;
+
+opacity: 0;
+transform: translateY(24px);
+will-change: transform, opacity;
+}
+
+#cutinImage.cutinAnimate {
+animation: cutinEnterStayExit 2000ms linear forwards;
+}
+
+/* =======================================================
+盤面
+======================================================= */
+
+#board {
+  position: relative;
+}
+
+/* =======================================================
+色変数
+======================================================= */
+
+:root {
+--attack-color: 255,0,0;
+--heal-color: 0,255,0;
+--buff-color: 255,230,0;
+--debuff-color: 180,0,255;
+
+--ui-speed: 1;
+
+--log-width: 500px;
+}
+
+/* 盤面セル */
+
+.cell {
+width: 68px;
+height: 68px;
+
+background: transparent;
+border: 1px solid rgba(255,255,255,0.2);
+
+position: relative;
+}
+
+/* =======================================================
+ユニット表示
+======================================================= */
+
+.unitWrapper {
+position: relative;
+width: 100%;
+height: 100%;
+}
+
+.unitImage {
+width: 60px;
+height: 60px;
+
+position: absolute;
+
+top: 50%;
+left: 50%;
+
+transform: translate(-50%, -50%);
+}
+
+.facingMarker {
+position: absolute;
+inset: 0;
+pointer-events: none;
+}
+
+/* =======================================================
+向き表示
+======================================================= */
+
+.team1 .face-N { background: linear-gradient(to bottom, #00ff88 0px, transparent 6px); }
+.team1 .face-S { background: linear-gradient(to top, #00ff88 0px, transparent 6px); }
+.team1 .face-E { background: linear-gradient(to left, #00ff88 0px, transparent 6px); }
+.team1 .face-W { background: linear-gradient(to right, #00ff88 0px, transparent 6px); }
+
+.team2 .face-N { background: linear-gradient(to bottom, #bb55ff 0px, transparent 6px); }
+.team2 .face-S { background: linear-gradient(to top, #bb55ff 0px, transparent 6px); }
+.team2 .face-E { background: linear-gradient(to left, #bb55ff 0px, transparent 6px); }
+.team2 .face-W { background: linear-gradient(to right, #bb55ff 0px, transparent 6px); }
+
+/* =======================================================
+ハイライト / エフェクト
+======================================================= */
+
+.cell.attackHighlight { background-color: rgba(var(--attack-color),0.45); }
+.cell.healHighlight { background-color: rgba(var(--heal-color),0.45); }
+.cell.buffHighlight { background-color: rgba(var(--buff-color),0.6); }
+.cell.debuffHighlight { background-color: rgba(var(--debuff-color),0.6); }
+
+.cell.attackRange { background-color: rgba(var(--attack-color),0.15); }
+.cell.healRange { background-color: rgba(var(--heal-color),0.15); }
+.cell.buffRange { background-color: rgba(var(--buff-color),0.2); }
+.cell.debuffRange { background-color: rgba(var(--debuff-color),0.2); }
+
+.cell.activeUnit {
+animation: activeGlow calc(0.8s / var(--ui-speed)) ease-in-out;
+}
+
+/* =======================================================
+アニメーション
+======================================================= */
+
+.unitImage.shake {
+animation: unitShake calc(0.25s / var(--ui-speed)) ease;
+}
+
+.unitImage.bounce {
+animation: unitBounce calc(0.25s / var(--ui-speed)) ease;
+}
+
+.unitImage.buffFloat {
+animation: unitBuffFloat calc(0.5s / var(--ui-speed)) ease;
+}
+
+.unitImage.debuffSink {
+animation: unitDebuffSink calc(0.5s / var(--ui-speed)) ease;
+}
+
+/* ダメージ揺れ */
+
+@keyframes unitShake {
+0%   { transform: translate(-50%, -50%) translateX(0); }
+25%  { transform: translate(-50%, -50%) translateX(-4px); }
+50%  { transform: translate(-50%, -50%) translateX(4px); }
+75%  { transform: translate(-50%, -50%) translateX(-4px); }
+100% { transform: translate(-50%, -50%) translateX(0); }
+}
+
+/* 回復バウンド */
+
+@keyframes unitBounce {
+0%   { transform: translate(-50%, -50%) translateY(0); }
+25%  { transform: translate(-50%, -50%) translateY(-4px); }
+50%  { transform: translate(-50%, -50%) translateY(0); }
+75%  { transform: translate(-50%, -50%) translateY(-4px); }
+100% { transform: translate(-50%, -50%) translateY(0); }
+}
+
+/* バフ浮き */
+
+@keyframes unitBuffFloat {
+0%   { transform: translate(-50%, -50%) translateY(0); }
+80%  { transform: translate(-50%, -50%) translateY(-4px); }
+90%  { transform: translate(-50%, -50%) translateY(-4px); }
+100% { transform: translate(-50%, -50%) translateY(0); }
+}
+
+/* デバフ沈み */
+
+@keyframes unitDebuffSink {
+0%   { transform: translate(-50%, -50%) translateY(0); }
+80%  { transform: translate(-50%, -50%) translateY(4px); }
+99%  { transform: translate(-50%, -50%) translateY(4px); }
+100% { transform: translate(-50%, -50%) translateY(0); }
+}
+
+/* 行動ユニットセル発光 */
+
+@keyframes activeGlow {
+0% {
+background-color: rgba(255,255,255,0.15);
+box-shadow: inset 0 0 0px rgba(255,255,255,0);
+}
+
+30% {
+background-color: rgba(255,255,255,0.40);
+box-shadow: inset 0 0 10px rgba(255,255,255,0.9);
+}
+
+50% {
+background-color: rgba(255,255,255,0.40);
+box-shadow: inset 0 0 10px rgba(255,255,255,0.9);
+}
+
+100% {
+background-color: rgba(255,255,255,0.15);
+box-shadow: inset 0 0 0px rgba(255,255,255,0);
+}
+}
+
+/* カットイン */
+
+@keyframes cutinEnterStayExit {
+0% {
+opacity: 0;
+transform: translateY(24px);
+}
+
+15% {
+opacity: 1;
+transform: translateY(4px);
+}
+
+85% {
+opacity: 1;
+transform: translateY(-4px);
+}
+
+100% {
+opacity: 0;
+transform: translateY(-24px);
+}
+}
+/* =======================================================
+数字ポップ
+======================================================= */
+
+.floatingNumber{
+
+font-family: 'DotGothic16', monospace;
+
+position:absolute;
+
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+--float-size-base: 14px;
+--float-size-scale: 1;
+font-size: calc(var(--float-size-base) * var(--float-size-scale));
+font-weight:bold;
+
+white-space:nowrap;
+
+pointer-events:none;
+
+animation:floatNumber 0.6s ease-out forwards;
+
+text-shadow:
+  1px 0 0 #000,
+ -1px 0 0 #000,
+  0 1px 0 #000,
+  0 -1px 0 #000,
+  1px 1px 0 #000,
+ -1px -1px 0 #000,
+  1px -1px 0 #000,
+ -1px 1px 0 #000;
+}
+
+.skillNumber{
+color:#ffffff;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.damageNumber{
+color:#ff5555;
+--float-size-scale: 1.2;
+}
+
+.healNumber{
+color:#66ff99;
+--float-size-scale: 1.2;
+}
+
+.effectApplyNumber{
+color:#66ccff;
+}
+
+.effectRemoveNumber{
+color:#bbbbbb;
+}
+
+.effectEndNumber{
+color:#888;
+--float-size-scale: 0.85;
+}
+
+.statUpNumber{
+color:#66ff99;
+}
+
+.statDownNumber{
+color:#ff5555;
+}
+
+.statUpNumber,
+.statDownNumber{
+}
+
+.criticalNumber{
+color:#ffd966;
+font-weight:bold;
+letter-spacing:1px;
+--float-size-scale: 0.85;
+}
+
+.effectTriggerNumber{
+color:#ffcc33;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+@keyframes floatNumber{
+
+0%{
+opacity:1;
+transform:translate(-50%,-50%) translateY(0);
+}
+
+80%{
+opacity:1;
+}
+
+100%{
+opacity:0;
+transform:translate(-50%,-50%) translateY(-26px);
+}
+
+}
