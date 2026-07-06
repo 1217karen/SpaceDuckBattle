@@ -214,7 +214,7 @@ function renderStatRadar(stats) {
 
 function renderNotFound(message) {
   profilePage.innerHTML = `
-    <section class="profileCard">
+    <section class="common-card-framed common-card-rounded-lg common-card-profile profileCard">
       <p class="profileMessage">${escapeHtml(message)}</p>
     </section>
   `;
@@ -273,12 +273,12 @@ function renderProfile(eno, character, unit, options = {}) {
   const characterIconHtml = characterIcons.length > 0
     ? characterIcons.map(icon => `
         <img
-          class="profileCommIcon"
+          class="commonIcon60 profileCommIcon"
           src="${escapeHtml(icon.url)}"
           alt="${escapeHtml(icon.name)}"
         >
       `).join("")
-    : `<p class="emptyText">設定されているアイコンはありません</p>`;
+    : `<p class="commonEmptyText emptyText">設定されているアイコンはありません</p>`;
 
   const statValueHtml = unitStatItems
     .map(item => `
@@ -290,7 +290,7 @@ function renderProfile(eno, character, unit, options = {}) {
     .join("");
 
   profilePage.innerHTML = `
-    <section class="profileCard">
+    <section class="common-card-framed common-card-rounded-lg common-card-profile profileCard">
       <header class="profileIdBar">
         <div class="profileIdMain">
           <div class="common-gradientHeading profileKicker">BATTLER FILE</div>
@@ -323,7 +323,7 @@ function renderProfile(eno, character, unit, options = {}) {
         <div class="profileSidePanel">
 
           <section class="common-card profileInfoBlock profileUnitBlock">
-            <h3 class="common-gradientHeading profileSectionHeading">DUCK DATA</h3>
+            <h3 class="common-gradientHeading commonSectionHeading commonSectionHeading-medium profileSectionHeading">DUCK DATA</h3>
 
             ${hasUnit ? `
               <div class="profileUnitHeader">
@@ -366,19 +366,19 @@ function renderProfile(eno, character, unit, options = {}) {
                 </div>
               </div>
             ` : `
-              <p class="emptyText">アヒル情報はありません</p>
+              <p class="commonEmptyText emptyText">アヒル情報はありません</p>
             `}
           </section>
         </div>
       </div>
 
       <section class="common-card profileSection profileTextSection">
-        <h3 class="common-gradientHeading profileSectionHeading">BATTLER PROFILE</h3>
+        <h3 class="common-gradientHeading commonSectionHeading commonSectionHeading-medium profileSectionHeading">BATTLER PROFILE</h3>
         <p class="profileText">${escapeHtml(profileText)}</p>
       </section>
 
       <section class="common-card profileSection profileIconSection">
-        <h3 class="common-gradientHeading profileSectionHeading">ICONS</h3>
+        <h3 class="common-gradientHeading commonSectionHeading commonSectionHeading-medium profileSectionHeading">ICONS</h3>
         <div class="profileCommIconGrid">
           ${characterIconHtml}
         </div>
