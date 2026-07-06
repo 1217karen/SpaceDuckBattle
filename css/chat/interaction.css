@@ -1,0 +1,56 @@
+/* =======================================================
+   入力・ショップ・アクション共通枠
+======================================================= */
+.chatInteractionSection {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.chatInteractionInner {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.chatInteractionPanel {
+  width: 100%;
+  padding: 12px;
+}
+
+.chatInteractionPanelReply {
+  border-color: var(--chat-reply-accent);
+}
+
+.chatInteractionPanelPrivate {
+  background: linear-gradient(
+    to right,
+    var(--chat-private-bg-start),
+    var(--chat-private-bg-end)
+  );
+}
+
+.chatInteractionHeading {
+  min-width: 180px;
+  margin-bottom: 8px;
+  padding: 0 42px 1px 8px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.chatInteractionBody {
+  width: 100%;
+}
+
+.chatInteractionPanelMessage {
+  border-color: rgba(190, 215, 235, 0.48);
+  background: linear-gradient(
+    to right,
+    var(--chat-message-surface),
+    var(--chat-message-surface-end)
+  );
+  color: var(--chat-message-text);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    var(--theme-shadow-panel);
+}
