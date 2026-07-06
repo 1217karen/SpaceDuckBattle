@@ -216,7 +216,7 @@ function createSkillDialogueRow(dialogueData = {}) {
 
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "commIconPickerButton button-box";
+  button.className = "commonIcon60 commIconPickerButton button-box";
   button.dataset.selectedId =
     dialogueData.iconId ? String(dialogueData.iconId) : "";
   button.dataset.selectedUrl =
