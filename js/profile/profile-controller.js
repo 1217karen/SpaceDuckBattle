@@ -278,7 +278,7 @@ function renderProfile(eno, character, unit, options = {}) {
           alt="${escapeHtml(icon.name)}"
         >
       `).join("")
-    : `<p class="emptyText">公開されているアイコンはありません</p>`;
+    : `<p class="emptyText">設定されているアイコンはありません</p>`;
 
   const statValueHtml = unitStatItems
     .map(item => `
@@ -341,8 +341,8 @@ function renderProfile(eno, character, unit, options = {}) {
                       <button
                         type="button"
                         class="profileFavoriteButton profileUnitFavoriteButton button-icon"
-                        title="${isUnitFavorite ? "ユニットのお気に入り解除" : "ユニットをお気に入り登録"}"
-                        aria-label="${isUnitFavorite ? "ユニットのお気に入り解除" : "ユニットをお気に入り登録"}"
+                        title="${isUnitFavorite ? "アヒルのお気に入り解除" : "アヒルをお気に入り登録"}"
+                        aria-label="${isUnitFavorite ? "アヒルのお気に入り解除" : "アヒルをお気に入り登録"}"
                         data-favorite-unit-button
                       >${isUnitFavorite ? "★" : "☆"}</button>
                     `}
@@ -366,7 +366,7 @@ function renderProfile(eno, character, unit, options = {}) {
                 </div>
               </div>
             ` : `
-              <p class="emptyText">ユニット情報はありません</p>
+              <p class="emptyText">アヒル情報はありません</p>
             `}
           </section>
         </div>
@@ -407,8 +407,8 @@ function renderProfile(eno, character, unit, options = {}) {
 
       showToast(
         result.isFavorite
-          ? "お気に入りキャラに登録しました"
-          : "お気に入りキャラを解除しました",
+          ? "お気に入りバトラーに登録しました"
+          : "お気に入りバトラーを解除しました",
         {
           type: result.isFavorite ? "success" : "info"
         }
@@ -431,20 +431,20 @@ function renderProfile(eno, character, unit, options = {}) {
 
       favoriteUnitButton.title =
         result.isFavorite
-          ? "ユニットのお気に入り解除"
-          : "ユニットをお気に入り登録";
+          ? "アヒルのお気に入り解除"
+          : "アヒルをお気に入り登録";
 
       favoriteUnitButton.setAttribute(
         "aria-label",
         result.isFavorite
-          ? "ユニットのお気に入り解除"
-          : "ユニットをお気に入り登録"
+          ? "アヒルのお気に入り解除"
+          : "アヒルをお気に入り登録"
       );
 
       showToast(
         result.isFavorite
-          ? "お気に入りユニットに登録しました"
-          : "お気に入りユニットを解除しました",
+          ? "お気に入りアヒルに登録しました"
+          : "お気に入りアヒルを解除しました",
         {
           type: result.isFavorite ? "success" : "info"
         }
