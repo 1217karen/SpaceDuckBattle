@@ -89,7 +89,7 @@ export function createPostCard(post, options = {}) {
 
   const postBox = document.createElement("div");
 
-  const classNames = ["chatPostCard"];
+  const classNames = ["common-card-framed", "common-card-gradient", "chatPostCard"];
 
   if (post.type === "actionLog") {
     classNames.push("chatPostCardActionLog");
@@ -138,7 +138,7 @@ if (shouldShowIcon) {
       : "";
 
   const iconImg = document.createElement("img");
-  iconImg.className = "chatPostIconImage";
+  iconImg.className = "commonIcon60 chatPostIconImage";
   iconImg.src = iconUrl || getNoImageUrl();
   iconImg.alt = "post icon";
   iconBox.appendChild(iconImg);
