@@ -1,0 +1,31 @@
+:root {
+  --chat-font-base: 13px;
+  --chat-font-scale-title: 2;
+  --chat-font-scale-body: 1;
+  --chat-font-scale-small: 0.86;
+  --chat-font-scale-xs: 0.79;
+  --chat-reply-accent: rgba(243, 211, 106, 0.9);
+  --chat-private-bg-start: rgba(70, 42, 66, 0.94);
+  --chat-private-bg-end: rgba(52, 42, 64, 0.94);
+  --chat-message-surface: rgba(185, 224, 240, 0.42);
+  --chat-message-surface-end: rgba(145, 200, 225, 0.38);
+}
+
+.chatTabButton,
+.chatHeaderTitle,
+.chatPostLogLabel {
+  font-family: var(--font-family-display);
+  letter-spacing: 0.08em;
+}
+
+/* =======================================================
+   全体背景
+======================================================= */
+body {
+  margin: 0;
+  background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
