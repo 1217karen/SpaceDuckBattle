@@ -1,6 +1,4 @@
 .commIconPickerButton {
-  width: 60px;
-  height: 60px;
   padding: 0;
   background: rgba(0, 0, 0, 0.35);
   display: flex;
@@ -13,8 +11,6 @@
 .commIconPickerButton img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 .iconPickerModal {
@@ -65,17 +61,8 @@
 }
 
 .iconPickerCard {
-  width: 60px;
-  height: 60px;
   cursor: pointer;
   box-sizing: border-box;
-}
-
-.iconPickerCard img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  display: block;
 }
 
 .iconPickerEmpty {
