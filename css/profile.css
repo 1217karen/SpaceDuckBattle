@@ -62,11 +62,22 @@
 }
 
 .profileKicker {
+  display: inline-block;
+  min-width: 160px;
+  padding: 0 42px 2px 8px;
   font-family: var(--font-family-display);
   font-size: 22px;
-  line-height: 1;
+  font-weight: normal;
+  line-height: 1.25;
   letter-spacing: 0.18em;
-  color: var(--theme-text-accent);
+  color: var(--theme-text-main);
+  background: linear-gradient(
+    to right,
+    rgba(95, 210, 245, 0.56),
+    rgba(95, 210, 245, 0.18),
+    rgba(95, 210, 245, 0)
+  );
+  box-sizing: border-box;
 }
 
 .profileIdentityRow {
