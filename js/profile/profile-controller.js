@@ -227,7 +227,7 @@ function renderProfile(eno, character, unit, options = {}) {
     character?.fullName?.trim() || "未設定";
 
   const profileText =
-    character?.profileText?.trim() || "未設定";
+    character?.profileText?.trim() || "バトラー情報が未登録です。";
 
   const profileImageUrl =
     getPublicProfileImageUrl(character);
