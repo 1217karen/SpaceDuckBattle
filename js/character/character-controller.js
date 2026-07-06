@@ -72,7 +72,7 @@ function createCommRowElement(typeKey, rowData = {}) {
 
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "commIconPickerButton button-box";
+  button.className = "commonIcon60 commIconPickerButton button-box";
   button.dataset.selectedId =
     rowData.iconId ? String(rowData.iconId) : "";
   button.dataset.selectedUrl =
