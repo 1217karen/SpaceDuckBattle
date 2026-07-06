@@ -231,23 +231,26 @@
   align-items: center;
   gap: 12px;
   margin-top: 12px;
+  flex-wrap: wrap;
 }
 
 .profileStatRadarWrap {
-  width: 130px;
+  width: clamp(96px, 36vw, 130px);
   flex: 0 0 auto;
 }
 
 .profileStatRadar {
-  width: 130px;
-  height: 130px;
+  width: 100%;
+  height: auto;
   display: block;
 }
 
-.profileStatRadarGrid {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.13);
-  stroke-width: 0.8;
+.profileStatValueGrid {
+  flex: 1 1 180px;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(64px, 1fr));
+  gap: 6px;
 }
 
 .profileStatRadarAxis {
@@ -355,20 +358,23 @@
   }
 
   .profileStatsLayout {
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
   }
 
   .profileStatRadarWrap {
-    width: 110px;
+    width: 112px;
+  }
+
+  .profileStatValueGrid {
+    width: 100%;
+    flex-basis: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .profileStatRadar {
     width: 110px;
     height: 110px;
-  }
-
-  .profileStatValueGrid {
-    grid-template-columns: 1fr;
   }
 
   .profileCommIconGrid {
