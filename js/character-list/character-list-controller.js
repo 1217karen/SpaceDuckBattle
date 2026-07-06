@@ -37,7 +37,7 @@ function renderCharacterList() {
   const characters = getCharacterSummaries();
 
   if (characters.length === 0) {
-    characterList.innerHTML = `<p class="emptyText">登録キャラクターはいません</p>`;
+    characterList.innerHTML = `<p class="commonEmptyText emptyText">登録されているキャラクターはいません</p>`;
     return;
   }
 
