@@ -1,0 +1,142 @@
+/* =======================================================
+   ヘッダー
+======================================================= */
+.chatHeader {
+  width: 100%;
+  margin-bottom: 20px;
+  color: var(--theme-text-main);
+}
+
+.chatHeaderInner {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.42),
+    rgba(0, 0, 0, 0.28)
+  );
+  box-shadow: var(--theme-shadow-panel);
+  box-sizing: border-box;
+}
+
+.chatHeaderTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.chatHeaderTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.chatHeaderTitle {
+  margin: 0;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-title));
+  line-height: 1.3;
+  color: var(--theme-text-main);
+}
+
+/* ヘッダー内リンク風ボタン */
+.chatHeaderLinkButton {
+  font-size: calc(var(--chat-font-base) * 0.93);
+}
+
+.chatHeaderAroundToggle,
+.chatThreadCloseButton,
+.chatHeaderFavoriteButton {
+  flex: 0 0 auto;
+}
+
+/* お気に入りボタン */
+.chatHeaderFavoriteButton {
+  color: #f3d36a;
+  font-size: calc(var(--chat-font-base) * 1.2);
+}
+
+.chatHeaderFavoriteButton:hover {
+  color: #ffe38a;
+}
+
+.chatHeaderFavoriteButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.chatHeaderDivider {
+  border-top: 1px dotted var(--theme-border-soft);
+  margin-bottom: 10px;
+}
+
+.chatHeaderBody {
+  padding-left: 1em;
+}
+
+.chatHeaderShortDescription {
+  margin: 0 0 8px;
+  line-height: 1.7;
+}
+
+.chatHeaderLongDescription {
+  margin: 0 0 8px;
+  line-height: 1.8;
+}
+
+.chatHeaderShortDescription,
+.chatHeaderLongDescription {
+  color: var(--theme-text-main);
+}
+
+.chatHeaderLongDescription:last-child {
+  margin-bottom: 0;
+}
+
+.chatHeaderDetailToggle {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.chatHeaderDetailContent {
+  padding-left: 1em;
+}
+
+/* =======================================================
+   周辺表示パネル
+======================================================= */
+.chatAroundPanel {
+  margin: 0 0 12px 0;
+  padding: 4px 0 8px 1em;
+  max-width: 480px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+}
+
+.chatAroundRow {
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.chatAroundPrefix {
+  color: var(--theme-text-muted);
+}
+
+.chatAroundCurrent {
+  color: var(--theme-text-main);
+}
+
+.chatAroundLinkButton {
+  color: var(--theme-text-accent);
+  text-align: left;
+}
