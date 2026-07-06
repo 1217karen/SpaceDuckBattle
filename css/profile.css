@@ -1,11 +1,24 @@
+/* =======================================================
+   プロフィールページ全体
+   - profile.html の #profilePage
+======================================================= */
+
 #profilePage {
   width: 100%;
 }
 
+/* ページ見出し：profile.html の h1 */
 .center-panel > h1 {
   font-family: var(--font-family-display);
   letter-spacing: 0.1em;
 }
+
+
+/* =======================================================
+   外側カード
+   - profile-controller.js の .profileCard
+   - プロフィール全体を包むメインパネル
+======================================================= */
 
 .profileCard {
   width: 100%;
@@ -25,6 +38,14 @@
   color: var(--theme-text-main);
   box-sizing: border-box;
 }
+
+
+/* =======================================================
+   上部IDバー
+   - PROFILE / Eno / キャラ名 / キャラお気に入り
+   - Eno は URLクエリ
+   - キャラ名は character.fullName
+======================================================= */
 
 .profileIdBar {
   display: flex;
@@ -83,12 +104,29 @@
   color: #ffe38a;
 }
 
+
+/* =======================================================
+   メイン2カラム
+   - 左：プロフィール画像 character.profileImages
+   - 右：CHARACTER DATA / UNIT DATA
+======================================================= */
+
 .profileMainGrid {
   display: grid;
   grid-template-columns: minmax(280px, 500px) minmax(260px, 1fr);
   align-items: start;
   gap: 16px;
 }
+
+
+/* =======================================================
+   プロフィール画像
+   - character.profileImages から公開可の画像をランダム表示
+   - 画像がない場合は No image
+   - 横は最大500px
+   - 縦は最大1000px
+   - 縦長すぎる画像はアスペクト比維持で縮小
+======================================================= */
 
 .profileImageFrame {
   width: 100%;
@@ -116,12 +154,28 @@
   object-fit: contain;
 }
 
+
+/* =======================================================
+   右側情報パネル
+   - CHARACTER DATA
+   - UNIT DATA
+======================================================= */
+
 .profileSidePanel {
   display: flex;
   flex-direction: column;
   gap: 12px;
   min-width: 0;
 }
+
+
+/* =======================================================
+   共通情報ブロック
+   - CHARACTER DATA
+   - UNIT DATA
+   - PROFILE TEXT
+   - COMM ICONS
+======================================================= */
 
 .profileInfoBlock,
 .profileSection {
@@ -153,6 +207,13 @@
   box-sizing: border-box;
 }
 
+
+/* =======================================================
+   CHARACTER DATA
+   - character.fullName
+   - Eno
+======================================================= */
+
 .profileInfoGrid {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -170,6 +231,21 @@
   min-width: 0;
   color: var(--theme-text-main);
   word-break: break-word;
+}
+
+
+/* =======================================================
+   UNIT DATA
+   - unit.icon.default
+   - unit.name
+   - unit.type
+   - unit.stats
+   - ユニットお気に入りボタン
+======================================================= */
+
+.profileUnitBlock {
+  container-type: inline-size;
+  container-name: profile-unit;
 }
 
 .profileUnitHeader {
@@ -226,6 +302,19 @@
   line-height: 1.6;
 }
 
+
+/* =======================================================
+   UNIT DATA：ステータス
+   - unit.stats.atk
+   - unit.stats.def
+   - unit.stats.heal
+   - unit.stats.speed
+   - unit.stats.cri
+   - unit.stats.tec
+   - レーダーは最大100基準
+   - 数値は実数表示
+======================================================= */
+
 .profileStatsLayout {
   display: flex;
   align-items: center;
@@ -235,7 +324,7 @@
 }
 
 .profileStatRadarWrap {
-  width: clamp(96px, 36vw, 130px);
+  width: clamp(96px, 36cqw, 130px);
   flex: 0 0 auto;
 }
 
@@ -298,6 +387,31 @@
   font-variant-numeric: tabular-nums;
 }
 
+
+/* UNIT DATA が狭いときだけ、ステータスを縦積みにする */
+@container profile-unit (max-width: 360px) {
+  .profileStatsLayout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profileStatRadarWrap {
+    width: 112px;
+  }
+
+  .profileStatValueGrid {
+    width: 100%;
+    flex: 0 0 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* =======================================================
+   PROFILE TEXT
+   - character.profileText
+======================================================= */
+
 .profileSection {
   margin-top: 16px;
 }
@@ -308,6 +422,15 @@
   margin: 0;
   word-break: break-word;
 }
+
+
+/* =======================================================
+   COMM ICONS
+   - character.commIcons
+   - character.defaultIcon は出さない
+   - 最大20件
+   - 名前は表示しない
+======================================================= */
 
 .profileCommIconGrid {
   display: grid;
@@ -325,6 +448,15 @@
   background: rgba(0, 0, 0, 0.24);
 }
 
+
+/* =======================================================
+   空表示・エラー表示
+   - アイコンなし
+   - ユニット情報なし
+   - Eno未指定
+   - 存在しないEno
+======================================================= */
+
 .emptyText {
   margin: 0;
   color: var(--theme-text-muted);
@@ -336,6 +468,12 @@
   line-height: 1.6;
 }
 
+
+/* =======================================================
+   レスポンシブ：メイン2カラムを縦積みにする
+   - プロフィール画像と右側情報欄が窮屈になる幅
+======================================================= */
+
 @media (max-width: 820px) {
   .profileMainGrid {
     grid-template-columns: 1fr;
@@ -346,6 +484,11 @@
   }
 }
 
+
+/* =======================================================
+   レスポンシブ：かなり狭い画面
+======================================================= */
+
 @media (max-width: 560px) {
   .profileCard {
     padding: 12px;
@@ -353,21 +496,6 @@
 
   .profileIdBar {
     align-items: flex-start;
-  }
-
-  .profileStatsLayout {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profileStatRadarWrap {
-    width: 112px;
-  }
-
-  .profileStatValueGrid {
-    width: 100%;
-    flex-basis: auto;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .profileCommIconGrid {
