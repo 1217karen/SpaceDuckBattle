@@ -293,7 +293,7 @@ function renderProfile(eno, character, unit, options = {}) {
     <section class="profileCard">
       <header class="profileIdBar">
         <div class="profileIdMain">
-          <div class="profileKicker">PROFILE</div>
+          <div class="profileKicker">BATTLER FILE</div>
           <div class="profileIdentityRow">
             <span class="profileEnoText">Eno.${escapeHtml(eno)}</span>
             <h2 class="characterName">${escapeHtml(fullName)}</h2>
@@ -323,7 +323,7 @@ function renderProfile(eno, character, unit, options = {}) {
         <div class="profileSidePanel">
 
           <section class="profileInfoBlock profileUnitBlock">
-            <h3>UNIT DATA</h3>
+            <h3>DUCK DATA</h3>
 
             ${hasUnit ? `
               <div class="profileUnitHeader">
@@ -373,12 +373,12 @@ function renderProfile(eno, character, unit, options = {}) {
       </div>
 
       <section class="profileSection profileTextSection">
-        <h3>PROFILE TEXT</h3>
+        <h3>BATTLER PROFILE</h3>
         <p class="profileText">${escapeHtml(profileText)}</p>
       </section>
 
       <section class="profileSection profileIconSection">
-        <h3>COMM ICONS</h3>
+        <h3>ICONS</h3>
         <div class="profileCommIconGrid">
           ${characterIconHtml}
         </div>
