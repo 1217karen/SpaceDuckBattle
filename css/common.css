@@ -191,6 +191,66 @@ button:hover{
   border-color: var(--theme-border-main);
 }
 
+.common-card-framed {
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+}
+
+.common-card-rounded-lg {
+  border-radius: var(--theme-radius-lg);
+}
+
+.common-card-surface {
+  background: var(--theme-surface-3);
+}
+
+.common-card-panel {
+  border-color: rgba(120, 160, 190, 0.55);
+  background: linear-gradient(
+    to right,
+    rgba(38, 52, 66, 0.72),
+    rgba(48, 58, 72, 0.72)
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    var(--theme-shadow-panel);
+}
+
+.common-card-gradient {
+  background: linear-gradient(
+    to right,
+    var(--theme-surface-2),
+    var(--theme-surface-3)
+  );
+  box-shadow: var(--theme-shadow-panel);
+}
+
+.common-card-profile {
+  background: linear-gradient(
+    to right,
+    rgba(18, 28, 42, 0.82),
+    rgba(24, 34, 48, 0.76)
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    var(--theme-shadow-panel);
+}
+
+.common-card-subtle {
+  border-color: var(--theme-border-soft);
+  border-radius: var(--theme-radius-sm);
+  background: var(--theme-surface-3);
+}
+
+.commonIcon60 {
+  width: 60px;
+  height: 60px;
+  display: block;
+  object-fit: cover;
+}
+
 .commonModalOverlay {
   position: fixed;
   inset: 0;
@@ -222,6 +282,32 @@ button:hover{
   color: var(--theme-text-main);
   background: var(--gradient-heading-bg, var(--theme-heading-gradient));
   box-sizing: border-box;
+}
+
+.commonSectionHeading {
+  min-width: 160px;
+  padding: 0 36px 2px 8px;
+  font-weight: normal;
+  letter-spacing: 0.12em;
+  line-height: 1.35;
+}
+
+.commonSectionHeading-large {
+  font-size: 20px;
+}
+
+.commonSectionHeading-medium {
+  font-size: 17px;
+}
+
+.commonSectionHeading-small {
+  font-size: var(--font-size-md);
+}
+
+.commonEmptyText {
+  margin: 0;
+  color: var(--theme-text-muted);
+  line-height: 1.6;
 }
 
 /* =======================================================
