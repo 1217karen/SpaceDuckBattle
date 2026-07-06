@@ -355,8 +355,8 @@ function renderProfile(eno, character, unit, options = {}) {
                 </div>
               </div>
 
-              ${unitTypeDescription ? `
-                <p class="profileUnitDescription">${escapeHtml(unitTypeDescription)}</p>
+              ${unitDescription ? `
+                <p class="profileUnitDescription">${escapeHtml(unitDescription)}</p>
               ` : ""}
 
               <div class="profileStatsLayout">
