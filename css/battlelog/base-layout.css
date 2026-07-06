@@ -1,0 +1,154 @@
+/* =======================================================
+   Battlelog base / layout
+======================================================= */
+
+/* =======================================================
+デバッグ用表示（レイアウト境界確認）
+・カラム領域の可視化
+・グリッド境界ライン表示
+======================================================= */
+
+/*
+#leftSide {
+  outline: 2px solid red;
+}
+
+#centerArea {
+  outline: 2px solid blue;
+}
+
+#rightSide {
+  outline: 2px solid green;
+}
+*/
+
+/* =======================================================
+全体の背景
+======================================================= */
+body {
+  margin: 0;
+
+  background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* =======================================================
+レイアウト（画面構成）
+======================================================= */
+
+#battleLayout {
+display: grid;
+
+/* 左余白可変 / 中央固定 / 右余白可変 */
+grid-template-columns: minmax(330px, 1fr) minmax(650px, 800px) minmax(330px, 1fr);
+
+height: 100vh;
+
+gap: 20px;
+position: relative;
+}
+
+#leftSide,
+#rightSide,
+#centerArea {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE / Edge旧 */
+}
+
+#leftSide::-webkit-scrollbar,
+#rightSide::-webkit-scrollbar,
+#centerArea::-webkit-scrollbar {
+  display: none;              /* Chrome / Safari */
+}
+
+/* =======================================================
+中央エリア
+======================================================= */
+
+#centerArea {
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+align-items: center;
+
+width: 100%;
+max-width: 800px;
+min-width: 650px;
+height: 100%;
+overflow-y: auto;
+
+position: relative;
+min-height: 0;
+}
+
+#centerContent {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 5px;
+
+width: 650px;
+padding-bottom: 20px;
+min-width: 0;
+
+flex: 1;
+min-height: 0;
+}
+
+/* サイドボタン */
+
+#commPanelRow {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 5px;
+
+width: min(650px, 100%);
+}
+
+.sideToggleButton {
+display: none;
+
+min-width: 50px;
+height: 40px;
+padding: 0 14px;
+
+background: rgba(10, 20, 40, 0.92);
+color: #aee0ff;
+
+border: 1px solid rgba(120,180,255,0.7);
+border-radius: 8px;
+
+font-family: 'Iceberg', sans-serif;
+font-size: 14px;
+letter-spacing: 0.5px;
+white-space: nowrap;
+
+box-shadow:
+  0 0 8px rgba(80,140,255,0.25),
+  inset 0 0 6px rgba(120,200,255,0.12);
+
+cursor: pointer;
+flex-shrink: 0;
+}
+
+.sideToggleButton:hover {
+background: rgba(70, 100, 145, 0.96);
+}
+
+/* ターン表示　いったん消した */
+
+#turnDisplay {
+display: none;
+
+text-align: center;
+font-size: 35px;
+font-weight: normal;
+
+font-family: 'Iceberg', sans-serif;
+color: #ffffff;
+}
+
