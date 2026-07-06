@@ -242,7 +242,7 @@ export const places = [
     parentId: "E1-1",
     kind: "room",
     layer: null,
-    name: "☆☆広場",
+    name: "⚪🎊🖐️広場",
     accessType: "public",
     showParentMainAreaPreview: true
   },
@@ -253,7 +253,7 @@ export const places = [
     parentId: "E3-1",
     kind: "room",
     layer: null,
-    name: "××屋",
+    name: "12345ABCD",
     accessType: "public",
     showParentMainAreaPreview: true
   },
