@@ -1,0 +1,465 @@
+/* =======================================================
+   Battlelog communication panel / side unit panels
+======================================================= */
+
+/* =======================================================
+通信パネル
+======================================================= */
+
+#commPanel {
+  width: min(460px, 100%);
+  min-height: 84px;
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  column-gap: 10px;
+  align-items: stretch;
+
+  padding: 10px 10px;
+
+  background:
+    linear-gradient(
+      to right,
+      rgba(20,40,70,0.92),
+      rgba(10,20,40,0.92)
+    );
+
+  border: 2px solid rgba(120,180,255,0.75);
+  border-radius: 8px;
+
+  box-shadow:
+    0 0 10px rgba(80,140,255,0.35),
+    inset 0 0 10px rgba(120,200,255,0.15);
+
+  position: relative;
+  overflow: hidden;
+}
+
+#commPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.05) 0px,
+      rgba(255,255,255,0.05) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+#commLeft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  z-index: 1;
+}
+
+#commIconFrame {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(120,180,255,0.7);
+
+  box-shadow:
+    0 0 8px rgba(80,140,255,0.25),
+    inset 0 0 6px rgba(120,200,255,0.12);
+}
+
+#commIcon {
+  width: 60px;
+  height: 60px;
+  display: block;
+  object-fit: cover;
+}
+
+#commRight {
+  min-width: 0;
+  min-height: 60px;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+  row-gap: 6px;
+  align-content: center;
+
+  position: relative;
+  z-index: 1;
+}
+
+#commName {
+  min-width: 0;
+  min-height: 18px;
+
+  font-family: 'Iceberg', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #8fd3ff;
+
+  text-shadow: 0 0 6px rgba(120,200,255,0.45);
+}
+
+#commMessage {
+  min-width: 0;
+  min-height: 24px;
+
+  color: #e6f4ff;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+
+  word-break: break-word;
+}
+
+/* =======================================================
+サイドUI（ユニットステータス）
+======================================================= */
+
+#leftSide {
+display: flex;
+flex-direction: column;
+gap: 4px;
+
+height: 100%;
+overflow-y: auto;
+align-items: flex-end;
+
+padding: 12px 10px;
+box-sizing: border-box;
+
+position: relative;
+isolation: isolate;
+}
+
+#rightSide {
+display: flex;
+flex-direction: column;
+gap: 4px;
+
+height: 100%;
+overflow-y: auto;
+align-items: flex-start;
+
+padding: 12px 10px;
+box-sizing: border-box;
+
+position: relative;
+isolation: isolate;
+}
+
+#leftSide::before,
+#rightSide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#leftSide::before {
+  background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG1.webp");
+}
+
+#rightSide::before {
+  background-image: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=battlelog_BG2.webp");
+}
+
+/* ユニットステータスカード */
+
+.unitStatus {
+width: 294px;
+height: 140px;
+overflow: hidden;
+box-sizing: border-box;
+padding: 3px;
+
+display: flex;
+flex-direction: column;
+
+position: relative;
+}
+
+.unitFrame {
+  width: 310px;
+  height: 162px;
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.team1Frame {
+  background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=unit_frame1.webp") no-repeat center / contain;
+}
+
+.team2Frame {
+  background: url("https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=unit_frame1.webp") no-repeat center / contain;
+}
+
+/* =======================================================
+ステータス内部レイアウト
+======================================================= */
+
+.unitRow {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* メインステータスブロック */
+
+.unitMain{
+flex:1;
+min-width:0;
+display: flex;
+flex-direction: column;
+min-height: 0;
+}
+
+/* アイコン＋名前＋状態 */
+
+.unitHeader {
+display: flex;
+flex-direction: column;
+align-items: stretch;
+gap: 4px;
+min-height: 0;
+}
+
+.unitTopRow{
+display:flex;
+align-items:flex-start;
+gap:6px;
+}
+
+.statusInfoBlock{
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+flex:1;
+min-width:0;
+min-height: 0;
+}
+
+/* 名前＋状態表示ブロック */
+
+.nameBlock {
+display: flex;
+flex-direction: column;
+justify-content: center;
+
+flex: 1;
+min-width: 0;
+}
+
+/* ユニット名 */
+
+.unitName {
+font-size: 13px;
+font-weight: bold;
+color: #aee0ff;
+letter-spacing: 0.5px;
+
+white-space: nowrap;
+
+display:block;
+width:100%;
+overflow:hidden;
+}
+
+/* 名前下のライン */
+
+.nameDivider {
+height: 1px;
+background: #00ff9c;
+margin: 3px 0;
+width: 100%;
+}
+
+/* 状態変化一覧 */
+
+.effectList {
+display: grid;
+grid-template-columns: repeat(5, auto);
+gap: 2px;
+
+color: #445566;   /* 非アクティブ色 */
+}
+
+.effectItem.active{
+color:#aee0ff;    /* アクティブ色 */
+}
+
+.effectItem {
+display: flex;
+align-items: center;
+gap: 1px;
+font-size: 10px;
+}
+
+.effectCount {
+display: inline-block;
+width: 11px;   /* 2桁固定 */
+text-align: right;
+font-size: 10px;
+}
+
+/* =======================================================
+STAT表示
+======================================================= */
+
+.statDivider{
+border-top:1px dashed rgba(120,180,255,0.6);
+margin:2px 0;
+width:100%;
+}
+
+.statRow{
+display:grid;
+grid-template-columns: repeat(2, minmax(0,1fr));
+gap:2px 8px;
+font-size:9px;
+color:#aee0ff;
+width:100%;
+}
+
+.statItem{
+display:grid;
+grid-template-columns: 15px 16px auto;
+white-space:nowrap;
+gap:4px;
+}
+
+.statRate{
+text-align:right;
+color:#ffd966;
+}
+
+.statLabel{
+text-align:left;
+}
+
+.statValue{
+text-align:right;
+}
+
+/* ユニットアイコン */
+
+.statusIcon {
+width: 60px;
+height: 60px;
+}
+
+/* =======================================================
+HP表示
+======================================================= */
+
+.hpRow {
+display: flex;
+align-items: center;
+gap: 6px;
+
+width:100%;
+margin-top: auto;
+}
+
+.hpText {
+font-size: 11px;
+color: #aee0ff;
+min-width: 60px;
+}
+
+.hpBar {
+flex: 1;
+height: 8px;
+
+background: rgba(0,0,0,0.6);
+border: 1px solid rgba(120,180,255,0.5);
+
+margin-top: 4px;
+
+overflow: hidden;
+}
+
+.hpFill {
+height: 100%;
+background: linear-gradient(
+90deg,
+#00ff9c,
+#6affc6
+);
+}
+
+/* =======================================================
+スキルスロット
+======================================================= */
+
+.skillSlots{
+display:grid;
+
+grid-template-columns:20px 20px;
+grid-template-rows:20px 20px 20px 20px;
+
+gap:4px;
+
+margin-top:3px;
+margin-left:1px;
+
+flex-shrink: 0;
+}
+
+.skillSlot{
+width:20px;
+height:20px;
+
+border:1px solid #666;
+background:#111;
+  
+position: relative;
+}
+
+.skillSlot.cooldown img {
+  filter: grayscale(100%) brightness(0.5);
+}
+
+.cooldownLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  color:#aee0ff;
+
+  pointer-events: none;
+}
+
+/* =======================================================
+盤面フレーム（仮）
+======================================================= */
+
