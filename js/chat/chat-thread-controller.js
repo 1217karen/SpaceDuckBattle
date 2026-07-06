@@ -199,7 +199,7 @@ function renderInteractionPanel(container, options = {}) {
 
   if (title) {
     const heading = document.createElement("div");
-    heading.className = "chatInteractionHeading";
+    heading.className = "common-gradientHeading chatInteractionHeading";
     heading.textContent = title;
     panel.appendChild(heading);
   }
