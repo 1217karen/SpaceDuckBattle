@@ -245,12 +245,10 @@
   display: block;
 }
 
-.profileStatValueGrid {
-  flex: 1 1 180px;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(64px, 1fr));
-  gap: 6px;
+.profileStatRadarGrid {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.13);
+  stroke-width: 0.8;
 }
 
 .profileStatRadarAxis {
@@ -272,10 +270,10 @@
 }
 
 .profileStatValueGrid {
-  flex: 1;
+  flex: 1 1 180px;
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(70px, 1fr));
+  grid-template-columns: repeat(2, minmax(64px, 1fr));
   gap: 6px;
 }
 
@@ -370,11 +368,6 @@
     width: 100%;
     flex-basis: auto;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .profileStatRadar {
-    width: 110px;
-    height: 110px;
   }
 
   .profileCommIconGrid {
