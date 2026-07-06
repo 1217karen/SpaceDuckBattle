@@ -293,7 +293,7 @@ function renderProfile(eno, character, unit, options = {}) {
     <section class="profileCard">
       <header class="profileIdBar">
         <div class="profileIdMain">
-          <div class="profileKicker">BATTLER FILE</div>
+          <div class="common-gradientHeading profileKicker">BATTLER FILE</div>
           <div class="profileIdentityRow">
             <span class="profileEnoText">Eno.${escapeHtml(eno)}</span>
             <h2 class="characterName">${escapeHtml(fullName)}</h2>
@@ -322,8 +322,8 @@ function renderProfile(eno, character, unit, options = {}) {
 
         <div class="profileSidePanel">
 
-          <section class="profileInfoBlock profileUnitBlock">
-            <h3>DUCK DATA</h3>
+          <section class="common-card profileInfoBlock profileUnitBlock">
+            <h3 class="common-gradientHeading profileSectionHeading">DUCK DATA</h3>
 
             ${hasUnit ? `
               <div class="profileUnitHeader">
@@ -372,13 +372,13 @@ function renderProfile(eno, character, unit, options = {}) {
         </div>
       </div>
 
-      <section class="profileSection profileTextSection">
-        <h3>BATTLER PROFILE</h3>
+      <section class="common-card profileSection profileTextSection">
+        <h3 class="common-gradientHeading profileSectionHeading">BATTLER PROFILE</h3>
         <p class="profileText">${escapeHtml(profileText)}</p>
       </section>
 
-      <section class="profileSection profileIconSection">
-        <h3>ICONS</h3>
+      <section class="common-card profileSection profileIconSection">
+        <h3 class="common-gradientHeading profileSectionHeading">ICONS</h3>
         <div class="profileCommIconGrid">
           ${characterIconHtml}
         </div>
