@@ -365,7 +365,7 @@ document.getElementById("saveCharacter")
     }
 
     if (!defaultName) {
-      alert("デフォルトネームを入力してください");
+      alert("ニックネームを入力してください");
       return;
     }
 
