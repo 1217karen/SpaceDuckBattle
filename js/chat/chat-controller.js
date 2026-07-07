@@ -12,7 +12,7 @@ import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { showToast } from "../common/toast.js";
 
 import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
-import { buildChatUrl,getChatPageFromQuery,getChatViewFromQuery,getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
+import { buildChatUrl,getChatAuthorEnoFromQuery,getChatPageFromQuery,getChatViewFromQuery,getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
 import { addEnoToTargetText } from "./chat-target-utils.js";
@@ -104,11 +104,12 @@ function navigateChatPageWithToast({ placeId, view = "chat", page = 1, message, 
   });
 }
 
-function replaceChatUrl({ placeId, view = currentViewMode, page = 1 }) {
+function replaceChatUrl({ placeId, view = currentViewMode, page = 1, eno = null }) {
   const nextUrl = buildChatUrl({
     placeId,
     view,
-    page
+    page,
+    eno
   });
 
   const currentUrl = `${window.location.pathname}${window.location.search}`;
@@ -119,11 +120,12 @@ function replaceChatUrl({ placeId, view = currentViewMode, page = 1 }) {
   }
 }
 
-function navigateChatPage({ placeId, view = currentViewMode, page = 1 }) {
+function navigateChatPage({ placeId, view = currentViewMode, page = 1, eno = null }) {
   window.location.href = buildChatUrl({
     placeId,
     view,
-    page
+    page,
+    eno
   });
 }
 
@@ -243,10 +245,11 @@ if (hasShopForPlace(place)) {
 function buildViewTabs(options = {}) {
   const {
     currentMode = "chat",
+    authorEno = null,
     onSelectMode = null
   } = options;
 
-  return [
+    authorEno = null,
     {
       key: "chat",
       label: "CHAT",
@@ -320,6 +323,32 @@ function buildViewTabs(options = {}) {
       }
     }
   ];
+  
+  const normalizedAuthorEno = Number(authorEno || 0);
+
+  if (Number.isInteger(normalizedAuthorEno) && normalizedAuthorEno > 0) {
+    tabs.push({
+      key: `eno-${normalizedAuthorEno}`,
+      label: `Eno.${normalizedAuthorEno}`,
+      isActive: currentMode === "eno",
+      isCurrent: currentMode === "eno",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("eno", {
+            eno: normalizedAuthorEno
+          });
+        }
+      },
+      onClose: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("chat");
+        }
+      }
+    });
+  }
+
+  return tabs;
 }
 
 function setupDraftPreview({
@@ -331,7 +360,8 @@ function setupDraftPreview({
   postActions,
   getQuotePreviewPostById,
   currentEno,
-  pagination
+  pagination,
+  onAuthorIconClick = null
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
     return;
@@ -345,7 +375,8 @@ function setupDraftPreview({
       currentPlace: place,
       places,
       viewerEno: currentEno,
-      favoriteEnos: loadFavoriteCharacterEnos({ currentEno })
+      favoriteEnos: loadFavoriteCharacterEnos({ currentEno }),
+      targetEno: getChatAuthorEnoFromQuery()
     });
 
     const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
@@ -369,7 +400,8 @@ function setupDraftPreview({
       postActions,
       currentEno,
       getReplyTargetLabels,
-      getQuotePreviewPostById
+      getQuotePreviewPostById,
+      onAuthorIconClick
     });
   }
 
@@ -519,6 +551,7 @@ function renderChatPlaceInfo() {
 
   const place = getPlaceById(placeId);
   const aroundBasePlace = getAroundBasePlace(place);
+  const authorEno = getChatAuthorEnoFromQuery();
 
   chatMainArea.innerHTML = "";
 
@@ -606,7 +639,8 @@ const placeTabs = buildPlaceTabs(place, {
 
 const viewTabs = buildViewTabs({
   currentMode: currentViewMode,
-  onSelectMode: (mode) => {
+  authorEno,
+  onSelectMode: (mode, selectOptions = {}) => {
     isShopOpen = false;
     isActionOpen = false;
     selectedActionId = "";
@@ -614,7 +648,8 @@ const viewTabs = buildViewTabs({
     navigateChatPage({
       placeId: place.placeId,
       view: mode,
-      page: 1
+      page: 1,
+      eno: selectOptions.eno ?? null
     });
   }
 });
@@ -879,6 +914,26 @@ const handleQuote = (post) => {
   renderChatPlaceInfo();
 };
 
+const handleAuthorIconClick = ({ authorEno: selectedAuthorEno } = {}) => {
+  const normalizedAuthorEno = Number(selectedAuthorEno || 0);
+
+  if (!Number.isInteger(normalizedAuthorEno) || normalizedAuthorEno <= 0) {
+    return;
+  }
+
+  isShopOpen = false;
+  isActionOpen = false;
+  selectedActionId = "";
+  selectedLogId = "";
+
+  navigateChatPage({
+    placeId: place.placeId,
+    view: "eno",
+    page: 1,
+    eno: normalizedAuthorEno
+  });
+};
+
 const readCurrentComposerDraft = () => composerRefs
   ? saveComposerDraft(
       readComposerDraftFromRefs(composerRefs)
@@ -950,7 +1005,8 @@ const rawDisplayPosts = getChatPostsForViewMode({
   currentPlace: place,
   places,
   viewerEno: eno,
-  favoriteEnos: loadFavoriteCharacterEnos({ currentEno: eno })
+  favoriteEnos: loadFavoriteCharacterEnos({ currentEno: eno }),
+  targetEno: authorEno
 });
 
 
@@ -962,7 +1018,8 @@ const pagination = getPaginationState(displayPosts, requestedPage, pageSize);
 replaceChatUrl({
   placeId: place.placeId,
   view: currentViewMode,
-  page: pagination.currentPage
+  page: pagination.currentPage,
+  eno: currentViewMode === "eno" ? authorEno : null
 });
 
 const pagedDisplayPosts = getPagedPosts(displayPosts, pagination);
@@ -974,7 +1031,8 @@ const postListRefs = renderPostListSection(chatMainArea, {
   postActions,
   currentEno: eno,
   getReplyTargetLabels,
-  getQuotePreviewPostById
+  getQuotePreviewPostById,
+  onAuthorIconClick: handleAuthorIconClick
 });
 
 renderChatPaginationSection(chatMainArea, {
@@ -984,7 +1042,8 @@ renderChatPaginationSection(chatMainArea, {
     navigateChatPage({
       placeId: place.placeId,
       view: currentViewMode,
-      page
+      page,
+      eno: currentViewMode === "eno" ? authorEno : null
     });
   },
   onChangePageSize: (nextPageSize) => {
@@ -992,7 +1051,8 @@ renderChatPaginationSection(chatMainArea, {
     navigateChatPage({
       placeId: place.placeId,
       view: currentViewMode,
-      page: 1
+      page: 1,
+      eno: currentViewMode === "eno" ? authorEno : null
     });
   }
 });
@@ -1008,7 +1068,8 @@ if (composerRefs) {
       postActions,
       getQuotePreviewPostById,
       currentEno: eno,
-      pagination
+      pagination,
+      onAuthorIconClick: handleAuthorIconClick
     });
   }
 
