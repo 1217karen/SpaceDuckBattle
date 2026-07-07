@@ -1,0 +1,62 @@
+.section-divider {
+  margin: 24px 0;
+  border-top: 1px dashed var(--theme-border-main);
+}
+
+.imageInputRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.imageInputPreview {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 1px solid var(--theme-border-main);
+  background: rgba(0, 0, 0, 0.28);
+  flex-shrink: 0;
+}
+
+.imageInputPreview-large {
+  width: 120px;
+  height: 120px;
+}
+
+.imageInputBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.imageInputLabel {
+  color: var(--theme-text-main);
+}
+
+.imageInputMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.imageInputControl {
+  width: 100%;
+}
+
+
+.subsection-card {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--theme-radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  box-sizing: border-box;
+}
+
+.subsection-divider {
+  margin: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
