@@ -314,3 +314,66 @@
     0 0 0 1px rgba(255, 255, 255, 0.08) inset,
     var(--theme-shadow-panel);
 }
+
+/* =======================================================
+   下書き・引用・ツリーメモ
+======================================================= */
+.chatThreadDraftPreviewSection {
+  width: 100%;
+  max-width: 600px;
+  margin: 8px auto 0;
+  box-sizing: border-box;
+}
+
+.chatThreadPrivateNoteTextarea {
+  width: 100%;
+  min-height: 120px;
+  margin-bottom: 8px;
+  padding: 10px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+  resize: vertical;
+  font: inherit;
+  line-height: 1.6;
+}
+
+.chatThreadPrivateNoteSaveButton {
+  padding: 6px 14px;
+}
+
+
+.chatQuoteAnchor {
+  color: #9ecbff;
+}
+
+.chatQuoteAnchor:hover {
+  color: #c8e1ff;
+}
+
+.chatQuotePreviewArea {
+  margin-top: 10px;
+}
+
+.chatQuotePreviewCardWrap {
+  width: 100%;
+}
+
+.chatQuotePreviewCard {
+  border-style: dotted;
+  border-color: rgba(158, 203, 255, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(158, 203, 255, 0.14) inset,
+    0 0 10px rgba(158, 203, 255, 0.12);
+}
+
+.chatQuotePreviewPlaceholder {
+  padding: 10px 12px;
+  border: 1px dotted rgba(158, 203, 255, 0.8);
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--theme-text-subtle);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
