@@ -1,0 +1,70 @@
+.chatPaginationSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1rem auto 0;
+  padding: 0.9rem 1rem;
+  max-width: 100%;
+}
+
+.chatPaginationPager {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chatPaginationButton {
+  min-width: 2.25rem;
+  padding: 0.35rem 0.55rem;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
+.chatPaginationButton.is-current {
+  border-color: rgba(255, 244, 180, 0.95);
+  color: #fff6c8;
+  font-weight: 700;
+  cursor: default;
+}
+
+.chatPaginationEllipsis {
+  padding: 0 0.15rem;
+  color: rgba(240, 232, 210, 0.78);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
+.chatPaginationPageSizeForm {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.chatPaginationPageSizeInput {
+  width: 5rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid rgba(255, 244, 180, 0.4);
+  border-radius: 0.45rem;
+  background: rgba(23, 18, 28, 0.82);
+  color: #fff8dd;
+  font: inherit;
+  text-align: right;
+}
+
+.chatPaginationPageSizeText,
+.chatPaginationPageSizeNote {
+  color: rgba(240, 232, 210, 0.82);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
+.chatPaginationPageSizeButton {
+  padding: 0.35rem 0.7rem;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
+.chatPaginationPageSizeNote {
+  margin: 0;
+}
