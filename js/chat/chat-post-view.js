@@ -76,7 +76,8 @@ export function createPostCard(post, options = {}) {
     hideActions = false,
     getReplyTargetLabels = null,
     getQuotePreviewPostById = null,
-    quotePreviewRootArea = null
+    quotePreviewRootArea = null,
+    onAuthorIconClick = null
   } = options;
 
   const {
@@ -141,7 +142,31 @@ if (shouldShowIcon) {
   iconImg.className = "commonIcon60 chatPostIconImage";
   iconImg.src = iconUrl || getNoImageUrl();
   iconImg.alt = "post icon";
-  iconBox.appendChild(iconImg);
+
+  if (
+    typeof onAuthorIconClick === "function" &&
+    typeof post?.authorEno === "number" &&
+    post.authorEno > 0 &&
+    post.type !== "message"
+  ) {
+    const iconButton = document.createElement("button");
+    iconButton.type = "button";
+    iconButton.className = "chatPostIconButton button-plain";
+    iconButton.title = "発言一覧を見る";
+    iconButton.setAttribute("aria-label", "発言一覧を見る");
+    iconButton.appendChild(iconImg);
+    iconButton.addEventListener("click", () => {
+      onAuthorIconClick({
+        authorEno: post.authorEno,
+        post
+      });
+    });
+
+    iconBox.appendChild(iconButton);
+  } else {
+    iconBox.appendChild(iconImg);
+  }
+
 
   left.appendChild(iconBox);
 }
@@ -471,7 +496,8 @@ export function renderPostListSection(container, options = {}) {
     postActions = {},
     currentEno = null,
     getReplyTargetLabels = null,
-    getQuotePreviewPostById = null
+    getQuotePreviewPostById = null,
+    onAuthorIconClick = null
   } = options;
 
   const section = document.createElement("section");
@@ -490,7 +516,8 @@ export function renderPostListSection(container, options = {}) {
     postActions,
     currentEno,
     getReplyTargetLabels,
-    getQuotePreviewPostById
+    getQuotePreviewPostById,
+    onAuthorIconClick
   });
 
   return {
@@ -507,7 +534,8 @@ export function renderPostListContent(listContainer, options = {}) {
     postActions = {},
     currentEno = null,
     getReplyTargetLabels = null,
-    getQuotePreviewPostById = null
+    getQuotePreviewPostById = null,
+    onAuthorIconClick = null
   } = options;
 
   if (!listContainer) {
@@ -532,7 +560,8 @@ export function renderPostListContent(listContainer, options = {}) {
         postActions,
         currentEno,
         getReplyTargetLabels,
-        getQuotePreviewPostById
+        getQuotePreviewPostById,
+        onAuthorIconClick
       })
     );
   });
