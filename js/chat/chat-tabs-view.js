@@ -75,6 +75,31 @@ function createChatTabButton(tab = {}, buttonClassName = "") {
   button.className = classNames.join(" ");
   button.textContent = tab.label ?? "";
 
+  if (typeof tab.onClose === "function") {
+    const closeButton = document.createElement("span");
+    closeButton.className = "chatTabCloseButton";
+    closeButton.textContent = "×";
+    closeButton.setAttribute("role", "button");
+    closeButton.setAttribute("tabindex", "0");
+    closeButton.setAttribute("aria-label", `${tab.label ?? "タブ"}を閉じる`);
+
+    const closeTab = (event) => {
+      event.stopPropagation();
+      tab.onClose();
+    };
+
+    closeButton.addEventListener("click", closeTab);
+    closeButton.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        closeTab(event);
+      }
+    });
+
+    button.appendChild(document.createTextNode(" "));
+    button.appendChild(closeButton);
+  }
+
   if (!tab.isDisabled && typeof tab.onClick === "function") {
     button.addEventListener("click", tab.onClick);
   }
