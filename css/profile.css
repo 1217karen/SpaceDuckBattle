@@ -439,6 +439,15 @@
   background: rgba(0, 0, 0, 0.24);
 }
 
+.profilePostListAction {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.profilePostListButton {
+  min-width: 160px;
+}
 
 /* =======================================================
    空表示・エラー表示
