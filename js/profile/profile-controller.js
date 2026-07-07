@@ -5,6 +5,7 @@ import { getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { showToast } from "../common/toast.js";
 import { getFavoritePlaces } from "../chat/chat-place-utils.js";
+import { buildChatUrl } from "../chat/chat-navigation.js";
 import { getFavoriteCharacters, isFavoriteCharacter, toggleFavoriteCharacter } from "../services/character-favorite-service.js";
 import { isFavoriteUnit, toggleFavoriteUnit } from "../services/unit-favorite-service.js";
 
@@ -383,6 +384,14 @@ function renderProfile(eno, character, unit, options = {}) {
           ${characterIconHtml}
         </div>
       </section>
+      
+      <div class="profilePostListAction">
+        <button
+          type="button"
+          class="profilePostListButton button-box"
+          data-open-post-list-button
+        >発言一覧を見る</button>
+      </div>
     </section>
   `;
 
@@ -449,6 +458,24 @@ function renderProfile(eno, character, unit, options = {}) {
           type: result.isFavorite ? "success" : "info"
         }
       );
+    });
+  }
+
+  const openPostListButton =
+    profilePage.querySelector("[data-open-post-list-button]");
+
+  if (openPostListButton) {
+    openPostListButton.addEventListener("click", () => {
+      const currentCharacter = currentEno
+        ? loadCharacter(currentEno)
+        : null;
+
+      window.location.href = buildChatUrl({
+        placeId: currentCharacter?.currentPlaceId || "F1-1",
+        view: "eno",
+        page: 1,
+        eno
+      });
     });
   }
 }
