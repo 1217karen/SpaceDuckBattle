@@ -1,8 +1,62 @@
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
 import { getPlaceLabel } from "./chat-place-utils.js";
 
+const VALID_CHAT_VIEWS = new Set([
+  "chat",
+  "here",
+  "reply",
+  "message",
+  "favorite",
+  "self"
+]);
+
+export function normalizeChatView(view, fallback = "chat") {
+  return VALID_CHAT_VIEWS.has(view) ? view : fallback;
+}
+
+export function normalizeChatPage(page, fallback = 1) {
+  const normalizedPage = Number(page);
+
+  if (!Number.isFinite(normalizedPage)) {
+    return fallback;
+  }
+
+  const integerPage = Math.trunc(normalizedPage);
+
+  return integerPage > 0 ? integerPage : fallback;
+}
+
+export function buildChatUrl(options = {}) {
+  const {
+    placeId = "",
+    view = "chat",
+    page = 1,
+    eno = null
+  } = options;
+
+  const params = new URLSearchParams();
+
+  if (placeId) {
+    params.set("placeId", placeId);
+  }
+
+  params.set("view", normalizeChatView(view));
+  params.set("page", String(normalizeChatPage(page)));
+
+  const normalizedEno = Number(eno || 0);
+  if (Number.isInteger(normalizedEno) && normalizedEno > 0) {
+    params.set("eno", String(normalizedEno));
+  }
+
+  return `./chat.html?${params.toString()}`;
+}
+
 export function buildChatPlaceUrl(placeId) {
-  return `./chat.html?placeId=${encodeURIComponent(placeId)}`;
+  return buildChatUrl({
+    placeId,
+    view: "chat",
+    page: 1
+  });
 }
 
 export function navigateToChatPlace(placeId, options = {}) {
@@ -65,4 +119,21 @@ export function moveToChatPlace(placeId, options = {}) {
 export function getPlaceIdFromQuery() {
   const params = new URLSearchParams(window.location.search);
   return params.get("placeId");
+}
+
+export function getChatViewFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  return normalizeChatView(params.get("view"));
+}
+
+export function getChatPageFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  return normalizeChatPage(params.get("page"));
+}
+
+export function getChatAuthorEnoFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const eno = Number(params.get("eno") || 0);
+
+  return Number.isInteger(eno) && eno > 0 ? eno : null;
 }
