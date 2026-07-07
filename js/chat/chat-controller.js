@@ -249,7 +249,7 @@ function buildViewTabs(options = {}) {
     onSelectMode = null
   } = options;
 
-    authorEno = null,
+  const tabs = [
     {
       key: "chat",
       label: "CHAT",
@@ -323,7 +323,7 @@ function buildViewTabs(options = {}) {
       }
     }
   ];
-  
+
   const normalizedAuthorEno = Number(authorEno || 0);
 
   if (Number.isInteger(normalizedAuthorEno) && normalizedAuthorEno > 0) {
@@ -350,7 +350,6 @@ function buildViewTabs(options = {}) {
 
   return tabs;
 }
-
 function setupDraftPreview({
   postListRefs,
   place,
