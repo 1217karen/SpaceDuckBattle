@@ -12,7 +12,7 @@ import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { showToast } from "../common/toast.js";
 
 import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
-import { getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
+import { buildChatUrl,getChatPageFromQuery,getChatViewFromQuery,getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
 import { addEnoToTargetText } from "./chat-target-utils.js";
@@ -31,6 +31,8 @@ import { renderPlaceInfoSection } from "./chat-header-view.js";
 import { renderChatComposerSection } from "./chat-composer-view.js";
 import { renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.js";
 import { renderPostListSection,renderPostListContent } from "./chat-post-view.js";
+import { loadChatPageSize,saveChatPageSize } from "./chat-pagination-state.js";
+import { renderChatPaginationSection } from "./chat-pagination-view.js";
 import { renderChatActionSection } from "./chat-action-view.js";
 
 import { hasShopForPlace } from "../services/shop-service.js";
@@ -42,7 +44,7 @@ const chatMainArea = document.querySelector("#chatMainArea");
 const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
-let currentViewMode = "chat";
+let currentViewMode = getChatViewFromQuery();
 let currentFavoritesTab = "place";
 let isShopOpen = false;
 let isActionOpen = false;
@@ -86,7 +88,7 @@ function moveToPlace(placeId) {
   });
 }
 
-function reloadChatPageWithToast(message, type = "success") {
+function navigateChatPageWithToast({ placeId, view = "chat", page = 1, message, type = "success" }) {
   sessionStorage.setItem(
     "chatToastMessage",
     JSON.stringify({
@@ -95,7 +97,54 @@ function reloadChatPageWithToast(message, type = "success") {
     })
   );
 
-  window.location.reload();
+  window.location.href = buildChatUrl({
+    placeId,
+    view,
+    page
+  });
+}
+
+function replaceChatUrl({ placeId, view = currentViewMode, page = 1 }) {
+  const nextUrl = buildChatUrl({
+    placeId,
+    view,
+    page
+  });
+
+  const currentUrl = `${window.location.pathname}${window.location.search}`;
+  const normalizedNextUrl = nextUrl.replace(/^\./, "");
+
+  if (currentUrl !== normalizedNextUrl) {
+    window.history.replaceState(null, "", nextUrl);
+  }
+}
+
+function navigateChatPage({ placeId, view = currentViewMode, page = 1 }) {
+  window.location.href = buildChatUrl({
+    placeId,
+    view,
+    page
+  });
+}
+
+function getPaginationState(posts = [], requestedPage = 1, pageSize = 30) {
+  const totalItems = posts.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const currentPage = Math.min(Math.max(1, requestedPage), totalPages);
+  const startIndex = (currentPage - 1) * pageSize;
+
+  return {
+    currentPage,
+    pageSize,
+    totalItems,
+    totalPages,
+    startIndex,
+    endIndex: startIndex + pageSize
+  };
+}
+
+function getPagedPosts(posts = [], pagination = {}) {
+  return posts.slice(pagination.startIndex, pagination.endIndex);
 }
 
 function getAroundBasePlace(place) {
@@ -281,7 +330,8 @@ function setupDraftPreview({
   getPlaceLabel,
   postActions,
   getQuotePreviewPostById,
-  currentEno
+  currentEno,
+  pagination
 }) {
   if (!postListRefs?.list || !composerRefs?.textarea) {
     return;
@@ -307,9 +357,11 @@ function setupDraftPreview({
       replySourcePost: getReplySourcePostForDraft(currentDraft)
     });
 
+    const pagedPosts = getPagedPosts(displayPosts, pagination);
+
     const postsForRender = draftPreviewPost
-      ? [draftPreviewPost, ...displayPosts]
-      : displayPosts;
+      ? [draftPreviewPost, ...pagedPosts]
+      : pagedPosts;
 
     renderPostListContent(postListRefs.list, {
       posts: postsForRender,
@@ -391,13 +443,23 @@ createPost(postInput);
     selectedLogId = "";
 
     if (isMessageMode) {
-      currentViewMode = "message";
-      renderChatPlaceInfo();
-      showToast("メッセージを送信しました", { type: "success" });
+      navigateChatPageWithToast({
+        placeId: place.placeId,
+        view: "message",
+        page: 1,
+        message: "メッセージを送信しました",
+        type: "success"
+      });
       return;
     }
     
-    reloadChatPageWithToast("発言を投稿しました", "success");
+    navigateChatPageWithToast({
+      placeId: place.placeId,
+      view: "chat",
+      page: 1,
+      message: "発言を投稿しました",
+      type: "success"
+    });
       });
     }
 
@@ -545,12 +607,15 @@ const placeTabs = buildPlaceTabs(place, {
 const viewTabs = buildViewTabs({
   currentMode: currentViewMode,
   onSelectMode: (mode) => {
-    currentViewMode = mode;
     isShopOpen = false;
     isActionOpen = false;
     selectedActionId = "";
-    renderChatPlaceInfo();
     selectedLogId = "";
+    navigateChatPage({
+      placeId: place.placeId,
+      view: mode,
+      page: 1
+    });
   }
 });
 
@@ -669,7 +734,13 @@ renderChatActionSection(interactionPanel, {
       selectedActionId = "";
       selectedLogId = "";
 
-      reloadChatPageWithToast("ログを流しました", "success");
+      navigateChatPageWithToast({
+        placeId: place.placeId,
+        view: "chat",
+        page: 1,
+        message: "ログを流しました",
+        type: "success"
+      });
       return;
     }
 
@@ -690,7 +761,13 @@ renderChatActionSection(interactionPanel, {
     selectedActionId = "";
     selectedLogId = "";
 
-    reloadChatPageWithToast("アクションを実行しました", "success");
+    navigateChatPageWithToast({
+      placeId: place.placeId,
+      view: "chat",
+      page: 1,
+      message: "アクションを実行しました",
+      type: "success"
+    });
       }
     });
     } else {
@@ -878,9 +955,20 @@ const rawDisplayPosts = getChatPostsForViewMode({
 
 
 const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
+const pageSize = loadChatPageSize();
+const requestedPage = getChatPageFromQuery();
+const pagination = getPaginationState(displayPosts, requestedPage, pageSize);
+
+replaceChatUrl({
+  placeId: place.placeId,
+  view: currentViewMode,
+  page: pagination.currentPage
+});
+
+const pagedDisplayPosts = getPagedPosts(displayPosts, pagination);
 
 const postListRefs = renderPostListSection(chatMainArea, {
-  posts: displayPosts,
+  posts: pagedDisplayPosts,
   getPlaceLabel,
   onMoveToPlace: moveToPlace,
   postActions,
@@ -889,6 +977,26 @@ const postListRefs = renderPostListSection(chatMainArea, {
   getQuotePreviewPostById
 });
 
+renderChatPaginationSection(chatMainArea, {
+  pagination,
+  pageSize,
+  onSelectPage: (page) => {
+    navigateChatPage({
+      placeId: place.placeId,
+      view: currentViewMode,
+      page
+    });
+  },
+  onChangePageSize: (nextPageSize) => {
+    saveChatPageSize(nextPageSize);
+    navigateChatPage({
+      placeId: place.placeId,
+      view: currentViewMode,
+      page: 1
+    });
+  }
+});
+  
 if (composerRefs) {
   if (!isMessageMode) {
     setupDraftPreview({
@@ -899,7 +1007,8 @@ if (composerRefs) {
       getPlaceLabel,
       postActions,
       getQuotePreviewPostById,
-      currentEno: eno
+      currentEno: eno,
+      pagination
     });
   }
 
