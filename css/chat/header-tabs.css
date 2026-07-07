@@ -196,3 +196,19 @@
   opacity: 1;
   cursor: default;
 }
+
+.chatTabCloseButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.25rem;
+  padding: 0 0.2rem;
+  border-radius: 999px;
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  line-height: 1;
+}
+
+.chatTabCloseButton:hover,
+.chatTabCloseButton:focus {
+  background: rgba(255, 255, 255, 0.18);
+}
