@@ -1,10 +1,5 @@
 @import url("./chat/base.css");
-@import url("./chat/header.css");
-@import url("./chat/posts.css");
-@import url("./chat/tabs.css");
-@import url("./chat/interaction.css");
+@import url("./chat/header-tabs.css");
+@import url("./chat/posts-thread.css");
 @import url("./chat/composer.css");
-@import url("./chat/shop.css");
-@import url("./chat/actions.css");
-@import url("./chat/thread.css");
-@import url("./chat/quote.css");
+@import url("./chat/interaction.css");
