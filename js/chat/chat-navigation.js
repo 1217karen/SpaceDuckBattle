@@ -7,7 +7,8 @@ const VALID_CHAT_VIEWS = new Set([
   "reply",
   "message",
   "favorite",
-  "self"
+  "self",
+  "eno"
 ]);
 
 export function normalizeChatView(view, fallback = "chat") {
