@@ -56,6 +56,20 @@
   height: 100%;
 }
 
+.chatPostIconButton {
+  display: block;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.chatPostIconButton:hover .chatPostIconImage,
+.chatPostIconButton:focus .chatPostIconImage {
+  filter: brightness(1.12);
+}
+
 .chatPostCardRight {
   flex: 1;
   min-width: 0;
