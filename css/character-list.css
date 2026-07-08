@@ -270,19 +270,39 @@
   .characterListRow {
     grid-template-columns: 76px 60px minmax(0, 1fr);
     grid-template-areas:
-      "eno charIcon charName"
-      "eno unitIcon unitName"
+      "eno  charIcon charName"
+      "eno  unitIcon unitName"
       "type statsTop statsTop"
       "type statsBottom statsBottom";
+    gap: 8px 12px;
+    align-items: center;
+  }
+
+  .characterListEno {
+    align-self: center;
   }
 
   .characterListType {
+    align-self: center;
     text-align: left;
+  }
+
+  .characterListTypeBadge {
+    min-width: 72px;
   }
 
   .characterListUnitIconWrap,
   .characterListUnitNameArea {
-    margin-left: 10px;
+    margin-left: 12px;
+  }
+
+  .characterListStatsTop,
+  .characterListStatsBottom {
+    align-self: center;
+  }
+
+  .characterListStatsBottom {
+    padding-left: 18px;
   }
 }
 
@@ -303,39 +323,48 @@
   }
 
   .characterListRow {
-    grid-template-columns: 60px minmax(0, 1fr);
+    grid-template-columns: 64px 52px minmax(0, 1fr);
     grid-template-areas:
-      "charIcon charName"
-      "unitIcon unitName"
-      "eno eno"
-      "type type"
-      "statsTop statsTop"
-      "statsBottom statsBottom";
+      "eno  charIcon charName"
+      "eno  unitIcon unitName"
+      "type statsTop statsTop"
+      "type statsBottom statsBottom";
+    gap: 7px 8px;
+  }
+
+  .characterListIconImage {
+    width: 52px;
+    height: 52px;
   }
 
   .characterListEno {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .characterListUnitIconWrap,
   .characterListUnitNameArea {
-    margin-left: 0;
+    margin-left: 8px;
   }
 
-  .characterListMobileLabel {
-    display: block;
-    margin-bottom: 2px;
-    color: var(--theme-text-muted);
-    font-family: var(--font-family-display);
-    font-size: var(--font-size-xs);
-    letter-spacing: 0.1em;
+  .characterListTypeBadge {
+    min-width: 64px;
+    padding: 3px 6px;
   }
 
   .characterListStats {
-    gap: 5px;
+    gap: 4px;
+  }
+
+  .characterListStatsBottom {
+    padding-left: 12px;
   }
 
   .characterListStatChip {
-    min-width: 54px;
+    min-width: 50px;
+    padding: 2px 5px;
+  }
+
+  .characterListMobileLabel {
+    display: none;
   }
 }
