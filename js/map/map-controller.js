@@ -454,8 +454,8 @@ function renderMapTree() {
   mapContent.innerHTML = "";
 
   const heading = document.createElement("h1");
-  heading.className = "mapTitle";
-  heading.textContent = "マップ";
+  heading.className = "pageTitle mapTitle";
+  heading.textContent = "MAP";
   mapContent.appendChild(heading);
 
   const info = document.createElement("p");
