@@ -143,7 +143,7 @@
   align-self: center;
   color: var(--theme-text-accent);
   font-family: var(--font-family-display);
-  font-size: 16px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   white-space: nowrap;
 }
@@ -338,7 +338,7 @@
   }
 
   .characterListEno {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .characterListUnitIconWrap,
