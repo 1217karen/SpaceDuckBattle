@@ -822,9 +822,11 @@ const interactionPanelRefs = renderInteractionPanel(chatMainArea, {
   title: interactionTitle
 });
 
-if (isMessageMode) {
+if (isShopOpen || isActionOpen) {
+  interactionPanelRefs?.panel?.classList.add("chatInteractionPanelUtility");
+} else if (isMessageMode) {
   interactionPanelRefs?.panel?.classList.add("chatInteractionPanelMessage");
-} else if (!isShopOpen && !isActionOpen && replySourcePost) {
+} else if (replySourcePost) {
   interactionPanelRefs?.panel?.classList.add("chatInteractionPanelReply");
 }
 
