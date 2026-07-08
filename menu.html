@@ -1,4 +1,21 @@
 <nav class="side-menu">
+  <a
+    id="menuProfileCard"
+    class="menuProfileCard common-card-framed common-card-rounded-lg common-card-profile"
+    href="./index.html"
+  >
+    <img
+      id="menuProfileIcon"
+      class="menuProfileIcon commonIcon60"
+      src="https://placehold.co/60x60?text=NO+IMG"
+      alt="自分のキャラクターアイコン"
+    >
+    <span class="menuProfileText">
+      <span id="menuProfileEno" class="menuProfileEno">Eno.-</span>
+      <span id="menuProfileName" class="menuProfileName">-</span>
+    </span>
+  </a>
+
   <a href="./battle.html" class="menu-link">バトル</a>
   <a href="./chat.html" class="menu-link">チャット</a>
   <a href="./inventory.html" class="menu-link">所持アイテム</a>
@@ -9,7 +26,16 @@
   <a href="./assets.html" class="menu-link">画像登録</a>
   <a href="./battle-history.html" class="menu-link">戦闘履歴</a>
 
-  <button type="button" id="logoutButton" class="menu-link menu-button">
+  <section
+    class="menuNoticeBox common-card-framed common-card-rounded-lg common-card-profile"
+    aria-label="通知"
+  >
+    <p class="menuNoticeText">Eno.12 テストさんから返信があります</p>
+    <p class="menuNoticeText">Eno.34 テストさんからメッセージがあります</p>
+    <p class="menuNoticeText">Eno.56 テストさんからアイテムが届いています</p>
+  </section>
+
+  <button type="button" id="logoutButton" class="menu-link menu-button menuLogoutButton">
     ログアウト
   </button>
 </nav>
