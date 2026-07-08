@@ -148,6 +148,18 @@ function getPagedPosts(posts = [], pagination = {}) {
 
 let activeChatTimelineContext = null;
 
+function saveActiveComposerDraft() {
+  const composerRefs = activeChatTimelineContext?.composerRefs;
+
+  if (!composerRefs) {
+    return loadComposerDraft();
+  }
+
+  return saveComposerDraft(
+    readComposerDraftFromRefs(composerRefs)
+  );
+}
+
 function selectChatViewMode(mode, selectOptions = {}) {
   const context = activeChatTimelineContext;
 
@@ -155,10 +167,7 @@ function selectChatViewMode(mode, selectOptions = {}) {
     return;
   }
 
-  isShopOpen = false;
-  isActionOpen = false;
-  selectedActionId = "";
-  selectedLogId = "";
+  saveActiveComposerDraft();
 
   if (selectOptions.closeAuthorEno) {
     openedAuthorEno = null;
@@ -168,8 +177,14 @@ function selectChatViewMode(mode, selectOptions = {}) {
 
   currentViewMode = mode;
   currentChatPage = 1;
-  renderActiveChatViewTabs();
-  renderActiveChatTimeline();
+  replaceChatUrl({
+    placeId: context.place.placeId,
+    view: currentViewMode,
+    page: currentChatPage,
+    eno: openedAuthorEno
+  });
+
+  renderChatPlaceInfo();
 }
 
 function renderActiveChatViewTabs() {
@@ -1048,17 +1063,20 @@ const handleAuthorIconClick = ({ authorEno: selectedAuthorEno } = {}) => {
   if (!Number.isInteger(normalizedAuthorEno) || normalizedAuthorEno <= 0) {
     return;
   }
-
-  isShopOpen = false;
-  isActionOpen = false;
-  selectedActionId = "";
-  selectedLogId = "";
+  
+  saveActiveComposerDraft();
 
   openedAuthorEno = normalizedAuthorEno;
   currentViewMode = "eno";
   currentChatPage = 1;
-  renderActiveChatViewTabs();
-  renderActiveChatTimeline();
+  replaceChatUrl({
+    placeId: place.placeId,
+    view: currentViewMode,
+    page: currentChatPage,
+    eno: openedAuthorEno
+  });
+
+  renderChatPlaceInfo();
 };
 
 const readCurrentComposerDraft = () => composerRefs
