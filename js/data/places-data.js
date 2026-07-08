@@ -1,6 +1,56 @@
 // places-data.js
 
-export const places = [
+const LAYER_SUFFIXES = {
+  side: "サイド",
+  local: "ローカル"
+};
+
+function buildLayeredPlaceId(placeId, layer) {
+  const suffixNumber = layer === "side"
+    ? "2"
+    : "3";
+  const basePlaceId = String(placeId);
+
+  return basePlaceId.endsWith("-1")
+    ? basePlaceId.replace(/-1$/, `-${suffixNumber}`)
+    : `${basePlaceId}-${suffixNumber}`;
+}
+
+function copyStringArray(value) {
+  return Array.isArray(value)
+    ? value.slice()
+    : value;
+}
+
+function createLinkedLayerPlace(mainPlace, layer) {
+  return {
+    ...mainPlace,
+    placeId: buildLayeredPlaceId(mainPlace.placeId, layer),
+    layer,
+    name: `${mainPlace.name} ${LAYER_SUFFIXES[layer]}`,
+    actionIds: copyStringArray(mainPlace.actionIds),
+    shopIds: copyStringArray(mainPlace.shopIds)
+  };
+}
+
+function expandLinkedLayerPlaces(sourcePlaces = []) {
+  return sourcePlaces.flatMap(place => {
+    if (
+      place?.layer !== "main" ||
+      !["field", "area"].includes(place?.kind)
+    ) {
+      return [place];
+    }
+
+    return [
+      place,
+      createLinkedLayerPlace(place, "side"),
+      createLinkedLayerPlace(place, "local")
+    ];
+  });
+}
+
+const mainPlaces = [
   {
     placeId: "F1-1",
     groupId: "F1",
