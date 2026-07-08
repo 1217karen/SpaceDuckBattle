@@ -45,6 +45,11 @@ const rightPanel = document.querySelector(".right-panel");
 const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
 let currentViewMode = getChatViewFromQuery();
+let openedAuthorEno = getChatAuthorEnoFromQuery();
+if (currentViewMode === "eno" && !openedAuthorEno) {
+  currentViewMode = "chat";
+}
+let currentChatPage = getChatPageFromQuery();
 let currentFavoritesTab = "place";
 let isShopOpen = false;
 let isActionOpen = false;
@@ -104,7 +109,7 @@ function navigateChatPageWithToast({ placeId, view = "chat", page = 1, message, 
   });
 }
 
-function replaceChatUrl({ placeId, view = currentViewMode, page = 1, eno = null }) {
+function replaceChatUrl({ placeId, view = currentViewMode, page = 1, eno = openedAuthorEno }) {
   const nextUrl = buildChatUrl({
     placeId,
     view,
@@ -120,14 +125,6 @@ function replaceChatUrl({ placeId, view = currentViewMode, page = 1, eno = null 
   }
 }
 
-function navigateChatPage({ placeId, view = currentViewMode, page = 1, eno = null }) {
-  window.location.href = buildChatUrl({
-    placeId,
-    view,
-    page,
-    eno
-  });
-}
 
 function getPaginationState(posts = [], requestedPage = 1, pageSize = 30) {
   const totalItems = posts.length;
@@ -148,6 +145,132 @@ function getPaginationState(posts = [], requestedPage = 1, pageSize = 30) {
 function getPagedPosts(posts = [], pagination = {}) {
   return posts.slice(pagination.startIndex, pagination.endIndex);
 }
+
+let activeChatTimelineContext = null;
+
+function selectChatViewMode(mode, selectOptions = {}) {
+  const context = activeChatTimelineContext;
+
+  if (!context?.place) {
+    return;
+  }
+
+  isShopOpen = false;
+  isActionOpen = false;
+  selectedActionId = "";
+  selectedLogId = "";
+
+  if (selectOptions.closeAuthorEno) {
+    openedAuthorEno = null;
+  } else if (selectOptions.eno) {
+    openedAuthorEno = selectOptions.eno;
+  }
+
+  currentViewMode = mode;
+  currentChatPage = 1;
+  renderActiveChatViewTabs();
+  renderActiveChatTimeline();
+}
+
+function renderActiveChatViewTabs() {
+  const context = activeChatTimelineContext;
+
+  if (!context?.viewTabsContainer) {
+    return;
+  }
+
+  context.viewTabsContainer.innerHTML = "";
+
+  renderViewTabsSection(context.viewTabsContainer, {
+    tabs: buildViewTabs({
+      currentMode: currentViewMode,
+      authorEno: openedAuthorEno,
+      onSelectMode: selectChatViewMode
+    })
+  });
+}
+
+function renderActiveChatTimeline() {
+  const context = activeChatTimelineContext;
+
+  if (!context?.timelineContainer || !context.place) {
+    return;
+  }
+
+  const {
+    timelineContainer,
+    place,
+    eno,
+    composerRefs,
+    postActions,
+    handleAuthorIconClick
+  } = context;
+
+  const rawDisplayPosts = getChatPostsForViewMode({
+    viewMode: currentViewMode,
+    currentPlace: place,
+    places,
+    viewerEno: eno,
+    favoriteEnos: loadFavoriteCharacterEnos({ currentEno: eno }),
+    targetEno: openedAuthorEno
+  });
+
+  const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
+  const pageSize = loadChatPageSize();
+  const pagination = getPaginationState(displayPosts, currentChatPage, pageSize);
+  currentChatPage = pagination.currentPage;
+
+  replaceChatUrl({
+    placeId: place.placeId,
+    view: currentViewMode,
+    page: pagination.currentPage,
+    eno: openedAuthorEno
+  });
+
+  timelineContainer.innerHTML = "";
+
+  const pagedDisplayPosts = getPagedPosts(displayPosts, pagination);
+  const postListRefs = renderPostListSection(timelineContainer, {
+    posts: pagedDisplayPosts,
+    getPlaceLabel,
+    onMoveToPlace: moveToPlace,
+    postActions,
+    currentEno: eno,
+    getReplyTargetLabels,
+    getQuotePreviewPostById,
+    onAuthorIconClick: handleAuthorIconClick
+  });
+
+  renderChatPaginationSection(timelineContainer, {
+    pagination,
+    pageSize,
+    onSelectPage: (page) => {
+      currentChatPage = page;
+      renderActiveChatTimeline();
+    },
+    onChangePageSize: (nextPageSize) => {
+      saveChatPageSize(nextPageSize);
+      currentChatPage = 1;
+      renderActiveChatTimeline();
+    }
+  });
+
+  if (composerRefs && currentViewMode !== "message") {
+    setupDraftPreview({
+      postListRefs,
+      place,
+      character: context.character,
+      composerRefs,
+      getPlaceLabel,
+      postActions,
+      getQuotePreviewPostById,
+      currentEno: eno,
+      pagination,
+      onAuthorIconClick: handleAuthorIconClick
+    });
+  }
+}
+
 
 function getAroundBasePlace(place) {
   if (!place) {
@@ -342,7 +465,9 @@ function buildViewTabs(options = {}) {
       },
       onClose: () => {
         if (typeof onSelectMode === "function") {
-          onSelectMode("chat");
+          onSelectMode("chat", {
+            closeAuthorEno: true
+          });
         }
       }
     });
@@ -366,45 +491,66 @@ function setupDraftPreview({
     return;
   }
 
+  composerRefs.draftPreviewState = {
+    postListRefs,
+    place,
+    character,
+    getPlaceLabel,
+    postActions,
+    getQuotePreviewPostById,
+    currentEno,
+    pagination,
+    onAuthorIconClick
+  };
+
   function refreshDraftPreview() {
+    const state = composerRefs.draftPreviewState;
+
+    if (!state?.postListRefs?.list) {
+      return;
+    }
+    
     const currentDraft = readComposerDraftFromRefs(composerRefs);
 
     const rawDisplayPosts = getChatPostsForViewMode({
       viewMode: currentViewMode,
-      currentPlace: place,
+      currentPlace: state.place,
       places,
-      viewerEno: currentEno,
-      favoriteEnos: loadFavoriteCharacterEnos({ currentEno }),
-      targetEno: getChatAuthorEnoFromQuery()
+      viewerEno: state.currentEno,
+      favoriteEnos: loadFavoriteCharacterEnos({ currentEno: state.currentEno }),
+      targetEno: openedAuthorEno
     });
 
     const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
 
     const draftPreviewPost = buildDraftPreviewPost({
-      place,
-      character,
+      place: state.place,
+      character: state.character,
       draft: currentDraft,
       replySourcePost: getReplySourcePostForDraft(currentDraft)
     });
 
-    const pagedPosts = getPagedPosts(displayPosts, pagination);
+    const pagedPosts = getPagedPosts(displayPosts, state.pagination);
 
     const postsForRender = draftPreviewPost
       ? [draftPreviewPost, ...pagedPosts]
       : pagedPosts;
 
-    renderPostListContent(postListRefs.list, {
+    renderPostListContent(state.postListRefs.list, {
       posts: postsForRender,
-      getPlaceLabel,
-      postActions,
-      currentEno,
+      getPlaceLabel: state.getPlaceLabel,
+      postActions: state.postActions,
+      currentEno: state.currentEno,
       getReplyTargetLabels,
-      getQuotePreviewPostById,
-      onAuthorIconClick
+      getQuotePreviewPostById: state.getQuotePreviewPostById,
+      onAuthorIconClick: state.onAuthorIconClick
     });
   }
 
-  bindComposerDraftPreviewEvents(composerRefs, refreshDraftPreview);
+  if (!composerRefs.isDraftPreviewBound) {
+    bindComposerDraftPreviewEvents(composerRefs, refreshDraftPreview);
+    composerRefs.isDraftPreviewBound = true;
+  }
   
   refreshDraftPreview();
 }
@@ -550,7 +696,7 @@ function renderChatPlaceInfo() {
 
   const place = getPlaceById(placeId);
   const aroundBasePlace = getAroundBasePlace(place);
-  const authorEno = getChatAuthorEnoFromQuery();
+  openedAuthorEno = getChatAuthorEnoFromQuery();
 
   chatMainArea.innerHTML = "";
 
@@ -633,23 +779,6 @@ const placeTabs = buildPlaceTabs(place, {
     selectedActionId = "";
     renderChatPlaceInfo();
     selectedLogId = "";
-  }
-});
-
-const viewTabs = buildViewTabs({
-  currentMode: currentViewMode,
-  authorEno,
-  onSelectMode: (mode, selectOptions = {}) => {
-    isShopOpen = false;
-    isActionOpen = false;
-    selectedActionId = "";
-    selectedLogId = "";
-    navigateChatPage({
-      placeId: place.placeId,
-      view: mode,
-      page: 1,
-      eno: selectOptions.eno ?? null
-    });
   }
 });
 
@@ -925,12 +1054,11 @@ const handleAuthorIconClick = ({ authorEno: selectedAuthorEno } = {}) => {
   selectedActionId = "";
   selectedLogId = "";
 
-  navigateChatPage({
-    placeId: place.placeId,
-    view: "eno",
-    page: 1,
-    eno: normalizedAuthorEno
-  });
+  openedAuthorEno = normalizedAuthorEno;
+  currentViewMode = "eno";
+  currentChatPage = 1;
+  renderActiveChatViewTabs();
+  renderActiveChatTimeline();
 };
 
 const readCurrentComposerDraft = () => composerRefs
@@ -994,84 +1122,30 @@ const postActions = createPostActions({
   onHide: handleHide
 });
 
-renderViewTabsSection(chatMainArea, {
-  tabs: viewTabs
-});
+const viewTabsContainer = document.createElement("div");
+viewTabsContainer.className = "chatViewTabsMount";
+chatMainArea.appendChild(viewTabsContainer);
+  
+const timelineContainer = document.createElement("div");
+timelineContainer.className = "chatTimelineMount";
+chatMainArea.appendChild(timelineContainer);
 
-
-const rawDisplayPosts = getChatPostsForViewMode({
-  viewMode: currentViewMode,
-  currentPlace: place,
-  places,
-  viewerEno: eno,
-  favoriteEnos: loadFavoriteCharacterEnos({ currentEno: eno }),
-  targetEno: authorEno
-});
-
-
-const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
-const pageSize = loadChatPageSize();
-const requestedPage = getChatPageFromQuery();
-const pagination = getPaginationState(displayPosts, requestedPage, pageSize);
-
-replaceChatUrl({
-  placeId: place.placeId,
-  view: currentViewMode,
-  page: pagination.currentPage,
-  eno: currentViewMode === "eno" ? authorEno : null
-});
-
-const pagedDisplayPosts = getPagedPosts(displayPosts, pagination);
-
-const postListRefs = renderPostListSection(chatMainArea, {
-  posts: pagedDisplayPosts,
-  getPlaceLabel,
-  onMoveToPlace: moveToPlace,
+activeChatTimelineContext = {
+  viewTabsContainer,
+  timelineContainer,
+  place,
+  eno,
+  character,
+  composerRefs,
   postActions,
-  currentEno: eno,
-  getReplyTargetLabels,
-  getQuotePreviewPostById,
-  onAuthorIconClick: handleAuthorIconClick
-});
+  handleAuthorIconClick
+};
 
-renderChatPaginationSection(chatMainArea, {
-  pagination,
-  pageSize,
-  onSelectPage: (page) => {
-    navigateChatPage({
-      placeId: place.placeId,
-      view: currentViewMode,
-      page,
-      eno: currentViewMode === "eno" ? authorEno : null
-    });
-  },
-  onChangePageSize: (nextPageSize) => {
-    saveChatPageSize(nextPageSize);
-    navigateChatPage({
-      placeId: place.placeId,
-      view: currentViewMode,
-      page: 1,
-      eno: currentViewMode === "eno" ? authorEno : null
-    });
-  }
-});
+currentChatPage = getChatPageFromQuery();
+renderActiveChatViewTabs();
+renderActiveChatTimeline();
   
 if (composerRefs) {
-  if (!isMessageMode) {
-    setupDraftPreview({
-      postListRefs,
-      place,
-      character,
-      composerRefs,
-      getPlaceLabel,
-      postActions,
-      getQuotePreviewPostById,
-      currentEno: eno,
-      pagination,
-      onAuthorIconClick: handleAuthorIconClick
-    });
-  }
-
   setupComposerSubmit({
     place,
     character,
