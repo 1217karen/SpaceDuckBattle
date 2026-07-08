@@ -91,19 +91,11 @@
 
 /* =======================================================
    一覧ヘッダー
+   - 2段カード表示では見出しがかえって煩雑なので非表示
 ======================================================= */
 
 .characterListColumnHead {
-  display: grid;
-  grid-template-columns: 132px 76px minmax(150px, 1.35fr) minmax(130px, 1fr) minmax(88px, auto);
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 6px;
-  padding: 0 10px;
-  color: var(--theme-text-muted);
-  font-family: var(--font-family-display);
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.12em;
+  display: none;
 }
 
 /* =======================================================
@@ -118,8 +110,11 @@
 
 .characterListRow {
   display: grid;
-  grid-template-columns: 132px 76px minmax(150px, 1.35fr) minmax(130px, 1fr) minmax(88px, auto);
-  gap: 10px;
+  grid-template-columns: 76px 60px minmax(140px, 1.2fr) 104px minmax(190px, 1fr);
+  grid-template-areas:
+    "eno charIcon charName type statsTop"
+    "eno unitIcon unitName type statsBottom";
+  gap: 8px 12px;
   align-items: center;
   padding: 10px;
   border: 1px solid rgba(120, 180, 255, 0.34);
@@ -143,18 +138,23 @@
   text-decoration: none;
 }
 
-.characterListIcons {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
+.characterListEno {
+  grid-area: eno;
+  align-self: center;
+  color: var(--theme-text-accent);
+  font-family: var(--font-family-display);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
-.characterListIconBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  width: 60px;
-  min-width: 0;
+.characterListCharIconWrap {
+  grid-area: charIcon;
+}
+
+.characterListUnitIconWrap {
+  grid-area: unitIcon;
+  margin-left: 12px;
 }
 
 .characterListIconImage {
@@ -168,27 +168,15 @@
   box-sizing: border-box;
 }
 
-.characterListIconLabel {
-  color: var(--theme-text-muted);
-  font-family: var(--font-family-display);
-  font-size: var(--font-size-xs);
-  line-height: 1.1;
-  letter-spacing: 0.08em;
-  text-align: center;
-}
-
-.characterListEno {
-  color: var(--theme-text-accent);
-  font-family: var(--font-family-display);
-  font-size: 16px;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-
-.characterListCharacter,
-.characterListUnit,
-.characterListType {
+.characterListCharNameArea {
+  grid-area: charName;
   min-width: 0;
+}
+
+.characterListUnitNameArea {
+  grid-area: unitName;
+  min-width: 0;
+  margin-left: 12px;
 }
 
 .characterListName {
@@ -204,12 +192,20 @@
   word-break: break-word;
 }
 
+.characterListType {
+  grid-area: type;
+  align-self: center;
+  min-width: 0;
+  text-align: center;
+}
+
 .characterListTypeBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   max-width: 100%;
-  padding: 3px 8px;
+  min-width: 84px;
+  padding: 4px 8px;
   border: 1px solid var(--theme-border-soft);
   border-radius: 999px;
   background: rgba(10, 20, 40, 0.62);
@@ -218,6 +214,44 @@
   line-height: 1.35;
   white-space: nowrap;
   box-sizing: border-box;
+}
+
+.characterListStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+
+.characterListStatsTop {
+  grid-area: statsTop;
+}
+
+.characterListStatsBottom {
+  grid-area: statsBottom;
+}
+
+.characterListStatChip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 56px;
+  padding: 2px 6px;
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+}
+
+.characterListStatLabel {
+  color: var(--theme-text-muted);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.08em;
+}
+
+.characterListStatValue {
+  color: var(--theme-text-main);
+  font-variant-numeric: tabular-nums;
 }
 
 .characterListMobileLabel {
@@ -232,6 +266,26 @@
    レスポンシブ
 ======================================================= */
 
+@media (max-width: 860px) {
+  .characterListRow {
+    grid-template-columns: 76px 60px minmax(0, 1fr);
+    grid-template-areas:
+      "eno charIcon charName"
+      "eno unitIcon unitName"
+      "type statsTop statsTop"
+      "type statsBottom statsBottom";
+  }
+
+  .characterListType {
+    text-align: left;
+  }
+
+  .characterListUnitIconWrap,
+  .characterListUnitNameArea {
+    margin-left: 10px;
+  }
+}
+
 @media (max-width: 760px) {
   .characterListHeader {
     align-items: flex-start;
@@ -241,40 +295,31 @@
   .characterListControls {
     grid-template-columns: 1fr;
   }
+}
 
-  .characterListColumnHead {
-    display: none;
+@media (max-width: 560px) {
+  .characterListPage {
+    padding: 12px;
   }
 
   .characterListRow {
-    grid-template-columns: 132px minmax(0, 1fr);
+    grid-template-columns: 60px minmax(0, 1fr);
     grid-template-areas:
-      "icons character"
-      "icons eno"
-      "icons unit"
-      "icons type";
-    align-items: start;
-  }
-
-  .characterListIcons {
-    grid-area: icons;
+      "charIcon charName"
+      "unitIcon unitName"
+      "eno eno"
+      "type type"
+      "statsTop statsTop"
+      "statsBottom statsBottom";
   }
 
   .characterListEno {
-    grid-area: eno;
     font-size: 14px;
   }
 
-  .characterListCharacter {
-    grid-area: character;
-  }
-
-  .characterListUnit {
-    grid-area: unit;
-  }
-
-  .characterListType {
-    grid-area: type;
+  .characterListUnitIconWrap,
+  .characterListUnitNameArea {
+    margin-left: 0;
   }
 
   .characterListMobileLabel {
@@ -285,24 +330,12 @@
     font-size: var(--font-size-xs);
     letter-spacing: 0.1em;
   }
-}
 
-@media (max-width: 520px) {
-  .characterListPage {
-    padding: 12px;
+  .characterListStats {
+    gap: 5px;
   }
 
-  .characterListRow {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "icons"
-      "eno"
-      "character"
-      "unit"
-      "type";
-  }
-
-  .characterListIcons {
-    justify-content: flex-start;
+  .characterListStatChip {
+    min-width: 54px;
   }
 }
