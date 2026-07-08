@@ -2,27 +2,307 @@
   width: 100%;
 }
 
-.characterListTable {
+.center-panel > h1 {
+  font-family: var(--font-family-display);
+  letter-spacing: 0.1em;
+}
+
+.characterListPage {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px;
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+}
+
+/* =======================================================
+   上部
+======================================================= */
+
+.characterListHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--theme-border-soft);
+}
+
+.characterListHeaderMain {
+  min-width: 0;
+}
+
+.characterListKicker {
+  min-width: 190px;
+  padding-right: 42px;
+  letter-spacing: 0.18em;
+}
+
+.characterListDescription {
+  margin: 8px 0 0;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+}
+
+.characterListCount {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--theme-text-accent);
+  font-family: var(--font-family-display);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* =======================================================
+   検索・ソート
+======================================================= */
+
+.characterListControls {
   display: grid;
-  grid-template-columns: 120px 1fr;
-  border: 1px solid #d9d9d9;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
+  grid-template-columns: minmax(220px, 1fr) minmax(160px, 220px);
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
-.characterListHead {
-  padding: 12px 16px;
+.characterListControlLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.characterListControlText {
+  color: var(--theme-text-muted);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.12em;
+}
+
+.characterListSearchInput,
+.characterListSortSelect {
+  width: 100%;
+}
+
+/* =======================================================
+   一覧ヘッダー
+======================================================= */
+
+.characterListColumnHead {
+  display: grid;
+  grid-template-columns: 132px 76px minmax(150px, 1.35fr) minmax(130px, 1fr) minmax(88px, auto);
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 0 10px;
+  color: var(--theme-text-muted);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.12em;
+}
+
+/* =======================================================
+   一覧本体
+======================================================= */
+
+.characterListResult {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.characterListRow {
+  display: grid;
+  grid-template-columns: 132px 76px minmax(150px, 1.35fr) minmax(130px, 1fr) minmax(88px, auto);
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid rgba(120, 180, 255, 0.34);
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--theme-text-main);
+  text-decoration: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.characterListRow:hover {
+  border-color: var(--theme-border-main);
+  background: rgba(40, 70, 105, 0.28);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    var(--theme-shadow-soft);
+  text-decoration: none;
+}
+
+.characterListIcons {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.characterListIconBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 60px;
+  min-width: 0;
+}
+
+.characterListIconImage {
+  width: 60px;
+  height: 60px;
+  display: block;
+  object-fit: cover;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+  box-sizing: border-box;
+}
+
+.characterListIconLabel {
+  color: var(--theme-text-muted);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xs);
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.characterListEno {
+  color: var(--theme-text-accent);
+  font-family: var(--font-family-display);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.characterListCharacter,
+.characterListUnit,
+.characterListType {
+  min-width: 0;
+}
+
+.characterListName {
+  color: var(--theme-text-main);
   font-weight: bold;
-  background: #f3f3f3;
-  border-bottom: 1px solid #d9d9d9;
+  line-height: 1.45;
+  word-break: break-word;
 }
 
-.characterListCell {
-  padding: 12px 16px;
-  border-bottom: 1px solid #ededed;
+.characterListUnitName {
+  color: var(--theme-text-main);
+  line-height: 1.45;
+  word-break: break-word;
 }
 
-.characterListTable > .characterListCell:nth-last-child(-n + 2) {
-  border-bottom: none;
+.characterListTypeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  padding: 3px 8px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: 999px;
+  background: rgba(10, 20, 40, 0.62);
+  color: var(--theme-text-accent);
+  font-size: var(--font-size-small);
+  line-height: 1.35;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.characterListMobileLabel {
+  display: none;
+}
+
+.characterListEmpty {
+  padding: 14px 4px 2px;
+}
+
+/* =======================================================
+   レスポンシブ
+======================================================= */
+
+@media (max-width: 760px) {
+  .characterListHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .characterListControls {
+    grid-template-columns: 1fr;
+  }
+
+  .characterListColumnHead {
+    display: none;
+  }
+
+  .characterListRow {
+    grid-template-columns: 132px minmax(0, 1fr);
+    grid-template-areas:
+      "icons character"
+      "icons eno"
+      "icons unit"
+      "icons type";
+    align-items: start;
+  }
+
+  .characterListIcons {
+    grid-area: icons;
+  }
+
+  .characterListEno {
+    grid-area: eno;
+    font-size: 14px;
+  }
+
+  .characterListCharacter {
+    grid-area: character;
+  }
+
+  .characterListUnit {
+    grid-area: unit;
+  }
+
+  .characterListType {
+    grid-area: type;
+  }
+
+  .characterListMobileLabel {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--theme-text-muted);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.1em;
+  }
+}
+
+@media (max-width: 520px) {
+  .characterListPage {
+    padding: 12px;
+  }
+
+  .characterListRow {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "icons"
+      "eno"
+      "character"
+      "unit"
+      "type";
+  }
+
+  .characterListIcons {
+    justify-content: flex-start;
+  }
 }
