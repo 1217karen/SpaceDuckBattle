@@ -112,6 +112,7 @@ a{
   display:flex;
   flex-direction:column;
   gap:10px;
+  min-height:calc(100vh - 20px);
 }
 
 .menu-link{
@@ -129,3 +130,66 @@ a{
   background:var(--theme-button-bg-hover);
 }
 
+.menuProfileCard{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  text-decoration:none;
+}
+
+.menuProfileCard:hover{
+  background:var(--theme-button-bg-hover);
+}
+
+.menuProfileIcon{
+  flex:0 0 auto;
+  border-radius:var(--theme-radius-sm);
+}
+
+.menuProfileText{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:4px;
+}
+
+.menuProfileEno{
+  color:var(--theme-text-accent);
+  font-size:var(--font-size-small);
+  line-height:1.2;
+}
+
+.menuProfileName{
+  overflow:hidden;
+  color:var(--theme-text-main);
+  font-weight:bold;
+  line-height:1.35;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.menuNoticeBox{
+  height:200px;
+  padding:10px;
+  overflow-y:auto;
+  box-sizing:border-box;
+}
+
+.menuNoticeText{
+  margin:0 0 8px;
+  color:var(--theme-text-main);
+  font-size:var(--font-size-small);
+  line-height:1.45;
+}
+
+.menuNoticeText:last-child{
+  margin-bottom:0;
+}
+
+.menuLogoutButton{
+  margin-top:auto;
+  padding:8px 10px;
+  font-size:var(--font-size-small);
+  text-align:center;
+}
