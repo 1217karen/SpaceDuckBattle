@@ -51,6 +51,41 @@ function getUnitTypeLabel(type) {
   return UNIT_TYPE_LABELS[key] || key;
 }
 
+function getUnitStats(stats = {}) {
+  return {
+    atk: Number(stats?.atk) || 0,
+    def: Number(stats?.def) || 0,
+    heal: Number(stats?.heal) || 0,
+    speed: Number(stats?.speed) || 0,
+    cri: Number(stats?.cri) || 0,
+    tec: Number(stats?.tec) || 0
+  };
+}
+
+function renderStatChip(label, value) {
+  return `
+    <span class="characterListStatChip">
+      <span class="characterListStatLabel">${escapeHtml(label)}</span>
+      <span class="characterListStatValue">${escapeHtml(value)}</span>
+    </span>
+  `;
+}
+
+function renderStatGroup(stats, keys) {
+  const labels = {
+    atk: "ATK",
+    def: "DEF",
+    heal: "HEAL",
+    speed: "SPD",
+    cri: "CRI",
+    tec: "TEC"
+  };
+
+  return keys
+    .map(key => renderStatChip(labels[key], stats[key]))
+    .join("");
+}
+
 function getCharacterSummaries() {
   const maxEno = getRegisteredEnoMax();
   const result = [];
@@ -73,7 +108,8 @@ function getCharacterSummaries() {
       fullName: getDisplayText(character?.fullName),
       unitName: getDisplayText(unit?.name),
       unitType,
-      unitTypeLabel: getUnitTypeLabel(unitType)
+      unitTypeLabel: getUnitTypeLabel(unitType),
+      stats: getUnitStats(unit?.stats)
     });
   }
 
@@ -148,42 +184,46 @@ function renderCharacterRows(characters) {
 
   resultArea.innerHTML = characters.map(item => `
     <a class="characterListRow" href="${escapeHtml(item.profileUrl)}">
-      <div class="characterListIcons">
-        <div class="characterListIconBlock">
-          <img
-            class="characterListIconImage"
-            src="${escapeHtml(item.characterIconUrl)}"
-            alt="${escapeHtml(item.fullName)}のキャラアイコン"
-            loading="lazy"
-          >
-          <span class="characterListIconLabel">CHARA</span>
-        </div>
-
-        <div class="characterListIconBlock">
-          <img
-            class="characterListIconImage"
-            src="${escapeHtml(item.unitIconUrl)}"
-            alt="${escapeHtml(item.unitName)}のユニットアイコン"
-            loading="lazy"
-          >
-          <span class="characterListIconLabel">UNIT</span>
-        </div>
-      </div>
-
       <div class="characterListEno">Eno.${item.eno}</div>
 
-      <div class="characterListCharacter">
+      <div class="characterListCharIconWrap">
+        <img
+          class="characterListIconImage"
+          src="${escapeHtml(item.characterIconUrl)}"
+          alt="${escapeHtml(item.fullName)}のキャラアイコン"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="characterListCharNameArea">
         <div class="characterListMobileLabel">CHARACTER</div>
         <div class="characterListName">${escapeHtml(item.fullName)}</div>
       </div>
 
-      <div class="characterListUnit">
+      <div class="characterListType">
+        <span class="characterListTypeBadge">${escapeHtml(item.unitTypeLabel)}</span>
+      </div>
+
+      <div class="characterListStats characterListStatsTop">
+        ${renderStatGroup(item.stats, ["atk", "def", "heal"])}
+      </div>
+
+      <div class="characterListUnitIconWrap">
+        <img
+          class="characterListIconImage"
+          src="${escapeHtml(item.unitIconUrl)}"
+          alt="${escapeHtml(item.unitName)}のユニットアイコン"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="characterListUnitNameArea">
         <div class="characterListMobileLabel">UNIT</div>
         <div class="characterListUnitName">${escapeHtml(item.unitName)}</div>
       </div>
 
-      <div class="characterListType">
-        <span class="characterListTypeBadge">${escapeHtml(item.unitTypeLabel)}</span>
+      <div class="characterListStats characterListStatsBottom">
+        ${renderStatGroup(item.stats, ["speed", "cri", "tec"])}
       </div>
     </a>
   `).join("");
