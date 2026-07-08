@@ -60,13 +60,16 @@
 }
 
 /* =======================================================
-   検索・ソート
+   検索・絞り込み・ソート
 ======================================================= */
 
 .characterListControls {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) minmax(160px, 220px);
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    "character unit"
+    "type sort";
+  gap: 10px 12px;
   margin-bottom: 14px;
 }
 
@@ -77,6 +80,37 @@
   min-width: 0;
 }
 
+.characterListControlLabel:nth-child(1) {
+  grid-area: character;
+}
+
+.characterListControlLabel:nth-child(2) {
+  grid-area: unit;
+}
+
+.characterListControlLabel:nth-child(3) {
+  grid-area: type;
+}
+
+.characterListControlLabel:nth-child(4),
+.characterListControlLabel:nth-child(5) {
+  min-width: 0;
+}
+
+.characterListControlLabel:nth-child(4) {
+  grid-area: sort;
+}
+
+.characterListControlLabel:nth-child(5) {
+  grid-area: sort;
+  width: min(100%, 96px);
+  justify-self: end;
+}
+
+.characterListControlLabel:nth-child(4) {
+  padding-right: 108px;
+}
+
 .characterListControlText {
   color: var(--theme-text-muted);
   font-family: var(--font-family-display);
@@ -84,9 +118,10 @@
   letter-spacing: 0.12em;
 }
 
-.characterListSearchInput,
-.characterListSortSelect {
+.characterListControlInput,
+.characterListControlSelect {
   width: 100%;
+  min-width: 0;
 }
 
 /* =======================================================
