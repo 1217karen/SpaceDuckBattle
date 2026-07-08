@@ -319,3 +319,5 @@ const mainPlaces = [
     showParentMainAreaPreview: false
   }
 ];
+
+export const places = expandLinkedLayerPlaces(mainPlaces);
