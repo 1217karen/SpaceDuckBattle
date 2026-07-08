@@ -51,6 +51,14 @@ function getUnitTypeLabel(type) {
   return UNIT_TYPE_LABELS[key] || key;
 }
 
+function renderUnitTypeOptions() {
+  return Object.entries(UNIT_TYPE_LABELS)
+    .map(([value, label]) => `
+      <option value="${escapeHtml(value)}">${escapeHtml(label)}</option>
+    `)
+    .join("");
+}
+
 function getUnitStats(stats = {}) {
   return {
     atk: Number(stats?.atk) || 0,
@@ -116,19 +124,6 @@ function getCharacterSummaries() {
   return result;
 }
 
-function getSearchSource(item) {
-  return [
-    item.eno,
-    `Eno.${item.eno}`,
-    item.fullName,
-    item.unitName,
-    item.unitType,
-    item.unitTypeLabel
-  ]
-    .join(" ")
-    .toLocaleLowerCase("ja-JP");
-}
-
 function compareText(a, b) {
   return String(a ?? "").localeCompare(
     String(b ?? ""),
@@ -140,27 +135,68 @@ function compareText(a, b) {
   );
 }
 
-function getSortedCharacters(characters, sortMode) {
+function getStatTotal(stats = {}) {
+  return (
+    (Number(stats.atk) || 0) +
+    (Number(stats.def) || 0) +
+    (Number(stats.heal) || 0) +
+    (Number(stats.speed) || 0) +
+    (Number(stats.cri) || 0) +
+    (Number(stats.tec) || 0)
+  );
+}
+
+function getSortValue(item, sortKey) {
+  if (sortKey === "fullName") return item.fullName;
+  if (sortKey === "unitName") return item.unitName;
+  if (sortKey === "unitType") return item.unitTypeLabel;
+  if (sortKey === "total") return getStatTotal(item.stats);
+  if (sortKey === "atk") return item.stats.atk;
+  if (sortKey === "def") return item.stats.def;
+  if (sortKey === "heal") return item.stats.heal;
+  if (sortKey === "speed") return item.stats.speed;
+  if (sortKey === "cri") return item.stats.cri;
+  if (sortKey === "tec") return item.stats.tec;
+
+  return item.eno;
+}
+
+function isNumericSortKey(sortKey) {
+  return [
+    "eno",
+    "total",
+    "atk",
+    "def",
+    "heal",
+    "speed",
+    "cri",
+    "tec"
+  ].includes(sortKey);
+}
+
+function getSortedCharacters(characters, sortKey, sortDirection) {
+  const direction = sortDirection === "desc" ? -1 : 1;
   const sorted = [...characters];
 
   sorted.sort((a, b) => {
-    if (sortMode === "eno-desc") {
-      return b.eno - a.eno;
+    let result = 0;
+
+    if (isNumericSortKey(sortKey)) {
+      result =
+        Number(getSortValue(a, sortKey) || 0) -
+        Number(getSortValue(b, sortKey) || 0);
+    } else {
+      result = compareText(
+        getSortValue(a, sortKey),
+        getSortValue(b, sortKey)
+      );
     }
 
-    if (sortMode === "fullName") {
-      return compareText(a.fullName, b.fullName) || a.eno - b.eno;
+    if (result === 0) {
+      result = a.eno - b.eno;
     }
 
-    if (sortMode === "unitName") {
-      return compareText(a.unitName, b.unitName) || a.eno - b.eno;
-    }
-
-    if (sortMode === "unitType") {
-      return compareText(a.unitTypeLabel, b.unitTypeLabel) || a.eno - b.eno;
-    }
-
-    return a.eno - b.eno;
+    return result * direction;
   });
 
   return sorted;
@@ -230,25 +266,67 @@ function renderCharacterRows(characters) {
 }
 
 function updateCharacterList() {
-  const searchInput = document.getElementById("characterListSearch");
-  const sortSelect = document.getElementById("characterListSort");
-  const countText = document.getElementById("characterListCount");
+  const characterSearchInput =
+    document.getElementById("characterListCharacterSearch");
 
-  const keyword =
-    searchInput?.value
+  const unitSearchInput =
+    document.getElementById("characterListUnitSearch");
+
+  const typeFilterSelect =
+    document.getElementById("characterListTypeFilter");
+
+  const sortKeySelect =
+    document.getElementById("characterListSortKey");
+
+  const sortDirectionSelect =
+    document.getElementById("characterListSortDirection");
+
+  const countText =
+    document.getElementById("characterListCount");
+
+  const characterKeyword =
+    characterSearchInput?.value
       ?.trim()
       .toLocaleLowerCase("ja-JP") ?? "";
 
-  const sortMode =
-    sortSelect?.value ?? "eno-asc";
+  const unitKeyword =
+    unitSearchInput?.value
+      ?.trim()
+      .toLocaleLowerCase("ja-JP") ?? "";
 
-  const filtered = keyword
-    ? allCharacters.filter(item =>
-        getSearchSource(item).includes(keyword)
-      )
-    : allCharacters;
+  const selectedType =
+    typeFilterSelect?.value ?? "";
 
-  const sorted = getSortedCharacters(filtered, sortMode);
+  const sortKey =
+    sortKeySelect?.value ?? "eno";
+
+  const sortDirection =
+    sortDirectionSelect?.value ?? "asc";
+
+  const filtered = allCharacters.filter(item => {
+    const fullName =
+      item.fullName.toLocaleLowerCase("ja-JP");
+
+    const unitName =
+      item.unitName.toLocaleLowerCase("ja-JP");
+
+    const matchesCharacter =
+      characterKeyword === "" ||
+      fullName.includes(characterKeyword);
+
+    const matchesUnit =
+      unitKeyword === "" ||
+      unitName.includes(unitKeyword);
+
+    const matchesType =
+      selectedType === "" ||
+      item.unitType === selectedType;
+
+    return matchesCharacter && matchesUnit && matchesType;
+  });
+
+  const sorted =
+    getSortedCharacters(filtered, sortKey, sortDirection);
 
   if (countText) {
     countText.textContent =
@@ -276,48 +354,83 @@ function renderCharacterList() {
         <div id="characterListCount" class="characterListCount"></div>
       </div>
 
-      <div class="characterListControls">
-        <label class="characterListControlLabel">
-          <span class="characterListControlText">検索</span>
-          <input
-            id="characterListSearch"
-            class="characterListSearchInput"
-            type="search"
-            placeholder="Eno / キャラ名 / ユニット名 / タイプ"
-          >
-        </label>
+<div class="characterListControls">
+  <label class="characterListControlLabel">
+    <span class="characterListControlText">キャラ名</span>
+    <input
+      id="characterListCharacterSearch"
+      class="characterListControlInput"
+      type="search"
+      placeholder="キャラ名で検索"
+    >
+  </label>
 
-        <label class="characterListControlLabel characterListSortLabel">
-          <span class="characterListControlText">ソート</span>
-          <select id="characterListSort" class="characterListSortSelect">
-            <option value="eno-asc">Eno 昇順</option>
-            <option value="eno-desc">Eno 降順</option>
-            <option value="fullName">キャラ名順</option>
-            <option value="unitName">ユニット名順</option>
-            <option value="unitType">ユニットタイプ順</option>
-          </select>
-        </label>
-      </div>
+  <label class="characterListControlLabel">
+    <span class="characterListControlText">ユニット名</span>
+    <input
+      id="characterListUnitSearch"
+      class="characterListControlInput"
+      type="search"
+      placeholder="ユニット名で検索"
+    >
+  </label>
 
-      <div class="characterListColumnHead" aria-hidden="true">
-        <div>ICON</div>
-        <div>ENO</div>
-        <div>CHARACTER</div>
-        <div>UNIT</div>
-        <div>TYPE</div>
-      </div>
+  <label class="characterListControlLabel">
+    <span class="characterListControlText">タイプ</span>
+    <select id="characterListTypeFilter" class="characterListControlSelect">
+      <option value="">すべて</option>
+      ${renderUnitTypeOptions()}
+    </select>
+  </label>
+
+  <label class="characterListControlLabel">
+    <span class="characterListControlText">ソート</span>
+    <select id="characterListSortKey" class="characterListControlSelect">
+      <option value="eno">Eno</option>
+      <option value="fullName">キャラ名</option>
+      <option value="unitName">ユニット名</option>
+      <option value="unitType">ユニットタイプ</option>
+      <option value="total">合計ステータス</option>
+      <option value="atk">ATK</option>
+      <option value="def">DEF</option>
+      <option value="heal">HEAL</option>
+      <option value="speed">SPEED</option>
+      <option value="cri">CRI</option>
+      <option value="tec">TEC</option>
+    </select>
+  </label>
+
+  <label class="characterListControlLabel">
+    <span class="characterListControlText">並び順</span>
+    <select id="characterListSortDirection" class="characterListControlSelect">
+      <option value="asc">昇順</option>
+      <option value="desc">降順</option>
+    </select>
+  </label>
+</div>
 
       <div id="characterListResult" class="characterListResult"></div>
     </section>
   `;
 
+[
+  "characterListCharacterSearch",
+  "characterListUnitSearch"
+].forEach(id => {
   document
-    .getElementById("characterListSearch")
+    .getElementById(id)
     ?.addEventListener("input", updateCharacterList);
+});
 
+[
+  "characterListTypeFilter",
+  "characterListSortKey",
+  "characterListSortDirection"
+].forEach(id => {
   document
-    .getElementById("characterListSort")
+    .getElementById(id)
     ?.addEventListener("change", updateCharacterList);
+});
 
   updateCharacterList();
 }
