@@ -4,6 +4,7 @@
   --font-family-display: "Iceberg", sans-serif;
   --font-family-menu: "Stick", sans-serif;
   --font-size-menu: var(--font-size-base);
+  --font-size-menu-nav: 15px;
 }
 
 body{
@@ -134,7 +135,7 @@ a{
 
 .menuNavLink{
   font-family:var(--font-family-menu);
-  font-size:var(--font-size-menu);
+  font-size:var(--font-size-menu-nav);
   text-align:center;
 }
 
