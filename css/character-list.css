@@ -2,66 +2,18 @@
   width: 100%;
 }
 
-.center-panel > h1 {
-  font-family: var(--font-family-display);
-  letter-spacing: 0.1em;
-}
+/* =======================================================
+   検索・絞り込み・ソート枠
+======================================================= */
 
-.characterListPage {
+.characterListControlPanel {
   width: 100%;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 16px;
+  max-width: 760px;
+  margin: 0 auto 14px;
+  padding: 12px;
   color: var(--theme-text-main);
   box-sizing: border-box;
 }
-
-/* =======================================================
-   上部
-======================================================= */
-
-.characterListHeader {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--theme-border-soft);
-}
-
-.characterListHeaderMain {
-  min-width: 0;
-}
-
-.characterListKicker {
-  min-width: 190px;
-  padding-right: 42px;
-  letter-spacing: 0.18em;
-}
-
-.characterListDescription {
-  margin: 8px 0 0;
-  color: var(--theme-text-muted);
-  font-size: var(--font-size-small);
-  line-height: 1.6;
-}
-
-.characterListCount {
-  flex: 0 0 auto;
-  padding: 4px 8px;
-  border: 1px solid var(--theme-border-soft);
-  border-radius: var(--theme-radius-sm);
-  background: rgba(0, 0, 0, 0.18);
-  color: var(--theme-text-accent);
-  font-family: var(--font-family-display);
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-
-/* =======================================================
-   検索・絞り込み・ソート
-======================================================= */
 
 .characterListControls {
   display: grid;
@@ -70,7 +22,26 @@
     "character unit"
     "type sort";
   gap: 10px 12px;
-  margin-bottom: 14px;
+}
+
+.characterListControlCharacter {
+  grid-area: character;
+}
+
+.characterListControlUnit {
+  grid-area: unit;
+}
+
+.characterListControlType {
+  grid-area: type;
+}
+
+.characterListSortControls {
+  grid-area: sort;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 88px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .characterListControlLabel {
@@ -78,37 +49,6 @@
   flex-direction: column;
   gap: 4px;
   min-width: 0;
-}
-
-.characterListControlLabel:nth-child(1) {
-  grid-area: character;
-}
-
-.characterListControlLabel:nth-child(2) {
-  grid-area: unit;
-}
-
-.characterListControlLabel:nth-child(3) {
-  grid-area: type;
-}
-
-.characterListControlLabel:nth-child(4),
-.characterListControlLabel:nth-child(5) {
-  min-width: 0;
-}
-
-.characterListControlLabel:nth-child(4) {
-  grid-area: sort;
-}
-
-.characterListControlLabel:nth-child(5) {
-  grid-area: sort;
-  width: min(100%, 96px);
-  justify-self: end;
-}
-
-.characterListControlLabel:nth-child(4) {
-  padding-right: 108px;
 }
 
 .characterListControlText {
@@ -122,6 +62,37 @@
 .characterListControlSelect {
   width: 100%;
   min-width: 0;
+}
+
+/* =======================================================
+   件数表示
+======================================================= */
+
+.characterListCount {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto 6px;
+  padding: 0 2px;
+  color: var(--theme-text-muted);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.08em;
+  text-align: right;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+/* =======================================================
+   リスト枠
+======================================================= */
+
+.characterListPage {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px;
+  color: var(--theme-text-main);
+  box-sizing: border-box;
 }
 
 /* =======================================================
@@ -193,9 +164,9 @@
 }
 
 .characterListIconImage {
+  display: block;
   width: 60px;
   height: 60px;
-  display: block;
   object-fit: cover;
   border: 1px solid var(--theme-border-main);
   border-radius: var(--theme-radius-sm);
@@ -341,18 +312,16 @@
   }
 }
 
-@media (max-width: 760px) {
-  .characterListHeader {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .characterListControls {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 560px) {
+  .characterListControlPanel {
+    padding: 10px;
+  }
+
+  .characterListSortControls {
+    grid-template-columns: minmax(0, 1fr) 74px;
+    gap: 6px;
+  }
+
   .characterListPage {
     padding: 12px;
   }
