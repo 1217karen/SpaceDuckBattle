@@ -65,6 +65,7 @@ export const NPCS = {
 
       commIcons: [
         {
+          id: 1,
           name: "防衛隊回復員",
           url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
         }
@@ -162,6 +163,7 @@ export const NPCS = {
 
       commIcons: [
         {
+          id: 1,
           name: "防衛隊戦闘員",
           url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
         }
@@ -259,6 +261,7 @@ export const NPCS = {
 
       commIcons: [
         {
+          id: 1,
           name: "防衛隊支援員",
           url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
         }
