@@ -18,35 +18,79 @@
     <div id="commonMenu"></div>
   </aside>
 
-  <main class="center-panel">
+<main class="center-panel battleCenterPanel">
 
-<div
-  class="center-topbar"
-  data-notice="お知らせエリア"
-  data-right-label="UNIT ＞"
-></div>
-    <h1 class="pageTitle">BATTLE SET</h1>
+  <div
+    class="center-topbar"
+    data-notice="お知らせエリア"
+    data-right-label="UNIT ＞"
+  ></div>
 
-    <select id="stageSelect">
-      <option value="">ステージを選択</option>
-      <option value="tutorial">チュートリアル</option>
-      <option value="normal">通常戦</option>
-      <option value="boss">ボス</option>
-    </select>
+  <h1 class="pageTitle">BATTLE SET</h1>
 
-    <button id="startBtn">戦闘開始</button>
+  <section class="battlePanel battleStagePanel common-card-framed common-card-rounded-lg common-card-profile">
+    <div class="battlePanelHeader">
+      <div class="common-gradientHeading commonSectionHeading battlePanelTitle">
+        STAGE SELECT
+      </div>
+      <p class="battlePanelLead">
+        出撃するステージを選択してください。
+      </p>
+    </div>
 
-    <div id="party">
+    <label class="battleStageControl">
+      <span class="battleControlText">STAGE</span>
+      <select id="stageSelect" class="battleStageSelect">
+        <option value="">ステージを選択</option>
+        <option value="tutorial">チュートリアル</option>
+        <option value="normal">通常戦</option>
+        <option value="boss">ボス</option>
+      </select>
+    </label>
+  </section>
+
+  <section class="battlePanel battlePartyPanel common-card-framed common-card-rounded-lg common-card-profile">
+    <div class="battlePanelHeader">
+      <div class="common-gradientHeading commonSectionHeading battlePanelTitle">
+        PARTY DOCK
+      </div>
+      <p class="battlePanelLead">
+        出撃ユニットを確認します。ユニットを選択して配置マスを指定してください。
+      </p>
+    </div>
+
+    <div id="party" class="battlePartySlots">
       <div class="pt-slot" data-slot="0">PT1</div>
       <div class="pt-slot" data-slot="1">PT2</div>
       <div class="pt-slot" data-slot="2">PT3</div>
       <div class="pt-slot" data-slot="3">PT4</div>
     </div>
+  </section>
 
-    <h2>配置</h2>
-    <div id="board"></div>
+  <section class="battlePanel battleBoardPanel common-card-framed common-card-rounded-lg common-card-profile">
+    <div class="battlePanelHeader">
+      <div class="common-gradientHeading commonSectionHeading battlePanelTitle">
+        POSITIONING FIELD
+      </div>
+      <p class="battlePanelLead">
+        配置可能なマスを選び、ユニットの初期位置を決定します。
+      </p>
+    </div>
 
-  </main>
+    <div class="battleBoardOuter">
+      <div class="battleBoardWrap">
+        <div id="board"></div>
+      </div>
+    </div>
+
+    <div class="battleStartArea">
+      <button id="startBtn" class="button-primaryNew battleStartButton">
+        戦闘開始
+      </button>
+    </div>
+  </section>
+
+</main>
 
   <aside class="right-panel">
     <h2>アヒル一覧</h2>
