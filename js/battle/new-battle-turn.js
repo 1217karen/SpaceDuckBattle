@@ -35,7 +35,7 @@ function pickBattleEndSpeaker(units, winnerTeam) {
     return lines.some(line =>
       line &&
       typeof line.text === "string" &&
-      line.text.trim() !== ""
+      line.text.length > 0
     );
   });
 
