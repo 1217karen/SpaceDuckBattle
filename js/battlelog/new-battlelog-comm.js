@@ -31,21 +31,12 @@ function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
   const unitSnapshot =
     unitId ? getUnitSnapshot(snapshot, unitId) : null;
 
-  const hasExplicitCommIcon =
-    typeof event.comm.iconUrl === "string" &&
-    event.comm.iconUrl.trim() !== "";
+  const hasExplicitCommText =
+    event.comm.text.length > 0;
 
-  const hasExplicitCommName =
-    typeof event.comm.name === "string" &&
-    event.comm.name.trim() !== "";
-
-  const shouldSwitchSpeaker =
-    hasExplicitCommIcon || hasExplicitCommName;
-
-  const iconUrl = shouldSwitchSpeaker
+  const iconUrl = hasExplicitCommText
     ? (
         event.comm.iconUrl ||
-        unitSnapshot?.icon ||
         getFallbackIcon()
       )
     : (
@@ -53,7 +44,7 @@ function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
         getFallbackIcon()
       );
 
-  const name = shouldSwitchSpeaker
+  const name = hasExplicitCommText
     ? resolveCommDisplayName({
         manualName: event.comm.name,
         iconUrl,
@@ -64,8 +55,7 @@ function buildCommPayloadFromEvent(event, snapshot, fallbackUnitId = null) {
           unitSnapshot?.name || "",
         fallback:
           unitId || "",
-        hasExplicitCommText: true,
-        hasExplicitCommIcon
+        hasExplicitCommText
       })
     : (
         unitSnapshot?.name ||
