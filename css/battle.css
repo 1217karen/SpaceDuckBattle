@@ -316,11 +316,21 @@
   }
 }
 
+/* =======================================================
+   右カラム：ユニット一覧
+======================================================= */
+
 #unitList{
   display:flex;
   flex-direction:column;
   gap:12px;
 }
+
+/* =======================================================
+   右カラム：ユニット一覧セクション
+   - お気に入りユニット
+   - その他のユニット
+======================================================= */
 
 .unitlist-section{
   display:flex;
@@ -333,27 +343,34 @@
   font-size:15px;
 }
 
+/* =======================================================
+   右カラム：キャラ＋ユニット行
+======================================================= */
+
 .eno-unit-row{
-  border:1px solid #888;
-  padding:8px;
   display:flex;
   align-items:flex-start;
   gap:10px;
+  padding:8px;
+  border:1px solid #888;
 }
 
 .eno-unit-row.is-favorite-unit{
-  background:#fff8df;
   border-color:#e0b64f;
+  background:#fff8df;
 }
 
+/* =======================================================
+   右カラム：キャラクター表示部分
+======================================================= */
 
 .eno-character-area{
   width:84px;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:4px;
   flex-shrink:0;
+  gap:4px;
 }
 
 .eno-character-icon{
@@ -369,10 +386,18 @@
   word-break:break-all;
 }
 
+/* =======================================================
+   右カラム：ユニットパターン一覧
+======================================================= */
+
 .eno-pattern-list{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
+}
+
+.eno-pattern-item{
+  cursor:pointer;
 }
 
 .eno-pattern-icon{
@@ -388,13 +413,9 @@
   word-break:break-all;
 }
 
-.unitlist-empty{
-  color:#666;
-  font-size:14px;
-}
-.eno-pattern-item{
-  cursor:pointer;
-}
+/* =======================================================
+   右カラム：ユニットパターン選択状態
+======================================================= */
 
 .eno-pattern-item.selected{
   background:#fff3d6;
@@ -403,4 +424,13 @@
 .eno-pattern-item.selected .eno-pattern-icon{
   border:2px solid #ff9900;
   box-shadow:0 0 6px #ff9900;
+}
+
+/* =======================================================
+   右カラム：空表示
+======================================================= */
+
+.unitlist-empty{
+  color:#666;
+  font-size:14px;
 }
