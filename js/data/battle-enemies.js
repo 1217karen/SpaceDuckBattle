@@ -288,6 +288,8 @@ export const ENEMIES = {
           url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp"
         }
       ],
+
+      patterns: [
         {
           name: "基本",
           public: true,
