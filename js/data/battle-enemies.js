@@ -54,28 +54,28 @@ export const ENEMIES = {
 
       commDialogues: {
         battleStart: [
-          { text: "（黒いアヒルが並んでいる……）" }
+          { text: "（黒いアヒルが並んでいる……）", iconId: 1 }
         ],
         turnChangeNeutral: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeAdvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeDisadvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangePinch: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         critical: [
           { text: "" }
         ],
         kill: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         battleEndWin: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ]
       }
     }
@@ -111,19 +111,19 @@ export const ENEMIES = {
             {
               type: "attack_front1",
               dialogue: [
-                { text: "（一直線に突っ込んでくる）" }
+                { text: "（一直線に突っ込んでくる）", iconId: 1 }
               ]
             },
             {
               type: "attack_front_knockback",
               dialogue: [
-                { text: "（強引に押し込んできた）" }
+                { text: "（強引に押し込んできた）", iconId: 1 }
               ]
             },
             {
               type: "skill_006",
               dialogue: [
-                { text: "（周囲を巻き込むように暴れた）" }
+                { text: "（周囲を巻き込むように暴れた）", iconId: 1 }
               ]
             }
           ]
@@ -146,28 +146,28 @@ export const ENEMIES = {
 
       commDialogues: {
         battleStart: [
-          { text: "（黒いアヒルが並んでいる……）" }
+          { text: "（黒いアヒルが並んでいる……）", iconId: 1 }
         ],
         turnChangeNeutral: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeAdvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeDisadvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangePinch: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         critical: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         kill: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         battleEndWin: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ]
       }
     }
@@ -203,19 +203,19 @@ export const ENEMIES = {
             {
               type: "skill_002",
               dialogue: [
-                { text: "（どこからか衛星を呼び寄せた）" }
+                { text: "（どこからか衛星を呼び寄せた）", iconId: 1 }
               ]
             },
             {
               type: "attack_front_knockback",
               dialogue: [
-                { text: "（体当たりで押し返してきた）" }
+                { text: "（体当たりで押し返してきた）", iconId: 1 }
               ]
             },
             {
               type: "skill_008",
               dialogue: [
-                { text: "（周囲に防護めいた波を広げた）" }
+                { text: "（周囲に防護めいた波を広げた）", iconId: 1 }
               ]
             }
           ]
@@ -228,32 +228,38 @@ export const ENEMIES = {
       defaultName: "防壁型宇宙アヒル",
       defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp",
 
-      commIcons: [],
+      commIcons: [
+        {
+          id: 1,
+          name: "",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp"
+        }
+      ],
 
       commDialogues: {
         battleStart: [
-          { text: "（黒いアヒルが身構えている……）" }
+          { text: "（黒いアヒルが身構えている……）", iconId: 1 }
         ],
         turnChangeNeutral: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeAdvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeDisadvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangePinch: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         critical: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         kill: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         battleEndWin: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ]
       }
     }
@@ -295,19 +301,19 @@ export const ENEMIES = {
             {
               type: "debuff_wave",
               dialogue: [
-                { text: "（嫌な音波を響かせている）" }
+                { text: "（嫌な音波を響かせている）", iconId: 1 }
               ]
             },
             {
               type: "skill_009",
               dialogue: [
-                { text: "（周囲の個体を強化している）" }
+                { text: "（周囲の個体を強化している）", iconId: 1 }
               ]
             },
             {
               type: "corrosion_wave",
               dialogue: [
-                { text: "（濁った波動が広がった）" }
+                { text: "（濁った波動が広がった）", iconId: 1 }
               ]
             }
           ]
@@ -320,32 +326,38 @@ export const ENEMIES = {
       defaultName: "支援型宇宙アヒル",
       defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp",
 
-      commIcons: [],
+      commIcons: [
+        {
+          id: 1,
+          name: "",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp"
+        }
+      ],
 
       commDialogues: {
         battleStart: [
-          { text: "（黒いアヒルが佇んでいる……）" }
+          { text: "（黒いアヒルが佇んでいる……）", iconId: 1 }
         ],
         turnChangeNeutral: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeAdvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeDisadvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangePinch: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         critical: [
           { text: "「…………。」"  }
         ],
         kill: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         battleEndWin: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ]
       }
     }
@@ -401,28 +413,28 @@ export const ENEMIES = {
 
       commDialogues: {
         battleStart: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeNeutral: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeAdvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangeDisadvantage: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         turnChangePinch: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         critical: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         kill: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ],
         battleEndWin: [
-          { text: "「…………。」" }
+          { text: "「…………。」", iconId: 1 }
         ]
       }
     }
