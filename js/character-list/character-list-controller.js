@@ -340,97 +340,90 @@ function renderCharacterList() {
   allCharacters = getCharacterSummaries();
 
   characterList.innerHTML = `
-    <section class="characterListPage common-card-framed common-card-rounded-lg common-card-profile">
-      <div class="characterListHeader">
-        <div class="characterListHeaderMain">
-          <div class="common-gradientHeading commonSectionHeading commonSectionHeading-large characterListKicker">
-            CHARACTER LIST
-          </div>
-          <p class="characterListDescription">
-            登録済みキャラクターの一覧です。行を選択するとプロフィールを表示します。
-          </p>
+    <section class="characterListControlPanel common-card-framed common-card-rounded-lg common-card-panel">
+      <div class="characterListControls">
+        <label class="characterListControlLabel characterListControlCharacter">
+          <span class="characterListControlText">キャラ名</span>
+          <input
+            id="characterListCharacterSearch"
+            class="characterListControlInput"
+            type="search"
+            placeholder="キャラ名で検索"
+          >
+        </label>
+
+        <label class="characterListControlLabel characterListControlUnit">
+          <span class="characterListControlText">ユニット名</span>
+          <input
+            id="characterListUnitSearch"
+            class="characterListControlInput"
+            type="search"
+            placeholder="ユニット名で検索"
+          >
+        </label>
+
+        <label class="characterListControlLabel characterListControlType">
+          <span class="characterListControlText">タイプ</span>
+          <select id="characterListTypeFilter" class="characterListControlSelect">
+            <option value="">すべて</option>
+            ${renderUnitTypeOptions()}
+          </select>
+        </label>
+
+        <div class="characterListSortControls">
+          <label class="characterListControlLabel">
+            <span class="characterListControlText">ソート</span>
+            <select id="characterListSortKey" class="characterListControlSelect">
+              <option value="eno">Eno</option>
+              <option value="fullName">キャラ名</option>
+              <option value="unitName">ユニット名</option>
+              <option value="unitType">ユニットタイプ</option>
+              <option value="total">合計ステータス</option>
+              <option value="atk">ATK</option>
+              <option value="def">DEF</option>
+              <option value="heal">HEAL</option>
+              <option value="speed">SPEED</option>
+              <option value="cri">CRI</option>
+              <option value="tec">TEC</option>
+            </select>
+          </label>
+
+          <label class="characterListControlLabel characterListSortDirectionLabel">
+            <span class="characterListControlText">順</span>
+            <select id="characterListSortDirection" class="characterListControlSelect">
+              <option value="asc">昇順</option>
+              <option value="desc">降順</option>
+            </select>
+          </label>
         </div>
-
-        <div id="characterListCount" class="characterListCount"></div>
       </div>
+    </section>
 
-<div class="characterListControls">
-  <label class="characterListControlLabel">
-    <span class="characterListControlText">キャラ名</span>
-    <input
-      id="characterListCharacterSearch"
-      class="characterListControlInput"
-      type="search"
-      placeholder="キャラ名で検索"
-    >
-  </label>
+    <div id="characterListCount" class="characterListCount"></div>
 
-  <label class="characterListControlLabel">
-    <span class="characterListControlText">ユニット名</span>
-    <input
-      id="characterListUnitSearch"
-      class="characterListControlInput"
-      type="search"
-      placeholder="ユニット名で検索"
-    >
-  </label>
-
-  <label class="characterListControlLabel">
-    <span class="characterListControlText">タイプ</span>
-    <select id="characterListTypeFilter" class="characterListControlSelect">
-      <option value="">すべて</option>
-      ${renderUnitTypeOptions()}
-    </select>
-  </label>
-
-  <label class="characterListControlLabel">
-    <span class="characterListControlText">ソート</span>
-    <select id="characterListSortKey" class="characterListControlSelect">
-      <option value="eno">Eno</option>
-      <option value="fullName">キャラ名</option>
-      <option value="unitName">ユニット名</option>
-      <option value="unitType">ユニットタイプ</option>
-      <option value="total">合計ステータス</option>
-      <option value="atk">ATK</option>
-      <option value="def">DEF</option>
-      <option value="heal">HEAL</option>
-      <option value="speed">SPEED</option>
-      <option value="cri">CRI</option>
-      <option value="tec">TEC</option>
-    </select>
-  </label>
-
-  <label class="characterListControlLabel">
-    <span class="characterListControlText">並び順</span>
-    <select id="characterListSortDirection" class="characterListControlSelect">
-      <option value="asc">昇順</option>
-      <option value="desc">降順</option>
-    </select>
-  </label>
-</div>
-
+    <section class="characterListPage common-card-framed common-card-rounded-lg common-card-profile">
       <div id="characterListResult" class="characterListResult"></div>
     </section>
   `;
 
-[
-  "characterListCharacterSearch",
-  "characterListUnitSearch"
-].forEach(id => {
-  document
-    .getElementById(id)
-    ?.addEventListener("input", updateCharacterList);
-});
+  [
+    "characterListCharacterSearch",
+    "characterListUnitSearch"
+  ].forEach(id => {
+    document
+      .getElementById(id)
+      ?.addEventListener("input", updateCharacterList);
+  });
 
-[
-  "characterListTypeFilter",
-  "characterListSortKey",
-  "characterListSortDirection"
-].forEach(id => {
-  document
-    .getElementById(id)
-    ?.addEventListener("change", updateCharacterList);
-});
+  [
+    "characterListTypeFilter",
+    "characterListSortKey",
+    "characterListSortDirection"
+  ].forEach(id => {
+    document
+      .getElementById(id)
+      ?.addEventListener("change", updateCharacterList);
+  });
 
   updateCharacterList();
 }
