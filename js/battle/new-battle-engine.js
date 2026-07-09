@@ -99,10 +99,21 @@ function buildCommPayload(unit, dialogue) {
     name: dialogue.name || "",
     iconUrl:
       dialogue.iconUrl ||
-      unit.defaultCharacterIcon ||
-      unit.icon ||
       "https://placehold.co/60x60?text=NO+IMG",
     text: dialogue.text
+  };
+}
+
+function buildUnitCommPayload(unit) {
+  if (!unit) return null;
+
+  return {
+    unitId: unit.id,
+    name: unit.name || "",
+    iconUrl:
+      unit.icon ||
+      "https://placehold.co/60x60?text=NO+IMG",
+    text: ""
   };
 }
 
@@ -314,13 +325,7 @@ if (event.type === "turnUnit") {
   }
 
   if (!dialogue?.text) {
-    return {
-      iconUrl:
-        unit.defaultCharacterIcon ||
-        unit.icon ||
-        "https://placehold.co/60x60?text=NO+IMG",
-      text: ""
-    };
+    return buildUnitCommPayload(unit);
   }
 
   return buildCommPayload(unit, dialogue);
