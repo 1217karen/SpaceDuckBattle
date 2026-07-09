@@ -813,27 +813,6 @@ saveBtn.addEventListener("click", () => {
 
   const eno = account.eno;
 
-  const character =
-    loadCharacter(eno) || {};
-
-  const oldUnit =
-    loadUnit(eno, 1) || {};
-
-  if (!character.fullName?.trim()) {
-    alert("バトラーフルネームを入力してください");
-    return;
-  }
-
-  if (!character.defaultName?.trim()) {
-    alert("バトラーニックネームを入力してください");
-    return;
-  }
-
-  if (!oldUnit.name?.trim()) {
-    alert("アヒル名を入力してください");
-    return;
-  }
-
   saveCurrentPattern();
 
   const warnings = buildSaveWarnings();
