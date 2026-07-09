@@ -7,54 +7,69 @@ import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveCharacter
 
 requireLogin();
 
-function normalizeDialogueList(dialogue) {
-  if (Array.isArray(dialogue)) {
-    return dialogue.map(item => ({
-      text:
-        typeof item?.text === "string"
-          ? item.text
-          : "",
-      name:
-        typeof item?.name === "string"
-          ? item.name
-          : "",
-      iconId:
-        typeof item?.iconId === "number" && item.iconId > 0
-          ? item.iconId
-          : null,
-      iconUrl:
-        typeof item?.iconUrl === "string"
-          ? item.iconUrl
-          : ""
-    }));
-  }
+function findIconIdByUrl(icons, iconUrl) {
+  if (!Array.isArray(icons)) return null;
+  if (typeof iconUrl !== "string" || iconUrl.trim() === "") return null;
 
-  if (dialogue && typeof dialogue === "object") {
-    return [{
-      text:
-        typeof dialogue.text === "string"
-          ? dialogue.text
-          : "",
-      name:
-        typeof dialogue.name === "string"
-          ? dialogue.name
-          : "",
-      iconId:
-        typeof dialogue.iconId === "number" && dialogue.iconId > 0
-          ? dialogue.iconId
-          : null,
-      iconUrl:
-        typeof dialogue.iconUrl === "string"
-          ? dialogue.iconUrl
-          : ""
-    }];
+  const matchedIcon =
+    icons.find(icon => icon?.url === iconUrl);
+
+  return matchedIcon?.id || null;
+}
+
+function getExistingCommIconId(iconId) {
+  const safeIconId =
+    Number(iconId || 0);
+
+  if (!safeIconId) return null;
+
+  const matchedIcon =
+    currentCommIcons.find(icon => icon?.id === safeIconId);
+
+  return matchedIcon?.id || null;
+}
+
+function normalizeDialogueItem(item) {
+  const text =
+    typeof item?.text === "string"
+      ? item.text
+      : "";
+
+  if (text === "") return null;
+
+  const iconId =
+    getExistingCommIconId(item?.iconId) ||
+    findIconIdByUrl(currentCommIcons, item?.iconUrl);
+
+  return {
+    text,
+    name:
+      typeof item?.name === "string"
+        ? item.name
+        : "",
+    iconId: iconId || null
+  };
+}
+
+function normalizeDialogueList(dialogue) {
+  const source = Array.isArray(dialogue)
+    ? dialogue
+    : dialogue && typeof dialogue === "object"
+      ? [dialogue]
+      : [];
+
+  const normalized = source
+    .map(item => normalizeDialogueItem(item))
+    .filter(Boolean);
+
+  if (normalized.length > 0) {
+    return normalized;
   }
 
   return [{
     text: "",
     name: "",
-    iconId: null,
-    iconUrl: ""
+    iconId: null
   }];
 }
 
@@ -62,6 +77,18 @@ let currentCommIcons = [];
 let nextCommRowId = 1;
 
 const iconPicker = createIconPicker();
+
+function getCommIconUrlById(iconId) {
+  const safeIconId =
+    Number(iconId || 0);
+
+  if (!safeIconId) return "";
+
+  const matchedIcon =
+    currentCommIcons.find(icon => icon?.id === safeIconId);
+
+  return matchedIcon?.url || "";
+}
 
 function createCommRowElement(typeKey, rowData = {}) {
   const rowId = nextCommRowId++;
@@ -76,10 +103,10 @@ function createCommRowElement(typeKey, rowData = {}) {
   button.dataset.selectedId =
     rowData.iconId ? String(rowData.iconId) : "";
   button.dataset.selectedUrl =
-    rowData.iconUrl || "";
+    getCommIconUrlById(rowData.iconId) || "";
 
   const img = document.createElement("img");
-  img.src = rowData.iconUrl || getNoImageUrl();
+  img.src = button.dataset.selectedUrl || getNoImageUrl();
   img.alt = `${typeKey} icon`;
 
   button.appendChild(img);
@@ -175,20 +202,16 @@ function collectDialogueList(typeKey) {
       const iconId =
         Number(button?.dataset.selectedId || 0);
 
-      const iconUrl =
-        button?.dataset.selectedUrl || "";
-
       const name =
         nameInput?.value.trim() || "";
 
       const text =
-        input?.value.trim() || "";
+        input?.value ?? "";
 
       return {
         name,
         text,
-        iconId: iconId || null,
-        iconUrl
+        iconId: iconId || null
       };
     })
     .filter(item => item.text !== "");
