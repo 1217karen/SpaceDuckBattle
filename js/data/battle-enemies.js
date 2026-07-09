@@ -68,9 +68,7 @@ export const ENEMIES = {
         turnChangePinch: [
           { text: "「…………。」", iconId: 1 }
         ],
-        critical: [
-          { text: "" }
-        ],
+        critical: [],
         kill: [
           { text: "「…………。」", iconId: 1 }
         ],
@@ -160,9 +158,7 @@ export const ENEMIES = {
         turnChangePinch: [
           { text: "「…………。」", iconId: 1 }
         ],
-        critical: [
-          { text: "「…………。」", iconId: 1 }
-        ],
+        critical: [],
         kill: [
           { text: "「…………。」", iconId: 1 }
         ],
@@ -252,9 +248,7 @@ export const ENEMIES = {
         turnChangePinch: [
           { text: "「…………。」", iconId: 1 }
         ],
-        critical: [
-          { text: "「…………。」", iconId: 1 }
-        ],
+        critical: [],
         kill: [
           { text: "「…………。」", iconId: 1 }
         ],
@@ -350,9 +344,7 @@ export const ENEMIES = {
         turnChangePinch: [
           { text: "「…………。」", iconId: 1 }
         ],
-        critical: [
-          { text: "「…………。」"  }
-        ],
+        critical: [],
         kill: [
           { text: "「…………。」", iconId: 1 }
         ],
@@ -427,9 +419,7 @@ export const ENEMIES = {
         turnChangePinch: [
           { text: "「…………。」", iconId: 1 }
         ],
-        critical: [
-          { text: "「…………。」", iconId: 1 }
-        ],
+        critical: [],
         kill: [
           { text: "「…………。」", iconId: 1 }
         ],
