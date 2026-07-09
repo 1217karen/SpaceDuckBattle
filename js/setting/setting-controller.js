@@ -588,11 +588,7 @@ function readSkillArea() {
           iconUrl
         };
       })
-      .filter(item =>
-        item.name !== "" ||
-        item.text !== "" ||
-        item.iconUrl !== ""
-      );
+      .filter(item => item.text !== "");
 
     if (!type) {
       return { type: "" };
@@ -817,6 +813,27 @@ saveBtn.addEventListener("click", () => {
 
   const eno = account.eno;
 
+  const character =
+    loadCharacter(eno) || {};
+
+  const oldUnit =
+    loadUnit(eno, 1) || {};
+
+  if (!character.fullName?.trim()) {
+    alert("バトラーフルネームを入力してください");
+    return;
+  }
+
+  if (!character.defaultName?.trim()) {
+    alert("バトラーニックネームを入力してください");
+    return;
+  }
+
+  if (!oldUnit.name?.trim()) {
+    alert("アヒル名を入力してください");
+    return;
+  }
+
   saveCurrentPattern();
 
   const warnings = buildSaveWarnings();
@@ -848,9 +865,6 @@ saveBtn.addEventListener("click", () => {
     cri: Number(document.getElementById("statCRI").value),
     tec: Number(document.getElementById("statTEC").value)
   };
-
-  const oldUnit =
-    loadUnit(eno, 1) || {};
 
   const unit = {
     ...oldUnit,
