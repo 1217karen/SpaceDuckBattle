@@ -31,7 +31,7 @@ export const ENEMIES = {
             {
               type: "attack_front1",
               dialogue: [
-                { text: "（勢いよく突進してきた）" }
+                { text: "（勢いよく突進してきた）", iconId: 1 }
               ]
             }
           ]
@@ -44,7 +44,13 @@ export const ENEMIES = {
       defaultName: "訓練用侵攻体",
       defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp",
 
-      commIcons: [],
+      commIcons: [
+        {
+          id: 1,
+          name: "",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp"
+        }
+      ],
 
       commDialogues: {
         battleStart: [
@@ -130,7 +136,13 @@ export const ENEMIES = {
       defaultName: "突撃型宇宙アヒル",
       defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp",
 
-      commIcons: [],
+      commIcons: [
+        {
+          id: 1,
+          name: "",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp"
+        }
+      ],
 
       commDialogues: {
         battleStart: [
@@ -269,7 +281,13 @@ export const ENEMIES = {
         tec: 9
       },
 
-      patterns: [
+      commIcons: [
+        {
+          id: 1,
+          name: "",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp"
+        }
+      ],
         {
           name: "基本",
           public: true,
@@ -373,7 +391,13 @@ export const ENEMIES = {
       defaultName: "ボス敵A",
       defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp",
 
-      commIcons: [],
+      commIcons: [
+        {
+          id: 1,
+          name: "",
+          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp"
+        }
+      ],
 
       commDialogues: {
         battleStart: [
