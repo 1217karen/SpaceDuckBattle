@@ -91,16 +91,37 @@ function findUnitById(unitId) {
   return units.find(u => u.id === unitId) || null;
 }
 
-function buildCommPayload(unit, dialogue) {
-  if (!unit || !dialogue?.text) return null;
+function getCommIconUrlById(unit, iconId) {
+  const safeIconId =
+    Number(iconId || 0);
+
+  if (!unit || !safeIconId) return "";
+  if (!Array.isArray(unit.commIcons)) return "";
+
+  const matchedIcon =
+    unit.commIcons.find(icon => icon?.id === safeIconId);
+
+  return matchedIcon?.url || "";
+}
+
+function getDialogueIconUrl(unit, dialogue) {
+  return (
+    dialogue?.iconUrl ||
+    getCommIconUrlById(unit, dialogue?.iconId) ||
+    ""
+  );
+}
+
+function buildUnitCommPayload(unit) {
+  if (!unit) return null;
 
   return {
     unitId: unit.id,
-    name: dialogue.name || "",
+    name: unit.name || "",
     iconUrl:
-      dialogue.iconUrl ||
+      getDialogueIconUrl(unit, dialogue) ||
       "https://placehold.co/60x60?text=NO+IMG",
-    text: dialogue.text
+    text: ""
   };
 }
 
