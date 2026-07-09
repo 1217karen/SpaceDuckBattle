@@ -1,7 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Iceberg&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Iceberg&family=Stick&display=swap");
 
 :root {
   --font-family-display: "Iceberg", sans-serif;
+  --font-family-menu: "Stick", sans-serif;
+  --font-size-menu: var(--font-size-base);
 }
 
 body{
@@ -130,12 +132,20 @@ a{
   background:var(--theme-button-bg-hover);
 }
 
+
+.menuNavLink{
+  font-family:var(--font-family-menu);
+  font-size:var(--font-size-menu);
+}
+
 .menuProfileCard{
   display:flex;
   align-items:center;
   gap:10px;
   padding:10px;
   text-decoration:none;
+  font-family:var(--font-family-menu);
+  font-size:var(--font-size-menu);
 }
 
 .menuProfileCard:hover{
@@ -156,7 +166,7 @@ a{
 
 .menuProfileEno{
   color:var(--theme-text-accent);
-  font-size:var(--font-size-small);
+  font-size:calc(var(--font-size-menu) * 0.85);
   line-height:1.2;
 }
 
