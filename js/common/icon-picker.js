@@ -119,15 +119,20 @@ export function createIconPicker({
   function createIconCard(item) {
     const card = document.createElement("div");
     card.className = "commonIcon60 iconPickerCard";
-    card.dataset.id = String(item.id);
-    card.dataset.url = item.url;
+    card.dataset.id = String(item.id || "");
+    card.dataset.url = item.url || "";
 
     const img = document.createElement("img");
     img.className = "commonIcon60";
-    img.src = item.url;
-    img.alt = `icon ${item.id}`;
+    img.src = item.url || getNoImageUrl();
+    img.alt = item.label || `icon ${item.id}`;
 
     card.appendChild(img);
+
+    if (item.label) {
+      card.title = item.label;
+      card.setAttribute("aria-label", item.label);
+    }
 
     card.addEventListener("click", () => {
       if (!currentButton) return;
@@ -144,10 +149,20 @@ export function createIconPicker({
     return card;
   }
 
+  function createNoImageCard() {
+    return createIconCard({
+      id: null,
+      url: "",
+      label: "アイコンなし"
+    });
+  }
+
   function render() {
     if (!list) return;
 
     list.innerHTML = "";
+
+    list.appendChild(createNoImageCard());
 
     if (currentIcons.length === 0) {
       const empty = document.createElement("div");
