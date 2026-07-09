@@ -38,6 +38,7 @@ const boardDiv = document.getElementById("board");
 const ptSlots = document.querySelectorAll(".pt-slot");
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
+const battleBoardPanel = document.getElementById("battleBoardPanel");
 
 const selfPattern =
   Array.isArray(units[0].patterns) && units[0].patterns[0]
@@ -218,6 +219,15 @@ function createBoard(stage) {
 
 function resetPlacement() {
   selectedCell = null;
+  selectedSlot = null;
+
+  Object.keys(placedSlots).forEach((slotIndex) => {
+    delete placedSlots[slotIndex];
+  });
+
+  ptSlots.forEach((slot) => {
+    slot.classList.remove("selected");
+  });
 }
 
 const unitListController = initUnitList({
@@ -426,15 +436,18 @@ startBtn.addEventListener("click", () => {
 });
 
 stageSelect.addEventListener("change", () => {
+  resetPlacement();
+
   if (!stageSelect.value) {
     boardDiv.innerHTML = "";
-    resetPlacement();
+    battleBoardPanel?.classList.add("is-hidden");
     return;
   }
 
-const stage = STAGES[stageSelect.value];
-createBoard(stage);
-resetPlacement();
+  const stage = STAGES[stageSelect.value];
+
+  battleBoardPanel?.classList.remove("is-hidden");
+  createBoard(stage);
 });
 
 renderParty();
