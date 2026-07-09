@@ -191,11 +191,7 @@ function collectDialogueList(typeKey) {
         iconUrl
       };
     })
-    .filter(item =>
-      item.name !== "" ||
-      item.text !== "" ||
-      item.iconUrl !== ""
-    );
+    .filter(item => item.text !== "");
 }
 
 function renderCommList(typeKey, dialogues) {
