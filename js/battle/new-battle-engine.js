@@ -58,16 +58,24 @@ export function simulateBattle(snapshot) {
   // ランダム抽選
   // ======================================================
 
-  function normalizeDialogueCandidates(dialogue) {
+  function hasDialogueText(dialogue) {
+  return (
+    dialogue &&
+    typeof dialogue.text === "string" &&
+    dialogue.text.length > 0
+  );
+}
+
+function normalizeDialogueCandidates(dialogue) {
   if (!dialogue) return [];
 
   if (Array.isArray(dialogue)) {
     return dialogue.filter(item =>
-      item && typeof item.text === "string"
+      hasDialogueText(item)
     );
   }
 
-  if (typeof dialogue.text === "string") {
+  if (hasDialogueText(dialogue)) {
     return [dialogue];
   }
 
@@ -91,37 +99,41 @@ function findUnitById(unitId) {
   return units.find(u => u.id === unitId) || null;
 }
 
-function getCommIconUrlById(unit, iconId) {
+function getCommIconById(unit, iconId) {
   const safeIconId =
     Number(iconId || 0);
 
-  if (!unit || !safeIconId) return "";
-  if (!Array.isArray(unit.commIcons)) return "";
+  if (!unit || !safeIconId) return null;
+  if (!Array.isArray(unit.commIcons)) return null;
 
+  return unit.commIcons.find(icon =>
+    icon?.id === safeIconId
+  ) || null;
+}
+
+function getCommIconUrlById(unit, iconId) {
   const matchedIcon =
-    unit.commIcons.find(icon => icon?.id === safeIconId);
+    getCommIconById(unit, iconId);
 
   return matchedIcon?.url || "";
 }
 
-function getDialogueIconUrl(unit, dialogue) {
-  return (
-    dialogue?.iconUrl ||
-    getCommIconUrlById(unit, dialogue?.iconId) ||
-    ""
-  );
-}
+function buildCommPayload(unit, dialogue) {
+  if (!unit || !hasDialogueText(dialogue)) return null;
 
-function buildUnitCommPayload(unit) {
-  if (!unit) return null;
+  const iconId =
+    Number(dialogue.iconId || 0) || null;
+
+  const iconUrl =
+    getCommIconUrlById(unit, iconId) ||
+    "https://placehold.co/60x60?text=NO+IMG";
 
   return {
     unitId: unit.id,
-    name: unit.name || "",
-    iconUrl:
-      getDialogueIconUrl(unit, dialogue) ||
-      "https://placehold.co/60x60?text=NO+IMG",
-    text: ""
+    name: dialogue.name || "",
+    iconId,
+    iconUrl,
+    text: dialogue.text
   };
 }
 
@@ -345,7 +357,7 @@ if (event.type === "turnUnit") {
     dialogue = getFixedDialogue(unit, key);
   }
 
-  if (!dialogue?.text) {
+  if (!hasDialogueText(dialogue)) {
     return buildUnitCommPayload(unit);
   }
 
