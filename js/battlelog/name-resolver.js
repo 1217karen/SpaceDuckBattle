@@ -62,15 +62,14 @@ export function resolveUnitDisplayName({
 
 // ========================================
 // 通信パネル表示名
-// 優先順位:
+// セリフありの優先順位:
 // 1. 個別指定名
 // 2. アイコンに紐づいた発言者名
 // 3. デフォルトキャラ名
-// 4. ユニット名
+// 4. fallback
 //
-// 発言テキストも発言用アイコン指定もない場合は
-// 「キャラ発言」ではなく「ユニット表示維持」とみなし、
-// ユニット名を優先する
+// セリフなしの場合は「キャラ発言」ではなく
+// 「ユニット表示維持」とみなし、ユニット名を優先する
 // ========================================
 
 function normalizeCommName(value) {
@@ -78,15 +77,17 @@ function normalizeCommName(value) {
   return value.trim();
 }
 
-function findCommIconNameByUrl(commIcons, iconUrl) {
+function findCommIconNameById(commIcons, iconId) {
   if (!Array.isArray(commIcons)) return "";
 
-  const normalizedUrl = normalizeCommName(iconUrl);
-  if (normalizedUrl === "") return "";
+  const safeIconId =
+    Number(iconId || 0);
+
+  if (!safeIconId) return "";
 
   const matched = commIcons.find(item => {
     if (!item || typeof item !== "object") return false;
-    return normalizeCommName(item.url) === normalizedUrl;
+    return Number(item.id || 0) === safeIconId;
   });
 
   return normalizeCommName(matched?.name);
@@ -94,19 +95,18 @@ function findCommIconNameByUrl(commIcons, iconUrl) {
 
 export function resolveCommDisplayName({
   manualName = "",
-  iconUrl = "",
+  iconId = null,
   commIcons = [],
   defaultCharacterName = "",
   unitName = "",
   fallback = "",
-  hasExplicitCommText = false,
-  hasExplicitCommIcon = false
+  hasExplicitCommText = false
 } = {}) {
   const normalizedManualName =
     normalizeCommName(manualName);
 
   const normalizedIconName =
-    findCommIconNameByUrl(commIcons, iconUrl);
+    findCommIconNameById(commIcons, iconId);
 
   const normalizedDefaultCharacterName =
     normalizeCommName(defaultCharacterName);
@@ -117,10 +117,7 @@ export function resolveCommDisplayName({
   const normalizedFallback =
     normalizeCommName(fallback);
 
-  const isCharacterComm =
-    hasExplicitCommText || hasExplicitCommIcon;
-
-  if (isCharacterComm) {
+  if (hasExplicitCommText) {
     return pickFirstName(
       normalizedManualName,
       normalizedIconName,
