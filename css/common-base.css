@@ -132,10 +132,10 @@ a{
   background:var(--theme-button-bg-hover);
 }
 
-
 .menuNavLink{
   font-family:var(--font-family-menu);
   font-size:var(--font-size-menu);
+  text-align:center;
 }
 
 .menuProfileCard{
