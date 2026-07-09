@@ -147,6 +147,10 @@
    配置盤面
 ======================================================= */
 
+.battleBoardPanel.is-hidden {
+  display: none;
+}
+
 .battleBoardPanel {
   max-width: 900px;
 }
