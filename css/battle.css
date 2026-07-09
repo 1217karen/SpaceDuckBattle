@@ -114,16 +114,6 @@
     color 0.16s ease;
 }
 
-.pt-slot::before {
-  content: "";
-  position: absolute;
-  inset: 5px;
-  border: 1px solid var(--theme-border-soft);
-  border-radius: calc(var(--theme-radius-md) - 3px);
-  pointer-events: none;
-  opacity: 0.7;
-}
-
 .pt-slot:hover {
   border-color: var(--theme-text-accent);
   background: var(--theme-button-bg-hover);
@@ -148,7 +138,9 @@
   width: 60px;
   height: 60px;
   object-fit: cover;
-  border-radius: calc(var(--theme-radius-md) - 2px);
+  border: none;
+  box-shadow: none;
+  border-radius: calc(var(--theme-radius-md) - 4px);
 }
 
 /* =======================================================
