@@ -145,8 +145,8 @@
 .pt-slot img {
   position: relative;
   z-index: 1;
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
   border-radius: calc(var(--theme-radius-md) - 2px);
 }
