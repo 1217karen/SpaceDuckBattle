@@ -63,21 +63,18 @@ export const testUnits = [
           {
             type: "heal_cross2",
             dialogue: {
-              iconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
               text: "回復ライン接続、まとめて立て直します。"
             }
           },
           {
             type: "repair_wave",
             dialogue: {
-              iconUrl: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=D06.webp",
               text: "修復波を展開します、持ちこたえてください。"
             }
           },
           {
             type: "satellite_meteor_field",
             dialogue: {
-              iconUrl: "https://placehold.co/60x60?text=HEAL",
               text: "衛星管制リンク確立、迎撃フィールドを起動。"
             }
           }
