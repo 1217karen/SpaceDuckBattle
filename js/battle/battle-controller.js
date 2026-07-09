@@ -145,8 +145,6 @@ function renderParty() {
 
     const img = document.createElement("img");
     img.src = unitData.icon?.default || "";
-    img.style.width = "64px";
-    img.style.height = "64px";
 
     slot.appendChild(img);
   });
