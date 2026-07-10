@@ -2,6 +2,7 @@
 
 import { skillHandlers } from "../data/skills.js";
 import { getNoImageUrl } from "../common/icon-picker.js";
+import { createSkillPatternPanel, getFirstPublicPatternIndex } from "../common/skill-pattern-panel.js";
 
 const UNIT_TYPE_LABELS = {
   attack: "アタック",
@@ -36,43 +37,6 @@ function getUnitPatterns(entry) {
   return Array.from({ length: PATTERN_COUNT }, (_, index) =>
     patterns[index] || null
   );
-}
-
-function isPatternPublic(pattern) {
-  return pattern?.public === true;
-}
-
-function getFirstPublicPatternIndex(entry) {
-  const patterns = getUnitPatterns(entry);
-
-  const index = patterns.findIndex(pattern =>
-    isPatternPublic(pattern)
-  );
-
-  return index >= 0 ? index : null;
-}
-
-function getSkillName(skill) {
-  const skillType = String(skill?.type ?? "").trim();
-
-  if (!skillType) {
-    return "";
-  }
-
-  return skillHandlers[skillType]?.name || skillType;
-}
-
-function getPatternSkills(pattern) {
-  const skills = Array.isArray(pattern?.skills)
-    ? pattern.skills
-    : [];
-
-  return skills
-    .map(skill => ({
-      skill,
-      name: getSkillName(skill)
-    }))
-    .filter(item => item.name !== "");
 }
 
 export function initUnitList(options) {
@@ -184,7 +148,7 @@ function showSkillTooltip(skill, anchorElement) {
     if (
       target instanceof Element &&
       (
-        target.closest(".unitSkillButton") ||
+        target.closest(".skillPatternSkillButton") ||
         target.closest(".unitSkillTooltip")
       )
     ) {
@@ -203,37 +167,25 @@ function showSkillTooltip(skill, anchorElement) {
     unitListDiv.appendChild(guide);
   }
 
-  function renderPatternButtons(entry, unitNo) {
-    const patterns = getUnitPatterns(entry);
-
-    const buttonArea = document.createElement("div");
-    buttonArea.className = "unitPatternButtonList";
-
-    patterns.forEach((pattern, index) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "unitPatternButton button-pill";
-      button.textContent = `設定${index + 1}`;
-
-      const isPublic = isPatternPublic(pattern);
-      const isActive = selectedPatternIndex === index;
-
-      button.classList.toggle("is-active", isActive);
-
-      if (!isPublic) {
-        button.disabled = true;
-        button.classList.add("is-disabled");
-      }
-
-      button.addEventListener("click", (event) => {
-        event.stopPropagation();
+  function renderPatternPanel(entry, unitNo) {
+    return createSkillPatternPanel({
+      patterns: getUnitPatterns(entry),
+      selectedPatternIndex,
+      rootClassName: "is-compact",
+      showPatternNameInButton: false,
+      disablePrivatePatterns: true,
+      showDetailsWhenClosed: true,
+      showSlot: false,
+      showIcon: true,
+      showCooldown: false,
+      showSummary: false,
+      skillButton: true,
+      onSkillClick: showSkillTooltip,
+      noSelectedPatternText: "公開されている設定がありません",
+      onPatternClick: ({ index, pattern, currentSelectedIndex }) => {
         closeSkillTooltip();
 
-        if (!isPublic) {
-          return;
-        }
-
-        if (selectedPatternIndex === index) {
+        if (currentSelectedIndex === index) {
           if (typeof onPatternConfirm === "function") {
             onPatternConfirm({
               eno: entry.eno,
@@ -253,69 +205,8 @@ function showSkillTooltip(skill, anchorElement) {
 
         selectedPatternIndex = index;
         renderUnitList();
-      });
-
-      buttonArea.appendChild(button);
+      }
     });
-
-    return buttonArea;
-  }
-
-  function renderSkillList(entry) {
-    const patterns = getUnitPatterns(entry);
-
-    const selectedPattern =
-      selectedPatternIndex !== null
-        ? patterns[selectedPatternIndex]
-        : null;
-
-    const skillArea = document.createElement("div");
-    skillArea.className = "unitSkillArea";
-
-    if (!selectedPattern) {
-      const empty = document.createElement("p");
-      empty.className = "unitSkillEmpty";
-      empty.textContent = "公開されている戦闘設定がありません";
-
-      skillArea.appendChild(empty);
-      return skillArea;
-    }
-
-    const skillItems = getPatternSkills(selectedPattern);
-
-    if (skillItems.length === 0) {
-      const empty = document.createElement("p");
-      empty.className = "unitSkillEmpty";
-      empty.textContent = "スキルは設定されていません";
-
-      skillArea.appendChild(empty);
-      return skillArea;
-    }
-
-    const list = document.createElement("ul");
-    list.className = "unitSkillList";
-
-    skillItems.forEach(({ skill, name }) => {
-      const item = document.createElement("li");
-      item.className = "unitSkillItem";
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "unitSkillButton button-plain";
-      button.textContent = name;
-
-      button.addEventListener("click", (event) => {
-        event.stopPropagation();
-        showSkillTooltip(skill, button);
-      });
-
-      item.appendChild(button);
-      list.appendChild(item);
-    });
-
-    skillArea.appendChild(list);
-
-    return skillArea;
   }
 
   function renderUnitCard(entry, section = {}) {
@@ -375,7 +266,7 @@ function showSkillTooltip(skill, anchorElement) {
       }
 
       openedUnitKey = unitKey;
-      selectedPatternIndex = getFirstPublicPatternIndex(entry);
+      selectedPatternIndex = getFirstPublicPatternIndex(getUnitPatterns(entry));
       renderUnitList();
     });
 
@@ -386,7 +277,7 @@ function showSkillTooltip(skill, anchorElement) {
       detail.className = "unitCardDetail";
 
       detail.appendChild(
-        renderPatternButtons(entry, unitNo)
+        renderPatternPanel(entry, unitNo)
       );
 
       detail.appendChild(
