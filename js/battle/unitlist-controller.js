@@ -88,6 +88,10 @@ export function initUnitList(options) {
   let skillTooltip = null;
   let skillTooltipAnchor = null;
 
+  unitListDiv.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
   function closeSkillTooltip() {
     if (!skillTooltip) {
       return;
@@ -221,7 +225,8 @@ function showSkillTooltip(skill, anchorElement) {
         button.classList.add("is-disabled");
       }
 
-      button.addEventListener("click", () => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
         closeSkillTooltip();
 
         if (!isPublic) {
@@ -358,7 +363,8 @@ function showSkillTooltip(skill, anchorElement) {
     summary.appendChild(icon);
     summary.appendChild(textArea);
 
-    summary.addEventListener("click", () => {
+    summary.addEventListener("click", (event) => {
+      event.stopPropagation();
       closeSkillTooltip();
 
       if (isOpen) {
