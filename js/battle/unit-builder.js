@@ -57,6 +57,13 @@ export function buildBattleUnit(
     y: y,
     facing: facing,
     icon: unitData.icon?.default ?? "",
+    iconSet: {
+      default: unitData.icon?.default ?? "",
+      N: unitData.icon?.N ?? "",
+      E: unitData.icon?.E ?? "",
+      S: unitData.icon?.S ?? "",
+      W: unitData.icon?.W ?? ""
+    },
     patterns: unitData.patterns || [],
     commIcons: characterData?.commIcons || [],
     commDialogues: characterData?.commDialogues || {},
