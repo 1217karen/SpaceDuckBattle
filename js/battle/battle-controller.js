@@ -165,9 +165,15 @@ if (skillItems.length === 0) {
 const list = document.createElement("ul");
 list.className = "selfPatternSkillList";
 
-skillItems.forEach(({ name, icon }) => {
+skillItems.forEach(({ name, icon }, index) => {
   const item = document.createElement("li");
   item.className = "selfPatternSkillItem";
+
+  const slotLabel = document.createElement("span");
+  slotLabel.className = "selfPatternSkillSlot";
+  slotLabel.textContent = `SLOT ${index + 1}`;
+
+  item.appendChild(slotLabel);
 
   if (icon) {
     const img = document.createElement("img");
