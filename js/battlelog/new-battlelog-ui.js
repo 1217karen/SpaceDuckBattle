@@ -4,12 +4,13 @@
 // import
 // =====================
 
-import { moveUnit, updateFacing, highlightCell, highlightCells, removeUnit } from "../common/board.js";
+import { moveUnit, updateFacing, updateUnitIcon, highlightCell, highlightCells, removeUnit } from "../common/board.js";
 import { EFFECTS } from "../battle/effects-config.js";
 import { getSkillDisplayName } from "../data/skills.js";
 import {applyHpChange,applyCooldownSet,applyCooldownChange,applyEffectDecay,applyEffectExpired,
         applyEffectRemoved,applyEffectApplied,applyMove,applyDeath,applyFacing} from "./new-battlelog-state-updater.js";
 import { battleState } from "./new-battlelog-state.js";
+import { resolveBoardIcon } from "./board-icon.js";
 
 
 let suppressBoardEffects = false;
@@ -476,6 +477,12 @@ else if (event.type === "turnUnit") {
         "board",
         event.unit,
         event.facing
+      );
+
+      updateUnitIcon(
+        "board",
+        event.unit,
+        resolveBoardIcon(boardState.units[event.unit])
       );
     }
     div.textContent =
