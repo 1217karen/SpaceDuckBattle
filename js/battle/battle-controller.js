@@ -91,7 +91,7 @@ function getSelfPatternLabel(pattern, index) {
     : baseLabel;
 }
 
-function getSelfPatternSkillNames(pattern) {
+function getSelfPatternSkillItems(pattern) {
   const skills = Array.isArray(pattern?.skills)
     ? pattern.skills
     : [];
@@ -101,12 +101,17 @@ function getSelfPatternSkillNames(pattern) {
       const skillType = String(skill?.type ?? "").trim();
 
       if (!skillType) {
-        return "";
+        return null;
       }
 
-      return skillHandlers[skillType]?.name || skillType;
+      const handler = skillHandlers[skillType];
+
+      return {
+        name: handler?.name || skillType,
+        icon: handler?.icon || ""
+      };
     })
-    .filter(name => name !== "");
+    .filter(Boolean);
 }
 
 function renderSelfPatternSelector() {
@@ -143,30 +148,43 @@ function renderSelfPatternSelector() {
   const selectedPattern =
     getSelfPattern(selectedSelfPatternIndex);
 
-  const skillNames =
-    getSelfPatternSkillNames(selectedPattern);
+const skillItems =
+  getSelfPatternSkillItems(selectedPattern);
 
-  selfPatternSkills.innerHTML = "";
+selfPatternSkills.innerHTML = "";
 
-  if (skillNames.length === 0) {
-    const empty = document.createElement("p");
-    empty.className = "selfPatternSkillEmpty";
-    empty.textContent = "スキルは設定されていません";
+if (skillItems.length === 0) {
+  const empty = document.createElement("p");
+  empty.className = "selfPatternSkillEmpty";
+  empty.textContent = "スキルは設定されていません";
 
-    selfPatternSkills.appendChild(empty);
-    return;
+  selfPatternSkills.appendChild(empty);
+  return;
+}
+
+const list = document.createElement("ul");
+list.className = "selfPatternSkillList";
+
+skillItems.forEach(({ name, icon }) => {
+  const item = document.createElement("li");
+  item.className = "selfPatternSkillItem";
+
+  if (icon) {
+    const img = document.createElement("img");
+    img.className = "selfPatternSkillIcon";
+    img.src = icon;
+    img.alt = "";
+
+    item.appendChild(img);
   }
 
-  const list = document.createElement("ul");
-  list.className = "selfPatternSkillList";
+  const text = document.createElement("span");
+  text.className = "selfPatternSkillName";
+  text.textContent = name;
 
-  skillNames.forEach(skillName => {
-    const item = document.createElement("li");
-    item.className = "selfPatternSkillItem";
-    item.textContent = skillName;
-
-    list.appendChild(item);
-  });
+  item.appendChild(text);
+  list.appendChild(item);
+});
 
   selfPatternSkills.appendChild(list);
 }
