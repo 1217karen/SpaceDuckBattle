@@ -179,12 +179,12 @@ function createUnitListSections() {
 
   return [
     {
-      title: "お気に入りユニット",
+      title: "お気に入り一覧",
       entries: favoriteEntries,
       isFavoriteSection: true
     },
     {
-      title: "その他のユニット",
+      title: "ランダムピックアップ",
       entries: otherEntries
     }
   ];
