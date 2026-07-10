@@ -347,7 +347,7 @@
   min-width: 220px;
   padding: 10px 28px;
   font-family: var(--font-family-display);
-  font-size: calc(var(--font-size-base) * 1.15);
+  font-size: calc(var(--font-size-base) * 1.5);
   letter-spacing: 0.16em;
 }
 
