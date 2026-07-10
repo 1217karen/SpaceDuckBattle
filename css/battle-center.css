@@ -1,0 +1,313 @@
+/* =======================================================
+   中央カラム：バトルセット
+======================================================= */
+
+.battleCenterPanel {
+  box-sizing: border-box;
+}
+
+.battlePanel {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 14px;
+  padding: 14px;
+  color: var(--theme-text-main);
+  box-sizing: border-box;
+}
+
+.battlePanelHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--theme-border-soft);
+}
+
+.battlePanelTitle {
+  min-width: 190px;
+  padding-right: 36px;
+  letter-spacing: 0.16em;
+}
+
+.battlePanelLead {
+  margin: 0;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+  text-align: right;
+}
+
+/* =======================================================
+   ステージ選択
+======================================================= */
+
+.battleStagePanel {
+  max-width: 720px;
+}
+
+.battleStageControl {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.battleControlText {
+  color: var(--theme-text-muted);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.14em;
+}
+
+.battleStageSelect {
+  width: 100%;
+  min-width: 0;
+}
+
+/* =======================================================
+   パーティ枠
+======================================================= */
+
+.battlePartyPanel {
+  max-width: 820px;
+}
+
+#party,
+.battlePartySlots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 0;
+}
+
+.pt-slot {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-md);
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.06),
+      rgba(0, 0, 0, 0.22)
+    );
+  color: var(--theme-text-muted);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-sizing: border-box;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    var(--theme-shadow-soft);
+  overflow: hidden;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease,
+    color 0.16s ease;
+}
+
+.pt-slot:hover {
+  border-color: var(--theme-text-accent);
+  background: var(--theme-button-bg-hover);
+  color: var(--theme-text-main);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    var(--theme-shadow-panel);
+}
+
+.pt-slot.selected {
+  border-color: var(--theme-text-accent);
+  color: var(--theme-text-accent);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 0 12px rgba(120, 180, 255, 0.42),
+    var(--theme-shadow-panel);
+}
+
+.pt-slot img {
+  position: relative;
+  z-index: 1;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: none;
+  box-shadow: none;
+  border-radius: calc(var(--theme-radius-md) - 4px);
+}
+
+/* =======================================================
+   配置盤面
+======================================================= */
+
+.battleBoardPanel.is-hidden {
+  display: none;
+}
+
+.battleBoardPanel {
+  max-width: 900px;
+}
+
+.battleBoardOuter {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-md);
+  background: rgba(0, 0, 0, 0.18);
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.battleBoardWrap {
+  display: inline-block;
+  padding: 8px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-sm);
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.04),
+      rgba(0, 0, 0, 0.2)
+    );
+  box-sizing: border-box;
+}
+
+#board {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+}
+
+.cell {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--theme-border-soft);
+  background: rgba(0, 0, 0, 0.24);
+  box-sizing: border-box;
+  cursor: pointer;
+  transition:
+    border-color 0.14s ease,
+    background 0.14s ease,
+    box-shadow 0.14s ease;
+}
+
+.cell:hover {
+  border-color: var(--theme-text-accent);
+  background: rgba(40, 70, 105, 0.34);
+  box-shadow: 0 0 8px rgba(120, 180, 255, 0.24) inset;
+}
+
+.cell.disabled-cell {
+  border-color: var(--theme-border-soft);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.03) 4px,
+      rgba(0, 0, 0, 0.18) 4px,
+      rgba(0, 0, 0, 0.18) 8px
+    );
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.cell.disabled-cell:hover {
+  border-color: var(--theme-border-soft);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.03) 4px,
+      rgba(0, 0, 0, 0.18) 4px,
+      rgba(0, 0, 0, 0.18) 8px
+    );
+  box-shadow: none;
+}
+
+.cell img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--theme-radius-sm);
+}
+
+/* =======================================================
+   戦闘開始
+======================================================= */
+
+.battleStartArea {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+.battleStartButton {
+  min-width: 160px;
+  padding-inline: 22px;
+  letter-spacing: 0.12em;
+}
+
+/* =======================================================
+   レスポンシブ
+======================================================= */
+
+@media (max-width: 760px) {
+  .battlePanelHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .battlePanelLead {
+    text-align: left;
+  }
+
+  .battleStageControl {
+    grid-template-columns: 1fr;
+  }
+
+  #party,
+  .battlePartySlots {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .battlePanel {
+    padding: 12px;
+  }
+
+  .pt-slot {
+    width: 60px;
+    height: 60px;
+  }
+
+  .pt-slot img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .battleBoardOuter {
+    justify-content: flex-start;
+    padding: 8px;
+  }
+
+  .battleStartArea {
+    justify-content: stretch;
+  }
+
+  .battleStartButton {
+    width: 100%;
+  }
+}
