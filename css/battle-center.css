@@ -110,9 +110,10 @@
 }
 
 .selfPatternSkillItem {
-  display: flex;
+  display: grid;
+  grid-template-columns: 64px 20px minmax(0, 1fr);
+  gap: 8px;
   align-items: center;
-  gap: 6px;
   padding: 5px 2px;
   border-bottom: 1px dashed var(--theme-border-soft);
   color: var(--theme-text-main);
@@ -124,8 +125,15 @@
   border-top: 1px dashed var(--theme-border-soft);
 }
 
+.selfPatternSkillSlot {
+  color: var(--theme-text-accent);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
 .selfPatternSkillIcon {
-  flex: 0 0 auto;
   width: 20px;
   height: 20px;
   object-fit: cover;
