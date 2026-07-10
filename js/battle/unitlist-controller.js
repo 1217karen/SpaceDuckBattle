@@ -49,9 +49,7 @@ function getFirstPublicPatternIndex(entry) {
     isPatternPublic(pattern)
   );
 
-  return index >= 0
-    ? index
-    : null;
+  return index >= 0 ? index : null;
 }
 
 function getSkillName(skill) {
@@ -70,8 +68,11 @@ function getPatternSkills(pattern) {
     : [];
 
   return skills
-    .map(getSkillName)
-    .filter(name => name !== "");
+    .map(skill => ({
+      skill,
+      name: getSkillName(skill)
+    }))
+    .filter(item => item.name !== "");
 }
 
 export function initUnitList(options) {
@@ -84,6 +85,102 @@ export function initUnitList(options) {
 
   let openedUnitKey = null;
   let selectedPatternIndex = null;
+  let skillTooltip = null;
+
+  function closeSkillTooltip() {
+    if (!skillTooltip) {
+      return;
+    }
+
+    skillTooltip.remove();
+    skillTooltip = null;
+  }
+
+  function getSkillTooltipData(skill) {
+    const skillType = String(skill?.type ?? "").trim();
+
+    if (!skillType) {
+      return null;
+    }
+
+    const handler = skillHandlers[skillType];
+
+    return {
+      cooldown: handler?.cooldown ?? 0,
+      summary:
+        handler?.summary ||
+        handler?.description ||
+        "スキル説明が未設定です。"
+    };
+  }
+
+  function showSkillTooltip(skill, anchorElement) {
+    const data = getSkillTooltipData(skill);
+
+    if (!data || !anchorElement) {
+      closeSkillTooltip();
+      return;
+    }
+
+    closeSkillTooltip();
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "unitSkillTooltip";
+    tooltip.innerHTML = `
+      <div class="unitSkillTooltipCooldown">CT: ${data.cooldown}</div>
+      <div class="unitSkillTooltipSummary"></div>
+    `;
+
+    tooltip.querySelector(".unitSkillTooltipSummary").textContent =
+      data.summary;
+
+    document.body.appendChild(tooltip);
+
+    const rect = anchorElement.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    let left = rect.left;
+    let top = rect.bottom + 8;
+
+    const margin = 8;
+
+    if (left + tooltipRect.width > window.innerWidth - margin) {
+      left = window.innerWidth - tooltipRect.width - margin;
+    }
+
+    if (left < margin) {
+      left = margin;
+    }
+
+    if (top + tooltipRect.height > window.innerHeight - margin) {
+      top = rect.top - tooltipRect.height - 8;
+    }
+
+    if (top < margin) {
+      top = margin;
+    }
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+
+    skillTooltip = tooltip;
+  }
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (
+      target instanceof Element &&
+      (
+        target.closest(".unitSkillButton") ||
+        target.closest(".unitSkillTooltip")
+      )
+    ) {
+      return;
+    }
+
+    closeSkillTooltip();
+  });
 
   function renderGuide() {
     const guide = document.createElement("p");
@@ -117,6 +214,8 @@ export function initUnitList(options) {
       }
 
       button.addEventListener("click", () => {
+        closeSkillTooltip();
+
         if (!isPublic) {
           return;
         }
@@ -151,6 +250,7 @@ export function initUnitList(options) {
 
   function renderSkillList(entry) {
     const patterns = getUnitPatterns(entry);
+
     const selectedPattern =
       selectedPatternIndex !== null
         ? patterns[selectedPatternIndex]
@@ -168,9 +268,9 @@ export function initUnitList(options) {
       return skillArea;
     }
 
-    const skillNames = getPatternSkills(selectedPattern);
+    const skillItems = getPatternSkills(selectedPattern);
 
-    if (skillNames.length === 0) {
+    if (skillItems.length === 0) {
       const empty = document.createElement("p");
       empty.className = "unitSkillEmpty";
       empty.textContent = "スキルは設定されていません";
@@ -182,14 +282,26 @@ export function initUnitList(options) {
     const list = document.createElement("ul");
     list.className = "unitSkillList";
 
-    skillNames.forEach(skillName => {
+    skillItems.forEach(({ skill, name }) => {
       const item = document.createElement("li");
       item.className = "unitSkillItem";
-      item.textContent = skillName;
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "unitSkillButton button-plain";
+      button.textContent = name;
+
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showSkillTooltip(skill, button);
+      });
+
+      item.appendChild(button);
       list.appendChild(item);
     });
 
     skillArea.appendChild(list);
+
     return skillArea;
   }
 
@@ -239,6 +351,8 @@ export function initUnitList(options) {
     summary.appendChild(textArea);
 
     summary.addEventListener("click", () => {
+      closeSkillTooltip();
+
       if (isOpen) {
         openedUnitKey = null;
         selectedPatternIndex = null;
@@ -272,6 +386,8 @@ export function initUnitList(options) {
   }
 
   function renderUnitList() {
+    closeSkillTooltip();
+
     unitListDiv.innerHTML = "";
 
     const unitSections = Array.isArray(sections)
@@ -282,13 +398,15 @@ export function initUnitList(options) {
         }];
 
     const hasEntries = unitSections.some(section =>
-      Array.isArray(section?.entries) && section.entries.length > 0
+      Array.isArray(section?.entries) &&
+      section.entries.length > 0
     );
 
     if (!hasEntries) {
       const empty = document.createElement("div");
       empty.className = "unitlist-empty";
       empty.textContent = "公開ユニットはありません";
+
       unitListDiv.appendChild(empty);
       return;
     }
@@ -315,6 +433,7 @@ export function initUnitList(options) {
         const heading = document.createElement("h3");
         heading.className = "unitlist-section-heading";
         heading.textContent = section.title;
+
         sectionEl.appendChild(heading);
       }
 
