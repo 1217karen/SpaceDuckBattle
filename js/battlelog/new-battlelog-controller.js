@@ -11,9 +11,8 @@ import { battleState } from "./new-battlelog-state.js";
 import { createSideUI } from "./new-battlelog-ui-init.js";
 import {applyEvent} from "./new-battlelog-state-updater.js";
 import { resetCommPanel } from "./new-battlelog-comm.js";
-
-
-
+import { normalizeUnitIconSet, resolveBoardIcon } from "./board-icon.js";
+import { getNoImageUrl } from "../common/icon-picker.js";
 
 // =====================
 // DOM取得
@@ -162,7 +161,7 @@ function rebuildBoardFromState() {
       x: u.x,
       y: u.y,
       team: u.team,
-      icon: u.icon
+      icon: resolveBoardIcon(u)
     });
 
     updateFacing("board", id, u.facing);
@@ -648,7 +647,8 @@ function initializeBoardState(targetBoardState, snapshot) {
       tec: u.tec ?? 0,
 
       team: u.team,
-      icon: u.icon || "https://placehold.co/60x60",
+      icon: u.icon || getNoImageUrl(),
+      iconSet: normalizeUnitIconSet(u),
       facing: u.facing,
 
       effects: [],
