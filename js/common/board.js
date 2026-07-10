@@ -44,6 +44,20 @@ marker.classList.add("facingMarker", "face-N");
 
   cell.appendChild(wrapper);
 }
+
+export function updateUnitIcon(containerId, unitId, iconUrl) {
+
+  const container = document.getElementById(containerId);
+
+  const img = container?.querySelector(
+    `[data-unit-id="${unitId}"] .unitImage`
+  );
+
+  if (!img) return;
+
+  img.src = iconUrl;
+}
+
 export function updateFacing(containerId, unitId, facing) {
 
   const container = document.getElementById(containerId);
