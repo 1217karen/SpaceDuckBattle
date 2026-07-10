@@ -1,0 +1,169 @@
+/* =======================================================
+   共通：戦闘設定スキルパターン表示
+======================================================= */
+
+.skillPatternPanel {
+  min-width: 0;
+}
+
+.skillPatternButtonList {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.skillPatternButton {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 5px 8px;
+  overflow: hidden;
+  font-size: var(--font-size-small);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skillPatternButton.is-active {
+  border-color: var(--theme-text-accent);
+  color: var(--theme-text-accent);
+  box-shadow: 0 0 8px rgba(120, 180, 255, 0.24);
+}
+
+.skillPatternButton.is-disabled,
+.skillPatternButton:disabled {
+  opacity: var(--theme-disabled-opacity);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.skillPatternDetail {
+  min-height: 36px;
+}
+
+.skillPatternSkillList {
+  width: min(70%, 520px);
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.skillPatternSkillItem {
+  display: grid;
+  grid-template-columns: 64px 20px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 5px 2px;
+  border-bottom: 1px dashed var(--theme-border-soft);
+  color: var(--theme-text-main);
+  font-size: var(--font-size-small);
+  line-height: 1.45;
+}
+
+.skillPatternSkillItem:first-child {
+  border-top: 1px dashed var(--theme-border-soft);
+}
+
+.skillPatternSkillSlot {
+  color: var(--theme-text-accent);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.skillPatternSkillIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: var(--theme-radius-sm);
+}
+
+.skillPatternSkillText {
+  min-width: 0;
+}
+
+.skillPatternSkillName {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--theme-text-main);
+  font-weight: bold;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skillPatternSkillButton {
+  width: 100%;
+  display: block;
+  padding: 0;
+  text-align: left;
+}
+
+.skillPatternSkillButton:hover {
+  color: var(--theme-text-accent);
+  background: none;
+}
+
+.skillPatternSkillMeta {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-xs);
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skillPatternEmpty {
+  width: min(70%, 520px);
+  margin: 0 auto;
+  padding: 6px 2px 2px;
+  font-size: var(--font-size-small);
+}
+
+.skillPatternPanel.is-compact .skillPatternButtonList {
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.skillPatternPanel.is-compact .skillPatternButton {
+  padding: 4px 6px;
+}
+
+.skillPatternPanel.is-compact .skillPatternSkillList {
+  width: 100%;
+  gap: 4px;
+}
+
+.skillPatternPanel.is-compact .skillPatternSkillItem {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  padding: 4px 6px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.skillPatternPanel.is-compact .skillPatternSkillItem:first-child {
+  border-top: 1px solid var(--theme-border-soft);
+}
+
+.skillPatternPanel.is-compact .skillPatternEmpty {
+  width: 100%;
+  margin: 0;
+}
+
+.skillPatternPanel.is-profile .skillPatternSkillList,
+.skillPatternPanel.is-profile .skillPatternEmpty {
+  width: 100%;
+}
+
+.skillPatternPanel.is-profile .skillPatternButtonList {
+  margin: 10px 0 0;
+}
+
+.skillPatternPanel.is-profile .skillPatternDetail:not(:empty) {
+  margin-top: 8px;
+}
