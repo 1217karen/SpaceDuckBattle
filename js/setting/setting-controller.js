@@ -62,6 +62,8 @@ let draggedSkillBlock = null;
 
 const iconPicker = createIconPicker();
 
+let oldUnit = {};
+
 const patterns = [
   {
     name: "",
@@ -725,6 +727,8 @@ function loadDuck() {
 
   const unit = loadUnit(eno, 1);
   const character = loadCharacter(eno);
+
+  oldUnit = unit || {};
 
   const defaultCharacterNameInput =
     document.getElementById("defaultCharacterName");
