@@ -1,4 +1,4 @@
-//public-unit-source.js
+// public-unit-source.js
 
 import {
   getRegisteredEnoMax,
@@ -28,10 +28,6 @@ export function loadPublicBattleEntries() {
         pattern
       }))
       .filter((entry) => entry.pattern?.public === true);
-
-    if (publicPatterns.length === 0) {
-      continue;
-    }
 
     results.push({
       eno,
