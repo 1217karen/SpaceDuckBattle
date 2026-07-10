@@ -8,6 +8,7 @@ import { getFavoritePlaces } from "../chat/chat-place-utils.js";
 import { buildChatUrl } from "../chat/chat-navigation.js";
 import { getFavoriteCharacters, isFavoriteCharacter, toggleFavoriteCharacter } from "../services/character-favorite-service.js";
 import { isFavoriteUnit, toggleFavoriteUnit } from "../services/unit-favorite-service.js";
+import { createSkillPatternPanel } from "../common/skill-pattern-panel.js";
 
 const MAX_CHARACTER_ICONS = 20;
 
@@ -357,6 +358,8 @@ function renderProfile(eno, character, unit, options = {}) {
                 <p class="profileUnitDescription">${escapeHtml(unitDescription)}</p>
               ` : ""}
 
+              <div class="profileSkillPatternMount" data-profile-skill-pattern></div>
+
               <div class="profileStatsLayout">
                 <div class="profileStatRadarWrap">
                   ${renderStatRadar(unitStats)}
@@ -394,6 +397,26 @@ function renderProfile(eno, character, unit, options = {}) {
       </div>
     </section>
   `;
+
+  const profileSkillPatternMount =
+    profilePage.querySelector("[data-profile-skill-pattern]");
+
+  if (profileSkillPatternMount && hasUnit) {
+    profileSkillPatternMount.appendChild(
+      createSkillPatternPanel({
+        patterns: unit?.patterns,
+        selectedPatternIndex: null,
+        rootClassName: "is-profile",
+        showPatternNameInButton: false,
+        disablePrivatePatterns: true,
+        toggleOnSamePatternClick: true,
+        showSlot: true,
+        showIcon: true,
+        showCooldown: true,
+        showSummary: true
+      })
+    );
+  }
 
   const favoriteButton =
     profilePage.querySelector("[data-favorite-character-button]");
