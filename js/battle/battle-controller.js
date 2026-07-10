@@ -110,6 +110,9 @@ function renderSelfPatternSelector() {
     }
   });
 
+  const buttons = panel.querySelector(".skillPatternButtonList");
+  const detail = panel.querySelector(".skillPatternDetail");
+
   if (buttons) {
     selfPatternButtons.appendChild(buttons);
   }
