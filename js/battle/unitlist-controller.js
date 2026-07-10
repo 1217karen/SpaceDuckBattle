@@ -276,12 +276,7 @@ function showSkillTooltip(skill, anchorElement) {
       const detail = document.createElement("div");
       detail.className = "unitCardDetail";
 
-      detail.appendChild(
         renderPatternPanel(entry, unitNo)
-      );
-
-      detail.appendChild(
-        renderSkillList(entry)
       );
 
       card.appendChild(detail);
