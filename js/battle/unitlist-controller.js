@@ -86,6 +86,7 @@ export function initUnitList(options) {
   let openedUnitKey = null;
   let selectedPatternIndex = null;
   let skillTooltip = null;
+  let skillTooltipAnchor = null;
 
   function closeSkillTooltip() {
     if (!skillTooltip) {
@@ -94,6 +95,7 @@ export function initUnitList(options) {
 
     skillTooltip.remove();
     skillTooltip = null;
+    skillTooltipAnchor = null;
   }
 
   function getSkillTooltipData(skill) {
@@ -114,57 +116,63 @@ export function initUnitList(options) {
     };
   }
 
-  function showSkillTooltip(skill, anchorElement) {
-    const data = getSkillTooltipData(skill);
-
-    if (!data || !anchorElement) {
-      closeSkillTooltip();
-      return;
-    }
-
+function showSkillTooltip(skill, anchorElement) {
+  if (skillTooltip && skillTooltipAnchor === anchorElement) {
     closeSkillTooltip();
-
-    const tooltip = document.createElement("div");
-    tooltip.className = "unitSkillTooltip";
-    tooltip.innerHTML = `
-      <div class="unitSkillTooltipCooldown">CT: ${data.cooldown}</div>
-      <div class="unitSkillTooltipSummary"></div>
-    `;
-
-    tooltip.querySelector(".unitSkillTooltipSummary").textContent =
-      data.summary;
-
-    document.body.appendChild(tooltip);
-
-    const rect = anchorElement.getBoundingClientRect();
-    const tooltipRect = tooltip.getBoundingClientRect();
-
-    let left = rect.left;
-    let top = rect.bottom + 8;
-
-    const margin = 8;
-
-    if (left + tooltipRect.width > window.innerWidth - margin) {
-      left = window.innerWidth - tooltipRect.width - margin;
-    }
-
-    if (left < margin) {
-      left = margin;
-    }
-
-    if (top + tooltipRect.height > window.innerHeight - margin) {
-      top = rect.top - tooltipRect.height - 8;
-    }
-
-    if (top < margin) {
-      top = margin;
-    }
-
-    tooltip.style.left = `${left}px`;
-    tooltip.style.top = `${top}px`;
-
-    skillTooltip = tooltip;
+    return;
   }
+
+  const data = getSkillTooltipData(skill);
+
+  if (!data || !anchorElement) {
+    closeSkillTooltip();
+    return;
+  }
+
+  closeSkillTooltip();
+
+  const tooltip = document.createElement("div");
+  tooltip.className = "unitSkillTooltip";
+  tooltip.innerHTML = `
+    <div class="unitSkillTooltipCooldown">CT: ${data.cooldown}</div>
+    <div class="unitSkillTooltipSummary"></div>
+  `;
+
+  tooltip.querySelector(".unitSkillTooltipSummary").textContent =
+    data.summary;
+
+  document.body.appendChild(tooltip);
+
+  const rect = anchorElement.getBoundingClientRect();
+  const tooltipRect = tooltip.getBoundingClientRect();
+
+  let left = rect.left;
+  let top = rect.bottom + 8;
+
+  const margin = 8;
+
+  if (left + tooltipRect.width > window.innerWidth - margin) {
+    left = window.innerWidth - tooltipRect.width - margin;
+  }
+
+  if (left < margin) {
+    left = margin;
+  }
+
+  if (top + tooltipRect.height > window.innerHeight - margin) {
+    top = rect.top - tooltipRect.height - 8;
+  }
+
+  if (top < margin) {
+    top = margin;
+  }
+
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
+
+  skillTooltip = tooltip;
+  skillTooltipAnchor = anchorElement;
+}
 
   document.addEventListener("click", (event) => {
     const target = event.target;
