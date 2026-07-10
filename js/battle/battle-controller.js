@@ -8,6 +8,7 @@ import { requireLogin, getCurrentAccount, loadCharacter, loadUnit } from "../ser
 import { initUnitList } from "./unitlist-controller.js";
 import { loadPublicBattleEntries } from "./public-unit-source.js";
 import { getFavoriteUnitEntries, getFavoriteUnitKey } from "../services/unit-favorite-service.js";
+import { skillHandlers } from "../data/skills.js";
 
 requireLogin();
 
@@ -39,22 +40,136 @@ const ptSlots = document.querySelectorAll(".pt-slot");
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
 const battleBoardPanel = document.getElementById("battleBoardPanel");
+const selfPatternButtons = document.getElementById("selfPatternButtons");
+const selfPatternSkills = document.getElementById("selfPatternSkills");
 
-const selfPattern =
-  Array.isArray(units[0].patterns) && units[0].patterns[0]
-    ? units[0].patterns[0]
-    : { skills: [] };
+let selectedSelfPatternIndex = 0;
+
+function getSelfPattern(index = selectedSelfPatternIndex) {
+  const patterns = Array.isArray(units[0]?.patterns)
+    ? units[0].patterns
+    : [];
+
+  return patterns[index] || {
+    name: "",
+    public: false,
+    skills: []
+  };
+}
 
 const selfPartyEntry = {
   eno: currentEno,
   characterData: playerCharacter,
   unitData: units[0],
-  patternIndex: 0,
-  pattern: selfPattern
+  patternIndex: selectedSelfPatternIndex,
+  pattern: getSelfPattern()
 };
 
 const partySlots = [selfPartyEntry, null, null, null];
 const placedSlots = {};
+
+function updateSelfPartyPattern() {
+  const currentSelfEntry = partySlots[0];
+
+  if (!currentSelfEntry) {
+    return;
+  }
+
+  partySlots[0] = {
+    ...currentSelfEntry,
+    patternIndex: selectedSelfPatternIndex,
+    pattern: getSelfPattern(selectedSelfPatternIndex)
+  };
+}
+
+function getSelfPatternLabel(pattern, index) {
+  const baseLabel = `設定${index + 1}`;
+  const name = String(pattern?.name ?? "").trim();
+
+  return name
+    ? `${baseLabel}：${name}`
+    : baseLabel;
+}
+
+function getSelfPatternSkillNames(pattern) {
+  const skills = Array.isArray(pattern?.skills)
+    ? pattern.skills
+    : [];
+
+  return skills
+    .map(skill => {
+      const skillType = String(skill?.type ?? "").trim();
+
+      if (!skillType) {
+        return "";
+      }
+
+      return skillHandlers[skillType]?.name || skillType;
+    })
+    .filter(name => name !== "");
+}
+
+function renderSelfPatternSelector() {
+  if (!selfPatternButtons || !selfPatternSkills) {
+    return;
+  }
+
+  const patterns = Array.from({ length: 3 }, (_, index) =>
+    getSelfPattern(index)
+  );
+
+  selfPatternButtons.innerHTML = "";
+
+  patterns.forEach((pattern, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "selfPatternButton button-pill";
+    button.textContent = getSelfPatternLabel(pattern, index);
+
+    button.classList.toggle(
+      "is-active",
+      index === selectedSelfPatternIndex
+    );
+
+    button.addEventListener("click", () => {
+      selectedSelfPatternIndex = index;
+      updateSelfPartyPattern();
+      renderSelfPatternSelector();
+    });
+
+    selfPatternButtons.appendChild(button);
+  });
+
+  const selectedPattern =
+    getSelfPattern(selectedSelfPatternIndex);
+
+  const skillNames =
+    getSelfPatternSkillNames(selectedPattern);
+
+  selfPatternSkills.innerHTML = "";
+
+  if (skillNames.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "selfPatternSkillEmpty";
+    empty.textContent = "スキルは設定されていません";
+
+    selfPatternSkills.appendChild(empty);
+    return;
+  }
+
+  const list = document.createElement("ul");
+  list.className = "selfPatternSkillList";
+
+  skillNames.forEach(skillName => {
+    const item = document.createElement("li");
+    item.className = "selfPatternSkillItem";
+    item.textContent = skillName;
+
+    list.appendChild(item);
+  });
+
+  selfPatternSkills.appendChild(list);
+}
 
 let selectedSlot = null;
 
@@ -450,5 +565,6 @@ stageSelect.addEventListener("change", () => {
   createBoard(stage);
 });
 
+renderSelfPatternSelector();
 renderParty();
 renderUnitList();
