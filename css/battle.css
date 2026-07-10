@@ -316,117 +316,193 @@
    右カラム：ユニット一覧
 ======================================================= */
 
-#unitList{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+#unitList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.unitlist-guide {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.55;
 }
 
 /* =======================================================
    右カラム：ユニット一覧セクション
-   - お気に入りユニット
-   - その他のユニット
 ======================================================= */
 
-.unitlist-section{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+.unitlist-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.unitlist-section-heading{
-  margin:0;
-  font-size:15px;
+.unitlist-section-heading {
+  margin: 0;
+  color: var(--theme-text-main);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.12em;
 }
 
 /* =======================================================
-   右カラム：キャラ＋ユニット行
+   右カラム：ユニットカード
 ======================================================= */
 
-.eno-unit-row{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-  padding:8px;
-  border:1px solid #888;
+.unitCard {
+  padding: 8px;
+  color: var(--theme-text-main);
+  box-sizing: border-box;
 }
 
-.eno-unit-row.is-favorite-unit{
-  border-color:#e0b64f;
-  background:#fff8df;
+.unitCard.is-favorite-unit {
+  border-color: var(--theme-text-accent);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    var(--theme-shadow-soft);
+}
+
+.unitCard.is-open {
+  border-color: var(--theme-border-main);
+}
+
+.unitCardSummary {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  text-align: left;
+}
+
+.unitCardSummary:hover {
+  background: none;
+}
+
+.unitCardIcon {
+  display: block;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: none;
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.unitCardText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 4px;
+}
+
+.unitCardMeta {
+  overflow: hidden;
+  color: var(--theme-text-accent);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unitCardName {
+  overflow: hidden;
+  color: var(--theme-text-main);
+  font-weight: bold;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* =======================================================
-   右カラム：キャラクター表示部分
+   右カラム：ユニットカード詳細
 ======================================================= */
 
-.eno-character-area{
-  width:84px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  flex-shrink:0;
-  gap:4px;
-}
-
-.eno-character-icon{
-  width:48px;
-  height:48px;
-  object-fit:cover;
-  border:1px solid #888;
-}
-
-.eno-character-name{
-  font-size:12px;
-  text-align:center;
-  word-break:break-all;
+.unitCardDetail {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--theme-border-soft);
 }
 
 /* =======================================================
-   右カラム：ユニットパターン一覧
+   右カラム：設定ボタン
 ======================================================= */
 
-.eno-pattern-list{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
+.unitPatternButtonList {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
-.eno-pattern-item{
-  cursor:pointer;
+.unitPatternButton {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 4px 6px;
+  font-size: var(--font-size-small);
+  white-space: nowrap;
 }
 
-.eno-pattern-icon{
-  width:40px;
-  height:40px;
-  object-fit:cover;
-  border:1px solid #888;
+.unitPatternButton.is-active {
+  border-color: var(--theme-text-accent);
+  color: var(--theme-text-accent);
+  box-shadow: 0 0 8px rgba(120, 180, 255, 0.24);
 }
 
-.eno-pattern-name{
-  font-size:11px;
-  text-align:center;
-  word-break:break-all;
+.unitPatternButton.is-disabled,
+.unitPatternButton:disabled {
+  opacity: 0.36;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* =======================================================
-   右カラム：ユニットパターン選択状態
+   右カラム：スキル一覧
 ======================================================= */
 
-.eno-pattern-item.selected{
-  background:#fff3d6;
+.unitSkillArea {
+  min-height: 36px;
 }
 
-.eno-pattern-item.selected .eno-pattern-icon{
-  border:2px solid #ff9900;
-  box-shadow:0 0 6px #ff9900;
+.unitSkillList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.unitSkillItem {
+  padding: 4px 6px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--theme-text-main);
+  font-size: var(--font-size-small);
+  line-height: 1.45;
+}
+
+.unitSkillEmpty {
+  margin: 0;
+  padding: 6px 2px 2px;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.5;
 }
 
 /* =======================================================
    右カラム：空表示
 ======================================================= */
 
-.unitlist-empty{
-  color:#666;
-  font-size:14px;
+.unitlist-empty {
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
 }
