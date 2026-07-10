@@ -101,26 +101,47 @@
 }
 
 .selfPatternSkillList {
+  width: min(70%, 520px);
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   list-style: none;
 }
 
 .selfPatternSkillItem {
-  padding: 4px 6px;
-  border: 1px solid var(--theme-border-soft);
-  border-radius: var(--theme-radius-sm);
-  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 2px;
+  border-bottom: 1px dashed var(--theme-border-soft);
   color: var(--theme-text-main);
   font-size: var(--font-size-small);
   line-height: 1.45;
 }
 
+.selfPatternSkillItem:first-child {
+  border-top: 1px dashed var(--theme-border-soft);
+}
+
+.selfPatternSkillIcon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: var(--theme-radius-sm);
+}
+
+.selfPatternSkillName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .selfPatternSkillEmpty {
-  margin: 0;
+  width: min(70%, 520px);
+  margin: 0 auto;
   padding: 6px 2px 2px;
   color: var(--theme-text-muted);
   font-size: var(--font-size-small);
