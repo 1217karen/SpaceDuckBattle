@@ -67,6 +67,67 @@
 }
 
 /* =======================================================
+   自分の戦闘設定
+======================================================= */
+
+.battleSelfPatternPanel {
+  max-width: 820px;
+}
+
+.selfPatternButtons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.selfPatternButton {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 5px 8px;
+  overflow: hidden;
+  font-size: var(--font-size-small);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selfPatternButton.is-active {
+  border-color: var(--theme-text-accent);
+  color: var(--theme-text-accent);
+  box-shadow: 0 0 8px rgba(120, 180, 255, 0.24);
+}
+
+.selfPatternSkills {
+  min-height: 36px;
+}
+
+.selfPatternSkillList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.selfPatternSkillItem {
+  padding: 4px 6px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-sm);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--theme-text-main);
+  font-size: var(--font-size-small);
+  line-height: 1.45;
+}
+
+.selfPatternSkillEmpty {
+  margin: 0;
+  padding: 6px 2px 2px;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.5;
+}
+
+/* =======================================================
    パーティ枠
 ======================================================= */
 
