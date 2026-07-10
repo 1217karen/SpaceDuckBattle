@@ -504,6 +504,27 @@ saveBtn.addEventListener("click", () => {
     W: document.getElementById("iconW").value
   };
 
+  const hasDefaultIcon =
+    icon.default.trim() !== "";
+
+  const hasDirectionIcon =
+    icon.N.trim() !== "" ||
+    icon.E.trim() !== "" ||
+    icon.S.trim() !== "" ||
+    icon.W.trim() !== "";
+
+  if (
+    !hasDefaultIcon &&
+    hasDirectionIcon &&
+    !confirm(
+      "方向アイコンが設定されていますが、アヒルのデフォルトアイコンが未設定です。\n" +
+      "未設定の向きでは No img が表示されます。\n" +
+      "このまま保存してよろしいですか？"
+    )
+  ) {
+    return;
+  }
+
   const profileImages =
     readProfileImageArea();
 
