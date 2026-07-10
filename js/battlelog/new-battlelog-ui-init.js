@@ -7,6 +7,7 @@
 
 import { skillHandlers } from "../data/skills.js";
 import { updateUnitStatUI } from "./new-battlelog-ui.js";
+import { getNoImageUrl } from "../common/icon-picker.js";
 
 
 export function createSideUI(snapshot, battleState, sideId, team) {
@@ -40,7 +41,7 @@ export function createSideUI(snapshot, battleState, sideId, team) {
 
 <div class="unitTopRow">
 
-  <img class="statusIcon" src="${u.icon || "https://placehold.co/60x60"}">
+  <img class="statusIcon" src="${u.icon || getNoImageUrl()}">
 
   <div class="statusInfoBlock">
 
