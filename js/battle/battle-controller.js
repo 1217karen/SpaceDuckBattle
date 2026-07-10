@@ -8,7 +8,7 @@ import { requireLogin, getCurrentAccount, loadCharacter, loadUnit } from "../ser
 import { initUnitList } from "./unitlist-controller.js";
 import { loadPublicBattleEntries } from "./public-unit-source.js";
 import { getFavoriteUnitEntries, getFavoriteUnitKey } from "../services/unit-favorite-service.js";
-import { skillHandlers } from "../data/skills.js";
+import { createSkillPatternPanel } from "../common/skill-pattern-panel.js";
 
 requireLogin();
 
@@ -82,38 +82,6 @@ function updateSelfPartyPattern() {
   };
 }
 
-function getSelfPatternLabel(pattern, index) {
-  const baseLabel = `設定${index + 1}`;
-  const name = String(pattern?.name ?? "").trim();
-
-  return name
-    ? `${baseLabel}：${name}`
-    : baseLabel;
-}
-
-function getSelfPatternSkillItems(pattern) {
-  const skills = Array.isArray(pattern?.skills)
-    ? pattern.skills
-    : [];
-
-  return skills
-    .map(skill => {
-      const skillType = String(skill?.type ?? "").trim();
-
-      if (!skillType) {
-        return null;
-      }
-
-      const handler = skillHandlers[skillType];
-
-      return {
-        name: handler?.name || skillType,
-        icon: handler?.icon || ""
-      };
-    })
-    .filter(Boolean);
-}
-
 function renderSelfPatternSelector() {
   if (!selfPatternButtons || !selfPatternSkills) {
     return;
@@ -124,75 +92,31 @@ function renderSelfPatternSelector() {
   );
 
   selfPatternButtons.innerHTML = "";
+  selfPatternSkills.innerHTML = "";
 
-  patterns.forEach((pattern, index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "selfPatternButton button-pill";
-    button.textContent = getSelfPatternLabel(pattern, index);
-
-    button.classList.toggle(
-      "is-active",
-      index === selectedSelfPatternIndex
-    );
-
-    button.addEventListener("click", () => {
+  const panel = createSkillPatternPanel({
+    patterns,
+    selectedPatternIndex: selectedSelfPatternIndex,
+    showPatternNameInButton: true,
+    disablePrivatePatterns: false,
+    showSlot: true,
+    showIcon: true,
+    showCooldown: true,
+    showSummary: true,
+    onPatternClick: ({ index }) => {
       selectedSelfPatternIndex = index;
       updateSelfPartyPattern();
       renderSelfPatternSelector();
-    });
-
-    selfPatternButtons.appendChild(button);
+    }
   });
 
-  const selectedPattern =
-    getSelfPattern(selectedSelfPatternIndex);
-
-const skillItems =
-  getSelfPatternSkillItems(selectedPattern);
-
-selfPatternSkills.innerHTML = "";
-
-if (skillItems.length === 0) {
-  const empty = document.createElement("p");
-  empty.className = "selfPatternSkillEmpty";
-  empty.textContent = "スキルは設定されていません";
-
-  selfPatternSkills.appendChild(empty);
-  return;
-}
-
-const list = document.createElement("ul");
-list.className = "selfPatternSkillList";
-
-skillItems.forEach(({ name, icon }, index) => {
-  const item = document.createElement("li");
-  item.className = "selfPatternSkillItem";
-
-  const slotLabel = document.createElement("span");
-  slotLabel.className = "selfPatternSkillSlot";
-  slotLabel.textContent = `SLOT ${index + 1}`;
-
-  item.appendChild(slotLabel);
-
-  if (icon) {
-    const img = document.createElement("img");
-    img.className = "selfPatternSkillIcon";
-    img.src = icon;
-    img.alt = "";
-
-    item.appendChild(img);
+  if (buttons) {
+    selfPatternButtons.appendChild(buttons);
   }
 
-  const text = document.createElement("span");
-  text.className = "selfPatternSkillName";
-  text.textContent = name;
-
-  item.appendChild(text);
-  list.appendChild(item);
-});
-
-  selfPatternSkills.appendChild(list);
+  if (detail) {
+    selfPatternSkills.appendChild(detail);
+  }
 }
 
 let selectedSlot = null;
