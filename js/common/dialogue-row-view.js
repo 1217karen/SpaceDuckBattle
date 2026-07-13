@@ -61,7 +61,7 @@ export function createDialogueRow({
   removeButtonClassName = "",
   textPlaceholder = "セリフを入力",
   iconAlt = "dialogue icon",
-  nameMaxLength = null,
+  nameMaxLength = 10,
   rowData = {},
   iconPicker,
   getIcons,
