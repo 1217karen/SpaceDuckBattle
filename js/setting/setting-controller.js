@@ -2,7 +2,7 @@
 
 import { skillHandlers } from "../data/skills.js";
 import { createIconPicker, normalizeCommIcons } from "../common/icon-picker.js";
-import { createDialogueRow } from "../common/dialogue-row-view.js";
+import { createDialogueRow, readDialogueRow } from "../common/dialogue-row-view.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveUnit } from "../services/storage-service.js";
 import { getCurrentStats, isSkillUnlocked } from "./skill-unlock.js";
 
@@ -531,31 +531,7 @@ function readSkillArea() {
       block.querySelectorAll(".skillDialogueRow");
 
     const dialogue = [...dialogueRows]
-      .map(row => {
-        const button =
-          row.querySelector(".commIconPickerButton");
-
-        const nameInput =
-          row.querySelector(".skillDialogueNameInput");
-
-        const input =
-          row.querySelector(".skillDialogueInput");
-
-        const iconId =
-          Number(button?.dataset.selectedId || 0);
-
-        const name =
-          nameInput?.value.trim() || "";
-
-        const text =
-          input?.value.trim() || "";
-
-        return {
-          name,
-          text,
-          iconId: iconId || null
-        };
-      })
+      .map(row => readDialogueRow(row, { trimText: true }))
       .filter(item => item.text !== "");
 
     if (!type) {
