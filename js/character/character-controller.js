@@ -7,6 +7,17 @@ import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveCharacter
 
 requireLogin();
 
+const dialogueTypes = [
+  { key: "battleStart", addButtonId: "addBattleStartLine" },
+  { key: "turnChangeNeutral", addButtonId: "addTurnChangeNeutralLine" },
+  { key: "turnChangeAdvantage", addButtonId: "addTurnChangeAdvantageLine" },
+  { key: "turnChangeDisadvantage", addButtonId: "addTurnChangeDisadvantageLine" },
+  { key: "turnChangePinch", addButtonId: "addTurnChangePinchLine" },
+  { key: "critical", addButtonId: "addCriticalLine" },
+  { key: "kill", addButtonId: "addKillLine" },
+  { key: "battleEndWin", addButtonId: "addBattleEndWinLine" }
+];
+
 function findIconIdByUrl(icons, iconUrl) {
   if (!Array.isArray(icons)) return null;
   if (typeof iconUrl !== "string" || iconUrl.trim() === "") return null;
@@ -216,86 +227,20 @@ function loadCharacterForm() {
   currentCommIcons =
     normalizeCommIcons(character?.commIcons);
 
-  renderCommList(
-    "battleStart",
-    character?.commDialogues?.battleStart
-  );
-
-  renderCommList(
-    "turnChangeAdvantage",
-    character?.commDialogues?.turnChangeAdvantage
-  );
-
-  renderCommList(
-    "turnChangeNeutral",
-    character?.commDialogues?.turnChangeNeutral
-  );
-
-  renderCommList(
-    "turnChangeDisadvantage",
-    character?.commDialogues?.turnChangeDisadvantage
-  );
-
-  renderCommList(
-    "turnChangePinch",
-    character?.commDialogues?.turnChangePinch
-  );
-
-  renderCommList(
-    "critical",
-    character?.commDialogues?.critical
-  );
-
-  renderCommList(
-    "kill",
-    character?.commDialogues?.kill
-  );
-
-  renderCommList(
-    "battleEndWin",
-    character?.commDialogues?.battleEndWin
-  );
+  dialogueTypes.forEach(({ key }) => {
+    renderCommList(
+      key,
+      character?.commDialogues?.[key]
+    );
+  });
 }
 
-document.getElementById("addBattleStartLine")
-  .addEventListener("click", () => {
-    addCommRow("battleStart");
-  });
-
-document.getElementById("addTurnChangeAdvantageLine")
-  .addEventListener("click", () => {
-    addCommRow("turnChangeAdvantage");
-  });
-
-document.getElementById("addTurnChangeNeutralLine")
-  .addEventListener("click", () => {
-    addCommRow("turnChangeNeutral");
-  });
-
-document.getElementById("addTurnChangeDisadvantageLine")
-  .addEventListener("click", () => {
-    addCommRow("turnChangeDisadvantage");
-  });
-
-document.getElementById("addTurnChangePinchLine")
-  .addEventListener("click", () => {
-    addCommRow("turnChangePinch");
-  });
-
-document.getElementById("addCriticalLine")
-  .addEventListener("click", () => {
-    addCommRow("critical");
-  });
-
-document.getElementById("addKillLine")
-  .addEventListener("click", () => {
-    addCommRow("kill");
-  });
-
-document.getElementById("addBattleEndWinLine")
-  .addEventListener("click", () => {
-    addCommRow("battleEndWin");
-  });
+dialogueTypes.forEach(({ key, addButtonId }) => {
+  document.getElementById(addButtonId)
+    .addEventListener("click", () => {
+      addCommRow(key);
+    });
+});
 
 document.getElementById("saveCharacter")
   .addEventListener("click", () => {
@@ -344,29 +289,12 @@ document.getElementById("saveCharacter")
       return;
     }
 
-    const battleStartList =
-      collectDialogueList("battleStart");
-
-    const turnChangeAdvantageList =
-      collectDialogueList("turnChangeAdvantage");
-
-    const turnChangeNeutralList =
-      collectDialogueList("turnChangeNeutral");
-
-    const turnChangeDisadvantageList =
-      collectDialogueList("turnChangeDisadvantage");
-
-    const turnChangePinchList =
-      collectDialogueList("turnChangePinch");
-
-    const criticalList =
-      collectDialogueList("critical");
-
-    const killList =
-      collectDialogueList("kill");
-
-    const battleEndWinList =
-      collectDialogueList("battleEndWin");
+    const commDialogues = dialogueTypes.reduce((result, { key }) => {
+      result[key] = collectDialogueList(key);
+      return result;
+    }, {
+      ...(oldCharacter.commDialogues || {})
+    });
 
     const character = {
       ...oldCharacter,
@@ -376,17 +304,7 @@ document.getElementById("saveCharacter")
       profileText,
       commIcons: currentCommIcons,
 
-      commDialogues: {
-        ...(oldCharacter.commDialogues || {}),
-        battleStart: battleStartList,
-        turnChangeAdvantage: turnChangeAdvantageList,
-        turnChangeNeutral: turnChangeNeutralList,
-        turnChangeDisadvantage: turnChangeDisadvantageList,
-        turnChangePinch: turnChangePinchList,
-        critical: criticalList,
-        kill: killList,
-        battleEndWin: battleEndWinList
-      }
+      commDialogues
     };
 
     const unit = {
