@@ -74,7 +74,6 @@ function normalizeDialogueList(dialogue) {
 }
 
 let currentCommIcons = [];
-let nextCommRowId = 1;
 
 const iconPicker = createIconPicker();
 
@@ -91,13 +90,10 @@ function getCommIconUrlById(iconId) {
 }
 
 function createCommRowElement(typeKey, rowData = {}) {
-  const rowId = nextCommRowId++;
-  
-   return createDialogueRow({
+  return createDialogueRow({
     rowClassName: "commRow",
     rowDataset: {
-      type: typeKey,
-      rowId
+      type: typeKey
     },
     inputAreaClassName: "commInputArea",
     nameInputClassName: "commNameInput",
@@ -211,9 +207,6 @@ function loadCharacterForm() {
   document.getElementById("defaultCharacterName").value =
     character?.defaultName ?? "";
 
-  document.getElementById("unitName").value =
-    unit?.name ?? "";
-  
   document.getElementById("unitName").value =
     unit?.name ?? "";
 
@@ -429,9 +422,9 @@ document.getElementById("defaultCharacterName")
           document.getElementById("defaultCharacterName")?.value.trim() || "",
         mode: "placeholder"
       });
-    });
-    
+      
       refreshDialogueRowPreview(row);
+    });
   });
 
 loadCharacterForm();
