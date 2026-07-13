@@ -139,11 +139,7 @@ function normalizeDialogueList(dialogue) {
       iconId:
         typeof item?.iconId === "number" && item.iconId > 0
           ? item.iconId
-          : null,
-      iconUrl:
-        typeof item?.iconUrl === "string"
-          ? item.iconUrl
-          : ""
+          : null
     }));
   }
 
@@ -160,19 +156,14 @@ function normalizeDialogueList(dialogue) {
       iconId:
         typeof dialogue.iconId === "number" && dialogue.iconId > 0
           ? dialogue.iconId
-          : null,
-      iconUrl:
-        typeof dialogue.iconUrl === "string"
-          ? dialogue.iconUrl
-          : ""
+          : null
     }];
   }
 
   return [{
     text: "",
     name: "",
-    iconId: null,
-    iconUrl: ""
+    iconId: null
   }];
 }
 
@@ -184,8 +175,7 @@ function normalizeSkill(skill) {
       dialogue: [{
         text: "",
         name: "",
-        iconId: null,
-        iconUrl: ""
+        iconId: null
       }]
     };
   }
@@ -207,8 +197,7 @@ function normalizeSkill(skill) {
     dialogue: [{
       text: "",
       name: "",
-      iconId: null,
-      iconUrl: ""
+      iconId: null
     }]
   };
 }
@@ -236,8 +225,7 @@ function createSkillDialogueRow(dialogueData = {}) {
     iconAlt: "dialogue icon",
     rowData: {
       ...dialogueData,
-      iconUrl:
-        dialogueData.iconUrl || getCommIconUrlById(dialogueData.iconId) || ""
+      iconUrl: getCommIconUrlById(dialogueData.iconId) || ""
     },
     iconPicker,
     getIcons: () => currentCommIcons,
@@ -556,9 +544,6 @@ function readSkillArea() {
         const iconId =
           Number(button?.dataset.selectedId || 0);
 
-        const iconUrl =
-          button?.dataset.selectedUrl || "";
-
         const name =
           nameInput?.value.trim() || "";
 
@@ -568,8 +553,7 @@ function readSkillArea() {
         return {
           name,
           text,
-          iconId: iconId || null,
-          iconUrl
+          iconId: iconId || null
         };
       })
       .filter(item => item.text !== "");
