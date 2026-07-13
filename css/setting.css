@@ -166,20 +166,6 @@
   gap: 10px;
 }
 
-.skillDialogueInputArea {
-  flex: 1;
-}
-
-.skillDialogueNameInput {
-  width: min(100%, 300px);
-}
-
-.skillDialogueInput {
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-}
-
 .addSkillDialogueLine {
   align-self: flex-start;
   padding: 4px 10px;
