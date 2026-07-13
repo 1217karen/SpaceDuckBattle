@@ -1,8 +1,8 @@
 //character-controller.js
 
-import { createIconPicker, getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
-import { bindTextPreview } from "../common/text-preview.js";
-import { bindSpeakerNameSync, updateSpeakerNameField } from "../common/speaker-name-sync.js";
+import { createIconPicker, normalizeCommIcons } from "../common/icon-picker.js";
+import { createDialogueRow, refreshDialogueRowPreview } from "../common/dialogue-row-view.js";
+import { updateSpeakerNameField } from "../common/speaker-name-sync.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveCharacter, saveUnit } from "../services/storage-service.js";
 
 requireLogin();
@@ -92,83 +92,41 @@ function getCommIconUrlById(iconId) {
 
 function createCommRowElement(typeKey, rowData = {}) {
   const rowId = nextCommRowId++;
-  const row = document.createElement("div");
-  row.className = "commRow";
-  row.dataset.type = typeKey;
-  row.dataset.rowId = String(rowId);
-
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "commonIcon60 commIconPickerButton button-box";
-  button.dataset.selectedId =
-    rowData.iconId ? String(rowData.iconId) : "";
-  button.dataset.selectedUrl =
-    getCommIconUrlById(rowData.iconId) || "";
-
-  const img = document.createElement("img");
-  img.src = button.dataset.selectedUrl || getNoImageUrl();
-  img.alt = `${typeKey} icon`;
-
-  button.appendChild(img);
-
-  button.addEventListener("click", () => {
-    iconPicker.open(button, currentCommIcons);
-  });
-
-  const inputArea = document.createElement("div");
-  inputArea.className = "commInputArea";
-
-  const nameInput = document.createElement("input");
-  nameInput.className = "commNameInput";
-  nameInput.maxLength = 10;
-  nameInput.value = rowData.name || "";
-
-  const input = document.createElement("input");
-  input.className = "commTextInput";
-  input.placeholder = "セリフを入力";
-  input.value = rowData.text || "";
-
-  const preview = document.createElement("div");
-  preview.className = "commTextPreview";
-  preview.dataset.previewFor = String(rowId);
-
-  inputArea.appendChild(nameInput);
-  inputArea.appendChild(input);
-  inputArea.appendChild(preview);
-
-  bindTextPreview(input, preview, { preset: "message" });
-
-  bindSpeakerNameSync({
-    nameInput,
-    button,
+  
+   return createDialogueRow({
+    rowClassName: "commRow",
+    rowDataset: {
+      type: typeKey,
+      rowId
+    },
+    inputAreaClassName: "commInputArea",
+    nameInputClassName: "commNameInput",
+    textInputClassName: "commTextInput",
+    removeButtonClassName: "commRemoveButton",
+    textPlaceholder: "セリフを入力",
+    iconAlt: `${typeKey} icon`,
+    nameMaxLength: 10,
+    rowData: {
+      ...rowData,
+      iconUrl: getCommIconUrlById(rowData.iconId) || ""
+    },
+    iconPicker,
     getIcons: () => currentCommIcons,
     getDefaultName: () =>
       document.getElementById("defaultCharacterName")?.value.trim() || "",
-    mode: "placeholder"
-  });
-  
-  const removeButton = document.createElement("button");
-  removeButton.type = "button";
-  removeButton.className = "commRemoveButton button-icon";
-  removeButton.textContent = "×";
+    onRemove: row => {
+      const list = document.getElementById(`${typeKey}List`);
+      if (!list) return;
 
-  removeButton.addEventListener("click", () => {
-    const list = document.getElementById(`${typeKey}List`);
-    if (!list) return;
+      row.remove();
 
-    row.remove();
-
-    if (list.children.length === 0) {
-      addCommRow(typeKey);
+      if (list.children.length === 0) {
+        addCommRow(typeKey);
+      }
     }
   });
-
-  row.appendChild(button);
-  row.appendChild(inputArea);
-  row.appendChild(removeButton);
-
-  return row;
 }
+
 
 function addCommRow(typeKey, rowData = {}) {
   const list = document.getElementById(`${typeKey}List`);
@@ -472,6 +430,8 @@ document.getElementById("defaultCharacterName")
         mode: "placeholder"
       });
     });
+    
+      refreshDialogueRowPreview(row);
   });
 
 loadCharacterForm();
