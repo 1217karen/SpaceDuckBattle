@@ -193,6 +193,21 @@
   flex: 0 0 auto;
 }
 
+.cutinImageRow {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.cutinImageRow .imageInputBody {
+  width: 100%;
+}
+
+.cutinPreview {
+  align-self: flex-start;
+}
+
 /* =========================
    右側：スキル一覧
 ========================= */
