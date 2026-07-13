@@ -24,6 +24,22 @@
   height: 120px;
 }
 
+.imageInputPreview-cutin {
+  display: block;
+  width: auto;
+  max-width: min(100%, 600px);
+  height: auto;
+  max-height: 200px;
+  object-fit: contain;
+  border: 1px solid var(--theme-border-main);
+  background: rgba(0, 0, 0, 0.28);
+  box-sizing: border-box;
+}
+
+.imageInputPreview-cutin[hidden] {
+  display: none;
+}
+
 .imageInputBody {
   flex: 1;
   display: flex;
