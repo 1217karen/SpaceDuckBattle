@@ -1,7 +1,7 @@
 //character-controller.js
 
 import { createIconPicker, normalizeCommIcons } from "../common/icon-picker.js";
-import { createDialogueRow, refreshDialogueRowPreview } from "../common/dialogue-row-view.js";
+import { createDialogueRow, readDialogueRow, refreshDialogueRowPreview } from "../common/dialogue-row-view.js";
 import { updateSpeakerNameField } from "../common/speaker-name-sync.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveCharacter, saveUnit } from "../services/storage-service.js";
 
@@ -154,31 +154,7 @@ function collectDialogueList(typeKey) {
   const rows = getCommRows(typeKey);
 
   return rows
-    .map(row => {
-      const button =
-        row.querySelector(".commIconPickerButton");
-
-      const nameInput =
-        row.querySelector(".commNameInput");
-
-      const input =
-        row.querySelector(".commTextInput");
-
-      const iconId =
-        Number(button?.dataset.selectedId || 0);
-
-      const name =
-        nameInput?.value.trim() || "";
-
-      const text =
-        input?.value ?? "";
-
-      return {
-        name,
-        text,
-        iconId: iconId || null
-      };
-    })
+    .map(row => readDialogueRow(row))
     .filter(item => item.text !== "");
 }
 
@@ -327,10 +303,10 @@ document.getElementById("defaultCharacterName")
 
     rows.forEach(row => {
       const button =
-        row.querySelector(".commIconPickerButton");
+        row.querySelector(".dialogueIconButton");
 
       const nameInput =
-        row.querySelector(".commNameInput");
+        row.querySelector(".dialogueNameInput");
 
       updateSpeakerNameField({
         nameInput,
