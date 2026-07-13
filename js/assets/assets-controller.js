@@ -140,7 +140,7 @@ function createProfileImageRow(item) {
   publicLabel.className = "profileImagePublicLabel imageInputMeta";
 
   const publicText = document.createElement("span");
-  publicText.textContent = "公開可否";
+  publicText.textContent = "公開する";
 
   const enabledInput = document.createElement("input");
   enabledInput.type = "checkbox";
