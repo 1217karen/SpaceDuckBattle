@@ -1,8 +1,8 @@
 //setting-controller.js
 
 import { skillHandlers } from "../data/skills.js";
-import { createIconPicker, getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
-import { bindSpeakerNameSync, updateSpeakerNameField } from "../common/speaker-name-sync.js";
+import { createIconPicker, normalizeCommIcons } from "../common/icon-picker.js";
+import { createDialogueRow } from "../common/dialogue-row-view.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveUnit } from "../services/storage-service.js";
 import { getCurrentStats, isSkillUnlocked } from "./skill-unlock.js";
 
@@ -63,6 +63,18 @@ let draggedSkillBlock = null;
 
 function getDefaultSpeakerName() {
   return currentDefaultSpeakerName;
+}
+
+function getCommIconUrlById(iconId) {
+  const safeIconId =
+    Number(iconId || 0);
+
+  if (!safeIconId) return "";
+
+  const matchedIcon =
+    currentCommIcons.find(icon => Number(icon?.id || 0) === safeIconId);
+
+  return matchedIcon?.url || "";
 }
 
 const iconPicker = createIconPicker();
@@ -217,75 +229,39 @@ const normalizedSkills = Array.from({ length: MAX_SKILL_SLOTS }, (_, i) =>
 function createSkillDialogueRow(dialogueData = {}) {
   const rowId = nextDialogueRowId++;
 
-  const row = document.createElement("div");
-  row.className = "skillDialogueRow imageInputRow";
-  row.dataset.rowId = String(rowId);
-
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "commonIcon60 commIconPickerButton button-box";
-  button.dataset.selectedId =
-    dialogueData.iconId ? String(dialogueData.iconId) : "";
-  button.dataset.selectedUrl =
-    dialogueData.iconUrl || "";
-
-  const img = document.createElement("img");
-  img.src = dialogueData.iconUrl || getNoImageUrl();
-  img.alt = "dialogue icon";
-
-  button.appendChild(img);
-
-  button.addEventListener("click", () => {
-    iconPicker.open(button, currentCommIcons);
-  });
-
-  const inputArea = document.createElement("div");
-  inputArea.className = "skillDialogueInputArea imageInputBody";
-
-  const nameInput = document.createElement("input");
-  nameInput.type = "text";
-  nameInput.className = "skillDialogueNameInput";
-  nameInput.value = dialogueData.name || "";
-
-  const input = document.createElement("input");
-  input.type = "text";
-  input.className = "skillDialogueInput";
-  input.placeholder = "スキル使用時セリフ";
-  input.value = dialogueData.text || "";
-
-  inputArea.appendChild(nameInput);
-  inputArea.appendChild(input);
-
-  bindSpeakerNameSync({
-    nameInput,
-    button,
+  return createDialogueRow({
+    rowClassName: "skillDialogueRow imageInputRow",
+    rowDataset: { rowId },
+    inputAreaClassName: "skillDialogueInputArea imageInputBody",
+    nameInputClassName: "skillDialogueNameInput",
+    textInputClassName: "skillDialogueInput",
+    removeButtonClassName: "skillDialogueRemoveButton",
+    textPlaceholder: "スキル使用時セリフ",
+    iconAlt: "dialogue icon",
+    rowData: {
+      ...dialogueData,
+      iconUrl:
+        dialogueData.iconUrl || getCommIconUrlById(dialogueData.iconId) || ""
+    },
+    iconPicker,
     getIcons: () => currentCommIcons,
     getDefaultName: getDefaultSpeakerName,
-    mode: "placeholder"
-  });
+    onRemove: row => {
+      const list = row.parentElement;
+      if (!list) return;
 
-  const removeButton = document.createElement("button");
-  removeButton.type = "button";
-  removeButton.className = "skillDialogueRemoveButton button-icon";
-  removeButton.textContent = "×";
+      row.remove();
 
-  removeButton.addEventListener("click", () => {
-    const list = row.parentElement;
-    if (!list) return;
-
-    row.remove();
-
-    if (list.children.length === 0) {
-      list.appendChild(createSkillDialogueRow());
+      if (list.querySelectorAll(".skillDialogueRow").length === 0) {
+        list.insertBefore(
+          createSkillDialogueRow(),
+          list.querySelector(".addSkillDialogueLine")
+        );
+      }
     }
   });
-
-  row.appendChild(button);
-  row.appendChild(inputArea);
-  row.appendChild(removeButton);
-
-  return row;
 }
+
 
 function createSkillDialogueList(dialogues = []) {
   const list = document.createElement("div");
