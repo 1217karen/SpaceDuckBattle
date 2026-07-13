@@ -47,22 +47,6 @@
    - アイコン選択ボタン + 名前入力 + セリフ入力 + 削除ボタン
 ======================================================= */
 
-.commRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.commInputArea {
-  flex: 1;
-  min-width: 0;
-}
-
-.commInputArea input {
-  box-sizing: border-box;
-}
-
 .commInputArea .commNameInput {
   width: 300px;
   max-width: 100%;
