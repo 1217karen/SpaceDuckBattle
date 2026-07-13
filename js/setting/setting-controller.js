@@ -2,6 +2,7 @@
 
 import { skillHandlers } from "../data/skills.js";
 import { createIconPicker, normalizeCommIcons } from "../common/icon-picker.js";
+import { createEmptyDialogue, normalizeDialogueList } from "../common/dialogue-data.js";
 import { createDialogueRow, readDialogueRow } from "../common/dialogue-row-view.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveUnit } from "../services/storage-service.js";
 import { getCurrentStats, isSkillUnlocked } from "./skill-unlock.js";
@@ -125,58 +126,12 @@ function updatePatternTabsActiveState() {
   });
 }
 
-function normalizeDialogueList(dialogue) {
-  if (Array.isArray(dialogue)) {
-    return dialogue.map(item => ({
-      text:
-        typeof item?.text === "string"
-          ? item.text
-          : "",
-      name:
-        typeof item?.name === "string"
-          ? item.name
-          : "",
-      iconId:
-        typeof item?.iconId === "number" && item.iconId > 0
-          ? item.iconId
-          : null
-    }));
-  }
-
-  if (dialogue && typeof dialogue === "object") {
-    return [{
-      text:
-        typeof dialogue.text === "string"
-          ? dialogue.text
-          : "",
-      name:
-        typeof dialogue.name === "string"
-          ? dialogue.name
-          : "",
-      iconId:
-        typeof dialogue.iconId === "number" && dialogue.iconId > 0
-          ? dialogue.iconId
-          : null
-    }];
-  }
-
-  return [{
-    text: "",
-    name: "",
-    iconId: null
-  }];
-}
-
 function normalizeSkill(skill) {
   if (typeof skill === "string") {
     return {
       type: skill,
       cutinUrl: "",
-      dialogue: [{
-        text: "",
-        name: "",
-        iconId: null
-      }]
+      dialogue: [createEmptyDialogue()]
     };
   }
 
@@ -194,11 +149,7 @@ function normalizeSkill(skill) {
   return {
     type: "",
     cutinUrl: "",
-    dialogue: [{
-      text: "",
-      name: "",
-      iconId: null
-    }]
+    dialogue: [createEmptyDialogue()]
   };
 }
 
