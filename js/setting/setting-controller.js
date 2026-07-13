@@ -57,8 +57,13 @@ function getUnlockedSkillList() {
 }
 
 let currentCommIcons = [];
+let currentDefaultSpeakerName = "";
 let nextDialogueRowId = 1;
 let draggedSkillBlock = null;
+
+function getDefaultSpeakerName() {
+  return currentDefaultSpeakerName;
+}
 
 const iconPicker = createIconPicker();
 
@@ -255,8 +260,7 @@ function createSkillDialogueRow(dialogueData = {}) {
     nameInput,
     button,
     getIcons: () => currentCommIcons,
-    getDefaultName: () =>
-      document.getElementById("defaultCharacterName")?.value.trim() || "",
+    getDefaultName: getDefaultSpeakerName,
     mode: "placeholder"
   });
 
@@ -730,34 +734,8 @@ function loadDuck() {
 
   oldUnit = unit || {};
 
-  const defaultCharacterNameInput =
-    document.getElementById("defaultCharacterName");
-
-  if (defaultCharacterNameInput) {
-    defaultCharacterNameInput.value =
-      character?.defaultName ?? "";
-
-    defaultCharacterNameInput.addEventListener("input", () => {
-      const rows = document.querySelectorAll(".skillDialogueRow");
-
-      rows.forEach(row => {
-        const button =
-          row.querySelector(".commIconPickerButton");
-
-        const nameInput =
-          row.querySelector(".skillDialogueNameInput");
-
-        updateSpeakerNameField({
-          nameInput,
-          button,
-          icons: currentCommIcons,
-          getDefaultName: () =>
-            document.getElementById("defaultCharacterName")?.value.trim() || "",
-          mode: "placeholder"
-        });
-      });
-    });
-  }
+  currentDefaultSpeakerName =
+    String(character?.defaultName ?? "").trim();
 
   currentCommIcons =
     normalizeCommIcons(character?.commIcons);
