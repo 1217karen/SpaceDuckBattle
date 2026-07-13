@@ -40,6 +40,7 @@ const ptSlots = document.querySelectorAll(".pt-slot");
 const startBtn = document.getElementById("startBtn");
 const stageSelect = document.getElementById("stageSelect");
 const battleBoardPanel = document.getElementById("battleBoardPanel");
+const battleStartPanel = document.getElementById("battleStartPanel");
 const selfPatternButtons = document.getElementById("selfPatternButtons");
 const selfPatternSkills = document.getElementById("selfPatternSkills");
 
@@ -507,12 +508,14 @@ stageSelect.addEventListener("change", () => {
   if (!stageSelect.value) {
     boardDiv.innerHTML = "";
     battleBoardPanel?.classList.add("is-hidden");
+    battleStartPanel?.classList.add("is-hidden");
     return;
   }
 
   const stage = STAGES[stageSelect.value];
 
   battleBoardPanel?.classList.remove("is-hidden");
+  battleStartPanel?.classList.remove("is-hidden");
   createBoard(stage);
 });
 
