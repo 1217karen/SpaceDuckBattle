@@ -1,3 +1,5 @@
+//dialogue-row-view.js
+
 import { getNoImageUrl } from "./icon-picker.js";
 import { renderRichText } from "./rich-text.js";
 import { bindSpeakerNameSync } from "./speaker-name-sync.js";
