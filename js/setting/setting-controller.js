@@ -58,7 +58,6 @@ function getUnlockedSkillList() {
 
 let currentCommIcons = [];
 let currentDefaultSpeakerName = "";
-let nextDialogueRowId = 1;
 let draggedSkillBlock = null;
 
 function getDefaultSpeakerName() {
@@ -227,11 +226,8 @@ const normalizedSkills = Array.from({ length: MAX_SKILL_SLOTS }, (_, i) =>
 }
 
 function createSkillDialogueRow(dialogueData = {}) {
-  const rowId = nextDialogueRowId++;
-
   return createDialogueRow({
     rowClassName: "skillDialogueRow imageInputRow",
-    rowDataset: { rowId },
     inputAreaClassName: "skillDialogueInputArea imageInputBody",
     nameInputClassName: "skillDialogueNameInput",
     textInputClassName: "skillDialogueInput",
