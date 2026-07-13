@@ -1,6 +1,7 @@
 //character-controller.js
 
 import { createIconPicker, normalizeCommIcons } from "../common/icon-picker.js";
+import { normalizeDialogueList } from "../common/dialogue-data.js";
 import { createDialogueRow, readDialogueRow, refreshDialogueRowPreview } from "../common/dialogue-row-view.js";
 import { updateSpeakerNameField } from "../common/speaker-name-sync.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveCharacter, saveUnit } from "../services/storage-service.js";
@@ -18,16 +19,6 @@ const dialogueTypes = [
   { key: "battleEndWin", addButtonId: "addBattleEndWinLine" }
 ];
 
-function findIconIdByUrl(icons, iconUrl) {
-  if (!Array.isArray(icons)) return null;
-  if (typeof iconUrl !== "string" || iconUrl.trim() === "") return null;
-
-  const matchedIcon =
-    icons.find(icon => icon?.url === iconUrl);
-
-  return matchedIcon?.id || null;
-}
-
 function getExistingCommIconId(iconId) {
   const safeIconId =
     Number(iconId || 0);
@@ -38,50 +29,6 @@ function getExistingCommIconId(iconId) {
     currentCommIcons.find(icon => icon?.id === safeIconId);
 
   return matchedIcon?.id || null;
-}
-
-function normalizeDialogueItem(item) {
-  const text =
-    typeof item?.text === "string"
-      ? item.text
-      : "";
-
-  if (text === "") return null;
-
-  const iconId =
-    getExistingCommIconId(item?.iconId) ||
-    findIconIdByUrl(currentCommIcons, item?.iconUrl);
-
-  return {
-    text,
-    name:
-      typeof item?.name === "string"
-        ? item.name
-        : "",
-    iconId: iconId || null
-  };
-}
-
-function normalizeDialogueList(dialogue) {
-  const source = Array.isArray(dialogue)
-    ? dialogue
-    : dialogue && typeof dialogue === "object"
-      ? [dialogue]
-      : [];
-
-  const normalized = source
-    .map(item => normalizeDialogueItem(item))
-    .filter(Boolean);
-
-  if (normalized.length > 0) {
-    return normalized;
-  }
-
-  return [{
-    text: "",
-    name: "",
-    iconId: null
-  }];
 }
 
 let currentCommIcons = [];
@@ -165,7 +112,10 @@ function renderCommList(typeKey, dialogues) {
   list.innerHTML = "";
 
   const normalized =
-    normalizeDialogueList(dialogues);
+    normalizeDialogueList(dialogues, {
+      dropEmptyText: true,
+      normalizeIconId: getExistingCommIconId
+    });
 
   normalized.forEach(item => {
     addCommRow(typeKey, item);
