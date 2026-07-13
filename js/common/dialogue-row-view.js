@@ -89,7 +89,7 @@ export function createDialogueRow({
 
   const iconButton = document.createElement("button");
   iconButton.type = "button";
-  iconButton.className = "commonIcon60 commIconPickerButton button-box";
+  iconButton.className = "dialogueIconButton commonIcon60 commIconPickerButton button-box";
   iconButton.dataset.selectedId = rowData.iconId ? String(rowData.iconId) : "";
   iconButton.dataset.selectedUrl = rowData.iconUrl || "";
 
@@ -159,7 +159,6 @@ export function createDialogueRow({
 
   inputArea.appendChild(nameInput);
   inputArea.appendChild(textInput);
-  inputArea.appendChild(preview);
 
   function refreshPreview() {
     previewIcon.src = resolvePreviewIconUrl(iconButton);
@@ -198,6 +197,7 @@ export function createDialogueRow({
   row.appendChild(removeButton);
   row.appendChild(iconButton);
   row.appendChild(inputArea);
+  row.appendChild(preview);
 
   refreshPreview();
 
