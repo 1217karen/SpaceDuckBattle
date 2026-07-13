@@ -418,42 +418,48 @@ wrapper.dataset.index = String(index);
   const skillSummary = document.createElement("div");
   skillSummary.className = "skillInfoSummary";
 
-  const cutinRow = document.createElement("div");
-  cutinRow.className = "cutinImageRow imageInputRow";
+const cutinRow = document.createElement("div");
+cutinRow.className = "cutinImageRow imageInputRow";
 
-  const cutinPreview = document.createElement("img");
-  cutinPreview.className = "cutinPreview imageInputPreview imageInputPreview-large";
-  cutinPreview.src =
-    skillData?.cutinUrl
-      ? skillData.cutinUrl
-      : getNoImageUrl();
-  cutinPreview.alt = "カットインプレビュー";
+const cutinInputArea = document.createElement("div");
+cutinInputArea.className = "imageInputBody";
 
-  const cutinInputArea = document.createElement("div");
-  cutinInputArea.className = "imageInputBody";
+const cutinLabel = document.createElement("label");
+cutinLabel.className = "imageInputLabel";
+cutinLabel.textContent = "カットインURL";
 
-  const cutinLabel = document.createElement("label");
-  cutinLabel.className = "imageInputLabel";
-  cutinLabel.textContent = "カットインURL";
+const cutinInput = document.createElement("input");
+cutinInput.type = "text";
+cutinInput.className = "cutinUrlInput imageInputControl";
+cutinInput.placeholder = "https://...";
+cutinInput.value = skillData?.cutinUrl || "";
 
-  const cutinInput = document.createElement("input");
-  cutinInput.type = "text";
-  cutinInput.className = "cutinUrlInput imageInputControl";
-  cutinInput.placeholder = "https://...";
-  cutinInput.value = skillData?.cutinUrl || "";
+const cutinPreview = document.createElement("img");
+cutinPreview.className = "cutinPreview imageInputPreview-cutin";
+cutinPreview.alt = "カットインプレビュー";
 
-  cutinInput.addEventListener("input", () => {
-    cutinPreview.src =
-      cutinInput.value.trim() !== ""
-        ? cutinInput.value.trim()
-        : getNoImageUrl();
-  });
+function updateCutinPreview() {
+  const url = cutinInput.value.trim();
 
-  cutinInputArea.appendChild(cutinLabel);
-  cutinInputArea.appendChild(cutinInput);
+  if (url === "") {
+    cutinPreview.hidden = true;
+    cutinPreview.removeAttribute("src");
+    return;
+  }
 
-  cutinRow.appendChild(cutinPreview);
-  cutinRow.appendChild(cutinInputArea);
+  cutinPreview.hidden = false;
+  cutinPreview.src = url;
+}
+
+cutinInput.addEventListener("input", updateCutinPreview);
+
+cutinInputArea.appendChild(cutinLabel);
+cutinInputArea.appendChild(cutinInput);
+
+cutinRow.appendChild(cutinInputArea);
+cutinRow.appendChild(cutinPreview);
+
+updateCutinPreview();
 
   const dialogueList = createSkillDialogueList(
     skillData?.dialogue
