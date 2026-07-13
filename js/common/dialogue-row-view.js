@@ -52,6 +52,29 @@ export function refreshDialogueRowPreview(row) {
   }
 }
 
+export function readDialogueRow(row, { trimText = false } = {}) {
+  const iconButton =
+    row?.querySelector(".dialogueIconButton");
+
+  const nameInput =
+    row?.querySelector(".dialogueNameInput");
+
+  const textInput =
+    row?.querySelector(".dialogueTextInput");
+
+  const iconId =
+    Number(iconButton?.dataset.selectedId || 0);
+
+  const rawText =
+    textInput?.value ?? "";
+
+  return {
+    name: nameInput?.value.trim() || "",
+    text: trimText ? rawText.trim() : rawText,
+    iconId: iconId || null
+  };
+}
+
 export function createDialogueRow({
   rowClassName = "",
   rowDataset = {},
