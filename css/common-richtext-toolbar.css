@@ -43,6 +43,15 @@
 }
 
 .richTextToolButtonRuby {
+  width: auto;
+  min-width: 34px;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+}
+
+.richTextToolButtonLineBreak {
+  width: auto;
+  min-width: 38px;
   font-size: 12px;
   letter-spacing: 0.2px;
 }
