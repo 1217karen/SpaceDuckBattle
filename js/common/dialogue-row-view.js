@@ -2,6 +2,8 @@
 
 import { getNoImageUrl } from "./icon-picker.js";
 import { renderRichText } from "./rich-text.js";
+import { bindRichTextToolbar } from "./rich-text-toolbar.js";
+import { createRichTextToolbarButtons } from "./rich-text-toolbar-ui.js";
 import { bindSpeakerNameSync } from "./speaker-name-sync.js";
 
 function normalizeName(value) {
@@ -150,6 +152,31 @@ export function createDialogueRow({
   textInput.placeholder = textPlaceholder;
   textInput.value = rowData.text || "";
 
+  const nameToolRow = document.createElement("div");
+  nameToolRow.className = "dialogueNameToolRow";
+
+  const richTextToolWrap = document.createElement("div");
+  richTextToolWrap.className = "dialogueRichTextToolWrap";
+
+  const richTextToggleButton = document.createElement("button");
+  richTextToggleButton.type = "button";
+  richTextToggleButton.className = "dialogueRichTextToggleButton button-box";
+  richTextToggleButton.textContent = "装飾";
+  richTextToggleButton.setAttribute("aria-label", "文字装飾を開く");
+  richTextToggleButton.setAttribute("aria-expanded", "false");
+
+  const richTextPopup = document.createElement("div");
+  richTextPopup.className = "dialogueRichTextPopup";
+  richTextPopup.hidden = true;
+  richTextPopup.appendChild(
+    createRichTextToolbarButtons({ includeLineBreak: true })
+  );
+
+  richTextToolWrap.appendChild(richTextToggleButton);
+  richTextToolWrap.appendChild(richTextPopup);
+  nameToolRow.appendChild(nameInput);
+  nameToolRow.appendChild(richTextToolWrap);
+
   const preview = document.createElement("div");
   preview.className = "dialoguePreviewPanel";
 
@@ -180,8 +207,45 @@ export function createDialogueRow({
   preview.appendChild(previewLeft);
   preview.appendChild(previewRight);
 
-  inputArea.appendChild(nameInput);
+  inputArea.appendChild(nameToolRow);
   inputArea.appendChild(textInput);
+
+  function closeRichTextPopup() {
+    richTextPopup.hidden = true;
+    richTextToggleButton.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleRichTextPopup() {
+    const shouldOpen = richTextPopup.hidden;
+    richTextPopup.hidden = !shouldOpen;
+    richTextToggleButton.setAttribute(
+      "aria-expanded",
+      shouldOpen ? "true" : "false"
+    );
+  }
+
+  richTextToggleButton.addEventListener("click", event => {
+    event.stopPropagation();
+    toggleRichTextPopup();
+  });
+
+  richTextPopup.addEventListener("click", event => {
+    event.stopPropagation();
+  });
+
+  document.addEventListener("click", event => {
+    if (!row.contains(event.target)) {
+      closeRichTextPopup();
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      closeRichTextPopup();
+    }
+  });
+
+  bindRichTextToolbar(richTextPopup, textInput);
 
   function refreshPreview() {
     const hasText = textInput.value.length > 0;
