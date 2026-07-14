@@ -81,6 +81,7 @@ function replaceTextareaRange(
   textarea.focus();
   textarea.setSelectionRange(caretStart, caretEnd);
   selectionMemory.set(caretStart, caretEnd);
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 function insertPairTag(textarea, selectionMemory, openTag, closeTag) {
