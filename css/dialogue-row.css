@@ -82,6 +82,10 @@
   overflow: hidden;
 }
 
+.dialoguePreviewPanel[hidden] {
+  display: none;
+}
+
 .dialoguePreviewPanel::before {
   content: "";
   position: absolute;
