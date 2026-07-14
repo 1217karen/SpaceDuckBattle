@@ -25,9 +25,48 @@
   box-sizing: border-box;
 }
 
+.dialogueNameToolRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
 .dialogueNameInput {
   width: 300px;
   max-width: 100%;
+}
+
+.dialogueRichTextToolWrap {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.dialogueRichTextToggleButton {
+  padding: 4px 10px;
+  font-size: var(--font-size-sm);
+}
+
+.dialogueRichTextPopup {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  right: 0;
+  width: max-content;
+  max-width: min(360px, 80vw);
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--theme-border-soft);
+  border-radius: var(--theme-radius-md);
+  background: var(--theme-surface-2);
+  box-shadow: var(--theme-shadow-panel);
+}
+
+.dialogueRichTextPopup[hidden] {
+  display: none;
 }
 
 .dialogueTextInput {
