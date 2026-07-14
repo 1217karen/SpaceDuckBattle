@@ -231,6 +231,14 @@ export function createDialogueRow({
 
   richTextPopup.addEventListener("click", event => {
     event.stopPropagation();
+
+    const clickedToolbarButton = event.target.closest(
+      "[data-insert-open-tag], [data-insert-text], [data-ruby-template]"
+    );
+
+    if (clickedToolbarButton) {
+      closeRichTextPopup();
+    }
   });
 
   document.addEventListener("click", event => {
