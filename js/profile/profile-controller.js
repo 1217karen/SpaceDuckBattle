@@ -9,6 +9,7 @@ import { buildChatUrl } from "../chat/chat-navigation.js";
 import { getFavoriteCharacters, isFavoriteCharacter, toggleFavoriteCharacter } from "../services/character-favorite-service.js";
 import { isFavoriteUnit, toggleFavoriteUnit } from "../services/unit-favorite-service.js";
 import { createSkillPatternPanel } from "../common/skill-pattern-panel.js";
+import { renderRichText } from "../common/rich-text.js";
 
 const MAX_CHARACTER_ICONS = 20;
 
@@ -355,7 +356,7 @@ function renderProfile(eno, character, unit, options = {}) {
               </div>
 
               ${unitDescription ? `
-                <p class="profileUnitDescription">${escapeHtml(unitDescription)}</p>
+                <p class="profileUnitDescription" data-profile-unit-description></p>
               ` : ""}
 
               <div class="profileSkillPatternMount" data-profile-skill-pattern></div>
@@ -378,7 +379,7 @@ function renderProfile(eno, character, unit, options = {}) {
 
       <section class="common-card profileSection profileTextSection">
         <h3 class="common-gradientHeading commonSectionHeading commonSectionHeading-medium profileSectionHeading">BATTLER PROFILE</h3>
-        <p class="profileText">${escapeHtml(profileText)}</p>
+        <p class="profileText" data-profile-text></p>
       </section>
 
       <section class="common-card profileSection profileIconSection">
@@ -397,6 +398,20 @@ function renderProfile(eno, character, unit, options = {}) {
       </div>
     </section>
   `;
+
+  renderRichText(
+    profilePage.querySelector("[data-profile-text]"),
+    profileText,
+    { preset: "message" }
+  );
+
+  if (unitDescription) {
+    renderRichText(
+      profilePage.querySelector("[data-profile-unit-description]"),
+      unitDescription,
+      { preset: "message" }
+    );
+  }
 
   const profileSkillPatternMount =
     profilePage.querySelector("[data-profile-skill-pattern]");
