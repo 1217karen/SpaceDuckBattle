@@ -3,6 +3,8 @@
 import { createIconPicker, normalizeCommIcons } from "../common/icon-picker.js";
 import { normalizeDialogueList } from "../common/dialogue-data.js";
 import { createDialogueRow, readDialogueRow, refreshDialogueRowPreview } from "../common/dialogue-row-view.js";
+import { bindRichTextToolbar } from "../common/rich-text-toolbar.js";
+import { createRichTextToolbarButtons } from "../common/rich-text-toolbar-ui.js";
 import { updateSpeakerNameField } from "../common/speaker-name-sync.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit, saveCharacter, saveUnit } from "../services/storage-service.js";
 
@@ -89,6 +91,16 @@ function addCommRow(typeKey, rowData = {}) {
   list.appendChild(createCommRowElement(typeKey, rowData));
 }
 
+function setupProfileRichTextToolbar(inputId, toolbarId) {
+  const input = document.getElementById(inputId);
+  const toolbar = document.getElementById(toolbarId);
+
+  if (!input || !toolbar) return;
+
+  toolbar.appendChild(createRichTextToolbarButtons());
+  bindRichTextToolbar(toolbar, input);
+}
+
 
 function getCommRows(typeKey) {
   const list = document.getElementById(`${typeKey}List`);
@@ -146,6 +158,9 @@ function loadCharacterForm() {
 
   document.getElementById("unitName").value =
     unit?.name ?? "";
+
+  document.getElementById("unitDescription").value =
+    unit?.description ?? "";
 
   document.getElementById("characterProfileText").value =
     character?.profileText ?? "";
@@ -270,5 +285,14 @@ document.getElementById("defaultCharacterName")
       refreshDialogueRowPreview(row);
     });
   });
+
+setupProfileRichTextToolbar(
+  "characterProfileText",
+  "characterProfileTextToolbar"
+);
+setupProfileRichTextToolbar(
+  "unitDescription",
+  "unitDescriptionToolbar"
+);
 
 loadCharacterForm();
