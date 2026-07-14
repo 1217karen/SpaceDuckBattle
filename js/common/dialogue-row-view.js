@@ -184,6 +184,11 @@ export function createDialogueRow({
   inputArea.appendChild(textInput);
 
   function refreshPreview() {
+    const hasText = textInput.value.length > 0;
+    preview.hidden = !hasText;
+
+    if (!hasText) return;
+
     previewIcon.src = resolvePreviewIconUrl(iconButton);
     previewName.textContent = resolvePreviewName({
       nameInput,
@@ -192,7 +197,7 @@ export function createDialogueRow({
       getDefaultName,
       fallbackName
     });
-    renderRichText(previewMessage, textInput.value || "", { preset: "message" });
+    renderRichText(previewMessage, textInput.value, { preset: "message" });
   }
 
   bindSpeakerNameSync({
