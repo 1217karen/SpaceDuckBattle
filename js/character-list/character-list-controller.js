@@ -1,9 +1,17 @@
 // character-list-controller.js
 
-import { getRegisteredEnoMax, loadCharacter, loadUnit } from "../services/storage-service.js";
+import { getCurrentAccount, getRegisteredEnoMax, loadCharacter, loadUnit } from "../services/storage-service.js";
 import { getNoImageUrl } from "../common/icon-picker.js";
+import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
+import { getFavoritePlaces } from "../chat/chat-place-utils.js";
+import {
+  getFavoriteCharacters,
+  getFavoriteCharacterMemoMaxLength,
+  saveFavoriteCharacterMemo
+} from "../services/character-favorite-service.js";
 
 const characterList = document.getElementById("characterList");
+const rightPanel = document.querySelector(".right-panel");
 
 const UNIT_TYPE_LABELS = {
   attack: "アタック",
