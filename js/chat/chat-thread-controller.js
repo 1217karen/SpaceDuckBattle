@@ -422,6 +422,7 @@ function renderThreadPage() {
     favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
     showCharacterReplyAction: true,
     showCharacterMessageAction: false,
+    showCharacterMemo: true,
     onReplyToCharacter: handleFavoriteCharacterReply,
     onTabChange: (tab) => {
       currentFavoritesTab = tab;
