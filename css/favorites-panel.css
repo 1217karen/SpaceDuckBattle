@@ -39,11 +39,6 @@
   cursor: default;
 }
 
-.favoritesPanelDivider {
-  margin: 8px 0;
-  border-top: 1px dotted var(--theme-border-soft);
-}
-
 .favoritesPanelEmptyText {
   margin: 0;
   color: var(--theme-text-muted);
@@ -51,25 +46,49 @@
   line-height: 1.6;
 }
 
+.favoritesPanelItem {
+  padding: 0 0 8px;
+  border-bottom: 1px dotted var(--theme-border-soft);
+}
+
+.favoritesPanelItem:not(:first-child) {
+  padding-top: 8px;
+}
+
+.favoritesPanelItem:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
 .favoritesPanelCharacterItem {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
 }
 
-.favoritesPanelCharacterMainButton {
-  display: flex;
-  min-width: 0;
-  flex: 1 1 auto;
-  align-items: center;
-  gap: 8px;
+.favoritesPanelCharacterIconButton,
+.favoritesPanelCharacterLabelButton {
   color: var(--theme-text-main);
-  text-align: left;
 }
 
-.favoritesPanelCharacterMainButton:disabled {
+.favoritesPanelCharacterIconButton:disabled,
+.favoritesPanelCharacterLabelButton:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+.favoritesPanelCharacterIconButton {
+  flex: 0 0 auto;
+}
+
+.favoritesPanelCharacterLabelButton {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .favoritesPanelCharacterIcon {
@@ -80,13 +99,6 @@
   border: 1px solid var(--theme-border-soft);
   border-radius: 6px;
   background: #fff;
-}
-
-.favoritesPanelCharacterLabel {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .favoritesPanelCharacterActions {
@@ -131,6 +143,14 @@
 }
 
 .favoritesPanelCharacterBody {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.favoritesPanelCharacterTextColumn {
   min-width: 0;
   flex: 1 1 auto;
 }
