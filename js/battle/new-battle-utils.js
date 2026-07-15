@@ -63,6 +63,18 @@ export function getChebyshevDistance(a, b) {
   return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 }
 
+export function getChebyshevCells(center, range) {
+  const cells = [];
+
+  for (let dx = -range; dx <= range; dx++) {
+    for (let dy = -range; dy <= range; dy++) {
+      cells.push({ x: center.x + dx, y: center.y + dy });
+    }
+  }
+
+  return cells;
+}
+
 // ==========================================================
 // クリティカル判定
 // ==========================================================
