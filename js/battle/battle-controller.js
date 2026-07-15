@@ -3,7 +3,7 @@
 import { simulateBattle } from "./new-battle-engine.js";
 import { STAGES } from "../data/stages.js";
 import { buildBattleUnit } from "./unit-builder.js";
-import { NPCS } from "../data/battle-npcs.js";
+import { buildStageNpcUnits, getNpcUnitData } from "./stage-npc-builder.js";
 import { requireLogin, getCurrentAccount, loadCharacter, loadUnit } from "../services/storage-service.js";
 import { initUnitList } from "./unitlist-controller.js";
 import { loadPublicBattleEntries } from "./public-unit-source.js";
@@ -20,9 +20,9 @@ import {
 requireLogin();
 
 const units = structuredClone([
-  NPCS.npcHealer.unitData,
-  NPCS.npcAttacker.unitData,
-  NPCS.npcSupporter.unitData
+  getNpcUnitData("npc_healer"),
+  getNpcUnitData("npc_attacker"),
+  getNpcUnitData("npc_supporter")
 ]);
 
 const currentAccount = getCurrentAccount();
@@ -449,43 +449,12 @@ startBtn.addEventListener("click", () => {
     units: []
   };
 
-  (stage.npcs || []).forEach((entry, index) => {
-    const pattern =
-      entry.unitData?.patterns?.[0] || { skills: [] };
-
-    const unit = buildBattleUnit(
-      { ...entry.unitData, displayName: entry.displayName },
-      entry.characterData,
-      pattern,
-      entry.team,
-      entry.x,
-      entry.y,
-      entry.facing,
-      1000 + index,
-      entry.id
-    );
-
-    snapshot.units.push(unit);
-  });
-
-  (stage.enemies || []).forEach((entry, index) => {
-    const pattern =
-      entry.unitData?.patterns?.[0] || { skills: [] };
-
-    const unit = buildBattleUnit(
-      { ...entry.unitData, displayName: entry.displayName },
-      entry.characterData,
-      pattern,
-      entry.team,
-      entry.x,
-      entry.y,
-      entry.facing,
-      2000 + index,
-      entry.id
-    );
-
-    snapshot.units.push(unit);
-  });
+  try {
+    snapshot.units.push(...buildStageNpcUnits(stage));
+  } catch (error) {
+    alert(error?.message || "ステージNPCの設定に問題があります");
+    return;
+  }
 
   /* プレイヤーユニット追加 */
   for (let slot = 0; slot < 4; slot++) {
