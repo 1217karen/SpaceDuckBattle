@@ -410,3 +410,11 @@
     width: 100%;
   }
 }
+
+.battleStageResetButton {
+  display: block;
+  width: fit-content;
+  margin: 10px 0 0 auto;
+  padding: 6px 12px;
+  font-size: var(--font-size-small);
+}
