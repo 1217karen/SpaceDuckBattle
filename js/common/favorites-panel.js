@@ -71,30 +71,12 @@ function createFavoritePlaceButton(place, options = {}) {
   return button;
 }
 
-function createFavoriteCharacterButton(character, options = {}) {
+function bindFavoriteCharacterOpen(button, character, options = {}) {
   const {
     onOpenCharacter = null
   } = options;
 
   const eno = getFavoriteCharacterEno(character);
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "favoritesPanelCharacterMainButton button-plain";
-
-  const icon = document.createElement("img");
-  icon.className = "favoritesPanelCharacterIcon";
-  icon.src = getFavoriteCharacterIconUrl(character);
-  icon.alt = getFavoriteCharacterName(character);
-
-  const label = document.createElement("span");
-  label.className = "favoritesPanelCharacterLabel";
-  label.textContent = eno
-    ? `Eno.${eno} ${getFavoriteCharacterName(character)}`
-    : getFavoriteCharacterName(character);
-
-  button.appendChild(icon);
-  button.appendChild(label);
-
   const openHandler =
     typeof onOpenCharacter === "function"
       ? onOpenCharacter
@@ -107,8 +89,81 @@ function createFavoriteCharacterButton(character, options = {}) {
   } else {
     button.disabled = true;
   }
+}
+
+function createFavoriteCharacterIconButton(character, options = {}) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "favoritesPanelCharacterIconButton button-plain";
+
+  const icon = document.createElement("img");
+  icon.className = "favoritesPanelCharacterIcon";
+  icon.src = getFavoriteCharacterIconUrl(character);
+  icon.alt = getFavoriteCharacterName(character);
+
+  button.appendChild(icon);
+  bindFavoriteCharacterOpen(button, character, options);
 
   return button;
+}
+
+function createFavoriteCharacterLabelButton(character, options = {}) {
+  const eno = getFavoriteCharacterEno(character);
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "favoritesPanelCharacterLabelButton button-plain";
+  button.textContent = eno
+    ? `Eno.${eno} ${getFavoriteCharacterName(character)}`
+    : getFavoriteCharacterName(character);
+
+  bindFavoriteCharacterOpen(button, character, options);
+
+  return button;
+}
+
+function createFavoriteCharacterMainBlock(character, options = {}) {
+  const {
+    onOpenCharacter = null,
+    showCharacterMemo = false,
+    editableCharacterMemo = false,
+    characterMemoMaxLength = 40,
+    onUpdateCharacterMemo = null
+  } = options;
+
+  const body = document.createElement("div");
+  body.className = "favoritesPanelCharacterBody";
+
+  const textColumn = document.createElement("div");
+  textColumn.className = "favoritesPanelCharacterTextColumn";
+
+  body.appendChild(
+    createFavoriteCharacterIconButton(character, {
+      onOpenCharacter
+    })
+  );
+
+  textColumn.appendChild(
+    createFavoriteCharacterLabelButton(character, {
+      onOpenCharacter
+    })
+  );
+
+  if (showCharacterMemo) {
+    const memoElement = editableCharacterMemo
+      ? createFavoriteCharacterMemoInput(character, {
+          characterMemoMaxLength,
+          onUpdateCharacterMemo
+        })
+      : createFavoriteCharacterMemoView(character);
+
+    if (memoElement) {
+      textColumn.appendChild(memoElement);
+    }
+  }
+
+  body.appendChild(textColumn);
+
+  return body;
 }
 
 function createFavoriteCharacterActionButton(character, options = {}) {
@@ -135,16 +190,6 @@ function createFavoriteCharacterActionButton(character, options = {}) {
   }
 
   return button;
-}
-
-function appendDividerIfNeeded(container, index, listLength) {
-  if (index >= listLength - 1) {
-    return;
-  }
-
-  const divider = document.createElement("div");
-  divider.className = "favoritesPanelDivider";
-  container.appendChild(divider);
 }
 
 function createFavoritePlaceDragHandle(place) {
@@ -238,7 +283,7 @@ function renderFavoritePlacesContent(container, options = {}) {
     return;
   }
 
-  favoritePlaces.forEach((place, index) => {
+  favoritePlaces.forEach((place) => {
     const item = document.createElement("div");
     item.className = "favoritesPanelItem favoritesPanelPlaceItem";
 
@@ -261,7 +306,6 @@ function renderFavoritePlacesContent(container, options = {}) {
     );
 
     container.appendChild(item);
-    appendDividerIfNeeded(container, index, favoritePlaces.length);
   });
 }
 
@@ -342,33 +386,19 @@ function renderFavoriteCharactersContent(container, options = {}) {
     return;
   }
 
-  favoriteCharacters.forEach((character, index) => {
+  favoriteCharacters.forEach((character) => {
     const item = document.createElement("div");
     item.className = "favoritesPanelItem favoritesPanelCharacterItem";
 
-    const characterBody = document.createElement("div");
-    characterBody.className = "favoritesPanelCharacterBody";
-
-    characterBody.appendChild(
-      createFavoriteCharacterButton(character, {
-        onOpenCharacter
+    item.appendChild(
+      createFavoriteCharacterMainBlock(character, {
+        onOpenCharacter,
+        showCharacterMemo,
+        editableCharacterMemo,
+        characterMemoMaxLength,
+        onUpdateCharacterMemo
       })
     );
-
-    if (showCharacterMemo) {
-      const memoElement = editableCharacterMemo
-        ? createFavoriteCharacterMemoInput(character, {
-            characterMemoMaxLength,
-            onUpdateCharacterMemo
-          })
-        : createFavoriteCharacterMemoView(character);
-
-      if (memoElement) {
-        characterBody.appendChild(memoElement);
-      }
-    }
-
-    item.appendChild(characterBody);
 
     if (showCharacterReplyAction || showCharacterMessageAction) {
       const actionGroup = document.createElement("div");
@@ -398,7 +428,6 @@ function renderFavoriteCharactersContent(container, options = {}) {
     }
     
     container.appendChild(item);
-    appendDividerIfNeeded(container, index, favoriteCharacters.length);
   });
 }
 
