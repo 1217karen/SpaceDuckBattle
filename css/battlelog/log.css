@@ -125,3 +125,39 @@ color:#ffffff;
 .logLevel4 { padding-left: 36px; }
 
 
+/* =======================================================
+戦闘終了表示
+======================================================= */
+
+.battleEndBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 8px;
+  text-align: center;
+}
+
+.battleEndResultText {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.battleEndBackLink {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid rgba(120, 180, 255, 0.85);
+  border-radius: 999px;
+  color: #e6f4ff;
+  background: rgba(40, 70, 105, 0.72);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(80, 140, 255, 0.35);
+}
+
+.battleEndBackLink:hover,
+.battleEndBackLink:focus {
+  background: rgba(70, 110, 160, 0.92);
+  text-decoration: none;
+}
