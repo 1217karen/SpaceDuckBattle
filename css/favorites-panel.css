@@ -101,3 +101,54 @@
   font-size: var(--font-size-sm);
   line-height: 1.4;
 }
+
+
+.favoritesPanelPlaceItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.favoritesPanelPlaceDragHandle {
+  width: 28px;
+  flex: 0 0 28px;
+  padding: 2px 4px;
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+.favoritesPanelPlaceDragHandle[draggable="true"] {
+  cursor: grab;
+}
+
+.favoritesPanelPlaceDragHandle[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.favoritesPanelPlaceItem.is-dragging {
+  opacity: 0.55;
+}
+
+.favoritesPanelCharacterBody {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.favoritesPanelCharacterMemo,
+.favoritesPanelCharacterMemoInput {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+  font-size: var(--font-size-sm);
+}
+
+.favoritesPanelCharacterMemo {
+  margin-bottom: 0;
+  color: var(--theme-text-muted);
+  line-height: 1.4;
+}
+
+.favoritesPanelCharacterMemoInput {
+  padding: 3px 6px;
+}
