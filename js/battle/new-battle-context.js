@@ -20,6 +20,7 @@ export function createBattleContext({
   getPullCell,
   applyEffect,
   getManhattanCells,
+  getChebyshevCells,
   getRandomEnemy,
   getRandomAlly,
   getRandomAny,
@@ -118,6 +119,7 @@ const context = {
     applyEffect,
 
     getManhattanCells,
+    getChebyshevCells,
 
     getRandomEnemy,
     getRandomAlly,
