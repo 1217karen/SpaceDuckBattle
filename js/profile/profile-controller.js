@@ -522,7 +522,8 @@ function renderProfileFavoritesPanel(currentEno = null) {
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "character",
     favoritePlaces: getFavoritePlaces(),
-    favoriteCharacters: getFavoriteCharacters({ currentEno })
+    favoriteCharacters: getFavoriteCharacters({ currentEno }),
+    showCharacterMemo: true
   });
 }
 
