@@ -16,6 +16,25 @@ const UNIT_TYPE_LABELS = {
 
 let allCharacters = [];
 
+function getCurrentEno() {
+  const account = getCurrentAccount();
+  const eno = Number(account?.eno || 0);
+
+  return Number.isInteger(eno) && eno > 0 ? eno : null;
+}
+
+function renderCharacterListFavoritesPanel() {
+  renderFavoritesSidePanel(rightPanel, {
+    defaultTab: "character",
+    favoritePlaces: getFavoritePlaces(),
+    favoriteCharacters: getFavoriteCharacters({ currentEno: getCurrentEno() }),
+    showCharacterMemo: true,
+    editableCharacterMemo: true,
+    characterMemoMaxLength: getFavoriteCharacterMemoMaxLength(),
+    onUpdateCharacterMemo: saveFavoriteCharacterMemo
+  });
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -429,3 +448,4 @@ function renderCharacterList() {
 }
 
 renderCharacterList();
+renderCharacterListFavoritesPanel();
