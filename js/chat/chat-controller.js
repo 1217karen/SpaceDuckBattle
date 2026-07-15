@@ -1208,6 +1208,7 @@ renderShopPurchaseConfirmModalIfNeeded(chatMainArea, {
     onMoveToPlace: moveToPlace,
     showCharacterReplyAction: true,
     showCharacterMessageAction: true,
+    showCharacterMemo: true,
     onReplyToCharacter: handleFavoriteCharacterReply,
     onMessageToCharacter: handleFavoriteCharacterMessage,
     onTabChange: (tab) => {
