@@ -1161,11 +1161,17 @@ else if (event.type === "battleEnd") {
       ? "RIGHT TEAM WIN"
       : "DRAW";
 
-  div.innerHTML = `
-    <div style="font-size:20px;font-weight:bold;">
-      ${text}
-    </div>
-  `;
+  const resultText = document.createElement("div");
+  resultText.className = "battleEndResultText";
+  resultText.textContent = text;
+
+  const backLink = document.createElement("a");
+  backLink.className = "battleEndBackLink";
+  backLink.href = "./battle.html";
+  backLink.textContent = "バトル画面に戻る";
+
+  div.appendChild(resultText);
+  div.appendChild(backLink);
 
   logArea.appendChild(div);
   return;
