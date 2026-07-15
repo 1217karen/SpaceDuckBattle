@@ -2,8 +2,12 @@
 
 import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
+import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
+import { getFavoriteCharacters } from "../services/character-favorite-service.js";
+import { getFavoritePlaces, saveFavoritePlaceIds } from "../chat/chat-place-utils.js";
 
 const mapContent = document.querySelector("#mapContent");
+const rightPanel = document.querySelector(".right-panel");
 
 const MAP_IMAGE_URL = "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=Map_BG.webp";
 
@@ -139,6 +143,7 @@ function createMapVisual() {
     button.addEventListener("click", () => {
       selectedFieldId = field.placeId;
       renderMapTree();
+renderMapFavoritesPanel();
     });
 
     wrapper.appendChild(button);
@@ -297,6 +302,7 @@ function renderAreaCard(areaPlace, currentPlaceId) {
       }
 
       renderMapTree();
+renderMapFavoritesPanel();
     });
 
     roomControlRow.appendChild(roomToggle);
@@ -433,6 +439,28 @@ function renderMoveConfirmModal() {
   return overlay;
 }
 
+function getCurrentEno() {
+  const account = getCurrentAccount();
+  const eno = Number(account?.eno || 0);
+
+  return Number.isInteger(eno) && eno > 0 ? eno : null;
+}
+
+function renderMapFavoritesPanel() {
+  renderFavoritesSidePanel(rightPanel, {
+    defaultTab: "place",
+    favoritePlaces: getFavoritePlaces(),
+    favoriteCharacters: getFavoriteCharacters({ currentEno: getCurrentEno() }),
+    onMoveToPlace: moveToPlace,
+    showCharacterMemo: true,
+    enablePlaceReorder: true,
+    onReorderFavoritePlaces: (placeIds) => {
+      saveFavoritePlaceIds(placeIds);
+      renderMapFavoritesPanel();
+    }
+  });
+}
+
 function renderMoveConfirmModalIfNeeded() {
   if (!moveConfirmPlaceId) {
     return;
@@ -503,3 +531,4 @@ renderMoveConfirmModalIfNeeded();
 }
 
 renderMapTree();
+renderMapFavoritesPanel();
