@@ -1,3 +1,5 @@
+// stage-npc-builder.js
+
 import { NPC_DATA } from "../data/npcs/npc-index.js";
 import { buildBattleUnit } from "./unit-builder.js";
 
