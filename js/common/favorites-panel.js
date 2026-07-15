@@ -147,10 +147,83 @@ function appendDividerIfNeeded(container, index, listLength) {
   container.appendChild(divider);
 }
 
+function createFavoritePlaceDragHandle(place) {
+  const handle = document.createElement("button");
+  handle.type = "button";
+  handle.className = "favoritesPanelPlaceDragHandle button-icon";
+  handle.textContent = "☰";
+  handle.title = "ドラッグで並び替え";
+  handle.setAttribute("aria-label", "ドラッグで並び替え");
+  handle.draggable = true;
+
+  if (place?.placeId) {
+    handle.dataset.placeId = place.placeId;
+  } else {
+    handle.disabled = true;
+  }
+
+  return handle;
+}
+
+function getFavoritePlaceIdsFromContainer(container) {
+  return Array.from(container.querySelectorAll(".favoritesPanelPlaceItem"))
+    .map(item => item.dataset.placeId)
+    .filter(placeId => typeof placeId === "string" && placeId.trim() !== "");
+}
+
+function bindFavoritePlaceDrag(item, handle, options = {}) {
+  const {
+    onReorderFavoritePlaces = null
+  } = options;
+
+  if (!item?.dataset?.placeId || !handle) {
+    return;
+  }
+
+  handle.addEventListener("dragstart", (event) => {
+    item.classList.add("is-dragging");
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", item.dataset.placeId);
+  });
+
+  handle.addEventListener("dragend", () => {
+    item.classList.remove("is-dragging");
+  });
+
+  item.addEventListener("dragover", (event) => {
+    const draggingItem = item.parentElement?.querySelector(".favoritesPanelPlaceItem.is-dragging");
+
+    if (!draggingItem || draggingItem === item) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const rect = item.getBoundingClientRect();
+    const insertAfter = event.clientY > rect.top + rect.height / 2;
+
+    if (insertAfter) {
+      item.parentElement.insertBefore(draggingItem, item.nextSibling);
+    } else {
+      item.parentElement.insertBefore(draggingItem, item);
+    }
+  });
+
+  item.addEventListener("drop", (event) => {
+    event.preventDefault();
+
+    if (typeof onReorderFavoritePlaces === "function") {
+      onReorderFavoritePlaces(getFavoritePlaceIdsFromContainer(item.parentElement));
+    }
+  });
+}
+
 function renderFavoritePlacesContent(container, options = {}) {
   const {
     favoritePlaces = [],
     onMoveToPlace = null,
+    enablePlaceReorder = false,
+    onReorderFavoritePlaces = null,
     emptyPlaceText = "チャットページ上部の☆を押すことでお気に入り登録することができます"
   } = options;
 
@@ -167,7 +240,19 @@ function renderFavoritePlacesContent(container, options = {}) {
 
   favoritePlaces.forEach((place, index) => {
     const item = document.createElement("div");
-    item.className = "favoritesPanelItem";
+    item.className = "favoritesPanelItem favoritesPanelPlaceItem";
+
+    if (place?.placeId) {
+      item.dataset.placeId = place.placeId;
+    }
+
+    if (enablePlaceReorder) {
+      const handle = createFavoritePlaceDragHandle(place);
+      item.appendChild(handle);
+      bindFavoritePlaceDrag(item, handle, {
+        onReorderFavoritePlaces
+      });
+    }
 
     item.appendChild(
       createFavoritePlaceButton(place, {
@@ -180,6 +265,57 @@ function renderFavoritePlacesContent(container, options = {}) {
   });
 }
 
+function createFavoriteCharacterMemoView(character) {
+  const memo = String(character?.memo ?? "").trim();
+
+  if (!memo) {
+    return null;
+  }
+
+  const text = document.createElement("p");
+  text.className = "favoritesPanelCharacterMemo";
+  text.textContent = memo;
+
+  return text;
+}
+
+function createFavoriteCharacterMemoInput(character, options = {}) {
+  const {
+    characterMemoMaxLength = 40,
+    onUpdateCharacterMemo = null
+  } = options;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "favoritesPanelCharacterMemoInput";
+  input.maxLength = characterMemoMaxLength;
+  input.placeholder = `非公開メモ(最大${characterMemoMaxLength}文字)`;
+  input.value = String(character?.memo ?? "").slice(0, characterMemoMaxLength);
+
+  function saveMemo() {
+    const eno = getFavoriteCharacterEno(character);
+
+    if (!eno || typeof onUpdateCharacterMemo !== "function") {
+      return;
+    }
+
+    const savedMemo = onUpdateCharacterMemo(eno, input.value);
+
+    if (typeof savedMemo === "string") {
+      input.value = savedMemo;
+    }
+  }
+
+  input.addEventListener("blur", saveMemo);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      input.blur();
+    }
+  });
+
+  return input;
+}
+
 function renderFavoriteCharactersContent(container, options = {}) {
   const {
     favoriteCharacters = [],
@@ -188,6 +324,10 @@ function renderFavoriteCharactersContent(container, options = {}) {
     onMessageToCharacter = null,
     showCharacterReplyAction = false,
     showCharacterMessageAction = false,
+    showCharacterMemo = false,
+    editableCharacterMemo = false,
+    characterMemoMaxLength = 40,
+    onUpdateCharacterMemo = null,
     emptyCharacterText = "お気に入りキャラはまだありません"
   } = options;
 
@@ -206,11 +346,29 @@ function renderFavoriteCharactersContent(container, options = {}) {
     const item = document.createElement("div");
     item.className = "favoritesPanelItem favoritesPanelCharacterItem";
 
-    item.appendChild(
+    const characterBody = document.createElement("div");
+    characterBody.className = "favoritesPanelCharacterBody";
+
+    characterBody.appendChild(
       createFavoriteCharacterButton(character, {
         onOpenCharacter
       })
     );
+
+    if (showCharacterMemo) {
+      const memoElement = editableCharacterMemo
+        ? createFavoriteCharacterMemoInput(character, {
+            characterMemoMaxLength,
+            onUpdateCharacterMemo
+          })
+        : createFavoriteCharacterMemoView(character);
+
+      if (memoElement) {
+        characterBody.appendChild(memoElement);
+      }
+    }
+
+    item.appendChild(characterBody);
 
     if (showCharacterReplyAction || showCharacterMessageAction) {
       const actionGroup = document.createElement("div");
@@ -259,6 +417,12 @@ export function renderFavoritesPanel(container, options = {}) {
     onMessageToCharacter = null,
     showCharacterReplyAction = false,
     showCharacterMessageAction = false,
+    showCharacterMemo = false,
+    editableCharacterMemo = false,
+    characterMemoMaxLength = 40,
+    onUpdateCharacterMemo = null,
+    enablePlaceReorder = false,
+    onReorderFavoritePlaces = null,
     onTabChange = null,
     emptyPlaceText,
     emptyCharacterText
@@ -301,6 +465,8 @@ export function renderFavoritesPanel(container, options = {}) {
       renderFavoritePlacesContent(content, {
         favoritePlaces,
         onMoveToPlace,
+        enablePlaceReorder,
+        onReorderFavoritePlaces,
         emptyPlaceText
       });
       return;
@@ -313,6 +479,10 @@ export function renderFavoritesPanel(container, options = {}) {
       onMessageToCharacter,
       showCharacterReplyAction,
       showCharacterMessageAction,
+      showCharacterMemo,
+      editableCharacterMemo,
+      characterMemoMaxLength,
+      onUpdateCharacterMemo,
       emptyCharacterText
     });
   }
