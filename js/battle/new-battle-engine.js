@@ -6,7 +6,7 @@ import { applyEffect } from "./new-battle-effects.js";
 import { getEffectiveStat } from "./new-battle-stats.js";
 import { getNearestEnemy, getLowestHpAlly, getIdleFacing } from "./new-battle-ai.js";
 import { applyHeal } from "./new-battle-heal.js";
-import {getManhattanCells,getEnemies,getAllies,getDistance,getChebyshevDistance,getRandomEnemy,
+import {getManhattanCells,getChebyshevCells,getEnemies,getAllies,getDistance,getChebyshevDistance,getRandomEnemy,
   getRandomAlly,getRandomAny,getUnitsInManhattanRange,getUnitsInSameRow,getUnitsInSameColumn} from "./new-battle-utils.js";
 import { createBattleContext } from "./new-battle-context.js";
 import { runBattleTurns } from "./new-battle-turn.js";
@@ -492,6 +492,7 @@ function pushBattleLog(event) {
     applyEffect,
     getManhattanCells,
     getRandomEnemy,
+    getChebyshevCells,
     getRandomAlly,
     getRandomAny,
     killUnit,
