@@ -101,7 +101,6 @@ export const NPCS = {
       battleStart: [
         { text: "訓練用デコイが立っている……。", iconId: 1 }
       ],
-
       turnChangeNeutral: []
     }
   }),
@@ -348,6 +347,4 @@ export const NPCS = {
       { type: "TEC_01", dialogue: { text: "妨害波を送信します。", iconId: 1 } }
     ]
   })
-    }
-  }
 };
