@@ -1144,7 +1144,7 @@ updateUnitStatUI(
 
     spawnFloatingNumber(
       event.unit,
-      "STAY",
+      "WAIT",
       "skill"
     );
   }
