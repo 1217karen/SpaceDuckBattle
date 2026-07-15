@@ -179,6 +179,11 @@ function pickBattleEndSpeaker(units, winnerTeam) {
         continue;
       }
 
+      if (unit.behavior === "wait") {
+        if (waitAction(unit) === "END") break;
+        continue;
+      }
+
       const enemies = getEnemies(units, unit.team);
 
       if (enemies.length === 0) {
