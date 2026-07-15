@@ -4,6 +4,8 @@ import { getNoImageUrl } from "../common/icon-picker.js";
 import { loadCharacter } from "./storage-service.js";
 
 const CHARACTER_FAVORITES_STORAGE_KEY = "chatCharacterFavorites";
+const CHARACTER_FAVORITE_MEMOS_STORAGE_KEY = "chatCharacterFavoriteMemos";
+const CHARACTER_FAVORITE_MEMO_MAX_LENGTH = 40;
 
 function safeParse(json, fallback = null) {
   if (!json) return fallback;
@@ -77,6 +79,66 @@ function getCharacterDefaultIcon(character = {}) {
     : getNoImageUrl();
 }
 
+function normalizeFavoriteCharacterMemo(memo) {
+  return String(memo ?? "").trim().slice(0, CHARACTER_FAVORITE_MEMO_MAX_LENGTH);
+}
+
+export function getFavoriteCharacterMemoMaxLength() {
+  return CHARACTER_FAVORITE_MEMO_MAX_LENGTH;
+}
+
+export function loadFavoriteCharacterMemos() {
+  const parsed = safeParse(
+    localStorage.getItem(CHARACTER_FAVORITE_MEMOS_STORAGE_KEY),
+    {}
+  );
+
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(parsed)
+      .map(([eno, memo]) => [String(normalizeEno(eno)), normalizeFavoriteCharacterMemo(memo)])
+      .filter(([eno]) => eno !== "0")
+  );
+}
+
+export function saveFavoriteCharacterMemo(eno, memo) {
+  const targetEno = normalizeEno(eno);
+
+  if (!targetEno) {
+    return "";
+  }
+
+  const memos = loadFavoriteCharacterMemos();
+  const normalizedMemo = normalizeFavoriteCharacterMemo(memo);
+  const key = String(targetEno);
+
+  if (normalizedMemo) {
+    memos[key] = normalizedMemo;
+  } else {
+    delete memos[key];
+  }
+
+  localStorage.setItem(
+    CHARACTER_FAVORITE_MEMOS_STORAGE_KEY,
+    JSON.stringify(memos)
+  );
+
+  return normalizedMemo;
+}
+
+export function getFavoriteCharacterMemo(eno) {
+  const targetEno = normalizeEno(eno);
+
+  if (!targetEno) {
+    return "";
+  }
+
+  return loadFavoriteCharacterMemos()[String(targetEno)] || "";
+}
+
 export function loadFavoriteCharacterEnos(options = {}) {
   const parsed = safeParse(
     localStorage.getItem(CHARACTER_FAVORITES_STORAGE_KEY),
@@ -142,7 +204,8 @@ export function getFavoriteCharacters(options = {}) {
         ...character,
         eno,
         name: getCharacterName(character, eno),
-        iconUrl: getCharacterDefaultIcon(character)
+        iconUrl: getCharacterDefaultIcon(character),
+        memo: getFavoriteCharacterMemo(eno)
       };
     });
 }
