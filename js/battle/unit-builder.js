@@ -38,13 +38,14 @@ export function buildBattleUnit(
 
   const unit = {
     id: unitId || ("unit_" + unitIndex),
-    name: unitData.name || "",
+    name: unitData.displayName || unitData.name || "",
     defaultCharacterName:
       characterData?.defaultName ?? "",
     defaultCharacterIcon:
       characterData?.defaultIcon ?? "",
     team: team,
     role: unitData.type,
+    behavior: unitData.behavior || "auto",
     hp: mhp,
     mhp: mhp,
     atk: atk,
