@@ -9,6 +9,13 @@ import { initUnitList } from "./unitlist-controller.js";
 import { loadPublicBattleEntries } from "./public-unit-source.js";
 import { getFavoriteUnitEntries, getFavoriteUnitKey } from "../services/unit-favorite-service.js";
 import { createSkillPatternPanel } from "../common/skill-pattern-panel.js";
+import {
+  getStageReleaseFlags,
+  isStageUnlocked,
+  loadStageProgress,
+  markStageCleared,
+  resetStageProgress
+} from "../services/stage-progress-service.js";
 
 requireLogin();
 
@@ -43,6 +50,7 @@ const battleBoardPanel = document.getElementById("battleBoardPanel");
 const battleStartPanel = document.getElementById("battleStartPanel");
 const selfPatternButtons = document.getElementById("selfPatternButtons");
 const selfPatternSkills = document.getElementById("selfPatternSkills");
+const stageProgressResetBtn = document.getElementById("stageProgressResetBtn");
 
 let selectedSelfPatternIndex = 0;
 
@@ -68,6 +76,73 @@ const selfPartyEntry = {
 
 const partySlots = [selfPartyEntry, null, null, null];
 const placedSlots = {};
+
+function getStageProgress() {
+  return loadStageProgress(currentEno);
+}
+
+function getSortedStages() {
+  return Object.values(STAGES)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
+
+function getCurrentStage() {
+  const stageId = stageSelect?.value || "";
+  return stageId ? STAGES[stageId] : null;
+}
+
+function isSoloStage(stage = getCurrentStage()) {
+  return stage?.partyMode === "solo";
+}
+
+function renderStageOptions() {
+  if (!stageSelect) return;
+
+  const currentValue = stageSelect.value;
+  const progress = getStageProgress();
+  const flags = getStageReleaseFlags();
+  const unlockedStages = getSortedStages()
+    .filter(stage => isStageUnlocked(stage, progress, flags));
+
+  stageSelect.innerHTML = "";
+
+  const emptyOption = document.createElement("option");
+  emptyOption.value = "";
+  emptyOption.textContent = "ステージを選択";
+  stageSelect.appendChild(emptyOption);
+
+  unlockedStages.forEach((stage) => {
+    const option = document.createElement("option");
+    option.value = stage.id;
+    option.textContent = stage.name || stage.id;
+    stageSelect.appendChild(option);
+  });
+
+  const canKeepCurrent = unlockedStages.some(stage => stage.id === currentValue);
+  stageSelect.value = canKeepCurrent ? currentValue : "";
+}
+
+function applyCurrentStagePartyMode() {
+  const solo = isSoloStage();
+
+  if (solo) {
+    for (let slot = 1; slot < partySlots.length; slot++) {
+      partySlots[slot] = null;
+      clearPlacedSlot(slot);
+    }
+  }
+
+  ptSlots.forEach((slot, index) => {
+    slot.style.display = solo && index > 0 ? "none" : "";
+  });
+
+  renderParty();
+}
+
+function resetSelectedStageView() {
+  resetPlacement();
+  applyCurrentStagePartyMode();
+}
 
 function updateSelfPartyPattern() {
   const currentSelfEntry = partySlots[0];
@@ -301,6 +376,10 @@ const unitListController = initUnitList({
   unitListDiv,
   sections: createUnitListSections(),
   onPatternConfirm: (selectedEntry) => {
+    if (isSoloStage()) {
+      return;
+    }
+
     const alreadyInParty = partySlots.some((slotEntry) => {
       return (
         slotEntry &&
@@ -375,7 +454,7 @@ startBtn.addEventListener("click", () => {
       entry.unitData?.patterns?.[0] || { skills: [] };
 
     const unit = buildBattleUnit(
-      entry.unitData,
+      { ...entry.unitData, displayName: entry.displayName },
       entry.characterData,
       pattern,
       entry.team,
@@ -394,7 +473,7 @@ startBtn.addEventListener("click", () => {
       entry.unitData?.patterns?.[0] || { skills: [] };
 
     const unit = buildBattleUnit(
-      entry.unitData,
+      { ...entry.unitData, displayName: entry.displayName },
       entry.characterData,
       pattern,
       entry.team,
@@ -444,15 +523,13 @@ startBtn.addEventListener("click", () => {
   const winner = battleResult.winner;
   const result = winner === 1 ? "win" : "lose";
 
+  if (result === "win" && stage.clearCondition?.type === "win") {
+    markStageCleared(account.eno, stage.id);
+  }
+
   const createdAt = Date.now();
   const randomSuffix = Math.random().toString(36).slice(2, 6).toUpperCase();
   const battleID = `battle_${createdAt}_${randomSuffix}`;
-
-  const stageNameMap = {
-    tutorial: "チュートリアル",
-    normal: "通常戦",
-    boss: "ボス戦"
-  };
 
   const partyMembers = partySlots
     .filter((slotEntry) => slotEntry !== null)
@@ -469,8 +546,8 @@ startBtn.addEventListener("click", () => {
     mode: "pve",
     createdAt: createdAt,
     stage: {
-      id: stageType,
-      name: stageNameMap[stageType] || stageType
+      id: stage.id,
+      name: stage.name || stage.id
     },
     result: result,
     party: party,
@@ -503,7 +580,7 @@ startBtn.addEventListener("click", () => {
 });
 
 stageSelect.addEventListener("change", () => {
-  resetPlacement();
+  resetSelectedStageView();
 
   if (!stageSelect.value) {
     boardDiv.innerHTML = "";
@@ -519,6 +596,26 @@ stageSelect.addEventListener("change", () => {
   createBoard(stage);
 });
 
+stageProgressResetBtn?.addEventListener("click", () => {
+  if (!currentEno) return;
+
+  const confirmed = window.confirm(
+    "ステージ進行を初期状態に戻します。よろしいですか？"
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  resetStageProgress(currentEno);
+  renderStageOptions();
+  resetSelectedStageView();
+  boardDiv.innerHTML = "";
+  battleBoardPanel?.classList.add("is-hidden");
+  battleStartPanel?.classList.add("is-hidden");
+});
+
+renderStageOptions();
 renderSelfPatternSelector();
 renderParty();
 renderUnitList();
