@@ -1,310 +1,353 @@
 // battle-npcs.js
 
+const DUCK_ICON = "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp";
+const ENEMY_ICON = "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck3_icon.webp";
+const NPC_ICON = "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp";
+
+function makeIconSet(url) {
+  return {
+    default: url,
+    N: "",
+    E: "",
+    S: "",
+    W: ""
+  };
+}
+
+function makeCharacterData(name, iconUrl, dialogues = {}) {
+  return {
+    fullName: name,
+    defaultName: name,
+    defaultIcon: iconUrl,
+    commIcons: [
+      {
+        id: 1,
+        name,
+        url: iconUrl
+      }
+    ],
+    commDialogues: {
+      battleStart: [
+        { text: `${name}、配置につきました。`, iconId: 1 }
+      ],
+      turnChangeNeutral: [
+        { text: `${name}、状況を確認中です。`, iconId: 1 }
+      ],
+      turnChangeAdvantage: [
+        { text: `${name}、優勢を確認しました。`, iconId: 1 }
+      ],
+      turnChangeDisadvantage: [
+        { text: `${name}、劣勢です。`, iconId: 1 }
+      ],
+      turnChangePinch: [
+        { text: `${name}、危険域です。`, iconId: 1 }
+      ],
+      critical: [],
+      kill: [
+        { text: `${name}、対象を無力化しました。`, iconId: 1 }
+      ],
+      battleEndWin: [
+        { text: `${name}、戦闘終了を確認しました。`, iconId: 1 }
+      ],
+      ...dialogues
+    }
+  };
+}
+
+function makeNpc({
+  name,
+  type,
+  iconUrl = ENEMY_ICON,
+  stats,
+  skills = [],
+  behavior = "auto",
+  characterDialogues = {}
+}) {
+  return {
+    unitData: {
+      name,
+      type,
+      behavior,
+      icon: makeIconSet(iconUrl),
+      stats,
+      patterns: [
+        {
+          name: "基本",
+          public: true,
+          skills
+        }
+      ]
+    },
+    characterData: makeCharacterData(name, iconUrl, characterDialogues)
+  };
+}
+
 export const NPCS = {
-  npcHealer: {
-    unitData: {
-      name: "ヒールアヒル",
-      type: "heal",
-
-      icon: {
-        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp",
-        N: "",
-        E: "",
-        S: "",
-        W: ""
-      },
-
-      stats: {
-        atk: 2,
-        def: 4,
-        heal: 11,
-        speed: 5,
-        cri: 4,
-        tec: 8
-      },
-
-      patterns: [
-        {
-          name: "基本",
-          public: true,
-          skills: [
-            
-            {
-              type: "skill_005",
-              dialogue: {
-                text: "損耗拡大を防ぎます、立て直します。",
-                iconId: 1
-              }
-            },
-            {
-              type: "skill_008",
-              dialogue: {
-                text: "防護補助を付与、前線を支えます。",
-                iconId: 1
-              }
-            },
-            {
-              type: "heal_cross2",
-              dialogue: {
-                text: "修復波を展開、隊列を維持してください。",
-                iconId: 1
-              }
-            },
-            {
-              type: "skill_004",
-              dialogue: {
-                text: "負傷者を確認、回復ラインを接続します。",
-                iconId: 1
-              }
-            }
-          ]
-        }
-      ]
+  trainingDecoy: makeNpc({
+    name: "訓練用デコイ",
+    type: "decoy",
+    behavior: "wait",
+    iconUrl: ENEMY_ICON,
+    stats: {
+      atk: 0,
+      def: 0,
+      heal: 0,
+      speed: 0,
+      cri: 0,
+      tec: 0
     },
-
-    characterData: {
-      fullName: "防衛隊員・回復担当",
-      defaultName: "防衛隊回復員",
-      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp",
-
-      commIcons: [
-        {
-          id: 1,
-          name: "防衛隊回復員",
-          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
-        }
+    skills: [],
+    characterDialogues: {
+      battleStart: [
+        { text: "訓練用デコイが立っている……。", iconId: 1 }
       ],
 
-      commDialogues: {
-        battleStart: [
-          { text: "防衛隊回復担当、支援を開始します。", iconId: 1 }
-        ],
-        turnChangeNeutral: [
-          { text: "負傷状況を監視中、回復は維持できます。", iconId: 1 }
-        ],
-        turnChangeAdvantage: [
-          { text: "前線は安定しています、このまま維持します。", iconId: 1 }
-        ],
-        turnChangeDisadvantage: [
-          { text: "損耗が増えています、治療を優先します。", iconId: 1 }
-        ],
-        turnChangePinch: [
-          { text: "危険です、無理をせず回復範囲へ。", iconId: 1 }
-        ],
-        critical: [
-          { text: "効果増大、処置が通りました。", iconId: 1 }
-        ],
-        kill: [
-          { text: "対象の無力化を確認しました。", iconId: 1 }
-        ],
-        battleEndWin: [
-          { text: "戦闘終了、応急対応を継続します。", iconId: 1 }
-        ]
-      }
+      turnChangeNeutral: []
     }
-  },
+  }),
 
-  npcAttacker: {
-    unitData: {
-      name: "アタックアヒル",
-      type: "attack",
-
-      icon: {
-        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp",
-        N: "",
-        E: "",
-        S: "",
-        W: ""
-      },
-
-      stats: {
-        atk: 11,
-        def: 4,
-        heal: 1,
-        speed: 6,
-        cri: 6,
-        tec: 4
-      },
-
-      patterns: [
-        {
-          name: "基本",
-          public: true,
-          skills: [
-            {
-              type: "attack_front1",
-              dialogue: {
-                text: "防衛隊戦闘員、正面目標を攻撃します。",
-                iconId: 1
-              }
-            },
-            {
-              type: "attack_front_knockback",
-              dialogue: {
-                text: "前方を押し返します、距離を取ってください。",
-                iconId: 1
-              }
-            },
-            {
-              type: "attack_around2_all",
-              dialogue: {
-                text: "周辺一帯を制圧、まとめて排除します。",
-                iconId: 1
-              }
-            },
-            {
-              type: "skill_009",
-              dialogue: {
-                text: "迎撃準備に入ります、続いてください。",
-                iconId: 1
-              }
-            }
-          ]
-        }
-      ]
+  attackTrainer: makeNpc({
+    name: "アタック訓練兵",
+    type: "attack",
+    stats: {
+      atk: 8,
+      def: 2,
+      heal: 0,
+      speed: 5,
+      cri: 4,
+      tec: 2
     },
+    skills: [
+      { type: "ATK_01", dialogue: { text: "正面目標へ攻撃訓練を行います。", iconId: 1 } }
+    ]
+  }),
 
-    characterData: {
-      fullName: "防衛隊員・戦闘担当",
-      defaultName: "防衛隊戦闘員",
-      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp",
+  defenseTrainer: makeNpc({
+    name: "ディフェンス訓練兵",
+    type: "defense",
+    stats: {
+      atk: 4,
+      def: 9,
+      heal: 0,
+      speed: 3,
+      cri: 2,
+      tec: 4
+    },
+    skills: [
+      { type: "DEF_01", dialogue: { text: "防御姿勢を確認します。", iconId: 1 } },
+      { type: "ATK_01", dialogue: { text: "防御訓練から反撃します。", iconId: 1 } }
+    ]
+  }),
 
-      commIcons: [
-        {
-          id: 1,
-          name: "防衛隊戦闘員",
-          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
-        }
-      ],
+  healTrainer: makeNpc({
+    name: "ヒール訓練兵",
+    type: "heal",
+    stats: {
+      atk: 3,
+      def: 3,
+      heal: 9,
+      speed: 4,
+      cri: 2,
+      tec: 5
+    },
+    skills: [
+      { type: "HEAL_01", dialogue: { text: "回復訓練を実施します。", iconId: 1 } },
+      { type: "ATK_01", dialogue: { text: "最低限の反撃を行います。", iconId: 1 } }
+    ]
+  }),
 
-      commDialogues: {
-        battleStart: [
-          { text: "防衛隊戦闘担当、これより迎撃します。", iconId: 1 }
-        ],
-        turnChangeNeutral: [
-          { text: "まだ拮抗中です、押し返します。", iconId: 1 }
-        ],
-        turnChangeAdvantage: [
-          { text: "敵が崩れています、このまま制圧します。", iconId: 1 }
-        ],
-        turnChangeDisadvantage: [
-          { text: "押されていますが、戦線は維持します。", iconId: 1 }
-        ],
-        turnChangePinch: [
-          { text: "劣勢です、ですがまだ下がれません。", iconId: 1 }
-        ],
-        critical: [
-          { text: "有効打を確認、続けます。", iconId: 1 }
-        ],
-        kill: [
-          { text: "一体排除、次の目標へ移ります。", iconId: 1 }
-        ],
-        battleEndWin: [
-          { text: "周辺の安全を確認、戦闘終了です。", iconId: 1 }
-        ]
-      }
+  speedTrainer: makeNpc({
+    name: "スピード訓練兵",
+    type: "attack",
+    stats: {
+      atk: 5,
+      def: 2,
+      heal: 0,
+      speed: 10,
+      cri: 3,
+      tec: 4
+    },
+    skills: [
+      { type: "SPD_01", dialogue: { text: "加速訓練を開始します。", iconId: 1 } },
+      { type: "ATK_01", dialogue: { text: "速度を活かして接近攻撃します。", iconId: 1 } }
+    ]
+  }),
+  
+  technicalTrainer: makeNpc({
+    name: "テクニカル訓練兵",
+    type: "support",
+    stats: {
+      atk: 3,
+      def: 3,
+      heal: 0,
+      speed: 5,
+      cri: 3,
+      tec: 10
+    },
+    skills: [
+      { type: "TEC_01", dialogue: { text: "妨害訓練を実施します。", iconId: 1 } },
+      { type: "ATK_01", dialogue: { text: "妨害後の接近行動を確認します。", iconId: 1 } }
+    ]
+  }),
+
+  supportTrainer: makeNpc({
+    name: "サポート訓練兵",
+    type: "support",
+    stats: {
+      atk: 3,
+      def: 4,
+      heal: 4,
+      speed: 6,
+      cri: 3,
+      tec: 8
+    },
+    skills: [
+      { type: "CRI_01", dialogue: { text: "支援訓練として集中状態を作ります。", iconId: 1 } },
+      { type: "TEC_01", dialogue: { text: "支援妨害を行います。", iconId: 1 } }
+    ]
+  }),
+
+  normalSoldier: makeNpc({
+    name: "一般兵",
+    type: "attack",
+    stats: {
+      atk: 9,
+      def: 4,
+      heal: 0,
+      speed: 5,
+      cri: 4,
+      tec: 3
+    },
+    skills: [
+      { type: "ATK_01", dialogue: { text: "一般兵、攻撃します。", iconId: 1 } }
+    ]
+  }),
+
+  normalGuard: makeNpc({
+    name: "防衛兵",
+    type: "defense",
+    stats: {
+      atk: 5,
+      def: 10,
+      heal: 0,
+      speed: 3,
+      cri: 2,
+      tec: 4
+    },
+    skills: [
+      { type: "DEF_01", dialogue: { text: "防衛兵、守りを固めます。", iconId: 1 } },
+      { type: "ATK_01", dialogue: { text: "防衛兵、反撃します。", iconId: 1 } }
+    ]
+  }),
+
+  normalMedic: makeNpc({
+    name: "衛生兵",
+    type: "heal",
+    stats: {
+      atk: 3,
+      def: 4,
+      heal: 10,
+      speed: 4,
+      cri: 2,
+      tec: 6
+    },
+    skills: [
+      { type: "HEAL_01", dialogue: { text: "衛生兵、回復します。", iconId: 1 } },
+      { type: "ATK_01", dialogue: { text: "衛生兵、牽制します。", iconId: 1 } }
+    ]
+  }),
+
+  boss01: makeNpc({
+    name: "ボス1",
+    type: "attack",
+    iconUrl: ENEMY_ICON,
+    stats: {
+      atk: 16,
+      def: 10,
+      heal: 0,
+      speed: 7,
+      cri: 8,
+      tec: 6
+    },
+    skills: [
+      { type: "ATK_01", dialogue: { text: "大型目標、前方を攻撃します。", iconId: 1 } },
+      { type: "CRI_01", dialogue: { text: "大型目標、狙いを定めています。", iconId: 1 } }
+    ],
+    characterDialogues: {
+      battleStart: [
+        { text: "大型反応を確認。戦闘を開始します。", iconId: 1 }
+      ]
     }
-  },
+  }),
 
-  npcSupporter: {
-    unitData: {
-      name: "サポートアヒル",
-      type: "support",
-
-      icon: {
-        default: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=duck2_icon_1.webp",
-        N: "",
-        E: "",
-        S: "",
-        W: ""
-      },
-
-      stats: {
-        atk: 4,
-        def: 4,
-        heal: 3,
-        speed: 9,
-        cri: 3,
-        tec: 10
-      },
-
-      patterns: [
-        {
-          name: "基本",
-          public: true,
-          skills: [
-            {
-              type: "skill_001",
-              dialogue: {
-                text: "妨害波を送信、敵を弱らせます。",
-                iconId: 1
-              }
-            },
-            {
-              type: "corrosion_wave",
-              dialogue: {
-                text: "相手基盤に直接ダメージを与えます。",
-                iconId: 1
-              }
-            },
-            {
-              type: "skill_001",
-              dialogue: {
-                text: "敵の動きを鈍らせます、攻撃を合わせてください。",
-                iconId: 1
-              } 
-            },
-            {
-              type: "skill_007",
-              dialogue: {
-                text: "出力を１段階上昇、回転を速めます。",
-                iconId: 1
-              }
-            }
-          ]
-        }
-      ]
+  boss02: makeNpc({
+    name: "ボス2",
+    type: "attack",
+    iconUrl: ENEMY_ICON,
+    stats: {
+      atk: 20,
+      def: 12,
+      heal: 0,
+      speed: 8,
+      cri: 10,
+      tec: 8
     },
+    skills: [
+      { type: "ATK_01", dialogue: { text: "次段階大型目標、攻撃します。", iconId: 1 } },
+      { type: "TEC_01", dialogue: { text: "次段階大型目標、妨害波を出します。", iconId: 1 } }
+    ]
+  }),
 
-    characterData: {
-      fullName: "防衛隊員・支援担当",
-      defaultName: "防衛隊支援員",
-      defaultIcon: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp",
+  npcHealer: makeNpc({
+    name: "ヒールアヒル",
+    type: "heal",
+    iconUrl: DUCK_ICON,
+    stats: {
+      atk: 2,
+      def: 4,
+      heal: 11,
+      speed: 5,
+      cri: 4,
+      tec: 8
+    },
+    skills: [
+      { type: "HEAL_01", dialogue: { text: "修復波を展開します。", iconId: 1 } }
+    ]
+  }),
+  
+  npcAttacker: makeNpc({
+    name: "アタックアヒル",
+    type: "attack",
+    iconUrl: DUCK_ICON,
+    stats: {
+      atk: 11,
+      def: 4,
+      heal: 1,
+      speed: 6,
+      cri: 6,
+      tec: 4
+    },
+    skills: [
+      { type: "ATK_01", dialogue: { text: "正面目標を攻撃します。", iconId: 1 } }
+    ]
+  }),
 
-      commIcons: [
-        {
-          id: 1,
-          name: "防衛隊支援員",
-          url: "https://www.rabbithutch.site/usagoya/picture.php?user=1217karen&file=npc2_icon_0.webp"
-        }
-      ],
-
-      commDialogues: {
-        battleStart: [
-          { text: "防衛隊支援担当、補助を開始します。", iconId: 1 }
-        ],
-        turnChangeNeutral: [
-          { text: "戦況を観測中、支援は継続可能です。", iconId: 1 }
-        ],
-        turnChangeAdvantage: [
-          { text: "こちらが主導しています、支援を重ねます。", iconId: 1 }
-        ],
-        turnChangeDisadvantage: [
-          { text: "敵圧が強いです、妨害を優先します。", iconId: 1 }
-        ],
-        turnChangePinch: [
-          { text: "危険域です、制御支援を集中します。", iconId: 1 }
-        ],
-        critical: [
-          { text: "連携成功、効果が増しています。", iconId: 1 }
-        ],
-        kill: [
-          { text: "対象排除を確認、次へ回します。", iconId: 1 }
-        ],
-        battleEndWin: [
-          { text: "支援任務を終了、各員お疲れさまでした。", iconId: 1 }
-        ]
-      }
+  npcSupporter: makeNpc({
+    name: "サポートアヒル",
+    type: "support",
+    iconUrl: DUCK_ICON,
+    stats: {
+      atk: 4,
+      def: 4,
+      heal: 3,
+      speed: 9,
+      cri: 3,
+      tec: 10
+    },
+    skills: [
+      { type: "TEC_01", dialogue: { text: "妨害波を送信します。", iconId: 1 } }
+    ]
+  })
     }
   }
 };
