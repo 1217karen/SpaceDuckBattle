@@ -32,7 +32,8 @@ export function buildChatUrl(options = {}) {
     placeId = "",
     view = "chat",
     page = 1,
-    eno = null
+    eno = null,
+    filterEno = null
   } = options;
 
   const params = new URLSearchParams();
@@ -47,6 +48,11 @@ export function buildChatUrl(options = {}) {
   const normalizedEno = Number(eno || 0);
   if (Number.isInteger(normalizedEno) && normalizedEno > 0) {
     params.set("eno", String(normalizedEno));
+  }
+
+  const normalizedFilterEno = Number(filterEno || 0);
+  if (Number.isInteger(normalizedFilterEno) && normalizedFilterEno > 0) {
+    params.set("filterEno", String(normalizedFilterEno));
   }
 
   return `./chat.html?${params.toString()}`;
@@ -135,6 +141,13 @@ export function getChatPageFromQuery() {
 export function getChatAuthorEnoFromQuery() {
   const params = new URLSearchParams(window.location.search);
   const eno = Number(params.get("eno") || 0);
+
+  return Number.isInteger(eno) && eno > 0 ? eno : null;
+}
+
+export function getChatMessageFilterEnoFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const eno = Number(params.get("filterEno") || 0);
 
   return Number.isInteger(eno) && eno > 0 ? eno : null;
 }
