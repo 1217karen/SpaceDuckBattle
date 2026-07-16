@@ -79,15 +79,41 @@ export function getHerePostsForPlace({
   );
 }
 
+function isMessageBetweenViewerAndEno(post, viewerEno, filterEno) {
+  const normalizedViewerEno = normalizeEno(viewerEno);
+  const normalizedFilterEno = normalizeEno(filterEno);
+
+  if (!normalizedViewerEno || !normalizedFilterEno) {
+    return true;
+  }
+
+  const authorEno = normalizeEno(post?.authorEno);
+  const visibleToEnoList = Array.isArray(post?.visibleToEnoList)
+    ? post.visibleToEnoList.map(eno => normalizeEno(eno))
+    : [];
+
+  const fromFilterToViewer =
+    authorEno === normalizedFilterEno &&
+    visibleToEnoList.includes(normalizedViewerEno);
+
+  const fromViewerToFilter =
+    authorEno === normalizedViewerEno &&
+    visibleToEnoList.includes(normalizedFilterEno);
+
+  return fromFilterToViewer || fromViewerToFilter;
+}
+
 export function getMessagePostsForViewer({
-  viewerEno = null
+  viewerEno = null,
+  filterEno = null
 } = {}) {
   return sortPostsNewestFirst(
     withNormalDisplayType(
       getAllPosts().filter(post =>
         post?.type === "message" &&
         !post.isDeleted &&
-        canViewMessagePost(post, viewerEno)
+        canViewMessagePost(post, viewerEno) &&
+        isMessageBetweenViewerAndEno(post, viewerEno, filterEno)
       )
     )
   );
@@ -156,7 +182,8 @@ export function getChatPostsForViewMode({
   places = [],
   viewerEno = null,
   favoriteEnos = [],
-  targetEno = null
+  targetEno = null,
+  messageFilterEno = null
 } = {}) {
   if (viewMode === "reply") {
     return getReplyPostsForViewer({
@@ -166,7 +193,8 @@ export function getChatPostsForViewMode({
 
   if (viewMode === "message") {
     return getMessagePostsForViewer({
-      viewerEno
+      viewerEno,
+      filterEno: messageFilterEno
     });
   }
 
