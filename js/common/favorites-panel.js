@@ -45,6 +45,31 @@ function getFavoriteCharacterIconUrl(character = {}) {
     : "https://placehold.co/60x60?text=NO+IMG";
 }
 
+function formatUnreadCount(count) {
+  const normalizedCount = Number(count || 0);
+
+  if (!Number.isInteger(normalizedCount) || normalizedCount <= 0) {
+    return "";
+  }
+
+  return normalizedCount >= 99 ? "99+" : String(normalizedCount);
+}
+
+function createFavoritePlaceUnreadBadge(place) {
+  const label = formatUnreadCount(place?.unreadCount);
+
+  if (!label) {
+    return null;
+  }
+
+  const badge = document.createElement("span");
+  badge.className = "favoritesPanelUnreadBadge";
+  badge.textContent = label;
+  badge.setAttribute("aria-label", `未読${label}件`);
+
+  return badge;
+}
+
 function createFavoritePlaceButton(place, options = {}) {
   const {
     onMoveToPlace = null
@@ -304,6 +329,12 @@ function renderFavoritePlacesContent(container, options = {}) {
         onMoveToPlace
       })
     );
+
+    const unreadBadge = createFavoritePlaceUnreadBadge(place);
+
+    if (unreadBadge) {
+      item.appendChild(unreadBadge);
+    }
 
     container.appendChild(item);
   });
