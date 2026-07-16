@@ -194,6 +194,20 @@ a{
   line-height:1.45;
 }
 
+.menuNoticeLink{
+  display:block;
+  text-decoration:none;
+}
+
+.menuNoticeLink:hover{
+  color:var(--theme-text-accent);
+  text-decoration:underline;
+}
+
+.menuNoticeEmptyText{
+  color:var(--theme-text-muted);
+}
+
 .menuNoticeText:last-child{
   margin-bottom:0;
 }
