@@ -29,3 +29,31 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
+
+.chatMessageFilterForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  background: var(--theme-panel-bg);
+  color: var(--theme-text-main);
+}
+
+.chatMessageFilterLabel,
+.chatMessageFilterStatus {
+  font-size: var(--font-size-sm);
+}
+
+.chatMessageFilterInput {
+  width: 96px;
+  box-sizing: border-box;
+  padding: 4px 6px;
+}
+
+.chatMessageFilterStatus {
+  color: var(--theme-text-muted);
+}
