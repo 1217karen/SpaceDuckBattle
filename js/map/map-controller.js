@@ -2,6 +2,7 @@
 
 import { places } from "../data/places-data.js";
 import { getCurrentAccount, loadCharacter, saveCharacter } from "../services/storage-service.js";
+import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getFavoritePlaces, saveFavoritePlaceIds } from "../chat/chat-place-utils.js";
@@ -449,7 +450,7 @@ function getCurrentEno() {
 function renderMapFavoritesPanel() {
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "place",
-    favoritePlaces: getFavoritePlaces(),
+    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { currentEno: getCurrentEno(), viewerEno: getCurrentEno() }),
     favoriteCharacters: getFavoriteCharacters({ currentEno: getCurrentEno() }),
     onMoveToPlace: moveToPlace,
     showCharacterMemo: true,
