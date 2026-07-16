@@ -224,7 +224,7 @@ function renderMessageFilterSection(container, options = {}) {
   }
 
   const form = document.createElement("form");
-  form.className = "chatMessageFilterForm common-card-framed common-card-rounded-lg";
+  form.className = "chatMessageFilterForm";
 
   const label = document.createElement("label");
   label.className = "chatMessageFilterLabel";
