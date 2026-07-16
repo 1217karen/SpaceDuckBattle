@@ -1,6 +1,7 @@
 //profile-controller.js
 
 import { getCurrentAccount, loadCharacter, loadUnit } from "../services/storage-service.js";
+import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
 import { getNoImageUrl, normalizeCommIcons } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { showToast } from "../common/toast.js";
@@ -521,7 +522,7 @@ function renderProfile(eno, character, unit, options = {}) {
 function renderProfileFavoritesPanel(currentEno = null) {
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "character",
-    favoritePlaces: getFavoritePlaces(),
+    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { viewerEno: currentEno }),
     favoriteCharacters: getFavoriteCharacters({ currentEno }),
     showCharacterMemo: true
   });
