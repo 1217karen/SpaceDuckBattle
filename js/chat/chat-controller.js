@@ -3,16 +3,17 @@
 import { places } from "../data/places-data.js";
 
 import { createPost,getReplySourcePostForDraft } from "../services/post-service.js";
-import { getChatPostsForViewMode } from "../services/chat-post-query-service.js";
+import { getChatPostsForViewMode, normalizeEno } from "../services/chat-post-query-service.js";
 import { getFavoriteCharacters, loadFavoriteCharacterEnos } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
+import { addUnreadCountsToPlaces, markPlaceReadAtLatestPost } from "../services/place-unread-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { showToast } from "../common/toast.js";
 
 import { getPlaceById,getPlaceLabel,getFavoritePlaces,isFavoritePlace,toggleFavoritePlace } from "./chat-place-utils.js";
-import { buildChatUrl,getChatAuthorEnoFromQuery,getChatPageFromQuery,getChatViewFromQuery,getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
+import { buildChatUrl,getChatAuthorEnoFromQuery,getChatMessageFilterEnoFromQuery,getChatPageFromQuery,getChatViewFromQuery,getPlaceIdFromQuery, moveToChatPlace } from "./chat-navigation.js";
 
 import { loadComposerDraft,saveComposerDraft,readComposerDraftFromRefs,clearComposerDraft } from "./chat-composer-state.js";
 import { addEnoToTargetText } from "./chat-target-utils.js";
@@ -46,6 +47,7 @@ const chatIconPicker = createIconPicker();
 const hiddenPostIds = new Set();
 let currentViewMode = getChatViewFromQuery();
 let openedAuthorEno = getChatAuthorEnoFromQuery();
+let messageFilterEno = getChatMessageFilterEnoFromQuery();
 if (currentViewMode === "eno" && !openedAuthorEno) {
   currentViewMode = "chat";
 }
@@ -93,7 +95,7 @@ function moveToPlace(placeId) {
   });
 }
 
-function navigateChatPageWithToast({ placeId, view = "chat", page = 1, message, type = "success" }) {
+function navigateChatPageWithToast({ placeId, view = "chat", page = 1, message, type = "success", filterEno = null }) {
   sessionStorage.setItem(
     "chatToastMessage",
     JSON.stringify({
@@ -105,16 +107,18 @@ function navigateChatPageWithToast({ placeId, view = "chat", page = 1, message, 
   window.location.href = buildChatUrl({
     placeId,
     view,
-    page
+    page,
+    filterEno
   });
 }
 
-function replaceChatUrl({ placeId, view = currentViewMode, page = 1, eno = openedAuthorEno }) {
+function replaceChatUrl({ placeId, view = currentViewMode, page = 1, eno = openedAuthorEno, filterEno = messageFilterEno }) {
   const nextUrl = buildChatUrl({
     placeId,
     view,
     page,
-    eno
+    eno,
+    filterEno: view === "message" ? filterEno : null
   });
 
   const currentUrl = `${window.location.pathname}${window.location.search}`;
@@ -176,12 +180,16 @@ function selectChatViewMode(mode, selectOptions = {}) {
   }
 
   currentViewMode = mode;
+  if (mode !== "message") {
+    messageFilterEno = null;
+  }
   currentChatPage = 1;
   replaceChatUrl({
     placeId: context.place.placeId,
     view: currentViewMode,
     page: currentChatPage,
-    eno: openedAuthorEno
+    eno: openedAuthorEno,
+    filterEno: messageFilterEno
   });
 
   renderChatPlaceInfo();
@@ -203,6 +211,60 @@ function renderActiveChatViewTabs() {
       onSelectMode: selectChatViewMode
     })
   });
+}
+
+function renderMessageFilterSection(container, options = {}) {
+  const {
+    filterEno = null,
+    onApplyFilter = null
+  } = options;
+
+  if (!container) {
+    return;
+  }
+
+  const form = document.createElement("form");
+  form.className = "chatMessageFilterForm common-card-framed common-card-rounded-lg";
+
+  const label = document.createElement("label");
+  label.className = "chatMessageFilterLabel";
+  label.textContent = "送受信Eno:";
+
+  const input = document.createElement("input");
+  input.type = "number";
+  input.min = "1";
+  input.step = "1";
+  input.className = "chatMessageFilterInput";
+  input.value = filterEno ? String(filterEno) : "";
+  input.placeholder = "Eno";
+
+  const button = document.createElement("button");
+  button.type = "submit";
+  button.className = "button-box chatMessageFilterButton";
+  button.textContent = "絞り込み";
+
+  form.appendChild(label);
+  form.appendChild(input);
+  form.appendChild(button);
+
+  if (filterEno) {
+    const status = document.createElement("span");
+    status.className = "chatMessageFilterStatus";
+    status.textContent = `Eno.${filterEno} とのメッセージを表示中`;
+    form.appendChild(status);
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const nextFilterEno = normalizeEno(input.value);
+
+    if (typeof onApplyFilter === "function") {
+      onApplyFilter(nextFilterEno || null);
+    }
+  });
+
+  container.appendChild(form);
 }
 
 function renderActiveChatTimeline() {
@@ -227,7 +289,8 @@ function renderActiveChatTimeline() {
     places,
     viewerEno: eno,
     favoriteEnos: loadFavoriteCharacterEnos({ currentEno: eno }),
-    targetEno: openedAuthorEno
+    targetEno: openedAuthorEno,
+    messageFilterEno
   });
 
   const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
@@ -243,6 +306,17 @@ function renderActiveChatTimeline() {
   });
 
   timelineContainer.innerHTML = "";
+
+  if (currentViewMode === "message") {
+    renderMessageFilterSection(timelineContainer, {
+      filterEno: messageFilterEno,
+      onApplyFilter: (nextFilterEno) => {
+        messageFilterEno = nextFilterEno;
+        currentChatPage = 1;
+        renderActiveChatTimeline();
+      }
+    });
+  }
 
   const pagedDisplayPosts = getPagedPosts(displayPosts, pagination);
   const postListRefs = renderPostListSection(timelineContainer, {
@@ -533,7 +607,8 @@ function setupDraftPreview({
       places,
       viewerEno: state.currentEno,
       favoriteEnos: loadFavoriteCharacterEnos({ currentEno: state.currentEno }),
-      targetEno: openedAuthorEno
+      targetEno: openedAuthorEno,
+      messageFilterEno
     });
 
     const displayPosts = filterHiddenPosts(rawDisplayPosts, hiddenPostIds);
@@ -712,6 +787,9 @@ function renderChatPlaceInfo() {
   const place = getPlaceById(placeId);
   const aroundBasePlace = getAroundBasePlace(place);
   openedAuthorEno = getChatAuthorEnoFromQuery();
+  messageFilterEno = currentViewMode === "message"
+    ? getChatMessageFilterEnoFromQuery()
+    : null;
 
   chatMainArea.innerHTML = "";
 
@@ -757,6 +835,10 @@ renderPlaceInfoSection(chatMainArea, {
 if (!place) {
   return;
 }
+
+markPlaceReadAtLatestPost(place.placeId, {
+  viewerEno: eno
+});
 
 if (isShopOpen && !hasShopForPlace(place)) {
   isShopOpen = false;
@@ -1124,6 +1206,7 @@ const handleFavoriteCharacterMessage = (favoriteCharacter) => {
   });
 
   currentViewMode = "message";
+  messageFilterEno = null;
   isShopOpen = false;
   isActionOpen = false;
   selectedActionId = "";
@@ -1203,7 +1286,7 @@ renderShopPurchaseConfirmModalIfNeeded(chatMainArea, {
   
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: currentFavoritesTab,
-    favoritePlaces: getFavoritePlaces(),
+    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { viewerEno: eno }),
     favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
     onMoveToPlace: moveToPlace,
     showCharacterReplyAction: true,
