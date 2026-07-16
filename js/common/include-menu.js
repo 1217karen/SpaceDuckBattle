@@ -1,9 +1,6 @@
 //include-menu.js
-import {
-  clearCurrentLoginId,
-  getCurrentAccount,
-  loadCharacter
-} from "../services/storage-service.js";
+import { clearCurrentLoginId,getCurrentAccount,loadCharacter } from "../services/storage-service.js";
+import { getNotificationsForViewer } from "../services/notification-service.js";
 
 const MENU_NO_IMAGE_URL =
   "https://placehold.co/60x60?text=NO+IMG";
@@ -69,6 +66,39 @@ function setupMenuProfileCard() {
   }
 }
 
+function setupMenuNotifications() {
+  const noticeBox = document.getElementById("menuNoticeBox");
+  const account = getCurrentAccount();
+
+  if (!noticeBox) {
+    return;
+  }
+
+  noticeBox.innerHTML = "";
+
+  const notifications = getNotificationsForViewer({
+    viewerEno: account?.eno ?? null,
+    limit: 10
+  });
+
+  if (notifications.length === 0) {
+    const emptyText = document.createElement("p");
+    emptyText.className = "menuNoticeText menuNoticeEmptyText";
+    emptyText.textContent = "まだ通知はありません";
+    noticeBox.appendChild(emptyText);
+    return;
+  }
+
+  notifications.forEach(notification => {
+    const link = document.createElement("a");
+    link.className = "menuNoticeText menuNoticeLink";
+    link.href = notification.targetUrl || "#";
+    link.textContent = notification.text;
+
+    noticeBox.appendChild(link);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("commonMenu");
   if (!container) return;
@@ -78,6 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   container.innerHTML = html;
 
   setupMenuProfileCard();
+  setupMenuNotifications();
 
   const logoutButton = document.getElementById("logoutButton");
 
