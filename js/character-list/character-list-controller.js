@@ -1,6 +1,7 @@
 // character-list-controller.js
 
 import { getCurrentAccount, getRegisteredEnoMax, loadCharacter, loadUnit } from "../services/storage-service.js";
+import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
 import { getNoImageUrl } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { getFavoritePlaces } from "../chat/chat-place-utils.js";
@@ -34,7 +35,7 @@ function getCurrentEno() {
 function renderCharacterListFavoritesPanel() {
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: "character",
-    favoritePlaces: getFavoritePlaces(),
+    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { currentEno: getCurrentEno(), viewerEno: getCurrentEno() }),
     favoriteCharacters: getFavoriteCharacters({ currentEno: getCurrentEno() }),
     showCharacterMemo: true,
     editableCharacterMemo: true,
