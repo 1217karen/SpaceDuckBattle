@@ -6,6 +6,7 @@ import { getPlaceIdFromQuery, navigateToChatPlace } from "./chat-navigation.js";
 import { createPost,getReplySourcePostForDraft,getThreadPostsByRootId } from "../services/post-service.js";
 import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
+import { addUnreadCountsToPlaces, markPlaceReadAtLatestPost } from "../services/place-unread-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
@@ -244,6 +245,10 @@ function renderThreadPage() {
 
   const threadPosts = getThreadPostsByRootId(threadRootPostId);
 
+  markPlaceReadAtLatestPost(place?.placeId ?? placeId, {
+    viewerEno: eno
+  });
+
   if (threadPosts.length === 0) {
     const errorText = document.createElement("p");
     errorText.textContent = "返信ツリーが見つかりません。";
@@ -418,7 +423,7 @@ function renderThreadPage() {
   });
   renderFavoritesSidePanel(rightPanel, {
     defaultTab: currentFavoritesTab,
-    favoritePlaces: getFavoritePlaces(),
+    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { viewerEno: eno }),
     favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
     showCharacterReplyAction: true,
     showCharacterMessageAction: false,
