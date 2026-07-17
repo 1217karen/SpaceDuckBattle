@@ -225,7 +225,7 @@ function renderNotFound(message) {
 }
 
 function renderProfile(eno, character, unit, options = {}) {
-  const { currentEno = null } = options;
+  const { currentEno = null, isLoggedIn = false } = options;
 
   const fullName =
     character?.fullName?.trim() || "未設定";
@@ -304,7 +304,7 @@ function renderProfile(eno, character, unit, options = {}) {
           </div>
         </div>
 
-        ${isOwnProfile ? "" : `
+        ${!isLoggedIn || isOwnProfile ? "" : `
           <button
             type="button"
             class="profileFavoriteButton button-icon"
@@ -341,7 +341,7 @@ function renderProfile(eno, character, unit, options = {}) {
                   <div class="profileUnitNameRow">
                     <div class="profileUnitName">${escapeHtml(unitName)}</div>
 
-                    ${isOwnProfile ? "" : `
+                    ${!isLoggedIn || isOwnProfile ? "" : `
                       <button
                         type="button"
                         class="profileFavoriteButton profileUnitFavoriteButton button-icon"
@@ -521,6 +521,7 @@ function renderProfile(eno, character, unit, options = {}) {
 
 function renderProfileFavoritesPanel(currentEno = null) {
   renderFavoritesSidePanel(rightPanel, {
+    isLoggedIn: currentEno !== null,
     defaultTab: "character",
     favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { viewerEno: currentEno }),
     favoriteCharacters: getFavoriteCharacters({ currentEno }),
@@ -556,7 +557,10 @@ function initProfilePage() {
     return;
   }
 
-  renderProfileFavoritesPanel(currentEno);
+  renderProfile(eno, character, unit, {
+    currentEno,
+    isLoggedIn: Boolean(account?.loginId)
+  });
   renderProfile(eno, character, unit, { currentEno });
 }
 
