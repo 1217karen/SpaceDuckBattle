@@ -266,7 +266,8 @@ function renderThreadPage() {
     isMemoOpen:
       typeof initialThreadPrivateNote === "string" &&
       initialThreadPrivateNote.trim() !== "",
-    onCloseThread: closeThread
+    onCloseThread: closeThread,
+    showPrivateMemo: Boolean(account)
   });
 
   if (threadHeaderRefs?.memoSaveButton && threadHeaderRefs?.memoTextarea) {
@@ -367,15 +368,16 @@ function renderThreadPage() {
     getQuotePreviewPostById
   });
 
-  const interactionPanelRefs = renderInteractionPanel(chatMainArea, {
-    title: "REPLY"
-  });
+  const interactionPanelRefs = account
+    ? renderInteractionPanel(chatMainArea, { title: "REPLY" })
+    : null;
 
   interactionPanelRefs?.panel?.classList.add("chatInteractionPanelReply");
 
-  const interactionPanel = interactionPanelRefs?.body ?? chatMainArea;
+  const interactionPanel = interactionPanelRefs?.body ?? null;
 
-  composerRefs = renderChatComposerSection(interactionPanel, {
+  if (interactionPanel) {
+    composerRefs = renderChatComposerSection(interactionPanel, {
     composerDraft,
     replySourcePost,
     getPlaceLabel,
@@ -421,7 +423,9 @@ function renderThreadPage() {
     composerRefs,
     threadPosts
   });
+  }
   renderFavoritesSidePanel(rightPanel, {
+    isLoggedIn: Boolean(account),
     defaultTab: currentFavoritesTab,
     favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { viewerEno: eno }),
     favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
