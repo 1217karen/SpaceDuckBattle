@@ -1,0 +1,25 @@
+.storyPage {
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.storyStatus {
+  margin: 0 0 16px;
+}
+
+.storyDialogueMount {
+  margin: 16px 0;
+}
+
+.storyActionRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.storyButton {
+  min-width: 120px;
+  min-height: 34px;
+  padding: 6px 14px;
+}
