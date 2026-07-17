@@ -215,6 +215,7 @@ export const STAGES = {
     name: "ボス1",
     description: "大型目標との戦闘です。",
     preBattleStoryId: "boss_01_intro",
+    postBattleStoryId: "boss_01_clear",
     unlockCondition: { type: "releaseFlag", flagId: "release_boss_01" },
     bossNpcId: "boss_01"
   }),
@@ -324,6 +325,7 @@ function makeBossStage({
   name,
   description,
   preBattleStoryId,
+  postBattleStoryId,
   unlockCondition,
   bossNpcId
 }) {
@@ -336,6 +338,7 @@ function makeBossStage({
     name,
     description,
     preBattleStoryId,
+    postBattleStoryId,
     partyMode: "free",
     unlockCondition,
     clearCondition: {
