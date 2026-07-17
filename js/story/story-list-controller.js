@@ -163,11 +163,14 @@ restartButton?.addEventListener("click", () => {
 renderStoryList();
 
 const requestedStoryId = new URLSearchParams(window.location.search).get("id") || "";
-const initialStory = accessibleStories.find(story => story.id === requestedStoryId) ||
-  accessibleStories[0];
+const initialStory = accessibleStories.find(story => story.id === requestedStoryId);
 
 if (initialStory) {
   renderSelectedStory(initialStory);
+} else if (accessibleStories.length > 0 && dialogue) {
+  setStatus("右メニューから閲覧したいストーリーを選んでください。");
+  dialogue.textContent = "";
+  restartButton.hidden = true;
 } else if (dialogue) {
   dialogue.textContent = "表示できるストーリーがありません。";
   restartButton.hidden = true;
