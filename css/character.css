@@ -86,3 +86,13 @@
 #saveCharacter {
   padding: 6px 14px;
 }
+
+.characterCheckboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.characterCheckboxLabel input {
+  width: auto;
+}
