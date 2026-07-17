@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ストーリー一覧</title>
+<link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/common.css">
+<link rel="stylesheet" href="./css/common-theme.css">
+<link rel="stylesheet" href="./css/story-list.css">
+</head>
+
+<body>
+<div class="layout">
+  <aside class="left-panel">
+    <div id="commonMenu"></div>
+  </aside>
+
+  <main class="center-panel storyArchivePage">
+    <div
+      class="center-topbar"
+      data-notice="お知らせエリア"
+      data-right-label="STORY ARCHIVE ＞"
+    ></div>
+
+    <h1 class="pageTitle">STORY ARCHIVE</h1>
+
+    <section class="storyArchiveSelector common-card-framed common-card-rounded-lg common-card-panel">
+      <div class="common-gradientHeading commonSectionHeading commonSectionHeading-large">
+        STORY SELECT
+      </div>
+      <p class="text-muted">解放済みのストーリーを選択してください。</p>
+      <div id="storyArchiveList" class="storyArchiveList"></div>
+    </section>
+
+    <section class="storyArchiveViewer common-card-framed common-card-rounded-lg common-card-panel">
+      <h2 id="storyArchiveTitle" class="common-gradientHeading commonSectionHeading commonSectionHeading-large">
+        STORY VIEW
+      </h2>
+      <p id="storyArchiveStatus" class="storyArchiveStatus text-muted"></p>
+      <div id="storyArchiveDialogue" class="storyArchiveDialogue"></div>
+      <div class="storyArchiveActions">
+        <button id="storyArchiveRestart" class="button-box" type="button" hidden>
+          最初から読む
+        </button>
+        <a class="button-box storyArchiveBackLink" href="battle.html">戦闘ページへ戻る</a>
+      </div>
+    </section>
+  </main>
+
+  <aside class="right-panel"></aside>
+</div>
+
+<script type="module" src="./js/common/include-menu.js"></script>
+<script type="module" src="./js/story/story-list-controller.js"></script>
+<script type="module">
+  import { initCenterTopbar } from "./js/common/center-topbar.js";
+  import { initLayoutPanelToggles } from "./js/common/layout.js";
+
+  initCenterTopbar();
+  initLayoutPanelToggles();
+</script>
+</body>
+</html>
