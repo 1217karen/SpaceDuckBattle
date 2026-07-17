@@ -1,0 +1,88 @@
+.storyArchivePage {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.storyArchiveSelector,
+.storyArchiveViewer {
+  padding: 18px;
+}
+
+.storyArchiveList {
+  display: grid;
+  gap: 10px;
+}
+
+.storyArchiveCategory {
+  border: 1px solid var(--border-color, #cbd5e1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.storyArchiveCategoryTitle {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.storyArchiveCategoryItems {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+}
+
+.storyArchiveItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.storyArchiveItem.is-selected {
+  outline: 2px solid var(--accent-color, #4f78a8);
+  outline-offset: -2px;
+}
+
+.storyArchiveReadState {
+  flex: 0 0 auto;
+  font-size: var(--font-size-sm, 0.875rem);
+  opacity: 0.75;
+}
+
+.storyArchiveStatus {
+  min-height: 1.5em;
+}
+
+.storyArchiveDialogue {
+  margin-top: 12px;
+}
+
+.storyArchiveActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.storyArchiveBackLink {
+  text-decoration: none;
+}
+
+.storyArchiveEmpty {
+  margin: 0;
+  padding: 12px;
+}
+
+@media (max-width: 560px) {
+  .storyArchiveItem {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
