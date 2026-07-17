@@ -1,0 +1,174 @@
+// story-list-controller.js
+
+import { renderGuideDialogue } from "../common/guide-dialogue-view.js";
+import { getArchivedStoryPages } from "../data/story-pages.js";
+import { canAccessStory } from "../services/story-access-service.js";
+import { requireLogin } from "../services/storage-service.js";
+import {
+  isStoryRead,
+  loadStoryProgress,
+  markStoryRead
+} from "../services/story-progress-service.js";
+
+const account = requireLogin();
+const list = document.getElementById("storyArchiveList");
+const title = document.getElementById("storyArchiveTitle");
+const status = document.getElementById("storyArchiveStatus");
+const dialogue = document.getElementById("storyArchiveDialogue");
+const restartButton = document.getElementById("storyArchiveRestart");
+
+let selectedStory = null;
+let storyProgress = loadStoryProgress(account?.eno);
+const storyButtons = new Map();
+
+const accessibleStories = account?.eno
+  ? getArchivedStoryPages().filter(story => canAccessStory(story, account.eno))
+  : [];
+
+function setStatus(message) {
+  if (status) {
+    status.textContent = message || "";
+  }
+}
+
+function updateReadState(storyId) {
+  storyProgress = loadStoryProgress(account?.eno);
+  const button = storyButtons.get(storyId);
+  const state = button?.querySelector(".storyArchiveReadState");
+
+  if (state) {
+    state.textContent = isStoryRead(storyProgress, storyId) ? "既読" : "未読";
+  }
+}
+
+function finishArchiveStory(story) {
+  if (!account?.eno || !story?.id) return;
+
+  markStoryRead(account.eno, story.id);
+  updateReadState(story.id);
+  setStatus("読了しました。別のストーリーを選ぶか、最初から読み直せます。");
+
+  if (restartButton) {
+    restartButton.hidden = false;
+  }
+}
+
+function renderSelectedStory(story) {
+  if (!story || !dialogue) return;
+
+  selectedStory = story;
+  storyButtons.forEach((button, storyId) => {
+    button.classList.toggle("is-selected", storyId === story.id);
+  });
+
+  if (title) {
+    title.textContent = story.title || story.id;
+  }
+
+  setStatus(story.mode === "click"
+    ? "クリックで会話を進めます。"
+    : "ストーリーを表示しています。"
+  );
+
+  if (restartButton) {
+    restartButton.hidden = true;
+  }
+
+  if (story.mode === "all") {
+    markStoryRead(account.eno, story.id);
+    updateReadState(story.id);
+  }
+
+  renderGuideDialogue(dialogue, {
+    mode: story.mode,
+    lines: story.lines,
+    clickHint: "クリックで次のセリフを表示",
+    completeHint: "クリックで読了",
+    onComplete: story.mode === "click"
+      ? () => finishArchiveStory(story)
+      : undefined
+  });
+
+  const url = new URL(window.location.href);
+  url.searchParams.set("id", story.id);
+  window.history.replaceState(null, "", url);
+}
+
+function createStoryButton(story) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "button-box storyArchiveItem";
+
+  const storyTitle = document.createElement("span");
+  storyTitle.textContent = story.title || story.id;
+
+  const readState = document.createElement("span");
+  readState.className = "storyArchiveReadState";
+  readState.textContent = isStoryRead(storyProgress, story.id) ? "既読" : "未読";
+
+  button.appendChild(storyTitle);
+  button.appendChild(readState);
+  button.addEventListener("click", () => renderSelectedStory(story));
+  storyButtons.set(story.id, button);
+  return button;
+}
+
+function renderStoryList() {
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  if (accessibleStories.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "storyArchiveEmpty text-muted";
+    empty.textContent = "現在閲覧できるストーリーはありません。";
+    list.appendChild(empty);
+    return;
+  }
+
+  const categories = new Map();
+  accessibleStories.forEach(story => {
+    const category = story.archive?.category || "other";
+    if (!categories.has(category)) {
+      categories.set(category, []);
+    }
+    categories.get(category).push(story);
+  });
+
+  categories.forEach(stories => {
+    const group = document.createElement("details");
+    group.className = "storyArchiveCategory";
+    group.open = true;
+
+    const summary = document.createElement("summary");
+    summary.className = "storyArchiveCategoryTitle";
+    summary.textContent = stories[0]?.archive?.categoryLabel || "STORY";
+
+    const items = document.createElement("div");
+    items.className = "storyArchiveCategoryItems";
+    stories.forEach(story => items.appendChild(createStoryButton(story)));
+
+    group.appendChild(summary);
+    group.appendChild(items);
+    list.appendChild(group);
+  });
+}
+
+restartButton?.addEventListener("click", () => {
+  if (selectedStory) {
+    renderSelectedStory(selectedStory);
+  }
+});
+
+renderStoryList();
+
+const requestedStoryId = new URLSearchParams(window.location.search).get("id") || "";
+const initialStory = accessibleStories.find(story => story.id === requestedStoryId) ||
+  accessibleStories[0];
+
+if (initialStory) {
+  renderSelectedStory(initialStory);
+} else if (dialogue) {
+  dialogue.textContent = "表示できるストーリーがありません。";
+  restartButton.hidden = true;
+}
