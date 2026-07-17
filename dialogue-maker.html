@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会話画像メーカー</title>
+<link rel="stylesheet" href="./css/common.css">
+<link rel="stylesheet" href="./css/common-theme.css">
+<link rel="stylesheet" href="./css/dialogue-maker.css">
+</head>
+
+<body class="dialogueMakerBody">
+<main class="dialogueMakerPage">
+  <header class="dialogueMakerHeader">
+    <h1 class="pageTitle">DIALOGUE MAKER</h1>
+    <p class="text-muted">アイコンとセリフを登録し、800px幅の会話画像用プレビューを作成します。</p>
+  </header>
+
+  <section class="dialogueMakerPanel common-card-framed common-card-rounded-lg common-card-panel">
+    <h2 class="common-gradientHeading commonSectionHeading commonSectionHeading-large">ICON ASSETS</h2>
+    <form id="dialogueMakerIconForm" class="dialogueMakerIconForm">
+      <label>
+        アイコン名
+        <input id="dialogueMakerIconName" maxlength="30" placeholder="例：案内役">
+      </label>
+      <label>
+        アイコンURL
+        <input id="dialogueMakerIconUrl" type="url" required placeholder="https://example.com/icon.png">
+      </label>
+      <button class="button-primaryNew dialogueMakerPrimaryButton" type="submit">アイコンを追加</button>
+    </form>
+    <p id="dialogueMakerIconMessage" class="dialogueMakerMessage text-muted"></p>
+    <div id="dialogueMakerIconList" class="dialogueMakerIconList"></div>
+  </section>
+
+  <section class="dialogueMakerPanel common-card-framed common-card-rounded-lg common-card-panel">
+    <div class="dialogueMakerSectionHeader">
+      <h2 class="common-gradientHeading commonSectionHeading commonSectionHeading-large">DIALOGUE EDITOR</h2>
+      <button id="dialogueMakerAddLine" class="button-box dialogueMakerButton" type="button">＋ セリフを追加</button>
+    </div>
+    <div id="dialogueMakerLines" class="dialogueMakerLines"></div>
+  </section>
+
+  <section class="dialogueMakerPanel dialogueMakerPreviewPanel common-card-framed common-card-rounded-lg common-card-panel">
+    <div class="dialogueMakerSectionHeader">
+      <h2 class="common-gradientHeading commonSectionHeading commonSectionHeading-large">PREVIEW</h2>
+      <span class="text-muted">横幅 800px・全行表示</span>
+    </div>
+    <div class="dialogueMakerPreviewScroller">
+      <div id="dialogueMakerPreview" class="dialogueMakerPreview"></div>
+    </div>
+    <p class="dialogueMakerScreenshotHint text-muted">
+      点線内をブラウザーのスクリーンショット機能で撮影してください。
+    </p>
+  </section>
+</main>
+
+<script type="module" src="./js/dialogue-maker/dialogue-maker-controller.js"></script>
+</body>
+</html>
