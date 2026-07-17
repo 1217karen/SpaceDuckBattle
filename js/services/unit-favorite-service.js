@@ -4,6 +4,7 @@ import {
   loadCharacter,
   loadUnit
 } from "./storage-service.js";
+import { makeAccountStorageKey } from "./account-storage-key.js";
 
 const UNIT_FAVORITES_STORAGE_KEY = "unitFavorites";
 
@@ -65,8 +66,17 @@ function normalizeFavoriteUnits(value, options = {}) {
 }
 
 export function loadFavoriteUnits(options = {}) {
+  const storageKey = makeAccountStorageKey(
+    UNIT_FAVORITES_STORAGE_KEY,
+    options.currentEno
+  );
+
+  if (!storageKey) {
+    return [];
+  }
+
   const parsed = safeParse(
-    localStorage.getItem(UNIT_FAVORITES_STORAGE_KEY),
+    localStorage.getItem(storageKey),
     []
   );
 
@@ -76,8 +86,16 @@ export function loadFavoriteUnits(options = {}) {
 export function saveFavoriteUnits(favorites = [], options = {}) {
   const normalized = normalizeFavoriteUnits(favorites, options);
 
-  localStorage.setItem(
+  const storageKey = makeAccountStorageKey(
     UNIT_FAVORITES_STORAGE_KEY,
+    options.currentEno
+  );
+
+  if (!storageKey) {
+    return [];
+  }
+  localStorage.setItem(
+    storageKey,
     JSON.stringify(normalized)
   );
 
