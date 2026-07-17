@@ -2,6 +2,8 @@
 
 import {getCurrentAccount,saveAccount,createInitialCharacter,createInitialUnit,saveCharacter,saveUnit} from "../services/storage-service.js";
 import { renderGuideDialogue } from "../common/guide-dialogue-view.js";
+import { getStoryPage } from "../data/story-pages.js";
+import { markStoryRead } from "../services/story-progress-service.js";
 
 const guideContainer = document.getElementById("setupGuideDialogue");
 const enoText = document.getElementById("setupEnoText");
@@ -11,6 +13,12 @@ const defaultNameInput = document.getElementById("defaultName");
 const unitNameInput = document.getElementById("unitName");
 
 const account = getCurrentAccount();
+const setupGuideStory = getStoryPage("first_setup_guide");
+
+renderGuideDialogue(guideContainer, {
+  mode: setupGuideStory?.mode || "all",
+  lines: setupGuideStory?.lines || []
+});
 
 renderGuideDialogue(guideContainer, {
   mode: "all",
@@ -89,6 +97,7 @@ if (form) {
       ...currentAccount,
       setupCompleted: true
     });
+    markStoryRead(eno, setupGuideStory?.id);
 
     window.location.href = "top.html";
   });
