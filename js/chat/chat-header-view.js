@@ -32,7 +32,7 @@ export function renderPlaceInfoSection(container, options = {}) {
   titleGroup.appendChild(title);
   topRow.appendChild(titleGroup);
 
-  if (place) {
+  if (place && typeof onToggleFavorite === "function") {
     favoriteButton = document.createElement("button");
     favoriteButton.type = "button";
     favoriteButton.className = "chatHeaderFavoriteButton button-icon";
@@ -43,13 +43,9 @@ export function renderPlaceInfoSection(container, options = {}) {
       isFavorite ? "お気に入り解除" : "お気に入り登録"
     );
 
-    if (typeof onToggleFavorite === "function") {
-      favoriteButton.addEventListener("click", () => {
-        onToggleFavorite(place);
-      });
-    } else {
-      favoriteButton.disabled = true;
-    }
+    favoriteButton.addEventListener("click", () => {
+      onToggleFavorite(place);
+    });
 
     topRow.appendChild(favoriteButton);
   }
@@ -160,7 +156,8 @@ export function renderThreadHeaderSection(container, options = {}) {
   const {
     memoText = "",
     isMemoOpen = false,
-    onCloseThread = null
+    onCloseThread = null,
+    showPrivateMemo = true
   } = options;
 
   const section = document.createElement("section");
@@ -240,8 +237,10 @@ topRow.appendChild(titleGroup);
   memoContent.appendChild(memoTextarea);
   memoContent.appendChild(memoSaveButton);
 
-  body.appendChild(memoToggle);
-  body.appendChild(memoContent);
+  if (showPrivateMemo) {
+    body.appendChild(memoToggle);
+    body.appendChild(memoContent);
+  }
 
   inner.appendChild(topRow);
   inner.appendChild(divider);
