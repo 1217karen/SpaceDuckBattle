@@ -561,7 +561,6 @@ function initProfilePage() {
     currentEno,
     isLoggedIn: Boolean(account?.loginId)
   });
-  renderProfile(eno, character, unit, { currentEno });
 }
 
 initProfilePage();
