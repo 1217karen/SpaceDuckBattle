@@ -5,6 +5,33 @@
 .battleCenterPanel {
   box-sizing: border-box;
 }
+/* =======================================================
+   ストーリーアーカイブ
+======================================================= */
+
+.battleStoryArchiveLink {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 auto 20px;
+  padding: 7px 12px;
+  color: var(--theme-button-text);
+  text-decoration: none;
+}
+
+.battleStoryArchiveTitle {
+  font-family: var(--font-family-display);
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.battleStoryArchiveText {
+  color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  white-space: nowrap;
+}
 
 .battlePanel {
   width: 100%;
