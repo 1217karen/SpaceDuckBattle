@@ -96,3 +96,12 @@
 .characterCheckboxLabel input {
   width: auto;
 }
+
+.characterStoryTestLink {
+  width: fit-content;
+  margin-top: 8px;
+  text-decoration: none;
+}
+.characterCheckboxLabel input {
+  width: auto;
+}
