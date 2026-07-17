@@ -1,6 +1,7 @@
 // chat-place-utils.js
 
 import { places } from "../data/places-data.js";
+import { makeAccountStorageKey } from "../services/account-storage-key.js";
 
 const PLACE_FAVORITES_STORAGE_KEY = "chatPlaceFavorites";
 
@@ -34,8 +35,14 @@ export function getPlaceLabel(placeId) {
 }
 
 export function loadFavoritePlaceIds() {
+  const storageKey = makeAccountStorageKey(PLACE_FAVORITES_STORAGE_KEY);
+
+  if (!storageKey) {
+    return [];
+  }
+
   const parsed = safeParse(
-    localStorage.getItem(PLACE_FAVORITES_STORAGE_KEY),
+    localStorage.getItem(storageKey),
     []
   );
 
@@ -44,9 +51,14 @@ export function loadFavoritePlaceIds() {
 
 export function saveFavoritePlaceIds(placeIds = []) {
   const normalized = normalizeFavoritePlaceIds(placeIds);
+  const storageKey = makeAccountStorageKey(PLACE_FAVORITES_STORAGE_KEY);
+
+  if (!storageKey) {
+    return [];
+  }
 
   localStorage.setItem(
-    PLACE_FAVORITES_STORAGE_KEY,
+    storageKey,
     JSON.stringify(normalized)
   );
 
