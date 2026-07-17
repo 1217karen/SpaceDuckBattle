@@ -40,7 +40,6 @@ function saveCurrentPlace(placeId) {
   const account = getCurrentAccount();
 
   if (!account?.eno) {
-    alert("ログイン中のアカウント情報を確認できません");
     return;
   }
 
@@ -448,10 +447,13 @@ function getCurrentEno() {
 }
 
 function renderMapFavoritesPanel() {
+  const currentEno = getCurrentEno();
+
   renderFavoritesSidePanel(rightPanel, {
+    isLoggedIn: currentEno !== null,
     defaultTab: "place",
-    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { currentEno: getCurrentEno(), viewerEno: getCurrentEno() }),
-    favoriteCharacters: getFavoriteCharacters({ currentEno: getCurrentEno() }),
+    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { currentEno, viewerEno: currentEno }),
+    favoriteCharacters: getFavoriteCharacters({ currentEno }),
     onMoveToPlace: moveToPlace,
     showCharacterMemo: true,
     enablePlaceReorder: true,
