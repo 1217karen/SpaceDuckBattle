@@ -323,6 +323,7 @@ function makeBossStage({
   chapter,
   name,
   description,
+  preBattleStoryId,
   unlockCondition,
   bossNpcId
 }) {
@@ -334,6 +335,7 @@ function makeBossStage({
     order,
     name,
     description,
+    preBattleStoryId,
     partyMode: "free",
     unlockCondition,
     clearCondition: {
