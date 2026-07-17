@@ -136,7 +136,10 @@ export function renderGuideDialogue(container, {
     showAllLines();
     footer.hidden = true;
   } else {
-    footer.textContent = clickHint;
+    appendLine();
+    footer.textContent = visibleCount >= normalizedLines.length
+      ? completeHint
+      : clickHint;
     root.tabIndex = 0;
     root.setAttribute("role", "button");
     root.setAttribute("aria-label", clickHint);
