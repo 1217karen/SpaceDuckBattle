@@ -1,5 +1,7 @@
 // chat-pagination-state.js
 
+import { makeAccountStorageKey } from "../services/account-storage-key.js";
+
 const CHAT_PAGE_SIZE_STORAGE_KEY = "chatPageSize";
 
 export const CHAT_PAGE_SIZE_MIN = 10;
@@ -7,6 +9,10 @@ export const CHAT_PAGE_SIZE_MAX = 100;
 export const CHAT_PAGE_SIZE_DEFAULT = 30;
 
 function toInteger(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
   const number = Number(value);
 
   if (!Number.isFinite(number)) {
@@ -32,14 +38,25 @@ export function normalizeChatPageSize(value, fallback = CHAT_PAGE_SIZE_DEFAULT) 
 }
 
 export function loadChatPageSize() {
+  const storageKey = makeAccountStorageKey(CHAT_PAGE_SIZE_STORAGE_KEY);
+
+  if (!storageKey) {
+    return CHAT_PAGE_SIZE_DEFAULT;
+  }
+
   return normalizeChatPageSize(
-    localStorage.getItem(CHAT_PAGE_SIZE_STORAGE_KEY),
+    localStorage.getItem(storageKey),
     CHAT_PAGE_SIZE_DEFAULT
   );
 }
 
 export function saveChatPageSize(value) {
   const pageSize = normalizeChatPageSize(value);
-  localStorage.setItem(CHAT_PAGE_SIZE_STORAGE_KEY, String(pageSize));
+  const storageKey = makeAccountStorageKey(CHAT_PAGE_SIZE_STORAGE_KEY);
+
+  if (storageKey) {
+    localStorage.setItem(storageKey, String(pageSize));
+  }
+
   return pageSize;
 }
