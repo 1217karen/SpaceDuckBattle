@@ -91,6 +91,19 @@ function getCurrentStage() {
   return stageId ? STAGES[stageId] : null;
 }
 
+function getStoryPassedId() {
+  return new URLSearchParams(window.location.search).get("storyPassed") || "";
+}
+
+function openPreBattleStory(stage) {
+  const storyId = stage?.preBattleStoryId;
+  if (!storyId || getStoryPassedId() === storyId) return false;
+
+  const returnUrl = `battle.html?stage=${encodeURIComponent(stage.id)}&storyPassed=${encodeURIComponent(storyId)}`;
+  window.location.href = `story.html?id=${encodeURIComponent(storyId)}&next=${encodeURIComponent(returnUrl)}`;
+  return true;
+}
+
 function isSoloStage(stage = getCurrentStage()) {
   return stage?.partyMode === "solo";
 }
@@ -548,21 +561,30 @@ startBtn.addEventListener("click", () => {
   window.location.href = `battlelog.html?id=${battleID}`;
 });
 
-stageSelect.addEventListener("change", () => {
+function handleStageSelection() {
   resetSelectedStageView();
 
   if (!stageSelect.value) {
     boardDiv.innerHTML = "";
     battleBoardPanel?.classList.add("is-hidden");
     battleStartPanel?.classList.add("is-hidden");
-    return;
+    return false;
   }
 
   const stage = STAGES[stageSelect.value];
 
+  if (openPreBattleStory(stage)) {
+    return true;
+  }
+
   battleBoardPanel?.classList.remove("is-hidden");
   battleStartPanel?.classList.remove("is-hidden");
   createBoard(stage);
+  return false;
+}
+
+stageSelect.addEventListener("change", () => {
+  handleStageSelection();
 });
 
 stageProgressResetBtn?.addEventListener("click", () => {
@@ -585,6 +607,13 @@ stageProgressResetBtn?.addEventListener("click", () => {
 });
 
 renderStageOptions();
+
+const requestedStageId = new URLSearchParams(window.location.search).get("stage") || "";
+if (requestedStageId && Array.from(stageSelect.options).some(option => option.value === requestedStageId)) {
+  stageSelect.value = requestedStageId;
+  handleStageSelection();
+}
+
 renderSelfPatternSelector();
 renderParty();
 renderUnitList();
