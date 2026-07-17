@@ -18,6 +18,7 @@ const backButton = document.getElementById("storyBackButton");
 const params = new URLSearchParams(window.location.search);
 const storyId = params.get("id") || "";
 const nextOverride = params.get("next") || "";
+const forceDisplay = params.get("force") === "1";
 const story = getStoryPage(storyId);
 
 backButton?.addEventListener("click", () => {
@@ -88,7 +89,7 @@ function finishStory() {
 }
 
 function shouldSkipReadStory() {
-  if (!account?.eno || !story?.id) return false;
+  if (forceDisplay || !account?.eno || !story?.id) return false;
 
   const character = loadCharacter(account.eno) || {};
   const storyProgress = loadStoryProgress(account.eno);
