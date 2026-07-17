@@ -1,7 +1,9 @@
 //first-setup-controller.js
 
 import {getCurrentAccount,saveAccount,createInitialCharacter,createInitialUnit,saveCharacter,saveUnit} from "../services/storage-service.js";
+import { renderGuideDialogue } from "../common/guide-dialogue-view.js";
 
+const guideContainer = document.getElementById("setupGuideDialogue");
 const enoText = document.getElementById("setupEnoText");
 const form = document.querySelector(".setup-form");
 const fullNameInput = document.getElementById("fullName");
@@ -9,6 +11,24 @@ const defaultNameInput = document.getElementById("defaultName");
 const unitNameInput = document.getElementById("unitName");
 
 const account = getCurrentAccount();
+
+renderGuideDialogue(guideContainer, {
+  mode: "all",
+  lines: [
+    {
+      speakerName: "SYSTEM",
+      text: "ようこそ！"
+    },
+    {
+      speakerName: "SYSTEM",
+      text: "あなたの名前と、最初のユニット名を教えてください。"
+    },
+    {
+      speakerName: "SYSTEM",
+      text: "登録後も、プロフィールや設定画面から内容を調整できます。"
+    }
+  ]
+});
 
 if (enoText) {
   if (account?.eno) {
