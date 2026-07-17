@@ -165,6 +165,14 @@ function loadCharacterForm() {
   document.getElementById("characterProfileText").value =
     character?.profileText ?? "";
 
+  const skipReadStoriesInput =
+    document.getElementById("skipReadStories");
+
+  if (skipReadStoriesInput) {
+    skipReadStoriesInput.checked =
+      Boolean(character?.storySettings?.skipReadStories);
+  }
+
   currentCommIcons =
     normalizeCommIcons(character?.commIcons);
 
@@ -230,6 +238,9 @@ document.getElementById("saveCharacter")
       return;
     }
 
+    const skipReadStories =
+      Boolean(document.getElementById("skipReadStories")?.checked);
+
     const commDialogues = dialogueTypes.reduce((result, { key }) => {
       result[key] = collectDialogueList(key);
       return result;
@@ -244,6 +255,10 @@ document.getElementById("saveCharacter")
       defaultName,
       profileText,
       commIcons: currentCommIcons,
+      storySettings: {
+        ...(oldCharacter.storySettings || {}),
+        skipReadStories
+      },
 
       commDialogues
     };
