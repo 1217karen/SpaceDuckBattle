@@ -290,7 +290,7 @@ headerRight.appendChild(postMetaTop);
   const actions = document.createElement("div");
   actions.className = "chatPostActions";
 
-  if (!isPreview && !post.isDraftPreview && !hideActions && post.type !== "message") {
+  if (!isPreview && !post.isDraftPreview && !hideActions && currentEno !== null && post.type !== "message") {
     const isOwnPost =
       currentEno !== null &&
       currentEno !== undefined &&
