@@ -558,7 +558,17 @@ startBtn.addEventListener("click", () => {
     JSON.stringify(battleRecord)
   );
 
-  window.location.href = `battlelog.html?id=${battleID}`;
+  const battleLogUrl = `battlelog.html?id=${encodeURIComponent(battleID)}`;
+  const postBattleStoryId = result === "win"
+    ? stage.postBattleStoryId
+    : "";
+
+  if (postBattleStoryId) {
+    window.location.href = `story.html?id=${encodeURIComponent(postBattleStoryId)}&next=${encodeURIComponent(battleLogUrl)}`;
+    return;
+  }
+
+  window.location.href = battleLogUrl;
 });
 
 function handleStageSelection() {
