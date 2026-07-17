@@ -816,7 +816,7 @@ renderPlaceInfoSection(chatMainArea, {
   places,
   onMoveToPlace: moveToPlace,
   isFavorite: isFavoritePlace(place?.placeId ?? ""),
-  onToggleFavorite: (targetPlace) => {
+  onToggleFavorite: account ? (targetPlace) => {
     const result = toggleFavoritePlace(targetPlace?.placeId ?? "");
 
     renderChatPlaceInfo();
@@ -829,7 +829,7 @@ renderPlaceInfoSection(chatMainArea, {
         type: result.isFavorite ? "success" : "info"
       }
     );
-  }
+  } : null
 });
 
 if (!place) {
@@ -1070,6 +1070,11 @@ renderChatActionSection(interactionPanel, {
   });
 }
 
+if (!account) {
+  interactionPanelRefs?.section?.remove();
+  composerRefs = null;
+}
+
 const handleReply = (post) => {
   const currentDraft = composerRefs
     ? saveComposerDraft(
@@ -1285,6 +1290,7 @@ renderShopPurchaseConfirmModalIfNeeded(chatMainArea, {
 });
   
   renderFavoritesSidePanel(rightPanel, {
+    isLoggedIn: Boolean(account),
     defaultTab: currentFavoritesTab,
     favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { viewerEno: eno }),
     favoriteCharacters: getFavoriteCharacters({ currentEno: eno }),
