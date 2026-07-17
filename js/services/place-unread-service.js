@@ -3,6 +3,7 @@
 import { getAllPosts } from "./post-service.js";
 import { canViewPost } from "../chat/chat-post-filter.js";
 import { normalizeEno } from "./chat-post-query-service.js";
+import { makeAccountStorageKey } from "./account-storage-key.js";
 
 const PLACE_READ_STATE_STORAGE_KEY = "chatPlaceLastReadPostIds";
 
@@ -37,17 +38,28 @@ function normalizeReadState(value) {
   }, {});
 }
 
-function loadPlaceReadState() {
+function loadPlaceReadState(viewerEno) {
+  const storageKey = makeAccountStorageKey(PLACE_READ_STATE_STORAGE_KEY, viewerEno);
+
+  if (!storageKey) {
+    return {};
+  }
+
   return normalizeReadState(
-    safeParse(localStorage.getItem(PLACE_READ_STATE_STORAGE_KEY), {})
+    safeParse(localStorage.getItem(storageKey), {})
   );
 }
 
-function savePlaceReadState(state = {}) {
+function savePlaceReadState(viewerEno, state = {}) {
   const normalized = normalizeReadState(state);
+  const storageKey = makeAccountStorageKey(PLACE_READ_STATE_STORAGE_KEY, viewerEno);
+
+  if (!storageKey) {
+    return {};
+  }
 
   localStorage.setItem(
-    PLACE_READ_STATE_STORAGE_KEY,
+    storageKey,
     JSON.stringify(normalized)
   );
 
@@ -74,18 +86,18 @@ export function markPlaceReadAtLatestPost(placeId, options = {}) {
   const viewerEno = normalizeEno(options.viewerEno);
 
   if (!normalizedPlaceId || !viewerEno) {
-    return loadPlaceReadState();
+    return {};
   }
 
   const latestPostId = getVisiblePostsForPlace(normalizedPlaceId, viewerEno)
     .reduce((latest, post) => Math.max(latest, Number(post.postId || 0)), 0);
 
   if (!latestPostId) {
-    return loadPlaceReadState();
+    return loadPlaceReadState(viewerEno);
   }
 
-  return savePlaceReadState({
-    ...loadPlaceReadState(),
+  return savePlaceReadState(viewerEno, {
+    ...loadPlaceReadState(viewerEno),
     [normalizedPlaceId]: latestPostId
   });
 }
@@ -98,7 +110,7 @@ export function getUnreadCountByPlaceId(placeId, options = {}) {
     return 0;
   }
 
-  const lastReadPostId = loadPlaceReadState()[normalizedPlaceId] || 0;
+  const lastReadPostId = loadPlaceReadState(viewerEno)[normalizedPlaceId] || 0;
 
   return getVisiblePostsForPlace(normalizedPlaceId, viewerEno)
     .filter(post =>
