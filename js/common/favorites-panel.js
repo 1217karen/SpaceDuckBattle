@@ -468,6 +468,7 @@ function normalizeFavoritesTab(value) {
 
 export function renderFavoritesPanel(container, options = {}) {
   const {
+    isLoggedIn = true,
     defaultTab = "place",
     favoritePlaces = [],
     favoriteCharacters = [],
@@ -571,6 +572,22 @@ export function renderFavoritesPanel(container, options = {}) {
   tabRow.appendChild(characterTabButton);
 
   section.appendChild(heading);
+  if (!isLoggedIn) {
+    const loginMessage = document.createElement("p");
+    loginMessage.className = "commonEmptyText favoritesPanelLoginMessage";
+    loginMessage.append("お気に入りを表示するには");
+
+    const loginLink = document.createElement("a");
+    loginLink.href = "./index.html";
+    loginLink.textContent = "ログイン";
+    loginMessage.appendChild(loginLink);
+    loginMessage.append("してください");
+
+    section.appendChild(loginMessage);
+    container.appendChild(section);
+    return { section, heading, loginMessage, loginLink };
+  }
+
   section.appendChild(tabRow);
   section.appendChild(content);
   container.appendChild(section);
