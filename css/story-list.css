@@ -9,6 +9,10 @@
   padding: 18px;
 }
 
+.right-panel .storyArchiveSelector {
+  padding: 12px;
+}
+
 .storyArchiveList {
   display: grid;
   gap: 10px;
@@ -41,6 +45,11 @@
   width: 100%;
   padding: 10px 12px;
   text-align: left;
+}
+
+.storyArchiveItem > :first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .storyArchiveItem.is-selected {
