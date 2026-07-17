@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Story</title>
+
+<link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/common.css">
+<link rel="stylesheet" href="./css/common-theme.css">
+<link rel="stylesheet" href="./css/story.css">
+</head>
+
+<body>
+<div class="layout">
+
+  <aside class="left-panel">
+    <div id="commonMenu"></div>
+  </aside>
+
+<main class="center-panel">
+<div
+  class="center-topbar"
+  data-notice="お知らせエリア"
+  data-right-label="STORY ＞"
+></div>
+
+  <h1 class="pageTitle">STORY</h1>
+
+  <section class="storyPage common-card-framed common-card-rounded-lg common-card-panel">
+    <h2 id="storyTitle" class="common-gradientHeading commonSectionHeading commonSectionHeading-large">STORY</h2>
+    <p id="storyStatus" class="storyStatus text-muted"></p>
+    <div id="storyDialogue" class="storyDialogueMount"></div>
+    <div class="storyActionRow">
+      <button type="button" id="storyBackButton" class="button-box storyButton">戻る</button>
+      <button type="button" id="storyNextButton" class="button-primaryNew storyButton">次へ</button>
+    </div>
+  </section>
+</main>
+
+<aside class="right-panel"></aside>
+
+</div>
+
+<script type="module" src="./js/common/include-menu.js"></script>
+<script type="module" src="./js/story/story-controller.js"></script>
+<script type="module">
+  import { initCenterTopbar } from "./js/common/center-topbar.js";
+  import { initLayoutPanelToggles } from "./js/common/layout.js";
+
+  initCenterTopbar();
+  initLayoutPanelToggles();
+</script>
+</body>
+</html>
