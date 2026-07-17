@@ -158,7 +158,10 @@ export function createInitialCharacter({
     profileText: "",
     currentPlaceId: "F1-1",
     commIcons: [],
-    commDialogues: {}
+    commDialogues: {},
+    storySettings: {
+      skipReadStories: false
+    }
   };
 }
 
