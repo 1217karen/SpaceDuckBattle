@@ -1,6 +1,26 @@
 // story-pages.js
 
 export const STORY_PAGES = {
+  story_test: {
+    id: "story_test",
+    title: "ストーリー表示テスト",
+    mode: "click",
+    accessCondition: {
+      type: "always"
+    },
+    nextLabel: "TOPへ",
+    nextUrl: "top.html",
+    lines: [
+      {
+        speakerName: "テスト",
+        text: "テスト"
+      },
+      {
+        speakerName: "テスト",
+        text: "テスト2"
+      }
+    ]
+  },
   boss_01_intro: {
     id: "boss_01_intro",
     title: "ボス1 戦闘前",
@@ -13,16 +33,12 @@ export const STORY_PAGES = {
     nextUrl: "battle.html",
     lines: [
       {
-        speakerName: "SYSTEM",
-        text: "見ろ！"
+        speakerName: "テスト",
+        text: "ボス1だ！"
       },
       {
-        speakerName: "SYSTEM",
-        text: "あそこに強敵がいるぞ。"
-      },
-      {
-        speakerName: "SYSTEM",
-        text: "くれぐれも無理はするなよ。"
+        speakerName: "テスト",
+        text: "強敵だけど、準備ができたら挑戦してみよう。"
       }
     ]
   },
