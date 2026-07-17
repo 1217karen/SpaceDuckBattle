@@ -214,6 +214,7 @@ export const STAGES = {
     chapter: 1,
     name: "ボス1",
     description: "大型目標との戦闘です。",
+    preBattleStoryId: "boss_01_intro",
     unlockCondition: { type: "releaseFlag", flagId: "release_boss_01" },
     bossNpcId: "boss_01"
   }),
