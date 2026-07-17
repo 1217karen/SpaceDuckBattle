@@ -39,12 +39,13 @@
   import { renderFavoritesSidePanel } from "./js/common/favorites-panel.js";
   import { getFavoritePlaces } from "./js/chat/chat-place-utils.js";
   import { getFavoriteCharacters } from "./js/services/character-favorite-service.js";
-  import { getCurrentAccount } from "./js/services/storage-service.js";
+  import { getCurrentAccount, requireLogin } from "./js/services/storage-service.js";
   import { addUnreadCountsToPlaces } from "./js/services/place-unread-service.js";
 
   initCenterTopbar();
   initLayoutPanelToggles();
 
+  requireLogin();
   const account = getCurrentAccount();
   renderFavoritesSidePanel(document.querySelector(".right-panel"), {
     defaultTab: "place",
