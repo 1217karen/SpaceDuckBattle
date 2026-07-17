@@ -1,5 +1,7 @@
 //chat-composer-state.js
 
+import { makeAccountStorageKey } from "../services/account-storage-key.js";
+
 const COMPOSER_DRAFT_STORAGE_KEY = "chatComposerDraft";
 
 function safeParse(json, fallback = null) {
@@ -63,8 +65,14 @@ function normalizeDraft(raw = {}) {
 }
 
 export function loadComposerDraft() {
+  const storageKey = makeAccountStorageKey(COMPOSER_DRAFT_STORAGE_KEY);
+
+  if (!storageKey) {
+    return normalizeDraft({});
+  }
+
   const parsed = safeParse(
-    localStorage.getItem(COMPOSER_DRAFT_STORAGE_KEY),
+    localStorage.getItem(storageKey),
     null
   );
 
@@ -73,8 +81,14 @@ export function loadComposerDraft() {
 
 export function saveComposerDraft(draft = {}) {
   const normalized = normalizeDraft(draft);
+  const storageKey = makeAccountStorageKey(COMPOSER_DRAFT_STORAGE_KEY);
+
+  if (!storageKey) {
+    return normalized;
+  }
 
   localStorage.setItem(
+    storageKey,
     COMPOSER_DRAFT_STORAGE_KEY,
     JSON.stringify(normalized)
   );
@@ -83,7 +97,11 @@ export function saveComposerDraft(draft = {}) {
 }
 
 export function clearComposerDraft() {
-  localStorage.removeItem(COMPOSER_DRAFT_STORAGE_KEY);
+  const storageKey = makeAccountStorageKey(COMPOSER_DRAFT_STORAGE_KEY);
+
+  if (storageKey) {
+    localStorage.removeItem(storageKey);
+  }
 }
 
 export function createEmptyComposerDraft() {
