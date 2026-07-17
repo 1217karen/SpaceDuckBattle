@@ -33,10 +33,13 @@ function getCurrentEno() {
 }
 
 function renderCharacterListFavoritesPanel() {
+  const currentEno = getCurrentEno();
+
   renderFavoritesSidePanel(rightPanel, {
+    isLoggedIn: currentEno !== null,
     defaultTab: "character",
-    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { currentEno: getCurrentEno(), viewerEno: getCurrentEno() }),
-    favoriteCharacters: getFavoriteCharacters({ currentEno: getCurrentEno() }),
+    favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { currentEno, viewerEno: currentEno }),
+    favoriteCharacters: getFavoriteCharacters({ currentEno }),
     showCharacterMemo: true,
     editableCharacterMemo: true,
     characterMemoMaxLength: getFavoriteCharacterMemoMaxLength(),
