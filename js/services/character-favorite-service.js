@@ -2,6 +2,7 @@
 
 import { getNoImageUrl } from "../common/icon-picker.js";
 import { loadCharacter } from "./storage-service.js";
+import { makeAccountStorageKey } from "./account-storage-key.js";
 
 const CHARACTER_FAVORITES_STORAGE_KEY = "chatCharacterFavorites";
 const CHARACTER_FAVORITE_MEMOS_STORAGE_KEY = "chatCharacterFavoriteMemos";
@@ -88,8 +89,14 @@ export function getFavoriteCharacterMemoMaxLength() {
 }
 
 export function loadFavoriteCharacterMemos() {
+  const storageKey = makeAccountStorageKey(CHARACTER_FAVORITE_MEMOS_STORAGE_KEY);
+
+  if (!storageKey) {
+    return {};
+  }
+
   const parsed = safeParse(
-    localStorage.getItem(CHARACTER_FAVORITE_MEMOS_STORAGE_KEY),
+    localStorage.getItem(storageKey),
     {}
   );
 
@@ -106,8 +113,9 @@ export function loadFavoriteCharacterMemos() {
 
 export function saveFavoriteCharacterMemo(eno, memo) {
   const targetEno = normalizeEno(eno);
+  const storageKey = makeAccountStorageKey(CHARACTER_FAVORITE_MEMOS_STORAGE_KEY);
 
-  if (!targetEno) {
+  if (!targetEno || !storageKey) {
     return "";
   }
 
@@ -122,7 +130,7 @@ export function saveFavoriteCharacterMemo(eno, memo) {
   }
 
   localStorage.setItem(
-    CHARACTER_FAVORITE_MEMOS_STORAGE_KEY,
+    storageKey,
     JSON.stringify(memos)
   );
 
@@ -140,8 +148,17 @@ export function getFavoriteCharacterMemo(eno) {
 }
 
 export function loadFavoriteCharacterEnos(options = {}) {
+  const storageKey = makeAccountStorageKey(
+    CHARACTER_FAVORITES_STORAGE_KEY,
+    options.currentEno
+  );
+
+  if (!storageKey) {
+    return [];
+  }
+
   const parsed = safeParse(
-    localStorage.getItem(CHARACTER_FAVORITES_STORAGE_KEY),
+    localStorage.getItem(storageKey),
     []
   );
 
@@ -150,9 +167,17 @@ export function loadFavoriteCharacterEnos(options = {}) {
 
 export function saveFavoriteCharacterEnos(enos = [], options = {}) {
   const normalized = normalizeFavoriteCharacterEnos(enos, options);
+  const storageKey = makeAccountStorageKey(
+    CHARACTER_FAVORITES_STORAGE_KEY,
+    options.currentEno
+  );
+
+  if (!storageKey) {
+    return [];
+  }
 
   localStorage.setItem(
-    CHARACTER_FAVORITES_STORAGE_KEY,
+    storageKey,
     JSON.stringify(normalized)
   );
 
