@@ -2,9 +2,8 @@
 
 import { renderGuideDialogue } from "../common/guide-dialogue-view.js";
 import { getStoryPage } from "../data/story-pages.js";
-import { STAGES } from "../data/stages.js";
 import { loadCharacter, requireLogin } from "../services/storage-service.js";
-import { getStageReleaseFlags, isStageUnlocked, loadStageProgress } from "../services/stage-progress-service.js";
+import { canAccessStory } from "../services/story-access-service.js";
 import { isStoryRead, loadStoryProgress, markStoryRead } from "../services/story-progress-service.js";
 
 const account = requireLogin();
@@ -49,38 +48,6 @@ function showError(message) {
   }
 }
 
-function isAccessConditionMet(condition) {
-  if (!condition || condition.type === "always") {
-    return true;
-  }
-
-  if (!account?.eno) {
-    return false;
-  }
-
-  const stageProgress = loadStageProgress(account.eno);
-  const flags = getStageReleaseFlags();
-
-  if (condition.type === "stageUnlocked") {
-    const stage = STAGES[condition.stageId];
-    return !!stage && isStageUnlocked(stage, stageProgress, flags);
-  }
-
-  if (condition.type === "stageCleared") {
-    return stageProgress.clearedStageIds.includes(condition.stageId);
-  }
-
-  if (condition.type === "all") {
-    return (condition.conditions || []).every(isAccessConditionMet);
-  }
-
-  if (condition.type === "any") {
-    return (condition.conditions || []).some(isAccessConditionMet);
-  }
-
-  return false;
-}
-
 function finishStory() {
   if (!account?.eno || !story?.id) return;
 
@@ -102,7 +69,7 @@ if (!account?.eno) {
   showError("ログイン情報を確認できません。");
 } else if (!story) {
   showError("指定されたストーリーが見つかりません。");
-} else if (!isAccessConditionMet(story.accessCondition)) {
+} else if (!canAccessStory(story, account.eno)) {
   if (title) {
     title.textContent = story.title || story.id;
   }
