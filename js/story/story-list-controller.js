@@ -113,7 +113,7 @@ function renderStoryList() {
 
   categories.forEach(stories => {
     const group = document.createElement("details");
-    group.className = "storyArchiveCategory";
+    group.className = "storyArchiveCategory common-card-subtle";
     group.open = true;
 
     const summary = document.createElement("summary");
