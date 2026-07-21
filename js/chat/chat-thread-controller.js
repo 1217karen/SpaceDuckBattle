@@ -49,7 +49,7 @@ function closeThread() {
 
 function setupDraftPreview({
   postListRefs,
-  place,
+  currentPlace,
   character,
   composerRefs,
   threadPosts,
@@ -57,20 +57,17 @@ function setupDraftPreview({
   postActions,
   getQuotePreviewPostById
 }) {
-  if (!postListRefs?.list || !composerRefs?.textarea || !composerRefs?.section) {
+  if (!postListRefs?.section || !postListRefs?.list || !composerRefs?.textarea || !composerRefs?.section) {
     return;
   }
 
   let draftPreviewContainer =
-    composerRefs.section.nextElementSibling &&
-    composerRefs.section.nextElementSibling.classList.contains("chatThreadDraftPreviewSection")
-      ? composerRefs.section.nextElementSibling
-      : null;
+    postListRefs.section.querySelector(".chatThreadDraftPreviewSection");
 
   if (!draftPreviewContainer) {
     draftPreviewContainer = document.createElement("section");
     draftPreviewContainer.className = "chatThreadDraftPreviewSection";
-    composerRefs.section.insertAdjacentElement("afterend", draftPreviewContainer);
+    postListRefs.section.appendChild(draftPreviewContainer);
   }
 
   function refreshDraftPreview() {
@@ -88,7 +85,7 @@ function setupDraftPreview({
     draftPreviewContainer.innerHTML = "";
 
     const draftPreviewPost = buildDraftPreviewPost({
-      place,
+      place: currentPlace,
       character,
       draft: currentDraft,
       replySourcePost: findReplySourcePost(threadPosts, currentDraft)
@@ -117,10 +114,11 @@ function setupDraftPreview({
 }
 
 function setupComposerSubmit({
-  place,
+  currentPlace,
   character,
   composerRefs,
-  threadPosts
+  threadPosts,
+  threadRootPostId
 }) {
   if (!composerRefs?.submitButton) {
     return;
@@ -139,6 +137,16 @@ function setupComposerSubmit({
       return;
     }
 
+    if (currentDraft.replyThreadRootPostId !== threadRootPostId) {
+      const ok = window.confirm(
+        "現在表示中のツリーとは別の発言への返信しようとしています。\n投稿しますか？"
+      );
+
+      if (!ok) {
+        return;
+      }
+    }
+
     const validationError = validateComposerDraftForPost(currentDraft, character);
 
     if (validationError) {
@@ -147,7 +155,7 @@ function setupComposerSubmit({
     }
 
     const postInput = buildComposerPostInput({
-      place,
+      place: currentPlace,
       character,
       draft: currentDraft,
       replySourcePost: findReplySourcePost(threadPosts, currentDraft)
@@ -221,6 +229,36 @@ function renderInteractionPanel(container, options = {}) {
   };
 }
 
+function getCharacterCurrentPlace(character, fallbackPlaceId) {
+  const currentPlaceId =
+    typeof character?.currentPlaceId === "string" && character.currentPlaceId.trim() !== ""
+      ? character.currentPlaceId
+      : fallbackPlaceId;
+
+  return getPlaceById(currentPlaceId) || getPlaceById(fallbackPlaceId);
+}
+
+function buildThreadPlaceTrailLabels(posts = []) {
+  const labels = [];
+  let previousPlaceId = "";
+
+  posts.forEach(post => {
+    const placeId =
+      typeof post?.placeId === "string"
+        ? post.placeId.trim()
+        : "";
+
+    if (!placeId || placeId === previousPlaceId) {
+      return;
+    }
+
+    labels.push(getPlaceLabel(placeId));
+    previousPlaceId = placeId;
+  });
+
+  return labels;
+}
+
 function renderThreadPage() {
   if (!centerPanel || !chatMainArea) {
     return;
@@ -232,6 +270,7 @@ function renderThreadPage() {
 
   const placeId = getPlaceIdFromQuery() || "F1-1";
   const place = getPlaceById(placeId);
+  const currentPlace = getCharacterCurrentPlace(character, placeId) || place;
   const threadRootPostId = getThreadRootPostIdFromQuery();
 
   chatMainArea.innerHTML = "";
@@ -244,6 +283,7 @@ function renderThreadPage() {
   }
 
   const threadPosts = getThreadPostsByRootId(threadRootPostId);
+  const displayThreadPosts = getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, eno);
 
   markPlaceReadAtLatestPost(place?.placeId ?? placeId, {
     viewerEno: eno
@@ -267,7 +307,8 @@ function renderThreadPage() {
       typeof initialThreadPrivateNote === "string" &&
       initialThreadPrivateNote.trim() !== "",
     onCloseThread: closeThread,
-    showPrivateMemo: Boolean(account)
+    showPrivateMemo: Boolean(account),
+    placeTrailLabels: buildThreadPlaceTrailLabels(displayThreadPosts)
   });
 
   if (threadHeaderRefs?.memoSaveButton && threadHeaderRefs?.memoTextarea) {
@@ -360,7 +401,7 @@ function renderThreadPage() {
   });
 
   const postListRefs = renderPostListSection(chatMainArea, {
-    posts: getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, eno),
+    posts: displayThreadPosts,
     getPlaceLabel,
     postActions,
     currentEno: eno,
@@ -368,36 +409,40 @@ function renderThreadPage() {
     getQuotePreviewPostById
   });
 
+  const hasReplySource = Boolean(replySourcePost);
+
   const interactionPanelRefs = account
-    ? renderInteractionPanel(chatMainArea, { title: "REPLY" })
+    ? renderInteractionPanel(chatMainArea, { title: hasReplySource ? "REPLY" : "POST" })
     : null;
 
-  interactionPanelRefs?.panel?.classList.add("chatInteractionPanelReply");
+  if (hasReplySource) {
+    interactionPanelRefs?.panel?.classList.add("chatInteractionPanelReply");
+  }
 
   const interactionPanel = interactionPanelRefs?.body ?? null;
 
   if (interactionPanel) {
     composerRefs = renderChatComposerSection(interactionPanel, {
-    composerDraft,
-    replySourcePost,
-    getPlaceLabel,
-    currentPlaceLabel: getPlaceLabel(place?.placeId ?? placeId),
-    useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
-    fixedReplyTargetEno: composerDraft.fixedReplyTargetEno,
-    fixedReplyTargetName,
-    isAdditionalTargetOpen: composerDraft.isAdditionalTargetOpen,
-    onClearReply: () => {
-      const currentDraft = saveComposerDraft(
-        readComposerDraftFromRefs(composerRefs)
-      );
+      composerDraft,
+      replySourcePost,
+      getPlaceLabel,
+      currentPlaceLabel: getPlaceLabel(currentPlace?.placeId ?? placeId),
+      useCurrentPlaceForReply: composerDraft.useCurrentPlaceForReply,
+      fixedReplyTargetEno: composerDraft.fixedReplyTargetEno,
+      fixedReplyTargetName,
+      isAdditionalTargetOpen: composerDraft.isAdditionalTargetOpen,
+      onClearReply: () => {
+        const currentDraft = saveComposerDraft(
+          readComposerDraftFromRefs(composerRefs)
+        );
 
-      const nextDraft = clearReplyState(currentDraft);
-      saveComposerDraft(nextDraft);
-      renderThreadPage();
-    }
-  });
+        const nextDraft = clearReplyState(currentDraft);
+        saveComposerDraft(nextDraft);
+        renderThreadPage();
+      }
+    });
   
-  composerRefs.interactionPanel = interactionPanelRefs?.panel ?? null;
+    composerRefs.interactionPanel = interactionPanelRefs?.panel ?? null;
 
     setupRenderedComposer({
       composerRefs,
@@ -406,23 +451,24 @@ function renderThreadPage() {
       chatIconPicker
     });
 
-  setupDraftPreview({
-    postListRefs,
-    place,
-    character,
-    composerRefs,
-    threadPosts,
-    currentEno: eno,
-    postActions,
-    getQuotePreviewPostById,
-  });
+    setupDraftPreview({
+      postListRefs,
+      currentPlace,
+      character,
+      composerRefs,
+      threadPosts,
+      currentEno: eno,
+      postActions,
+      getQuotePreviewPostById,
+    });
 
-  setupComposerSubmit({
-    place,
-    character,
-    composerRefs,
-    threadPosts
-  });
+    setupComposerSubmit({
+      currentPlace,
+      character,
+      composerRefs,
+      threadPosts,
+      threadRootPostId
+    });
   }
   renderFavoritesSidePanel(rightPanel, {
     isLoggedIn: Boolean(account),
