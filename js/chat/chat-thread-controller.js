@@ -6,7 +6,7 @@ import { getPlaceIdFromQuery, navigateToChatPlace } from "./chat-navigation.js";
 import { createPost,getReplySourcePostForDraft,getThreadPostsByRootId } from "../services/post-service.js";
 import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
-import { addUnreadCountsToPlaces, markPlaceReadAtLatestPost } from "../services/place-unread-service.js";
+import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
@@ -39,7 +39,13 @@ const hiddenThreadPostIds = new Set();
 let currentFavoritesTab = "place";
 
 function closeThread() {
-  const placeId = getPlaceIdFromQuery() || "F1-1";
+  const account = getCurrentAccount();
+  const character = account?.eno ? loadCharacter(account.eno) : null;
+  const placeId =
+    typeof character?.currentPlaceId === "string" &&
+    character.currentPlaceId.trim() !== ""
+      ? character.currentPlaceId
+      : getPlaceIdFromQuery() || "F1-1";
 
   navigateToChatPlace(placeId, {
     withToast: false
@@ -138,13 +144,10 @@ function setupComposerSubmit({
     }
 
     if (currentDraft.replyThreadRootPostId !== threadRootPostId) {
-      const ok = window.confirm(
-        "現在表示中のツリーとは別の発言への返信しようとしています。\n投稿しますか？"
+      alert(
+        "現在表示中のツリーとは別の発言への返信です。\nツリーを閉じてから投稿してください。"
       );
-
-      if (!ok) {
-        return;
-      }
+      return;
     }
 
     const validationError = validateComposerDraftForPost(currentDraft, character);
@@ -161,32 +164,32 @@ function setupComposerSubmit({
       replySourcePost: findReplySourcePost(threadPosts, currentDraft)
     });
 
-if (!postInput) {
-  alert("本文を入力してください");
-  return;
-}
+    if (!postInput) {
+      alert("本文を入力してください");
+      return;
+    }
 
-if (
-  postInput.visibility === "private" &&
-  Array.isArray(postInput.visibleToEnoList) &&
-  postInput.visibleToEnoList.length <= 1
-) {
-  const ok = window.confirm(
-    "返信先が設定されていません。\nこの秘話は自分にしか見えません。投稿しますか？"
-  );
+    if (
+      postInput.visibility === "private" &&
+      Array.isArray(postInput.visibleToEnoList) &&
+      postInput.visibleToEnoList.length <= 1
+    ) {
+      const ok = window.confirm(
+        "返信先が設定されていません。\nこの秘話は自分にしか見えません。投稿しますか？"
+      );
 
-  if (!ok) {
-    return;
-  }
-}
+      if (!ok) {
+        return;
+      }
+    }
 
-createPost(postInput);
+    createPost(postInput);
 
     clearComposerDraft();
     renderThreadPage();
     showToast("発言を投稿しました", { type: "success" });
-      });
-    }
+  });
+}
 
 function renderInteractionPanel(container, options = {}) {
   const {
@@ -284,10 +287,6 @@ function renderThreadPage() {
 
   const threadPosts = getThreadPostsByRootId(threadRootPostId);
   const displayThreadPosts = getThreadDisplayPosts(threadPosts, hiddenThreadPostIds, eno);
-
-  markPlaceReadAtLatestPost(place?.placeId ?? placeId, {
-    viewerEno: eno
-  });
 
   if (threadPosts.length === 0) {
     const errorText = document.createElement("p");
