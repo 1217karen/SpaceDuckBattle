@@ -4,11 +4,7 @@ import { renderGuideDialogue } from "../common/guide-dialogue-view.js";
 import { getArchivedStoryPages } from "../data/story-pages.js";
 import { canAccessStory } from "../services/story-access-service.js";
 import { requireLogin } from "../services/storage-service.js";
-import {
-  isStoryRead,
-  loadStoryProgress,
-  markStoryRead
-} from "../services/story-progress-service.js";
+import { markStoryRead } from "../services/story-progress-service.js";
 
 const account = requireLogin();
 const list = document.getElementById("storyArchiveList");
@@ -18,7 +14,6 @@ const dialogue = document.getElementById("storyArchiveDialogue");
 const restartButton = document.getElementById("storyArchiveRestart");
 
 let selectedStory = null;
-let storyProgress = loadStoryProgress(account?.eno);
 const storyButtons = new Map();
 
 const accessibleStories = account?.eno
@@ -31,21 +26,10 @@ function setStatus(message) {
   }
 }
 
-function updateReadState(storyId) {
-  storyProgress = loadStoryProgress(account?.eno);
-  const button = storyButtons.get(storyId);
-  const state = button?.querySelector(".storyArchiveReadState");
-
-  if (state) {
-    state.textContent = isStoryRead(storyProgress, storyId) ? "既読" : "未読";
-  }
-}
-
 function finishArchiveStory(story) {
   if (!account?.eno || !story?.id) return;
 
   markStoryRead(account.eno, story.id);
-  updateReadState(story.id);
   setStatus("読了しました。別のストーリーを選ぶか、最初から読み直せます。");
 
   if (restartButton) {
@@ -76,7 +60,6 @@ function renderSelectedStory(story) {
 
   if (story.mode === "all") {
     markStoryRead(account.eno, story.id);
-    updateReadState(story.id);
   }
 
   renderGuideDialogue(dialogue, {
@@ -98,18 +81,11 @@ function createStoryButton(story) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "button-box storyArchiveItem";
+  button.textContent = story.title || story.id;
 
-  const storyTitle = document.createElement("span");
-  storyTitle.textContent = story.title || story.id;
-
-  const readState = document.createElement("span");
-  readState.className = "storyArchiveReadState";
-  readState.textContent = isStoryRead(storyProgress, story.id) ? "既読" : "未読";
-
-  button.appendChild(storyTitle);
-  button.appendChild(readState);
   button.addEventListener("click", () => renderSelectedStory(story));
   storyButtons.set(story.id, button);
+
   return button;
 }
 
