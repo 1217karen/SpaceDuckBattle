@@ -157,7 +157,8 @@ export function renderThreadHeaderSection(container, options = {}) {
     memoText = "",
     isMemoOpen = false,
     onCloseThread = null,
-    showPrivateMemo = true
+    showPrivateMemo = true,
+    placeTrailLabels = []
   } = options;
 
   const section = document.createElement("section");
