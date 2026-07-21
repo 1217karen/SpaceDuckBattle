@@ -104,6 +104,17 @@
   margin-bottom: 8px;
 }
 
+.chatThreadPlaceTrail {
+  margin-bottom: 6px;
+  color: var(--theme-text-sub);
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+  line-height: 1.7;
+}
+
+.chatThreadPrivateNoteToggle {
+  font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
+}
+
 .chatHeaderDetailContent {
   padding-left: 1em;
 }
