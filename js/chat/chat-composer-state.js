@@ -89,7 +89,6 @@ export function saveComposerDraft(draft = {}) {
 
   localStorage.setItem(
     storageKey,
-    COMPOSER_DRAFT_STORAGE_KEY,
     JSON.stringify(normalized)
   );
 
