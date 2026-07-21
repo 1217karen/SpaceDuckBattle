@@ -30,7 +30,7 @@ function finishArchiveStory(story) {
   if (!account?.eno || !story?.id) return;
 
   markStoryRead(account.eno, story.id);
-  setStatus("読了しました。別のストーリーを選ぶか、最初から読み直せます。");
+  setStatus("");
 
   if (restartButton) {
     restartButton.hidden = false;
@@ -49,10 +49,7 @@ function renderSelectedStory(story) {
     title.textContent = story.title || story.id;
   }
 
-  setStatus(story.mode === "click"
-    ? "クリックで会話を進めます。"
-    : "ストーリーを表示しています。"
-  );
+  setStatus("");
 
   if (restartButton) {
     restartButton.hidden = true;
@@ -114,7 +111,6 @@ function renderStoryList() {
   categories.forEach(stories => {
     const group = document.createElement("details");
     group.className = "storyArchiveCategory common-card-subtle";
-    group.open = true;
 
     const summary = document.createElement("summary");
     summary.className = "storyArchiveCategoryTitle";
