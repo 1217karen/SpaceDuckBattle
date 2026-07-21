@@ -4,18 +4,17 @@
   gap: 18px;
 }
 
-.storyArchiveSelector,
 .storyArchiveViewer {
   padding: 18px;
 }
 
-.right-panel .storyArchiveSelector {
-  padding: 12px;
+.storyArchiveSelector {
+  padding: 4px;
 }
 
 .storyArchiveList {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .storyArchiveCategory {
@@ -24,9 +23,17 @@
 
 .storyArchiveCategoryTitle {
   padding: 10px 12px;
-  background: var(--theme-button-bg);
-  color: var(--theme-text-main);
-  font-weight: bold;
+  background:
+    linear-gradient(
+      to right,
+      rgba(70, 115, 155, 0.72),
+      rgba(35, 60, 90, 0.72)
+    );
+  color: var(--theme-text-strong);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-md);
+  font-weight: normal;
+  letter-spacing: 0.12em;
   cursor: pointer;
 }
 
@@ -36,19 +43,43 @@
 
 .storyArchiveCategoryItems {
   display: grid;
-  gap: 6px;
-  padding: 10px;
+  gap: 3px;
+  padding: 6px;
 }
 
 .storyArchiveItem {
   width: 100%;
-  padding: 10px 12px;
+  padding: 5px 8px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--theme-text-muted);
+  box-shadow: none;
+  font-size: var(--font-size-small);
+  line-height: 1.5;
   text-align: left;
   overflow-wrap: anywhere;
 }
 
+.storyArchiveItem:hover {
+  border-color: var(--theme-border-soft);
+  background: rgba(70, 100, 145, 0.28);
+  color: var(--theme-text-main);
+}
+
+.storyArchiveItem.is-active {
+  border-color: var(--theme-border-main);
+  background: rgba(70, 100, 145, 0.42);
+  color: var(--theme-text-main);
+  box-shadow: none;
+  font-weight: normal;
+}
+
 .storyArchiveStatus {
   min-height: 1.5em;
+}
+
+.storyArchiveStatus:empty {
+  display: none;
 }
 
 .storyArchiveDialogue {
