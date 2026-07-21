@@ -19,16 +19,19 @@
 }
 
 .storyArchiveCategory {
-  border: 1px solid var(--border-color, #cbd5e1);
-  border-radius: 8px;
   overflow: hidden;
 }
 
 .storyArchiveCategoryTitle {
   padding: 10px 12px;
-  cursor: pointer;
+  background: var(--theme-button-bg);
+  color: var(--theme-text-main);
   font-weight: bold;
-  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+.storyArchiveCategoryTitle:hover {
+  background: var(--theme-button-bg-hover);
 }
 
 .storyArchiveCategoryItems {
@@ -38,24 +41,10 @@
 }
 
 .storyArchiveItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
   width: 100%;
   padding: 10px 12px;
   text-align: left;
-}
-
-.storyArchiveItem > :first-child {
-  min-width: 0;
   overflow-wrap: anywhere;
-}
-
-.storyArchiveReadState {
-  flex: 0 0 auto;
-  font-size: var(--font-size-sm, 0.875rem);
-  opacity: 0.75;
 }
 
 .storyArchiveStatus {
@@ -69,24 +58,22 @@
 .storyArchiveActions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: 10px;
   margin-top: 16px;
 }
 
+.storyArchivePageActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .storyArchiveBackLink {
+  padding: 6px 12px;
+  color: var(--theme-button-text);
   text-decoration: none;
 }
 
 .storyArchiveEmpty {
   margin: 0;
   padding: 12px;
-}
-
-@media (max-width: 560px) {
-  .storyArchiveItem {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
-  }
 }
