@@ -42,7 +42,7 @@ function renderSelectedStory(story) {
 
   selectedStory = story;
   storyButtons.forEach((button, storyId) => {
-    button.classList.toggle("is-selected", storyId === story.id);
+    button.classList.toggle("is-active", storyId === story.id);
   });
 
   if (title) {
