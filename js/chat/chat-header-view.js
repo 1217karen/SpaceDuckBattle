@@ -202,9 +202,22 @@ topRow.appendChild(titleGroup);
   const body = document.createElement("div");
   body.className = "chatHeaderBody";
 
+  const normalizedPlaceTrailLabels = Array.isArray(placeTrailLabels)
+    ? placeTrailLabels
+        .map(label => String(label ?? "").trim())
+        .filter(label => label !== "")
+    : [];
+
+  if (normalizedPlaceTrailLabels.length > 0) {
+    const placeTrail = document.createElement("div");
+    placeTrail.className = "chatThreadPlaceTrail";
+    placeTrail.textContent = normalizedPlaceTrailLabels.join(" ＞ ");
+    body.appendChild(placeTrail);
+  }
+
   const memoToggle = document.createElement("button");
   memoToggle.type = "button";
-  memoToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle button-plain";
+  memoToggle.className = "chatHeaderLinkButton chatHeaderDetailToggle chatThreadPrivateNoteToggle button-plain";
   memoToggle.textContent = isMemoOpen
     ? "▶非公開メモを閉じる"
     : "▼非公開メモを表示";
