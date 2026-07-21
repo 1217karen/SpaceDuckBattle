@@ -211,7 +211,7 @@ function renderInteractionPanel(container, options = {}) {
 
   if (title) {
     const heading = document.createElement("div");
-  panel.className = "common-card-framed common-card-rounded-lg common-card-panel chatInteractionPanel";
+    heading.className = "common-gradientHeading commonSectionHeading commonSectionHeading-small chatInteractionHeading";
     heading.textContent = title;
     panel.appendChild(heading);
   }
