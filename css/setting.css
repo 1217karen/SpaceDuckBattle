@@ -209,8 +209,6 @@
 .skillGuideControls {
   margin-bottom: 14px;
   padding: 10px;
-  border-color: var(--theme-border-soft);
-  background: rgba(10, 20, 40, 0.42);
 }
 
 .skillGuideFilterGroup {
