@@ -1,3 +1,5 @@
+// skill-pattern-panel.js
+
 import { skillHandlers } from "../data/skills.js";
 
 const DEFAULT_PATTERN_COUNT = 3;
