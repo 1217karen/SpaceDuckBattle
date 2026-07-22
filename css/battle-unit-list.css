@@ -140,12 +140,6 @@
   white-space: nowrap;
 }
 
-.unitPatternButton.is-active {
-  border-color: var(--theme-text-accent);
-  color: var(--theme-text-accent);
-  box-shadow: 0 0 8px rgba(120, 180, 255, 0.24);
-}
-
 .unitPatternButton.is-disabled,
 .unitPatternButton:disabled {
   opacity: 0.36;
