@@ -497,8 +497,9 @@ export function renderFavoritesPanel(container, options = {}) {
   section.className = "favoritesPanelSection";
 
   const heading = document.createElement("h2");
-  heading.className = "favoritesPanelHeading";
-  heading.textContent = "お気に入り";
+  heading.className =
+    "favoritesPanelHeading common-gradientHeading commonSectionHeading commonSectionHeading-large";
+  heading.textContent = "FAVORITES LIST";
 
   const tabRow = document.createElement("div");
   tabRow.className = "favoritesPanelTabRow";
