@@ -158,7 +158,8 @@ export function renderThreadHeaderSection(container, options = {}) {
     isMemoOpen = false,
     onCloseThread = null,
     showPrivateMemo = true,
-    placeTrailLabels = []
+    placeTrailItems = [],
+    onMoveToPlace = null
   } = options;
 
   const section = document.createElement("section");
@@ -202,16 +203,43 @@ topRow.appendChild(titleGroup);
   const body = document.createElement("div");
   body.className = "chatHeaderBody";
 
-  const normalizedPlaceTrailLabels = Array.isArray(placeTrailLabels)
-    ? placeTrailLabels
-        .map(label => String(label ?? "").trim())
-        .filter(label => label !== "")
+  const normalizedPlaceTrailItems = Array.isArray(placeTrailItems)
+    ? placeTrailItems
+        .map(item => ({
+          placeId: String(item?.placeId ?? "").trim(),
+          label: String(item?.label ?? "").trim()
+        }))
+        .filter(item => item.placeId !== "" && item.label !== "")
     : [];
 
-  if (normalizedPlaceTrailLabels.length > 0) {
+  if (normalizedPlaceTrailItems.length > 0) {
     const placeTrail = document.createElement("div");
     placeTrail.className = "chatThreadPlaceTrail";
-    placeTrail.textContent = normalizedPlaceTrailLabels.join(" ＞ ");
+
+    normalizedPlaceTrailItems.forEach((item, index) => {
+      if (index > 0) {
+        const separator = document.createElement("span");
+        separator.className = "chatThreadPlaceTrailSeparator";
+        separator.textContent = " ＞ ";
+        placeTrail.appendChild(separator);
+      }
+
+      const placeButton = document.createElement("button");
+      placeButton.type = "button";
+      placeButton.className = "chatThreadPlaceTrailButton button-plain";
+      placeButton.textContent = item.label;
+
+      if (typeof onMoveToPlace === "function") {
+        placeButton.addEventListener("click", () => {
+          onMoveToPlace(item.placeId);
+        });
+      } else {
+        placeButton.disabled = true;
+      }
+
+      placeTrail.appendChild(placeButton);
+    });
+
     body.appendChild(placeTrail);
   }
 
