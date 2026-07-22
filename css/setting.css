@@ -208,7 +208,28 @@
 
 .skillGuideControls {
   margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.skillGuideControlsSummary {
+  padding: 8px 10px;
+  color: var(--theme-text-accent);
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.skillGuideControlsSummary:hover {
+  background: var(--theme-button-bg-hover);
+  color: var(--theme-text-main);
+}
+
+.skillGuideControlsBody {
   padding: 10px;
+  border-top: 1px solid var(--theme-border-soft);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .skillGuideFilterGroup {
