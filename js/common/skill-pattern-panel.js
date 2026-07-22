@@ -117,7 +117,7 @@ export function createSkillPatternPanel(options = {}) {
     normalizedPatterns.forEach((pattern, index) => {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "skillPatternButton button-pill";
+      button.className = "skillPatternButton button-box skillPatternButton-pill";
       button.textContent = getPatternButtonLabel(
         pattern,
         index,
