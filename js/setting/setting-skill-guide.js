@@ -1,7 +1,7 @@
 //setting-skill-guide.js
 
 import { skillHandlers } from "../data/skills.js";
-import { getCurrentStats, isSkillUnlocked, formatUnlockText } from "./skill-unlock.js";
+import { getCurrentStats, isSkillUnlocked } from "./skill-unlock.js";
 
 const filterState = {
   ctSort: "",
@@ -108,7 +108,7 @@ function createFilterCheckboxGroup(titleText, stateKey, options, matchModeKey = 
 function createSkillGuideControls() {
   const controls = document.createElement("div");
   controls.id = "skillGuideControls";
-  controls.className = "skillGuideControls";
+  controls.className = "skillGuideControls common-card-subtle";
 
   const ctGroup = document.createElement("div");
   ctGroup.className = "skillGuideFilterGroup";
@@ -234,15 +234,9 @@ function createSkillGuideItem(skillId, skill, unlocked) {
   summary.textContent =
     skill.summary || skill.description || "説明未設定";
 
-  const unlock = document.createElement("div");
-  unlock.className = "skillGuideUnlock";
-  unlock.textContent =
-    `解放条件：${formatUnlockText(skill.unlock)}`;
-
   item.appendChild(title);
   item.appendChild(cooldown);
   item.appendChild(summary);
-  item.appendChild(unlock);
 
   if (!unlocked) {
     item.classList.add("is-locked");
@@ -356,12 +350,18 @@ function renderSkillGuide() {
 
   container.innerHTML = "";
 
+  const heading = document.createElement("h2");
+  heading.className =
+    "skillGuideHeading common-gradientHeading commonSectionHeading commonSectionHeading-large";
+  heading.textContent = "SKILL LIST";
+
   const controls = createSkillGuideControls();
 
   const list = document.createElement("div");
   list.id = "skillGuideList";
   list.className = "skillGuideList";
 
+  container.appendChild(heading);
   container.appendChild(controls);
   container.appendChild(list);
 
