@@ -187,3 +187,13 @@
   line-height: 1.2;
   text-align: center;
 }
+
+.favoritesPanelFeatureGuide {
+  margin: 0 0 10px;
+  font-size: var(--font-size-small);
+  line-height: 1.5;
+}
+
+.favoritesPanelFeatureGuide[hidden] {
+  display: none;
+}
