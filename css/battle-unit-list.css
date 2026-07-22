@@ -14,10 +14,7 @@
 
 .unitlist-guide {
   margin: 0;
-  padding: 8px 10px;
-  border: 1px solid var(--theme-border-soft);
-  border-radius: var(--theme-radius-sm);
-  background: rgba(0, 0, 0, 0.18);
+  padding: 0;
   color: var(--theme-text-muted);
   font-size: var(--font-size-small);
   line-height: 1.55;
