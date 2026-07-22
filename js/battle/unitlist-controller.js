@@ -291,6 +291,13 @@ function showSkillTooltip(skill, anchorElement) {
 
     unitListDiv.innerHTML = "";
 
+    const heading = document.createElement("h2");
+    heading.className =
+      "unitlist-heading common-gradientHeading commonSectionHeading commonSectionHeading-large";
+    heading.textContent = "DUCK LIST";
+
+    unitListDiv.appendChild(heading);
+
     const unitSections = Array.isArray(sections)
       ? sections
       : [{
