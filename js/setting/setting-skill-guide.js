@@ -106,9 +106,16 @@ function createFilterCheckboxGroup(titleText, stateKey, options, matchModeKey = 
 }
 
 function createSkillGuideControls() {
-  const controls = document.createElement("div");
-  controls.id = "skillGuideControls";
-  controls.className = "skillGuideControls common-card-framed common-card-surface";
+  const details = document.createElement("details");
+  details.id = "skillGuideControls";
+  details.className = "skillGuideControls common-card-framed";
+
+  const summary = document.createElement("summary");
+  summary.className = "skillGuideControlsSummary";
+  summary.textContent = "FILTER";
+
+  const body = document.createElement("div");
+  body.className = "skillGuideControlsBody";
 
   const ctGroup = document.createElement("div");
   ctGroup.className = "skillGuideFilterGroup";
@@ -148,62 +155,68 @@ function createSkillGuideControls() {
   ctGroup.appendChild(ctTitle);
   ctGroup.appendChild(ctItems);
 
-  controls.appendChild(ctGroup);
-controls.appendChild(
-  createFilterCheckboxGroup(
-    "対象",
-    "targets",
-    filterOptions.targets,
-    "targetMatchMode"
-  )
-);
-controls.appendChild(
-  createFilterCheckboxGroup(
-    "単複",
-    "targetCounts",
-    filterOptions.targetCounts
-  )
-);
-controls.appendChild(
-  createFilterCheckboxGroup(
-    "効果",
-    "effects",
-    filterOptions.effects,
-    "effectMatchMode"
-  )
-);
+  body.appendChild(ctGroup);
+
+  body.appendChild(
+    createFilterCheckboxGroup(
+      "対象",
+      "targets",
+      filterOptions.targets,
+      "targetMatchMode"
+    )
+  );
+
+  body.appendChild(
+    createFilterCheckboxGroup(
+      "単複",
+      "targetCounts",
+      filterOptions.targetCounts
+    )
+  );
+
+  body.appendChild(
+    createFilterCheckboxGroup(
+      "効果",
+      "effects",
+      filterOptions.effects,
+      "effectMatchMode"
+    )
+  );
 
   const resetButton = document.createElement("button");
   resetButton.type = "button";
   resetButton.className = "skillGuideResetButton button-box";
-  resetButton.textContent = "リセット";
+  resetButton.textContent = "検索リセット";
 
-resetButton.addEventListener("click", () => {
-  filterState.ctSort = "";
-  filterState.targetMatchMode = "any";
-  filterState.effectMatchMode = "any";
-  filterState.targets = [];
-  filterState.targetCounts = [];
-  filterState.effects = [];
+  resetButton.addEventListener("click", () => {
+    filterState.ctSort = "";
+    filterState.targetMatchMode = "any";
+    filterState.effectMatchMode = "any";
+    filterState.targets = [];
+    filterState.targetCounts = [];
+    filterState.effects = [];
 
-  controls
-    .querySelectorAll("input")
-    .forEach(input => {
-      input.checked = false;
-    });
+    body
+      .querySelectorAll("input")
+      .forEach(input => {
+        input.checked = false;
+      });
 
-  controls
-    .querySelectorAll(".skillGuideMatchModeButton")
-    .forEach(button => {
-      button.textContent = "どれかを含む";
-    });
+    body
+      .querySelectorAll(".skillGuideMatchModeButton")
+      .forEach(button => {
+        button.textContent = "どれかを含む";
+      });
 
-  renderSkillGuideItems();
-});
+    renderSkillGuideItems();
+  });
 
-  controls.appendChild(resetButton);
+  body.appendChild(resetButton);
 
-  return controls;
+  details.appendChild(summary);
+  details.appendChild(body);
+
+  return details;
 }
 
 function createSkillGuideItem(skillId, skill, unlocked) {
