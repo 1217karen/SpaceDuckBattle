@@ -108,7 +108,7 @@ function createFilterCheckboxGroup(titleText, stateKey, options, matchModeKey = 
 function createSkillGuideControls() {
   const controls = document.createElement("div");
   controls.id = "skillGuideControls";
-  controls.className = "skillGuideControls common-card-subtle";
+  controls.className = "skillGuideControls common-card-framed common-card-surface";
 
   const ctGroup = document.createElement("div");
   ctGroup.className = "skillGuideFilterGroup";
