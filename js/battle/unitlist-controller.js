@@ -162,7 +162,7 @@ function showSkillTooltip(skill, anchorElement) {
     const guide = document.createElement("p");
     guide.className = "unitlist-guide";
     guide.textContent =
-      "選択中の設定ボタンを再クリックすると編成できます。";
+      "選択中の設定を再クリックすると編成できます。";
 
     unitListDiv.appendChild(guide);
   }
