@@ -202,14 +202,23 @@
   display: block;
 }
 
+.skillGuideHeading {
+  margin: 0 0 12px;
+}
+
 .skillGuideControls {
-  margin-bottom: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px dashed var(--theme-border-main);
+  margin-bottom: 14px;
+  padding: 10px;
+  border-color: var(--theme-border-soft);
+  background: rgba(10, 20, 40, 0.42);
 }
 
 .skillGuideFilterGroup {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.skillGuideFilterGroup:last-of-type {
+  margin-bottom: 0;
 }
 
 .skillGuideFilterHeader {
@@ -222,8 +231,8 @@
 .skillGuideFilterTitle {
   margin-bottom: 0;
   color: var(--theme-text-accent);
-  font-weight: bold;
   font-size: var(--font-size-small);
+  font-weight: bold;
 }
 
 .skillGuideMatchModeButton {
@@ -252,8 +261,8 @@
 }
 
 .skillGuideResetButton {
-  margin-top: 2px;
-  padding: 2px 6px;
+  margin-top: 6px;
+  padding: 3px 8px;
   font-size: var(--font-size-xs);
 }
 
@@ -263,7 +272,15 @@
 
 .skillGuideItem {
   padding: 10px 0;
-  border-bottom: 1px dashed var(--theme-border-main);
+  border-bottom: 1px dashed var(--theme-border-soft);
+}
+
+.skillGuideItem:first-child {
+  padding-top: 0;
+}
+
+.skillGuideItem:last-child {
+  border-bottom: 0;
 }
 
 .skillGuideTitle {
@@ -278,26 +295,20 @@
 .skillGuideIcon {
   width: 20px;
   height: 20px;
-  object-fit: cover;
   flex-shrink: 0;
+  object-fit: cover;
 }
 
 .skillGuideCooldown {
   margin-bottom: 4px;
   color: var(--theme-text-accent);
-  font-weight: bold;
   font-size: var(--font-size-small);
+  font-weight: bold;
 }
 
 .skillGuideSummary {
-  margin-bottom: 4px;
+  color: var(--theme-text-main);
   line-height: 1.45;
-}
-
-.skillGuideUnlock {
-  color: var(--theme-text-muted);
-  font-size: var(--font-size-small);
-  line-height: 1.4;
 }
 
 .skillGuideEmpty {
