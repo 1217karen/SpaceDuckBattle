@@ -141,3 +141,7 @@
   text-decoration: none;
 }
 
+/* ボタンの形だけをピル型にする */
+.button-shape-pill {
+  border-radius: 999px;
+}
