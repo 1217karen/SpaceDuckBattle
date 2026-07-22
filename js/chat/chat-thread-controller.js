@@ -241,8 +241,8 @@ function getCharacterCurrentPlace(character, fallbackPlaceId) {
   return getPlaceById(currentPlaceId) || getPlaceById(fallbackPlaceId);
 }
 
-function buildThreadPlaceTrailLabels(posts = []) {
-  const labels = [];
+function buildThreadPlaceTrailItems(posts = []) {
+  const items = [];
   let previousPlaceId = "";
 
   posts.forEach(post => {
@@ -255,11 +255,14 @@ function buildThreadPlaceTrailLabels(posts = []) {
       return;
     }
 
-    labels.push(getPlaceLabel(placeId));
+    items.push({
+      placeId,
+      label: getPlaceLabel(placeId)
+    });
     previousPlaceId = placeId;
   });
 
-  return labels;
+  return items;
 }
 
 function renderThreadPage() {
@@ -307,7 +310,8 @@ function renderThreadPage() {
       initialThreadPrivateNote.trim() !== "",
     onCloseThread: closeThread,
     showPrivateMemo: Boolean(account),
-    placeTrailLabels: buildThreadPlaceTrailLabels(displayThreadPosts)
+    placeTrailItems: buildThreadPlaceTrailItems(displayThreadPosts),
+    onMoveToPlace: navigateToChatPlace
   });
 
   if (threadHeaderRefs?.memoSaveButton && threadHeaderRefs?.memoTextarea) {
