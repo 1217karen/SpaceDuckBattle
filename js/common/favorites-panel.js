@@ -514,6 +514,10 @@ export function renderFavoritesPanel(container, options = {}) {
   characterTabButton.className = "favoritesPanelTabButton button-box";
   characterTabButton.textContent = "キャラ";
 
+  const featureGuide = document.createElement("p");
+  featureGuide.className = "favoritesPanelFeatureGuide text-muted";
+  featureGuide.hidden = true;
+
   const content = document.createElement("div");
   content.className = "favoritesPanelContent";
 
@@ -522,6 +526,23 @@ export function renderFavoritesPanel(container, options = {}) {
   function refreshContent() {
     placeTabButton.classList.toggle("is-active", currentTab === "place");
     characterTabButton.classList.toggle("is-active", currentTab === "character");
+
+    featureGuide.hidden = true;
+    featureGuide.textContent = "";
+
+    if (currentTab === "place" && enablePlaceReorder) {
+      featureGuide.textContent = "☰をドラッグして並べ替えができます";
+      featureGuide.hidden = false;
+    }
+
+    if (
+      currentTab === "character" &&
+      showCharacterMemo &&
+      editableCharacterMemo
+    ) {
+      featureGuide.textContent = "キャラクターごとにメモを残せます";
+      featureGuide.hidden = false;
+    }
 
     if (currentTab === "place") {
       renderFavoritePlacesContent(content, {
@@ -590,6 +611,7 @@ export function renderFavoritesPanel(container, options = {}) {
   }
 
   section.appendChild(tabRow);
+  section.appendChild(featureGuide);
   section.appendChild(content);
   container.appendChild(section);
 
@@ -601,6 +623,7 @@ export function renderFavoritesPanel(container, options = {}) {
     tabRow,
     placeTabButton,
     characterTabButton,
+    featureGuide,
     content
   };
 }
