@@ -106,9 +106,25 @@
 
 .chatThreadPlaceTrail {
   margin-bottom: 6px;
-  color: var(--theme-text-sub);
+  color: var(--theme-text-subtle);
   font-size: calc(var(--chat-font-base) * var(--chat-font-scale-small));
   line-height: 1.7;
+}
+
+.chatThreadPlaceTrailButton {
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.chatThreadPlaceTrailButton:hover,
+.chatThreadPlaceTrailButton:focus {
+  color: var(--theme-text-accent);
+}
+
+.chatThreadPlaceTrailSeparator {
+  color: var(--theme-text-muted);
 }
 
 .chatThreadPrivateNoteToggle {
