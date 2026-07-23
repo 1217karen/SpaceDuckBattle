@@ -1,5 +1,7 @@
 //favorites-panel.js
 
+import { bindReorderableList } from "./reorderable-list.js";
+
 function navigateToFavoritePlace(placeId) {
   if (!placeId) {
     return;
@@ -224,7 +226,6 @@ function createFavoritePlaceDragHandle(place) {
   handle.textContent = "☰";
   handle.title = "ドラッグで並び替え";
   handle.setAttribute("aria-label", "ドラッグで並び替え");
-  handle.draggable = true;
 
   if (place?.placeId) {
     handle.dataset.placeId = place.placeId;
@@ -239,53 +240,6 @@ function getFavoritePlaceIdsFromContainer(container) {
   return Array.from(container.querySelectorAll(".favoritesPanelPlaceItem"))
     .map(item => item.dataset.placeId)
     .filter(placeId => typeof placeId === "string" && placeId.trim() !== "");
-}
-
-function bindFavoritePlaceDrag(item, handle, options = {}) {
-  const {
-    onReorderFavoritePlaces = null
-  } = options;
-
-  if (!item?.dataset?.placeId || !handle) {
-    return;
-  }
-
-  handle.addEventListener("dragstart", (event) => {
-    item.classList.add("is-dragging");
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", item.dataset.placeId);
-  });
-
-  handle.addEventListener("dragend", () => {
-    item.classList.remove("is-dragging");
-  });
-
-  item.addEventListener("dragover", (event) => {
-    const draggingItem = item.parentElement?.querySelector(".favoritesPanelPlaceItem.is-dragging");
-
-    if (!draggingItem || draggingItem === item) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const rect = item.getBoundingClientRect();
-    const insertAfter = event.clientY > rect.top + rect.height / 2;
-
-    if (insertAfter) {
-      item.parentElement.insertBefore(draggingItem, item.nextSibling);
-    } else {
-      item.parentElement.insertBefore(draggingItem, item);
-    }
-  });
-
-  item.addEventListener("drop", (event) => {
-    event.preventDefault();
-
-    if (typeof onReorderFavoritePlaces === "function") {
-      onReorderFavoritePlaces(getFavoritePlaceIdsFromContainer(item.parentElement));
-    }
-  });
 }
 
 function renderFavoritePlacesContent(container, options = {}) {
@@ -319,9 +273,6 @@ function renderFavoritePlacesContent(container, options = {}) {
     if (enablePlaceReorder) {
       const handle = createFavoritePlaceDragHandle(place);
       item.appendChild(handle);
-      bindFavoritePlaceDrag(item, handle, {
-        onReorderFavoritePlaces
-      });
     }
 
     item.appendChild(
@@ -338,6 +289,18 @@ function renderFavoritePlacesContent(container, options = {}) {
 
     container.appendChild(item);
   });
+  if (enablePlaceReorder) {
+    bindReorderableList({
+      container,
+      itemSelector: ".favoritesPanelPlaceItem",
+      handleSelector: ".favoritesPanelPlaceDragHandle",
+      onReorder: ({ container: listContainer }) => {
+        if (typeof onReorderFavoritePlaces === "function") {
+          onReorderFavoritePlaces(getFavoritePlaceIdsFromContainer(listContainer));
+        }
+      }
+    });
+  }
 }
 
 function createFavoriteCharacterMemoView(character) {
