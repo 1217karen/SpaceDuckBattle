@@ -78,7 +78,9 @@ export function createPostCard(post, options = {}) {
     getQuotePreviewPostById = null,
     quotePreviewRootArea = null,
     onAuthorIconClick = null,
-    isPlaceLinkDisabled = null
+    isPlaceLinkDisabled = null,
+    isReplyDisabled = null,
+    onReplyDisabled = null
   } = options;
 
   const {
@@ -300,10 +302,28 @@ headerRight.appendChild(postMetaTop);
     const replyButton = document.createElement("button");
     replyButton.type = "button";
     replyButton.className = "chatPostActionButton chatPostActionButtonReply button-icon";
-    replyButton.title = "返信";
-    replyButton.setAttribute("aria-label", "返信");
+    const isReplyBlocked =
+      typeof isReplyDisabled === "function" && isReplyDisabled(post);
 
-    if (typeof onReply === "function") {
+    replyButton.title = isReplyBlocked
+      ? "同じルームにいる人のみ返信できます"
+      : "返信";
+    replyButton.setAttribute(
+      "aria-label",
+      isReplyBlocked
+        ? "同じルームにいる人のみ返信できます"
+        : "返信"
+    );
+
+    if (isReplyBlocked) {
+      replyButton.classList.add("chatPostActionButtonDisabled");
+      replyButton.setAttribute("aria-disabled", "true");
+      replyButton.addEventListener("click", () => {
+        if (typeof onReplyDisabled === "function") {
+          onReplyDisabled(post);
+        }
+      });
+    } else if (typeof onReply === "function") {
       replyButton.addEventListener("click", () => {
         onReply(post);
       });
@@ -499,7 +519,9 @@ export function renderPostListSection(container, options = {}) {
     getReplyTargetLabels = null,
     getQuotePreviewPostById = null,
     onAuthorIconClick = null,
-    isPlaceLinkDisabled = null
+    isPlaceLinkDisabled = null,
+    isReplyDisabled = null,
+    onReplyDisabled = null
   } = options;
 
   const section = document.createElement("section");
@@ -520,7 +542,9 @@ export function renderPostListSection(container, options = {}) {
     getReplyTargetLabels,
     getQuotePreviewPostById,
     onAuthorIconClick,
-    isPlaceLinkDisabled
+    isPlaceLinkDisabled,
+    isReplyDisabled,
+    onReplyDisabled
   });
 
   return {
@@ -539,7 +563,9 @@ export function renderPostListContent(listContainer, options = {}) {
     getReplyTargetLabels = null,
     getQuotePreviewPostById = null,
     onAuthorIconClick = null,
-    isPlaceLinkDisabled = null
+    isPlaceLinkDisabled = null,
+    isReplyDisabled = null,
+    onReplyDisabled = null
   } = options;
 
   if (!listContainer) {
@@ -566,7 +592,9 @@ export function renderPostListContent(listContainer, options = {}) {
         getReplyTargetLabels,
         getQuotePreviewPostById,
         onAuthorIconClick,
-        isPlaceLinkDisabled
+        isPlaceLinkDisabled,
+        isReplyDisabled,
+        onReplyDisabled
       })
     );
   });
