@@ -801,7 +801,6 @@ function renderChatPlaceInfo() {
     "F1-1";
 
   const place = getPlaceById(placeId);
-  const aroundBasePlace = getAroundBasePlace(place);
   const roomAccess = canAccessRoom(place, account);
 
   if (!roomAccess.ok && roomAccess.reason === "login-required") {
@@ -821,6 +820,7 @@ function renderChatPlaceInfo() {
     return;
   }
 
+  const aroundBasePlace = getAroundBasePlace(place);
   openedAuthorEno = getChatAuthorEnoFromQuery();
   messageFilterEno = currentViewMode === "message"
     ? getChatMessageFilterEnoFromQuery()
