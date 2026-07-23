@@ -1,5 +1,6 @@
 // chat-place-utils.js
 
+import "../services/room-service.js";
 import { places } from "../data/places-data.js";
 import { makeAccountStorageKey } from "../services/account-storage-key.js";
 
