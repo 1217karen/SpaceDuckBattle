@@ -7,6 +7,7 @@ import { createPost,getReplySourcePostForDraft,getThreadPostsByRootId } from "..
 import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
+import { isInviteRoomPost } from "../services/room-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
@@ -85,7 +86,8 @@ function setupDraftPreview({
       postActions,
       currentEno,
       getReplyTargetLabels,
-      getQuotePreviewPostById
+      getQuotePreviewPostById,
+      isPlaceLinkDisabled: isInviteRoomPost
     });
 
     draftPreviewContainer.innerHTML = "";
@@ -106,7 +108,8 @@ function setupDraftPreview({
       getPlaceLabel,
       currentEno,
       hideActions: true,
-      getReplyTargetLabels
+      getReplyTargetLabels,
+      isPlaceLinkDisabled: isInviteRoomPost
     });
 
     previewCard.classList.add("chatComposerReplyPreviewCard");
@@ -409,7 +412,8 @@ function renderThreadPage() {
     postActions,
     currentEno: eno,
     getReplyTargetLabels,
-    getQuotePreviewPostById
+    getQuotePreviewPostById,
+    isPlaceLinkDisabled: isInviteRoomPost
   });
 
   const hasReplySource = Boolean(replySourcePost);
