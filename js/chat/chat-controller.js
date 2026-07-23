@@ -37,6 +37,7 @@ import { renderChatPaginationSection } from "./chat-pagination-view.js";
 import { renderChatActionSection } from "./chat-action-view.js";
 
 import { hasShopForPlace } from "../services/shop-service.js";
+import { canAccessRoom, isInviteRoom } from "../services/room-service.js";
 import { purchaseItems as purchaseInventoryItems,getInventoryLogs,markInventoryLogPosted } from "../services/inventory-service.js";
 import { renderShopSection,renderShopPurchaseConfirmModalIfNeeded } from "./chat-shop-view.js";
 
