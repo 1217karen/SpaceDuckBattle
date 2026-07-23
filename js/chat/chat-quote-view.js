@@ -1,6 +1,7 @@
 //chat-quote-view.js
 
 import { createPostCard } from "./chat-post-view.js";
+import { isInviteRoomPost } from "../services/room-service.js";
 
 function parseQuotePostIds(text) {
   const source = String(text ?? "");
@@ -39,7 +40,8 @@ function buildQuotePreviewCard(post, options = {}) {
     getQuotePreviewPostById: typeof getQuotePreviewPostById === "function"
       ? getQuotePreviewPostById
       : null,
-    quotePreviewRootArea: rootPreviewArea ?? null
+    quotePreviewRootArea: rootPreviewArea ?? null,
+    isPlaceLinkDisabled: isInviteRoomPost
   });
 
   card.classList.add("chatQuotePreviewCard");
