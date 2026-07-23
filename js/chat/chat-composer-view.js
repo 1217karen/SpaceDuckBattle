@@ -103,7 +103,8 @@ if (replySourcePost) {
       onMoveToPlace: null,
       onReply: null,
       currentEno: null,
-      hideActions: true
+      hideActions: true,
+      isPlaceLinkDisabled: isInviteRoomPost
     });
   replyPreviewCard.classList.add("chatComposerReplyPreviewCard");
 
