@@ -248,6 +248,18 @@
   justify-content: center;
 }
 
+
+.chatPostActionButtonDisabled {
+  opacity: 0.42;
+  filter: grayscale(1);
+  cursor: help;
+}
+
+.chatPostActionButtonDisabled:hover,
+.chatPostActionButtonDisabled:focus {
+  opacity: 0.55;
+}
+
 .chatPostActionButtonDelete:hover {
   color: #ff8a8a;
 }
