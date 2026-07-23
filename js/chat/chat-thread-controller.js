@@ -7,7 +7,7 @@ import { createPost,getReplySourcePostForDraft,getThreadPostsByRootId } from "..
 import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
-import { isInviteRoom, isInviteRoomPost, isInviteRoomReplyBlocked } from "../services/room-service.js";
+import { isInviteRoom, isInviteRoomPost, isInviteRoomReplyBlocked, isPrivateRoom } from "../services/room-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
@@ -264,9 +264,12 @@ function buildThreadPlaceTrailItems(posts = []) {
       return;
     }
 
+    const place = getPlaceById(placeId);
+
     items.push({
       placeId,
-      label: getPlaceLabel(placeId)
+      label: getPlaceLabel(placeId),
+      isLinkDisabled: isInviteRoom(place) || isPrivateRoom(place)
     });
     previousPlaceId = placeId;
   });
