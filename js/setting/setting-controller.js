@@ -59,7 +59,6 @@ function getUnlockedSkillList() {
 
 let currentCommIcons = [];
 let currentDefaultSpeakerName = "";
-let draggedSkillBlock = null;
 
 function getDefaultSpeakerName() {
   return currentDefaultSpeakerName;
@@ -225,49 +224,6 @@ function createSkillDialogueList(dialogues = []) {
   return list;
 }
 
-function bindSkillBlockDrag(block, dragHandle) {
-  dragHandle.draggable = true;
-  dragHandle.title = "ドラッグで並べ替え";
-
-  dragHandle.addEventListener("dragstart", (e) => {
-    draggedSkillBlock = block;
-    block.classList.add("is-dragging");
-
-    if (e.dataTransfer) {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", block.dataset.index || "");
-    }
-  });
-
-  dragHandle.addEventListener("dragend", () => {
-    block.classList.remove("is-dragging");
-    draggedSkillBlock = null;
-  });
-
-  block.addEventListener("dragover", (e) => {
-    if (!draggedSkillBlock || draggedSkillBlock === block) return;
-
-    e.preventDefault();
-
-    const area =
-      document.getElementById("skillArea");
-
-    if (!area) return;
-
-    const rect =
-      block.getBoundingClientRect();
-
-    const insertAfter =
-      e.clientY > rect.top + rect.height / 2;
-
-    if (insertAfter) {
-      area.insertBefore(draggedSkillBlock, block.nextSibling);
-    } else {
-      area.insertBefore(draggedSkillBlock, block);
-    }
-  });
-}
-
 function createSkillBlock(skillData, index) {
 const wrapper = document.createElement("div");
 wrapper.className = "skillBlock subsection-card";
@@ -280,6 +236,8 @@ wrapper.dataset.index = String(index);
   dragHandle.type = "button";
   dragHandle.className = "skillDragHandle button-icon";
   dragHandle.textContent = "☰";
+  dragHandle.title = "ドラッグで並べ替え";
+  dragHandle.setAttribute("aria-label", "ドラッグで並べ替え");
 
   const skillBlockBody = document.createElement("div");
   skillBlockBody.className = "skillBlockBody";
@@ -438,8 +396,6 @@ updateCutinPreview();
 
   select.addEventListener("change", updateDetailVisibility);
 
-  bindSkillBlockDrag(wrapper, dragHandle);
-
   skillHeader.appendChild(select);
   skillHeader.appendChild(skillInfo);
 
@@ -462,6 +418,11 @@ function renderSkillArea(skills, visibleCount = skills.length) {
   visibleSkills.forEach((skillData, index) => {
     const block = createSkillBlock(skillData, index);
     skillArea.appendChild(block);
+  });
+  bindReorderableList({
+    container: skillArea,
+    itemSelector: ".skillBlock",
+    handleSelector: ".skillDragHandle"
   });
 }
 
