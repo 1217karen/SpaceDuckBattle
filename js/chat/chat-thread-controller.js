@@ -7,7 +7,7 @@ import { createPost,getReplySourcePostForDraft,getThreadPostsByRootId } from "..
 import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
-import { isInviteRoomPost } from "../services/room-service.js";
+import { isInviteRoom, isInviteRoomPost } from "../services/room-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
