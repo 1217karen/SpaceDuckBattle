@@ -2,6 +2,7 @@
 
 import {requireLogin,getCurrentAccount,loadCharacter,loadUnit,saveCharacter,saveUnit} from "../services/storage-service.js";
 import { getNoImageUrl } from "../common/icon-picker.js";
+import { bindReorderableList } from "../common/reorderable-list.js";
 
 requireLogin();
 
@@ -43,51 +44,6 @@ function normalizeProfileImages(profileImages) {
           ? item.enabled
           : true
     }));
-}
-
-let draggedCommIconRow = null;
-
-function bindCommIconDrag(row, dragHandle) {
-  dragHandle.draggable = true;
-  dragHandle.title = "ドラッグで並べ替え";
-
-  dragHandle.addEventListener("dragstart", (e) => {
-    draggedCommIconRow = row;
-    row.classList.add("is-dragging");
-
-    if (e.dataTransfer) {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", row.dataset.id || "");
-    }
-  });
-
-  dragHandle.addEventListener("dragend", () => {
-    row.classList.remove("is-dragging");
-    draggedCommIconRow = null;
-  });
-
-  row.addEventListener("dragover", (e) => {
-    if (!draggedCommIconRow || draggedCommIconRow === row) return;
-
-    e.preventDefault();
-
-    const area =
-      document.getElementById("commIconArea");
-
-    if (!area) return;
-
-    const rect =
-      row.getBoundingClientRect();
-
-    const insertAfter =
-      e.clientY > rect.top + rect.height / 2;
-
-    if (insertAfter) {
-      area.insertBefore(draggedCommIconRow, row.nextSibling);
-    } else {
-      area.insertBefore(draggedCommIconRow, row);
-    }
-  });
 }
 
 function setIconInputAndPreview(inputId, previewId, value) {
@@ -232,9 +188,10 @@ function createCommIconRow(item) {
       ? item.url.trim()
       : getNoImageUrl();
   preview.alt = `アイコン${item.id}`;
+  preview.draggable = false;
+  preview.title = "ドラッグで並べ替え";
+  preview.setAttribute("aria-label", "ドラッグで並べ替え");
   row.appendChild(preview);
-
-  bindCommIconDrag(row, preview);
 
   const inputArea = document.createElement("div");
   inputArea.className = "imageInputBody";
@@ -274,6 +231,11 @@ function renderCommIconArea(commIcons) {
 
   commIcons.forEach(item => {
     area.appendChild(createCommIconRow(item));
+  });
+  bindReorderableList({
+    container: area,
+    itemSelector: ".commIconRow",
+    handleSelector: ".commIconPreview"
   });
 }
 
