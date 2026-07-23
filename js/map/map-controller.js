@@ -6,6 +6,8 @@ import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
 import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getFavoritePlaces, saveFavoritePlaceIds } from "../chat/chat-place-utils.js";
+import { showToast } from "../common/toast.js";
+import { createRoom, getPublicRoomsByParentAreaId, getRoomAccessLabel, getRoomsByOwnerEno, isAreaPlace, updateRoom } from "../services/room-service.js";
 
 const mapContent = document.querySelector("#mapContent");
 const rightPanel = document.querySelector(".right-panel");
@@ -25,6 +27,7 @@ const expandedAreaIds = new Set();
 
 let selectedFieldId = null;
 let moveConfirmPlaceId = null;
+let editingRoomPlaceId = null;
 
 function getCurrentCharacter() {
   const account = getCurrentAccount();
@@ -107,10 +110,7 @@ function getMainAreasByFieldId(fieldPlaceId) {
 }
 
 function getRoomsByAreaId(areaPlaceId) {
-  return places.filter(place =>
-    place.kind === "room" &&
-    place.parentId === areaPlaceId
-  );
+  return getPublicRoomsByParentAreaId(areaPlaceId);
 }
 
 function createMapVisual() {
@@ -144,6 +144,7 @@ function createMapVisual() {
       selectedFieldId = field.placeId;
       renderMapTree();
 renderMapFavoritesPanel();
+showPendingMapToast();
     });
 
     wrapper.appendChild(button);
@@ -303,6 +304,7 @@ function renderAreaCard(areaPlace, currentPlaceId) {
 
       renderMapTree();
 renderMapFavoritesPanel();
+showPendingMapToast();
     });
 
     roomControlRow.appendChild(roomToggle);
@@ -464,6 +466,204 @@ function renderMapFavoritesPanel() {
   });
 }
 
+function readRoomFormData(form) {
+  return {
+    name: form.querySelector("[name=roomName]")?.value ?? "",
+    description: form.querySelector("[name=roomDescription]")?.value ?? "",
+    accessType: form.querySelector("[name=roomAccessType]:checked")?.value ?? "public",
+    showParentMainAreaPreview: Boolean(form.querySelector("[name=showParentMainAreaPreview]")?.checked),
+    actionIds: form.querySelector("[name=actionLookAround]")?.checked ? ["look-around"] : []
+  };
+}
+
+function renderRoomCreatorSection(currentPlaceId) {
+  const section = document.createElement("section");
+  section.className = "common-card mapRoomCreatorSection";
+
+  const account = getCurrentAccount();
+  const currentPlace = findPlaceById(currentPlaceId);
+  const editingRoom = editingRoomPlaceId
+    ? findPlaceById(editingRoomPlaceId)
+    : null;
+
+  const title = document.createElement("h2");
+  title.className = "mapRoomCreatorTitle";
+  title.textContent = editingRoom ? "ルーム編集" : "ルーム作成";
+  section.appendChild(title);
+
+  const help = document.createElement("p");
+  help.className = "mapRoomCreatorHelp";
+  help.textContent = "現在いるエリアにだけルームを作成できます。作成後は自動でそのルームへ移動します。";
+  section.appendChild(help);
+
+  if (!account?.eno) {
+    const loginNotice = document.createElement("p");
+    loginNotice.className = "mapRoomCreatorNotice";
+    loginNotice.textContent = "ルーム作成・編集にはログインが必要です。";
+    section.appendChild(loginNotice);
+    return section;
+  }
+
+  const form = document.createElement("form");
+  form.className = "mapRoomForm";
+
+  const roomName = editingRoom?.name ?? "";
+  const roomDescription = editingRoom?.longDescription ?? editingRoom?.shortDescription ?? "";
+  const accessType = editingRoom?.accessType === "invite" || editingRoom?.accessType === "private"
+    ? editingRoom.accessType
+    : "public";
+  const showParentPreview = editingRoom
+    ? Boolean(editingRoom.showParentMainAreaPreview)
+    : true;
+  const hasLookAround = editingRoom
+    ? Array.isArray(editingRoom.actionIds) && editingRoom.actionIds.includes("look-around")
+    : true;
+
+  form.innerHTML = `
+    <label class="mapRoomFormField">
+      <span>ルーム名</span>
+      <input type="text" name="roomName" value="${escapeHtml(roomName)}" maxlength="40" required>
+    </label>
+    <label class="mapRoomFormField">
+      <span>説明文</span>
+      <textarea name="roomDescription" maxlength="200" rows="3">${escapeHtml(roomDescription)}</textarea>
+    </label>
+    <fieldset class="mapRoomFormFieldset">
+      <legend>公開範囲</legend>
+      <label><input type="radio" name="roomAccessType" value="public" ${accessType === "public" ? "checked" : ""}> 公開</label>
+      <label><input type="radio" name="roomAccessType" value="invite" ${accessType === "invite" ? "checked" : ""}> 招待制</label>
+      <label><input type="radio" name="roomAccessType" value="private" ${accessType === "private" ? "checked" : ""}> 非公開</label>
+    </fieldset>
+    <label class="mapRoomFormCheckbox">
+      <input type="checkbox" name="showParentMainAreaPreview" ${showParentPreview ? "checked" : ""}>
+      親エリアの発言を表示する
+    </label>
+    <label class="mapRoomFormCheckbox">
+      <input type="checkbox" name="actionLookAround" ${hasLookAround ? "checked" : ""}>
+      アクション「周囲を見る」を使えるようにする
+    </label>
+  `;
+
+  const buttonRow = document.createElement("div");
+  buttonRow.className = "mapRoomFormButtonRow";
+
+  const submitButton = document.createElement("button");
+  submitButton.type = "submit";
+  submitButton.className = "button-primaryNew";
+  submitButton.textContent = editingRoom ? "変更を保存" : "ルームを作成";
+  buttonRow.appendChild(submitButton);
+
+  if (editingRoom) {
+    const cancelButton = document.createElement("button");
+    cancelButton.type = "button";
+    cancelButton.className = "button-box";
+    cancelButton.textContent = "編集をやめる";
+    cancelButton.addEventListener("click", () => {
+      editingRoomPlaceId = null;
+      renderMapTree();
+    });
+    buttonRow.appendChild(cancelButton);
+  }
+
+  form.appendChild(buttonRow);
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const input = readRoomFormData(form);
+    const result = editingRoom
+      ? updateRoom(editingRoom.placeId, { ...input, ownerEno: account.eno })
+      : createRoom({ ...input, parentId: currentPlaceId, ownerEno: account.eno });
+
+    if (!result.ok) {
+      showToast(result.message, { type: "error" });
+      return;
+    }
+
+    showToast(result.message, { type: "success" });
+
+    if (editingRoom) {
+      editingRoomPlaceId = null;
+      renderMapTree();
+      return;
+    }
+
+    moveToPlace(result.room.placeId);
+  });
+
+  if (!editingRoom && !isAreaPlace(currentPlace)) {
+    form.querySelectorAll("input, textarea, button").forEach(element => {
+      element.disabled = true;
+    });
+
+    const notice = document.createElement("p");
+    notice.className = "mapRoomCreatorNotice";
+    notice.textContent = "現在地ではルームを作成できません。エリアに移動してください。";
+    form.appendChild(notice);
+  }
+
+  section.appendChild(form);
+  section.appendChild(renderOwnedRoomList(account.eno));
+
+  return section;
+}
+
+function renderOwnedRoomList(ownerEno) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "mapOwnedRoomListSection";
+
+  const title = document.createElement("h3");
+  title.className = "mapOwnedRoomListTitle";
+  title.textContent = "作成済みルーム一覧";
+  wrapper.appendChild(title);
+
+  const rooms = getRoomsByOwnerEno(ownerEno);
+
+  if (rooms.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "mapNoRoomText";
+    empty.textContent = "作成済みルームはありません。";
+    wrapper.appendChild(empty);
+    return wrapper;
+  }
+
+  const list = document.createElement("div");
+  list.className = "mapOwnedRoomList";
+
+  rooms.forEach(room => {
+    const row = document.createElement("div");
+    row.className = "mapOwnedRoomRow";
+
+    const name = document.createElement("span");
+    name.className = "mapOwnedRoomName";
+    name.textContent = `${room.name} [${getRoomAccessLabel(room.accessType)}]`;
+    row.appendChild(name);
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "button-box mapMoveButton";
+    editButton.textContent = "編集";
+    editButton.addEventListener("click", () => {
+      editingRoomPlaceId = room.placeId;
+      renderMapTree();
+    });
+    row.appendChild(editButton);
+
+    list.appendChild(row);
+  });
+
+  wrapper.appendChild(list);
+  return wrapper;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function renderMoveConfirmModalIfNeeded() {
   if (!moveConfirmPlaceId) {
     return;
@@ -473,6 +673,27 @@ function renderMoveConfirmModalIfNeeded() {
 
   if (modal) {
     mapContent.appendChild(modal);
+  }
+}
+
+function showPendingMapToast() {
+  const pendingToast = sessionStorage.getItem("chatToastMessage");
+
+  if (!pendingToast) {
+    return;
+  }
+
+  sessionStorage.removeItem("chatToastMessage");
+
+  try {
+    const parsed = JSON.parse(pendingToast);
+    if (parsed?.message) {
+      showToast(parsed.message, {
+        type: parsed.type || "info"
+      });
+    }
+  } catch {
+    // 何もしない
   }
 }
 
@@ -506,6 +727,7 @@ function renderMapTree() {
     empty.textContent = "移動したい階層を選んでください";
     tree.appendChild(empty);
     mapContent.appendChild(tree);
+    mapContent.appendChild(renderRoomCreatorSection(currentPlaceId));
 
     renderMoveConfirmModalIfNeeded();
     return;
@@ -519,6 +741,7 @@ function renderMapTree() {
     empty.textContent = "表示できる階層がありません";
     tree.appendChild(empty);
     mapContent.appendChild(tree);
+    mapContent.appendChild(renderRoomCreatorSection(currentPlaceId));
 
     renderMoveConfirmModalIfNeeded();
     return;
@@ -529,9 +752,11 @@ tree.appendChild(
 );
 
 mapContent.appendChild(tree);
+    mapContent.appendChild(renderRoomCreatorSection(currentPlaceId));
 
 renderMoveConfirmModalIfNeeded();
 }
 
 renderMapTree();
 renderMapFavoritesPanel();
+showPendingMapToast();
