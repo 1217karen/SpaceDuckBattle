@@ -77,7 +77,8 @@ export function createPostCard(post, options = {}) {
     getReplyTargetLabels = null,
     getQuotePreviewPostById = null,
     quotePreviewRootArea = null,
-    onAuthorIconClick = null
+    onAuthorIconClick = null,
+    isPlaceLinkDisabled = null
   } = options;
 
   const {
@@ -418,7 +419,7 @@ const moveToPlace =
 
 if (post.isDraftPreview) {
   placeButton.disabled = true;
-} else if (post.placeId) {
+} else if (post.placeId && !(typeof isPlaceLinkDisabled === "function" && isPlaceLinkDisabled(post))) {
   placeButton.addEventListener("click", () => {
     moveToPlace(post.placeId);
   });
@@ -497,7 +498,8 @@ export function renderPostListSection(container, options = {}) {
     currentEno = null,
     getReplyTargetLabels = null,
     getQuotePreviewPostById = null,
-    onAuthorIconClick = null
+    onAuthorIconClick = null,
+    isPlaceLinkDisabled = null
   } = options;
 
   const section = document.createElement("section");
@@ -517,7 +519,8 @@ export function renderPostListSection(container, options = {}) {
     currentEno,
     getReplyTargetLabels,
     getQuotePreviewPostById,
-    onAuthorIconClick
+    onAuthorIconClick,
+    isPlaceLinkDisabled
   });
 
   return {
@@ -535,7 +538,8 @@ export function renderPostListContent(listContainer, options = {}) {
     currentEno = null,
     getReplyTargetLabels = null,
     getQuotePreviewPostById = null,
-    onAuthorIconClick = null
+    onAuthorIconClick = null,
+    isPlaceLinkDisabled = null
   } = options;
 
   if (!listContainer) {
@@ -561,7 +565,8 @@ export function renderPostListContent(listContainer, options = {}) {
         currentEno,
         getReplyTargetLabels,
         getQuotePreviewPostById,
-        onAuthorIconClick
+        onAuthorIconClick,
+        isPlaceLinkDisabled
       })
     );
   });
