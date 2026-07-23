@@ -1,5 +1,6 @@
 .commIconPreview {
   cursor: grab;
+  touch-action: none;
 }
 
 .commIconPreview:active {
@@ -8,6 +9,7 @@
 
 .commIconRow.is-dragging {
   opacity: 0.55;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
 }
 
 .directionIconPreviewRow {
