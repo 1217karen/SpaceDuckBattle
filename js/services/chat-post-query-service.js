@@ -73,7 +73,7 @@ export function getSelfPostsForViewer({
   viewerEno = null
 } = {}) {
   return excludeMessagePosts(
-    getSelfPostsForEno(getAllPosts(), viewerEno).filter(post => !isPrivateRoomPost(post))
+    getSelfPostsForEno(getAllPosts(), viewerEno)
   );
 }
 
