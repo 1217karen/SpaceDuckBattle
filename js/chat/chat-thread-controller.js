@@ -7,7 +7,7 @@ import { createPost,getReplySourcePostForDraft,getThreadPostsByRootId } from "..
 import { getFavoriteCharacters } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { addUnreadCountsToPlaces } from "../services/place-unread-service.js";
-import { isInviteRoom, isInviteRoomPost } from "../services/room-service.js";
+import { isInviteRoom, isInviteRoomPost, isInviteRoomReplyBlocked } from "../services/room-service.js";
 
 import { createIconPicker } from "../common/icon-picker.js";
 import { renderFavoritesSidePanel } from "../common/favorites-panel.js";
@@ -62,7 +62,9 @@ function setupDraftPreview({
   threadPosts,
   currentEno,
   postActions,
-  getQuotePreviewPostById
+  getQuotePreviewPostById,
+  isReplyDisabled,
+  onReplyDisabled
 }) {
   if (!postListRefs?.section || !postListRefs?.list || !composerRefs?.textarea || !composerRefs?.section) {
     return;
@@ -87,7 +89,9 @@ function setupDraftPreview({
       currentEno,
       getReplyTargetLabels,
       getQuotePreviewPostById,
-      isPlaceLinkDisabled: isInviteRoomPost
+      isPlaceLinkDisabled: isInviteRoomPost,
+      isReplyDisabled,
+      onReplyDisabled
     });
 
     draftPreviewContainer.innerHTML = "";
@@ -109,7 +113,9 @@ function setupDraftPreview({
       currentEno,
       hideActions: true,
       getReplyTargetLabels,
-      isPlaceLinkDisabled: isInviteRoomPost
+      isPlaceLinkDisabled: isInviteRoomPost,
+      isReplyDisabled,
+      onReplyDisabled
     });
 
     previewCard.classList.add("chatComposerReplyPreviewCard");
@@ -268,6 +274,10 @@ function buildThreadPlaceTrailItems(posts = []) {
   return items;
 }
 
+function showInviteRoomReplyBlockedToast() {
+  showToast("同じルームにいる人のみ返信できます", { type: "info" });
+}
+
 function renderThreadPage() {
   if (!centerPanel || !chatMainArea) {
     return;
@@ -405,6 +415,8 @@ function renderThreadPage() {
     onQuote: handleQuote,
     onHide: handleHide
   });
+  
+  const isReplyDisabled = post => isInviteRoomReplyBlocked(post, currentPlace);
 
   const postListRefs = renderPostListSection(chatMainArea, {
     posts: displayThreadPosts,
@@ -413,7 +425,9 @@ function renderThreadPage() {
     currentEno: eno,
     getReplyTargetLabels,
     getQuotePreviewPostById,
-    isPlaceLinkDisabled: isInviteRoomPost
+    isPlaceLinkDisabled: isInviteRoomPost,
+    isReplyDisabled,
+    onReplyDisabled: showInviteRoomReplyBlockedToast
   });
 
   const hasReplySource = Boolean(replySourcePost);
@@ -467,6 +481,8 @@ function renderThreadPage() {
       currentEno: eno,
       postActions,
       getQuotePreviewPostById,
+      isReplyDisabled,
+      onReplyDisabled: showInviteRoomReplyBlockedToast
     });
 
     setupComposerSubmit({
