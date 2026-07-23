@@ -123,24 +123,26 @@
 }
 
 .favoritesPanelPlaceDragHandle {
-  width: 28px;
-  flex: 0 0 28px;
-  padding: 2px 4px;
+  width: 34px;
+  flex: 0 0 34px;
+  padding: 6px 8px;
   color: var(--theme-text-muted);
   font-size: var(--font-size-sm);
   line-height: 1.4;
+  touch-action: none;
 }
 
-.favoritesPanelPlaceDragHandle[draggable="true"] {
+.favoritesPanelPlaceDragHandle {
   cursor: grab;
 }
 
-.favoritesPanelPlaceDragHandle[draggable="true"]:active {
+.favoritesPanelPlaceDragHandle:active {
   cursor: grabbing;
 }
 
 .favoritesPanelPlaceItem.is-dragging {
   opacity: 0.55;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
 }
 
 .favoritesPanelCharacterBody {
