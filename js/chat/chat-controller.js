@@ -605,7 +605,8 @@ function setupDraftPreview({
     getQuotePreviewPostById,
     currentEno,
     pagination,
-    onAuthorIconClick
+    onAuthorIconClick,
+    isPlaceLinkDisabled: isInviteRoomPost
   };
 
   function refreshDraftPreview() {
@@ -649,7 +650,8 @@ function setupDraftPreview({
       currentEno: state.currentEno,
       getReplyTargetLabels,
       getQuotePreviewPostById: state.getQuotePreviewPostById,
-      onAuthorIconClick: state.onAuthorIconClick
+      onAuthorIconClick: state.onAuthorIconClick,
+      isPlaceLinkDisabled: state.isPlaceLinkDisabled
     });
   }
 
