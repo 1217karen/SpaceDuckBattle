@@ -111,6 +111,10 @@
   line-height: 1.7;
 }
 
+.chatThreadPlaceTrailText {
+  color: inherit;
+}
+
 .chatThreadPlaceTrailButton {
   color: inherit;
   font: inherit;
