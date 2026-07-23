@@ -37,7 +37,7 @@ import { renderChatPaginationSection } from "./chat-pagination-view.js";
 import { renderChatActionSection } from "./chat-action-view.js";
 
 import { hasShopForPlace } from "../services/shop-service.js";
-import { canAccessRoom, isInviteRoom, isInviteRoomPost } from "../services/room-service.js";
+import { canAccessRoom, isInviteRoom, isInviteRoomPost, isInviteRoomReplyBlocked } from "../services/room-service.js";
 import { purchaseItems as purchaseInventoryItems,getInventoryLogs,markInventoryLogPosted } from "../services/inventory-service.js";
 import { renderShopSection,renderShopPurchaseConfirmModalIfNeeded } from "./chat-shop-view.js";
 
@@ -338,7 +338,9 @@ function renderActiveChatTimeline() {
     posts: pagedDisplayPosts,
     getPlaceLabel,
     onMoveToPlace: moveToPlace,
-    isPlaceLinkDisabled: post => isInviteRoom(getPlaceById(post?.placeId)),
+    isPlaceLinkDisabled: isInviteRoomPost,
+    isReplyDisabled: post => isInviteRoomReplyBlocked(post, place),
+    onReplyDisabled: showInviteRoomReplyBlockedToast,
     postActions,
     currentEno: eno,
     getReplyTargetLabels,
@@ -606,7 +608,9 @@ function setupDraftPreview({
     currentEno,
     pagination,
     onAuthorIconClick,
-    isPlaceLinkDisabled: isInviteRoomPost
+    isPlaceLinkDisabled: isInviteRoomPost,
+    isReplyDisabled: post => isInviteRoomReplyBlocked(post, place),
+    onReplyDisabled: showInviteRoomReplyBlockedToast
   };
 
   function refreshDraftPreview() {
@@ -651,7 +655,9 @@ function setupDraftPreview({
       getReplyTargetLabels,
       getQuotePreviewPostById: state.getQuotePreviewPostById,
       onAuthorIconClick: state.onAuthorIconClick,
-      isPlaceLinkDisabled: state.isPlaceLinkDisabled
+      isPlaceLinkDisabled: state.isPlaceLinkDisabled,
+      isReplyDisabled: state.isReplyDisabled,
+      onReplyDisabled: state.onReplyDisabled
     });
   }
 
@@ -789,6 +795,10 @@ function renderInteractionPanel(container, options = {}) {
   };
 }
 
+
+function showInviteRoomReplyBlockedToast() {
+  showToast("同じルームにいる人のみ返信できます", { type: "info" });
+}
 
 function renderChatPlaceInfo() {
   if (!centerPanel || !chatMainArea) return;
