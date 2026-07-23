@@ -188,7 +188,6 @@ function createCommIconRow(item) {
       ? item.url.trim()
       : getNoImageUrl();
   preview.alt = `アイコン${item.id}`;
-  preview.draggable = false;
   preview.title = "ドラッグで並べ替え";
   preview.setAttribute("aria-label", "ドラッグで並べ替え");
   row.appendChild(preview);
