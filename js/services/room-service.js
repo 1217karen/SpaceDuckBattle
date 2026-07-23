@@ -1,5 +1,3 @@
-// room-service.js
-
 import { places } from "../data/places-data.js";
 
 const ROOM_STORAGE_KEY = "userCreatedRooms";
@@ -171,6 +169,17 @@ export function isInviteRoom(place) {
 export function isInviteRoomPost(post) {
   const place = places.find(item => item.placeId === post?.placeId) || null;
   return isInviteRoom(place);
+}
+
+export function isInviteRoomReplyBlocked(post, currentPlace) {
+  if (!isInviteRoomPost(post)) {
+    return false;
+  }
+
+  const postPlaceId = typeof post?.placeId === "string" ? post.placeId : "";
+  const currentPlaceId = typeof currentPlace?.placeId === "string" ? currentPlace.placeId : "";
+
+  return postPlaceId !== "" && postPlaceId !== currentPlaceId;
 }
 
 export function isPrivateRoom(place) {
