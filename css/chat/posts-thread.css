@@ -252,7 +252,7 @@
 .chatPostActionButtonDisabled {
   opacity: 0.42;
   filter: grayscale(1);
-  cursor: help;
+  cursor: pointer;
 }
 
 .chatPostActionButtonDisabled:hover,
