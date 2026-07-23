@@ -207,7 +207,8 @@ topRow.appendChild(titleGroup);
     ? placeTrailItems
         .map(item => ({
           placeId: String(item?.placeId ?? "").trim(),
-          label: String(item?.label ?? "").trim()
+          label: String(item?.label ?? "").trim(),
+          isLinkDisabled: Boolean(item?.isLinkDisabled)
         }))
         .filter(item => item.placeId !== "" && item.label !== "")
     : [];
@@ -224,6 +225,14 @@ topRow.appendChild(titleGroup);
         placeTrail.appendChild(separator);
       }
 
+      if (item.isLinkDisabled) {
+        const placeText = document.createElement("span");
+        placeText.className = "chatThreadPlaceTrailText";
+        placeText.textContent = item.label;
+        placeTrail.appendChild(placeText);
+        return;
+      }
+      
       const placeButton = document.createElement("button");
       placeButton.type = "button";
       placeButton.className = "chatThreadPlaceTrailButton button-plain";
