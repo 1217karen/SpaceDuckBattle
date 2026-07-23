@@ -2,6 +2,8 @@
 
 import { getAllPosts } from "./post-service.js";
 import { getDisplayPosts } from "../chat/chat-display-rules.js";
+import { places } from "../data/places-data.js";
+import { isPrivateRoom } from "./room-service.js";
 import { canViewPost, getHerePosts, getReplyPostsForEno, getSelfPostsForEno, sortPostsNewestFirst, withNormalDisplayType } from "../chat/chat-post-filter.js";
 
 export function normalizeEno(eno) {
@@ -39,6 +41,11 @@ function excludeMessagePosts(posts = []) {
   return posts.filter(post => post?.type !== "message");
 }
 
+function isPrivateRoomPost(post) {
+  const place = places.find(item => item.placeId === post?.placeId) || null;
+  return isPrivateRoom(place);
+}
+
 export function getChatTimelinePosts({
   currentPlace = null,
   places = [],
@@ -58,7 +65,7 @@ export function getReplyPostsForViewer({
   viewerEno = null
 } = {}) {
   return excludeMessagePosts(
-    getReplyPostsForEno(getAllPosts(), viewerEno)
+    getReplyPostsForEno(getAllPosts(), viewerEno).filter(post => !isPrivateRoomPost(post))
   );
 }
 
@@ -66,7 +73,7 @@ export function getSelfPostsForViewer({
   viewerEno = null
 } = {}) {
   return excludeMessagePosts(
-    getSelfPostsForEno(getAllPosts(), viewerEno)
+    getReplyPostsForEno(getAllPosts(), viewerEno).filter(post => !isPrivateRoomPost(post))
   );
 }
 
@@ -141,7 +148,7 @@ export function getFavoritePostsForViewer({
           return false;
         }
 
-        if (post.visibility === "private") {
+        if (post.visibility === "private" || isPrivateRoomPost(post)) {
           return false;
         }
 
@@ -170,7 +177,8 @@ export function getAuthorPostsForViewer({
         !post.isDeleted &&
         post.type !== "message" &&
         Number(post.authorEno) === normalizedTargetEno &&
-        canViewPost(post, viewerEno)
+        canViewPost(post, viewerEno) &&
+        !isPrivateRoomPost(post)
       )
     )
   );
