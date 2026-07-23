@@ -168,6 +168,11 @@ export function isInviteRoom(place) {
   return isRoomPlace(place) && ["invite", "password"].includes(place.accessType);
 }
 
+export function isInviteRoomPost(post) {
+  const place = places.find(item => item.placeId === post?.placeId) || null;
+  return isInviteRoom(place);
+}
+
 export function isPrivateRoom(place) {
   return isRoomPlace(place) && place.accessType === "private";
 }
