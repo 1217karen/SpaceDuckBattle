@@ -3,6 +3,7 @@
 import { bindRichTextToolbar } from "../common/rich-text-toolbar.js";
 import { createRichTextToolbarButtons } from "../common/rich-text-toolbar-ui.js";
 import { createPostCard } from "./chat-post-view.js";
+import { isInviteRoomPost } from "../services/room-service.js";
 
 export function renderChatComposerSection(container, options = {}) {
   const {
