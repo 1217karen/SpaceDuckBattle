@@ -84,14 +84,28 @@ function closeShopPurchaseConfirm() {
   renderChatPlaceInfo();
 }
 
+function resetUtilityStateBeforeMove() {
+  isShopOpen = false;
+  isActionOpen = false;
+  selectedActionId = "";
+  selectedLogId = "";
+}
+
 function moveToPlace(placeId) {
+  const account = getCurrentAccount();
+
+  if (!account?.eno) {
+    resetUtilityStateBeforeMove();
+    window.location.href = buildChatUrl({
+      placeId,
+      view: "chat",
+      page: 1
+    });
+    return;
+  }
+
   moveToChatPlace(placeId, {
-    onBeforeMove: () => {
-      isShopOpen = false;
-      isActionOpen = false;
-      selectedActionId = "";
-      selectedLogId = "";
-    }
+    onBeforeMove: resetUtilityStateBeforeMove
   });
 }
 
@@ -323,6 +337,7 @@ function renderActiveChatTimeline() {
     posts: pagedDisplayPosts,
     getPlaceLabel,
     onMoveToPlace: moveToPlace,
+    isPlaceLinkDisabled: post => isInviteRoom(getPlaceById(post?.placeId)),
     postActions,
     currentEno: eno,
     getReplyTargetLabels,
@@ -786,6 +801,25 @@ function renderChatPlaceInfo() {
 
   const place = getPlaceById(placeId);
   const aroundBasePlace = getAroundBasePlace(place);
+  const roomAccess = canAccessRoom(place, account);
+
+  if (!roomAccess.ok && roomAccess.reason === "login-required") {
+    window.location.href = "./index.html";
+    return;
+  }
+
+  if (!roomAccess.ok && roomAccess.reason === "private") {
+    sessionStorage.setItem(
+      "chatToastMessage",
+      JSON.stringify({
+        message: "現在このルームは非公開です",
+        type: "info"
+      })
+    );
+    window.location.href = "./map.html";
+    return;
+  }
+
   openedAuthorEno = getChatAuthorEnoFromQuery();
   messageFilterEno = currentViewMode === "message"
     ? getChatMessageFilterEnoFromQuery()
