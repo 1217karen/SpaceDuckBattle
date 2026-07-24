@@ -723,12 +723,6 @@ function renderMapTree() {
   heading.textContent = "MAP";
   mapContent.appendChild(heading);
 
-  const info = document.createElement("p");
-  info.className = "mapCurrentInfo";
-  info.textContent =
-    `保存中の現在地: ${currentPlaceId ?? "なし"}`;
-  mapContent.appendChild(info);
-
   mapContent.appendChild(createMapVisual());
 
   const tree = document.createElement("div");
