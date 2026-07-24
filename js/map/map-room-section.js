@@ -457,7 +457,7 @@ export function createMapRoomSectionController(options = {}) {
 
       deleteButton.type = "button";
       deleteButton.className =
-        "button-danger mapRoomDeleteButton";
+        "button-box mapRoomDeleteButton";
       deleteButton.textContent =
         "ルームを削除";
       deleteButton.disabled = true;
