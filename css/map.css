@@ -343,6 +343,11 @@
    ルーム作成・編集カード
 ======================================================= */
 
+.roomForm input[name="roomName"] {
+  width: 100%;
+  max-width: 360px;
+}
+
 .mapRoomCreatorCard {
   width: 100%;
   padding: 12px;
