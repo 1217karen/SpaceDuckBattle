@@ -112,6 +112,23 @@
   color: var(--theme-text-muted);
 }
 
+.mapListNameWrap {
+  min-width: 0;
+}
+
+.mapListNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mapListShortDescription {
+  display: block;
+  margin-top: 3px;
+  font-size: var(--font-size-small);
+  line-height: 1.45;
+}
 
 /* =======================================================
    フィールド表示
