@@ -297,6 +297,20 @@
   color: var(--theme-text-strong);
   text-decoration: underline;
 }
+/* =======================================================
+   共通装飾見出しのページ固有配置
+======================================================= */
+
+.mapSectionHeading {
+  display: block;
+  width: min(100%, 760px);
+  margin: 0 auto 10px;
+}
+
+.mapRoomCreatorSection > .mapSectionHeading {
+  width: 100%;
+  margin-bottom: 14px;
+}
 
 
 /* =======================================================
@@ -305,22 +319,34 @@
 
 .mapRoomCreatorSection {
   width: min(100%, 760px);
-  margin: 16px auto 0;
+  margin: 36px auto 0;
   padding: 12px;
   box-sizing: border-box;
 }
 
-.mapRoomCreatorTitle,
-.mapOwnedRoomListTitle {
+.mapRoomCreatorTitle {
   margin: 0 0 8px;
   font-size: var(--font-size-heading-sm);
 }
 
-.mapRoomCreatorHelp,
-.mapRoomCurrentInfo,
-.mapRoomCreatorNotice {
+.mapRoomCreatorHelp {
   margin: 0 0 10px;
   color: var(--theme-text-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+}
+
+.mapRoomCurrentRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 10px;
+}
+
+.mapRoomCurrentInfo,
+.mapRoomCreatorNotice {
+  margin: 0;
   font-size: var(--font-size-small);
   line-height: 1.6;
 }
@@ -329,10 +355,28 @@
   color: var(--theme-text-main);
 }
 
+.mapRoomCreatorNotice {
+  color: var(--theme-text-muted);
+}
+
 .mapRoomForm {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.mapRoomFormButtonRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.mapRoomFormSubmitButton,
+.mapRoomFormSecondaryButton {
+  min-width: 112px;
+  padding: 8px 16px;
 }
 
 .mapRoomFormField,
@@ -351,7 +395,6 @@
 }
 
 .mapRoomFormHint {
-  color: var(--theme-text-muted);
   font-size: calc(var(--font-size-small) * 0.9);
   line-height: 1.5;
 }
@@ -362,13 +405,10 @@
   gap: 10px 14px;
   margin: 0;
   padding: 8px 10px;
-  border: 1px solid var(--theme-border-main);
-  border-radius: var(--theme-radius-sm);
 }
 
 .mapRoomFormFieldset legend {
   padding: 0 4px;
-  color: var(--theme-text-muted);
   font-size: var(--font-size-small);
 }
 
@@ -377,17 +417,18 @@
   align-items: center;
 }
 
-.mapRoomFormButtonRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-}
+/* =======================================================
+   作成済みルーム一覧
+======================================================= */
 
 .mapOwnedRoomListSection {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.16);
+  margin-top: 22px;
+}
+
+.mapOwnedRoomListTitle {
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
 }
 
 .mapOwnedRoomList {
