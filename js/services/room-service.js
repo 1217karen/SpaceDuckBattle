@@ -1,6 +1,7 @@
 // room-service.js
 
 import { places } from "../data/places-data.js";
+import { createRoom,deleteRoom,getRoomAccessLabel,getRoomsByOwnerEno,isAreaPlace,updateRoom } from "../services/room-service.js";
 
 const ROOM_STORAGE_KEY = "userCreatedRooms";
 const ROOM_ID_PREFIX = "room_";
@@ -244,7 +245,7 @@ export function createRoom(input = {}) {
     return { ok: false, message: "ログイン中のアカウント情報を確認できません", room: null };
   }
 
-  const name = typeof input.name === "string" ? input.name.trim() : "";
+  const name = normalizeRoomName(input.name);
   if (!name) {
     return { ok: false, message: "ルーム名を入力してください", room: null };
   }
@@ -289,7 +290,7 @@ export function updateRoom(roomPlaceId, input = {}) {
     return { ok: false, message: "このルームを編集できるのは作成者のみです", room };
   }
 
-  const name = typeof input.name === "string" ? input.name.trim() : "";
+  const name = normalizeRoomName(input.name);
   if (!name) {
     return { ok: false, message: "ルーム名を入力してください", room };
   }
@@ -324,6 +325,58 @@ export function updateRoom(roomPlaceId, input = {}) {
   saveStoredRooms(storedRooms);
 
   return { ok: true, message: "ルーム情報を保存しました", room: nextRoom };
+}
+
+export function deleteRoom(roomPlaceId, input = {}) {
+  const room = places.find(
+    place => place.placeId === roomPlaceId
+  ) || null;
+
+  if (!isRoomPlace(room)) {
+    return {
+      ok: false,
+      message: "ルームが見つかりません",
+      room: null,
+      parentPlaceId: null
+    };
+  }
+
+  if (!isRoomOwner(room, input.ownerEno)) {
+    return {
+      ok: false,
+      message: "このルームを削除できるのは作成者のみです",
+      room,
+      parentPlaceId: room.parentId || null
+    };
+  }
+
+  const parentPlaceId = room.parentId || null;
+
+  /*
+   * localStorageから削除。
+   */
+  const storedRooms = loadStoredRooms()
+    .filter(item => item.placeId !== roomPlaceId);
+
+  saveStoredRooms(storedRooms);
+
+  /*
+   * 実行中のplaces配列からも削除。
+   */
+  const placeIndex = places.findIndex(
+    place => place.placeId === roomPlaceId
+  );
+
+  if (placeIndex >= 0) {
+    places.splice(placeIndex, 1);
+  }
+
+  return {
+    ok: true,
+    message: "ルームを削除しました",
+    room,
+    parentPlaceId
+  };
 }
 
 syncStoredRoomsToPlaces();
