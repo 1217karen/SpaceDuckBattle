@@ -1,7 +1,6 @@
 // room-service.js
 
 import { places } from "../data/places-data.js";
-import { createRoom,deleteRoom,getRoomAccessLabel,getRoomsByOwnerEno,isAreaPlace,updateRoom } from "../services/room-service.js";
 
 const ROOM_STORAGE_KEY = "userCreatedRooms";
 const ROOM_ID_PREFIX = "room_";
@@ -47,9 +46,7 @@ function normalizeRoom(room = {}) {
     parentId,
     kind: "room",
     layer: null,
-    name: typeof room.name === "string" && room.name.trim() !== ""
-      ? room.name.trim()
-      : "無名のルーム",
+    name: normalizeRoomName(room.name) || "無名のルーム",
     shortDescription: normalizeRoomShortDescription(room.shortDescription),
     longDescription: normalizeRoomLongDescription(room.longDescription),
     accessType: normalizeAccessType(room.accessType),
@@ -66,6 +63,15 @@ function normalizeRoom(room = {}) {
     createdAt: typeof room.createdAt === "string" && room.createdAt ? room.createdAt : now,
     updatedAt: typeof room.updatedAt === "string" && room.updatedAt ? room.updatedAt : now
   };
+}
+
+function normalizeRoomName(value) {
+  return typeof value === "string"
+    ? value
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, ROOM_NAME_MAX_LENGTH)
+    : "";
 }
 
 function normalizeRoomShortDescription(value) {
