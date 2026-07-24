@@ -351,6 +351,12 @@
   box-sizing: border-box;
 }
 
+.mapRoomFormHint {
+  color: var(--theme-text-muted);
+  font-size: calc(var(--font-size-small) * 0.9);
+  line-height: 1.5;
+}
+
 .mapRoomFormFieldset {
   display: flex;
   flex-wrap: wrap;
