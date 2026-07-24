@@ -818,8 +818,8 @@ function renderOwnedRoomList(ownerEno) {
     "mapOwnedRoomListSection"
   ].join(" ");
 
-  const title = document.createElement("h3");
-  title.className = "mapOwnedRoomListTitle";
+  const title = document.createElement("h2");
+  title.className = "mapRoomCreatorTitle mapOwnedRoomListTitle";
   title.textContent = "作成済みルーム一覧";
   wrapper.appendChild(title);
 
