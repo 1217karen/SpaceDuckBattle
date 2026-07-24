@@ -343,7 +343,7 @@
    ルーム作成・編集カード
 ======================================================= */
 
-.roomForm input[name="roomName"] {
+.mapRoomForm input[name="roomName"] {
   width: 100%;
   max-width: 360px;
 }
@@ -445,6 +445,23 @@
 .mapRoomFormCheckbox {
   flex-direction: row;
   align-items: center;
+}
+
+.mapRoomDangerSection {
+  margin-top: 20px;
+}
+
+.mapRoomDangerSummary {
+  cursor: pointer;
+  color: var(--theme-text-subtle);
+}
+
+.mapRoomDangerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .mapRoomDeleteButton {
