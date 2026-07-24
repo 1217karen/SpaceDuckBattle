@@ -595,7 +595,7 @@ function renderRoomCreatorSection(currentPlaceId) {
         maxlength="40"
         placeholder="最大40文字"
       >
-      <small class="mapRoomFormHint">
+      <small class="text-muted mapRoomFormHint">
         一覧やヘッダーに出る1行説明です。
       </small>
     </label>
@@ -608,13 +608,13 @@ function renderRoomCreatorSection(currentPlaceId) {
         rows="5"
         placeholder="最大800文字"
       >${escapeHtml(roomLongDescription)}</textarea>
-      <small class="mapRoomFormHint">
+      <small class="text-muted mapRoomFormHint">
         ルーム詳細に出る説明です。文字装飾が使用可能です。
       </small>
     </label>
 
-    <fieldset class="mapRoomFormFieldset">
-      <legend>公開範囲</legend>
+    <fieldset class="common-card-subtle mapRoomFormFieldset">
+      <legend class="text-muted">公開範囲</legend>
 
       <label>
         <input
