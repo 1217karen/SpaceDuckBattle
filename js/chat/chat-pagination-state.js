@@ -60,3 +60,24 @@ export function saveChatPageSize(value) {
 
   return pageSize;
 }
+
+
+export function getPaginationState(posts = [], requestedPage = 1, pageSize = CHAT_PAGE_SIZE_DEFAULT) {
+  const totalItems = posts.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const currentPage = Math.min(Math.max(1, requestedPage), totalPages);
+  const startIndex = (currentPage - 1) * pageSize;
+
+  return {
+    currentPage,
+    pageSize,
+    totalItems,
+    totalPages,
+    startIndex,
+    endIndex: startIndex + pageSize
+  };
+}
+
+export function getPagedPosts(posts = [], pagination = {}) {
+  return posts.slice(pagination.startIndex, pagination.endIndex);
+}
