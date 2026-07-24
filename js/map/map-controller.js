@@ -533,13 +533,13 @@ function renderRoomCreatorSection(currentPlaceId) {
     </label>
     <label class="mapRoomFormField">
       <span>簡易説明</span>
-      <input type="text" name="roomShortDescription" value="${escapeHtml(roomShortDescription)}" maxlength="40" placeholder="40文字以内の短い説明">
-      <small class="mapRoomFormHint">一覧やヘッダーに出る1行説明です。40文字まで入力できます。</small>
+      <input type="text" name="roomShortDescription" value="${escapeHtml(roomShortDescription)}" maxlength="40" placeholder="最大40文字">
+      <small class="mapRoomFormHint">一覧やヘッダーに出る1行説明です。</small>
     </label>
     <label class="mapRoomFormField">
       <span>詳細説明</span>
-      <textarea name="roomLongDescription" maxlength="800" rows="5" placeholder="改行を使って自由に説明できます">${escapeHtml(roomLongDescription)}</textarea>
-      <small class="mapRoomFormHint">ルーム詳細に出る説明です。改行を反映します。</small>
+      <textarea name="roomLongDescription" maxlength="800" rows="5" placeholder="最大800文字">${escapeHtml(roomLongDescription)}</textarea>
+      <small class="mapRoomFormHint">ルーム詳細に出る説明です。文字装飾が使用可能です。</small>
     </label>
     <fieldset class="mapRoomFormFieldset">
       <legend>公開範囲</legend>
