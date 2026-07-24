@@ -496,42 +496,66 @@ function readRoomFormData(form) {
 }
 
 function renderRoomCreatorSection(currentPlaceId) {
+  /*
+   * ROOM全体のラッパー。
+   * この要素自体にはカードの見た目を付けない。
+   */
   const section = document.createElement("section");
-  section.className = [
-    "common-card",
-    "common-card-themed",
-    "mapRoomCreatorSection"
-  ].join(" ");
+  section.className = "mapRoomSection";
 
   const account = getCurrentAccount();
   const currentPlace = findPlaceById(currentPlaceId);
+
   const editingRoom = editingRoomPlaceId
     ? findPlaceById(editingRoomPlaceId)
     : null;
 
   const canCreateRoom = isAreaPlace(currentPlace);
 
+  /*
+   * ROOM見出し。
+   * 作成カードと作成済み一覧カードの両方より外側に置く。
+   */
   section.appendChild(
     createMapSectionHeading("ROOM")
   );
 
+  /*
+   * ルーム作成・編集用のカード。
+   */
+  const creatorCard = document.createElement("div");
+  creatorCard.className = [
+    "common-card",
+    "common-card-themed",
+    "mapRoomCreatorCard"
+  ].join(" ");
+
   const title = document.createElement("h2");
   title.className = "mapRoomCreatorTitle";
-  title.textContent = editingRoom ? "ルーム編集" : "ルーム作成";
-  section.appendChild(title);
+  title.textContent = editingRoom
+    ? "ルーム編集"
+    : "ルーム作成";
+
+  creatorCard.appendChild(title);
 
   const help = document.createElement("p");
   help.className = "mapRoomCreatorHelp";
   help.textContent =
     "現在いるエリアにルームを作成します。作成後は自動でそのルームへ移動します。";
-  section.appendChild(help);
 
+  creatorCard.appendChild(help);
+
+  /*
+   * 現在地と、作成できない場合の注意文。
+   */
   const currentRow = document.createElement("div");
   currentRow.className = "mapRoomCurrentRow";
 
   const currentInfo = document.createElement("p");
   currentInfo.className = "mapRoomCurrentInfo";
-  currentInfo.textContent = `現在地：${currentPlace?.name ?? "なし"}`;
+  currentInfo.textContent =
+    `現在地：${currentPlace?.name ?? "なし"}`;
+
   currentRow.appendChild(currentInfo);
 
   if (!editingRoom && !canCreateRoom) {
@@ -539,25 +563,39 @@ function renderRoomCreatorSection(currentPlaceId) {
     notice.className = "mapRoomCreatorNotice";
     notice.textContent =
       "現在地ではルームを作成できません。エリアに移動してください。";
+
     currentRow.appendChild(notice);
   }
 
-  section.appendChild(currentRow);
+  creatorCard.appendChild(currentRow);
 
+  /*
+   * 未ログイン時。
+   * 作成カードだけ表示し、作成済み一覧は表示しない。
+   */
   if (!account?.eno) {
     const loginNotice = document.createElement("p");
     loginNotice.className = "mapRoomCreatorNotice";
-    loginNotice.textContent = "ルーム作成・編集にはログインが必要です。";
-    section.appendChild(loginNotice);
+    loginNotice.textContent =
+      "ルーム作成・編集にはログインが必要です。";
+
+    creatorCard.appendChild(loginNotice);
+    section.appendChild(creatorCard);
+
     return section;
   }
 
+  /*
+   * 入力フォーム。
+   */
   const form = document.createElement("form");
   form.className = "mapRoomForm";
 
   const roomName = editingRoom?.name ?? "";
-  const roomShortDescription = editingRoom?.shortDescription ?? "";
-  const roomLongDescription = editingRoom?.longDescription ?? "";
+  const roomShortDescription =
+    editingRoom?.shortDescription ?? "";
+  const roomLongDescription =
+    editingRoom?.longDescription ?? "";
 
   const accessType =
     editingRoom?.accessType === "invite" ||
@@ -614,7 +652,9 @@ function renderRoomCreatorSection(currentPlaceId) {
     </label>
 
     <fieldset class="common-card-subtle mapRoomFormFieldset">
-      <legend class="text-muted">公開範囲</legend>
+      <legend class="text-muted">
+        公開範囲
+      </legend>
 
       <label>
         <input
@@ -666,6 +706,9 @@ function renderRoomCreatorSection(currentPlaceId) {
     </label>
   `;
 
+  /*
+   * 作成・保存ボタン。
+   */
   const buttonRow = document.createElement("div");
   buttonRow.className = "mapRoomFormButtonRow";
 
@@ -673,11 +716,15 @@ function renderRoomCreatorSection(currentPlaceId) {
   submitButton.type = "submit";
   submitButton.className =
     "button-primaryNew mapRoomFormSubmitButton";
-  submitButton.textContent =
-    editingRoom ? "変更を保存" : "ルームを作成";
+  submitButton.textContent = editingRoom
+    ? "変更を保存"
+    : "ルームを作成";
 
   buttonRow.appendChild(submitButton);
 
+  /*
+   * 編集中だけキャンセルボタンを表示。
+   */
   if (editingRoom) {
     const cancelButton = document.createElement("button");
     cancelButton.type = "button";
@@ -712,11 +759,16 @@ function renderRoomCreatorSection(currentPlaceId) {
         });
 
     if (!result.ok) {
-      showToast(result.message, { type: "error" });
+      showToast(result.message, {
+        type: "error"
+      });
+
       return;
     }
 
-    showToast(result.message, { type: "success" });
+    showToast(result.message, {
+      type: "success"
+    });
 
     if (editingRoom) {
       editingRoomPlaceId = null;
@@ -727,6 +779,10 @@ function renderRoomCreatorSection(currentPlaceId) {
     moveToPlace(result.room.placeId);
   });
 
+  /*
+   * 新規作成時、現在地がエリアでなければフォームを無効化。
+   * 編集中は現在地に関係なく編集可能。
+   */
   if (!editingRoom && !canCreateRoom) {
     form
       .querySelectorAll("input, textarea, button")
@@ -735,8 +791,19 @@ function renderRoomCreatorSection(currentPlaceId) {
       });
   }
 
-  section.appendChild(form);
-  section.appendChild(renderOwnedRoomList(account.eno));
+  /*
+   * フォームは作成カード内に入れる。
+   */
+  creatorCard.appendChild(form);
+
+  /*
+   * ROOM見出しの下に、
+   * 作成カードと作成済み一覧カードを別々に追加する。
+   */
+  section.appendChild(creatorCard);
+  section.appendChild(
+    renderOwnedRoomList(account.eno)
+  );
 
   return section;
 }
@@ -864,11 +931,11 @@ function renderMapTree() {
   mapContent.appendChild(createMapVisual());
 
   mapContent.appendChild(
-    createMapSectionHeading("移動")
+    createMapSectionHeading("MOVE")
   );
 
-const tree = document.createElement("div");
-tree.className = "mapTree";
+  const tree = document.createElement("div");
+  tree.className = "mapTree";
 
   if (!selectedFieldId) {
     const empty = document.createElement("p");
