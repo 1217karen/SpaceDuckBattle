@@ -415,118 +415,100 @@ export function createMapRoomSectionController(options = {}) {
 
     form.appendChild(buttonRow);
 
-    if (editingRoom) {
-      const dangerSection =
-        document.createElement("div");
+if (editingRoom) {
+  const dangerSection = document.createElement("details");
+  dangerSection.className = "mapRoomDangerSection";
 
-      dangerSection.className =
-        "mapRoomDangerSection";
+  const dangerSummary = document.createElement("summary");
+  dangerSummary.className = "mapRoomDangerSummary";
+  dangerSummary.textContent = "ルームの削除";
 
-      const dangerTitle =
-        document.createElement("h3");
+  const dangerContent = document.createElement("div");
+  dangerContent.className = "mapRoomDangerContent";
 
-      dangerTitle.className =
-        "mapRoomDangerTitle";
-      dangerTitle.textContent =
-        "ルームの削除";
+  const confirmLabel = document.createElement("label");
+  confirmLabel.className =
+    "mapRoomFormCheckbox mapRoomDeleteConfirm";
 
-      const confirmLabel =
-        document.createElement("label");
+  const confirmCheckbox = document.createElement("input");
+  confirmCheckbox.type = "checkbox";
+  confirmCheckbox.name = "confirmRoomDelete";
 
-      confirmLabel.className =
-        "mapRoomFormCheckbox";
+  const confirmText = document.createTextNode(
+    "削除すると元に戻せないことを確認しました"
+  );
 
-      const confirmCheckbox =
-        document.createElement("input");
+  confirmLabel.append(
+    confirmCheckbox,
+    confirmText
+  );
 
-      confirmCheckbox.type = "checkbox";
-      confirmCheckbox.name =
-        "confirmRoomDelete";
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className =
+    "button-box mapRoomDeleteButton";
+  deleteButton.textContent = "ルームを削除";
+  deleteButton.disabled = true;
 
-      const confirmText = document.createTextNode(
-        "削除すると元に戻せないことを確認しました"
-      );
+  confirmCheckbox.addEventListener("change", () => {
+    deleteButton.disabled = !confirmCheckbox.checked;
+  });
 
-      confirmLabel.append(
-        confirmCheckbox,
-        confirmText
-      );
+  deleteButton.addEventListener("click", () => {
+    const confirmed = window.confirm(
+      `「${editingRoom.name}」を削除します。\nこの操作は取り消せません。\n本当に削除しますか？`
+    );
 
-      const deleteButton =
-        document.createElement("button");
-
-      deleteButton.type = "button";
-      deleteButton.className =
-        "button-box mapRoomDeleteButton";
-      deleteButton.textContent =
-        "ルームを削除";
-      deleteButton.disabled = true;
-
-      confirmCheckbox.addEventListener(
-        "change",
-        () => {
-          deleteButton.disabled =
-            !confirmCheckbox.checked;
-        }
-      );
-
-      deleteButton.addEventListener("click", () => {
-        const confirmed = window.confirm(
-          `「${editingRoom.name}」を削除します。\nこの操作は取り消せません。\n本当に削除しますか？`
-        );
-
-        if (!confirmed) {
-          return;
-        }
-
-        const result = deleteRoom(
-          editingRoom.placeId,
-          {
-            ownerEno: account.eno
-          }
-        );
-
-        if (!result.ok) {
-          showToast(result.message, {
-            type: "error"
-          });
-
-          return;
-        }
-
-        clearRoomFormTracking();
-        editingRoomPlaceId = null;
-
-        if (
-          currentPlaceId === editingRoom.placeId
-        ) {
-          sessionStorage.setItem(
-            "chatToastMessage",
-            JSON.stringify({
-              message: result.message,
-              type: "success"
-            })
-          );
-
-          moveToPlace(result.parentPlaceId);
-          return;
-        }
-
-        showToast(result.message, {
-          type: "success"
-        });
-
-        renderMapTree();
-      });
-
-      dangerSection.append(
-        dangerTitle,
-        confirmLabel,
-        deleteButton
-      );
-
-      form.appendChild(dangerSection);
+    if (!confirmed) {
+      return;
     }
+
+    const result = deleteRoom(editingRoom.placeId, {
+      ownerEno: account.eno
+    });
+
+    if (!result.ok) {
+      showToast(result.message, {
+        type: "error"
+      });
+      return;
+    }
+
+    clearRoomFormTracking();
+    editingRoomPlaceId = null;
+
+    if (currentPlaceId === editingRoom.placeId) {
+      sessionStorage.setItem(
+        "chatToastMessage",
+        JSON.stringify({
+          message: result.message,
+          type: "success"
+        })
+      );
+
+      moveToPlace(result.parentPlaceId);
+      return;
+    }
+
+    showToast(result.message, {
+      type: "success"
+    });
+
+    renderMapTree();
+  });
+
+  dangerContent.append(
+    confirmLabel,
+    deleteButton
+  );
+
+  dangerSection.append(
+    dangerSummary,
+    dangerContent
+  );
+
+  form.appendChild(dangerSection);
+}
 
     form.addEventListener("submit", event => {
       event.preventDefault();
