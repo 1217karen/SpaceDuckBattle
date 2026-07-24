@@ -157,6 +157,24 @@ function capitalize(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
+function createMapSectionHeading(
+  text,
+  sizeClass = "commonSectionHeading-medium"
+) {
+  const heading = document.createElement("h2");
+
+  heading.className = [
+    "common-gradientHeading",
+    "commonSectionHeading",
+    sizeClass,
+    "mapSectionHeading"
+  ].join(" ");
+
+  heading.textContent = text;
+
+  return heading;
+}
+
 function createToggleButton({
   canToggle,
   isExpanded,
@@ -479,13 +497,23 @@ function readRoomFormData(form) {
 
 function renderRoomCreatorSection(currentPlaceId) {
   const section = document.createElement("section");
-  section.className = "common-card mapRoomCreatorSection";
+  section.className = [
+    "common-card",
+    "common-card-themed",
+    "mapRoomCreatorSection"
+  ].join(" ");
 
   const account = getCurrentAccount();
   const currentPlace = findPlaceById(currentPlaceId);
   const editingRoom = editingRoomPlaceId
     ? findPlaceById(editingRoomPlaceId)
     : null;
+
+  const canCreateRoom = isAreaPlace(currentPlace);
+
+  section.appendChild(
+    createMapSectionHeading("作成")
+  );
 
   const title = document.createElement("h2");
   title.className = "mapRoomCreatorTitle";
@@ -494,13 +522,27 @@ function renderRoomCreatorSection(currentPlaceId) {
 
   const help = document.createElement("p");
   help.className = "mapRoomCreatorHelp";
-  help.textContent = "現在いるエリアにルームを作成します。作成後は自動でそのルームへ移動します。";
+  help.textContent =
+    "現在いるエリアにルームを作成します。作成後は自動でそのルームへ移動します。";
   section.appendChild(help);
+
+  const currentRow = document.createElement("div");
+  currentRow.className = "mapRoomCurrentRow";
 
   const currentInfo = document.createElement("p");
   currentInfo.className = "mapRoomCurrentInfo";
   currentInfo.textContent = `現在地：${currentPlace?.name ?? "なし"}`;
-  section.appendChild(currentInfo);
+  currentRow.appendChild(currentInfo);
+
+  if (!editingRoom && !canCreateRoom) {
+    const notice = document.createElement("p");
+    notice.className = "mapRoomCreatorNotice";
+    notice.textContent =
+      "現在地ではルームを作成できません。エリアに移動してください。";
+    currentRow.appendChild(notice);
+  }
+
+  section.appendChild(currentRow);
 
   if (!account?.eno) {
     const loginNotice = document.createElement("p");
@@ -516,43 +558,110 @@ function renderRoomCreatorSection(currentPlaceId) {
   const roomName = editingRoom?.name ?? "";
   const roomShortDescription = editingRoom?.shortDescription ?? "";
   const roomLongDescription = editingRoom?.longDescription ?? "";
-  const accessType = editingRoom?.accessType === "invite" || editingRoom?.accessType === "private"
-    ? editingRoom.accessType
-    : "public";
+
+  const accessType =
+    editingRoom?.accessType === "invite" ||
+    editingRoom?.accessType === "private"
+      ? editingRoom.accessType
+      : "public";
+
   const showParentPreview = editingRoom
     ? Boolean(editingRoom.showParentMainAreaPreview)
     : true;
+
   const hasLookAround = editingRoom
-    ? Array.isArray(editingRoom.actionIds) && editingRoom.actionIds.includes("look-around")
+    ? Array.isArray(editingRoom.actionIds) &&
+      editingRoom.actionIds.includes("look-around")
     : true;
 
   form.innerHTML = `
     <label class="mapRoomFormField">
       <span>ルーム名</span>
-      <input type="text" name="roomName" value="${escapeHtml(roomName)}" maxlength="40" required>
+      <input
+        type="text"
+        name="roomName"
+        value="${escapeHtml(roomName)}"
+        maxlength="40"
+        required
+      >
     </label>
+
     <label class="mapRoomFormField">
       <span>簡易説明</span>
-      <input type="text" name="roomShortDescription" value="${escapeHtml(roomShortDescription)}" maxlength="40" placeholder="最大40文字">
-      <small class="mapRoomFormHint">一覧やヘッダーに出る1行説明です。</small>
+      <input
+        type="text"
+        name="roomShortDescription"
+        value="${escapeHtml(roomShortDescription)}"
+        maxlength="40"
+        placeholder="最大40文字"
+      >
+      <small class="mapRoomFormHint">
+        一覧やヘッダーに出る1行説明です。
+      </small>
     </label>
+
     <label class="mapRoomFormField">
       <span>詳細説明</span>
-      <textarea name="roomLongDescription" maxlength="800" rows="5" placeholder="最大800文字">${escapeHtml(roomLongDescription)}</textarea>
-      <small class="mapRoomFormHint">ルーム詳細に出る説明です。文字装飾が使用可能です。</small>
+      <textarea
+        name="roomLongDescription"
+        maxlength="800"
+        rows="5"
+        placeholder="最大800文字"
+      >${escapeHtml(roomLongDescription)}</textarea>
+      <small class="mapRoomFormHint">
+        ルーム詳細に出る説明です。文字装飾が使用可能です。
+      </small>
     </label>
+
     <fieldset class="mapRoomFormFieldset">
       <legend>公開範囲</legend>
-      <label><input type="radio" name="roomAccessType" value="public" ${accessType === "public" ? "checked" : ""}> 公開</label>
-      <label><input type="radio" name="roomAccessType" value="invite" ${accessType === "invite" ? "checked" : ""}> 招待制</label>
-      <label><input type="radio" name="roomAccessType" value="private" ${accessType === "private" ? "checked" : ""}> 非公開</label>
+
+      <label>
+        <input
+          type="radio"
+          name="roomAccessType"
+          value="public"
+          ${accessType === "public" ? "checked" : ""}
+        >
+        公開
+      </label>
+
+      <label>
+        <input
+          type="radio"
+          name="roomAccessType"
+          value="invite"
+          ${accessType === "invite" ? "checked" : ""}
+        >
+        招待制
+      </label>
+
+      <label>
+        <input
+          type="radio"
+          name="roomAccessType"
+          value="private"
+          ${accessType === "private" ? "checked" : ""}
+        >
+        非公開
+      </label>
     </fieldset>
+
     <label class="mapRoomFormCheckbox">
-      <input type="checkbox" name="showParentMainAreaPreview" ${showParentPreview ? "checked" : ""}>
+      <input
+        type="checkbox"
+        name="showParentMainAreaPreview"
+        ${showParentPreview ? "checked" : ""}
+      >
       親エリアの発言を表示する
     </label>
+
     <label class="mapRoomFormCheckbox">
-      <input type="checkbox" name="actionLookAround" ${hasLookAround ? "checked" : ""}>
+      <input
+        type="checkbox"
+        name="actionLookAround"
+        ${hasLookAround ? "checked" : ""}
+      >
       アクション「周囲を見る」を使えるようにする
     </label>
   `;
@@ -562,19 +671,25 @@ function renderRoomCreatorSection(currentPlaceId) {
 
   const submitButton = document.createElement("button");
   submitButton.type = "submit";
-  submitButton.className = "button-primaryNew";
-  submitButton.textContent = editingRoom ? "変更を保存" : "ルームを作成";
+  submitButton.className =
+    "button-primaryNew mapRoomFormSubmitButton";
+  submitButton.textContent =
+    editingRoom ? "変更を保存" : "ルームを作成";
+
   buttonRow.appendChild(submitButton);
 
   if (editingRoom) {
     const cancelButton = document.createElement("button");
     cancelButton.type = "button";
-    cancelButton.className = "button-box";
+    cancelButton.className =
+      "button-box mapRoomFormSecondaryButton";
     cancelButton.textContent = "編集をやめる";
+
     cancelButton.addEventListener("click", () => {
       editingRoomPlaceId = null;
       renderMapTree();
     });
+
     buttonRow.appendChild(cancelButton);
   }
 
@@ -584,9 +699,17 @@ function renderRoomCreatorSection(currentPlaceId) {
     event.preventDefault();
 
     const input = readRoomFormData(form);
+
     const result = editingRoom
-      ? updateRoom(editingRoom.placeId, { ...input, ownerEno: account.eno })
-      : createRoom({ ...input, parentId: currentPlaceId, ownerEno: account.eno });
+      ? updateRoom(editingRoom.placeId, {
+          ...input,
+          ownerEno: account.eno
+        })
+      : createRoom({
+          ...input,
+          parentId: currentPlaceId,
+          ownerEno: account.eno
+        });
 
     if (!result.ok) {
       showToast(result.message, { type: "error" });
@@ -604,15 +727,12 @@ function renderRoomCreatorSection(currentPlaceId) {
     moveToPlace(result.room.placeId);
   });
 
-  if (!editingRoom && !isAreaPlace(currentPlace)) {
-    form.querySelectorAll("input, textarea, button").forEach(element => {
-      element.disabled = true;
-    });
-
-    const notice = document.createElement("p");
-    notice.className = "mapRoomCreatorNotice";
-    notice.textContent = "現在地ではルームを作成できません。エリアに移動してください。";
-    form.appendChild(notice);
+  if (!editingRoom && !canCreateRoom) {
+    form
+      .querySelectorAll("input, textarea, button")
+      .forEach(element => {
+        element.disabled = true;
+      });
   }
 
   section.appendChild(form);
@@ -623,10 +743,23 @@ function renderRoomCreatorSection(currentPlaceId) {
 
 function renderOwnedRoomList(ownerEno) {
   const wrapper = document.createElement("div");
-  wrapper.className = "mapOwnedRoomListSection";
+
+  wrapper.className = [
+    "common-card",
+    "common-card-themed",
+    "common-card-surface",
+    "mapOwnedRoomListSection"
+  ].join(" ");
 
   const title = document.createElement("h3");
-  title.className = "mapOwnedRoomListTitle";
+
+  title.className = [
+    "common-gradientHeading",
+    "commonSectionHeading",
+    "commonSectionHeading-small",
+    "mapOwnedRoomListTitle"
+  ].join(" ");
+
   title.textContent = "作成済みルーム一覧";
   wrapper.appendChild(title);
 
@@ -637,6 +770,7 @@ function renderOwnedRoomList(ownerEno) {
     empty.className = "mapNoRoomText";
     empty.textContent = "作成済みルームはありません。";
     wrapper.appendChild(empty);
+
     return wrapper;
   }
 
@@ -649,23 +783,27 @@ function renderOwnedRoomList(ownerEno) {
 
     const name = document.createElement("span");
     name.className = "mapOwnedRoomName";
-    name.textContent = `${room.name} [${getRoomAccessLabel(room.accessType)}]`;
+    name.textContent =
+      `${room.name} [${getRoomAccessLabel(room.accessType)}]`;
+
     row.appendChild(name);
 
     const editButton = document.createElement("button");
     editButton.type = "button";
     editButton.className = "button-box mapMoveButton";
     editButton.textContent = "編集";
+
     editButton.addEventListener("click", () => {
       editingRoomPlaceId = room.placeId;
       renderMapTree();
     });
-    row.appendChild(editButton);
 
+    row.appendChild(editButton);
     list.appendChild(row);
   });
 
   wrapper.appendChild(list);
+
   return wrapper;
 }
 
@@ -725,8 +863,12 @@ function renderMapTree() {
 
   mapContent.appendChild(createMapVisual());
 
-  const tree = document.createElement("div");
-  tree.className = "mapTree";
+  mapContent.appendChild(
+    createMapSectionHeading("移動")
+  );
+
+const tree = document.createElement("div");
+tree.className = "mapTree";
 
   if (!selectedFieldId) {
     const empty = document.createElement("p");
