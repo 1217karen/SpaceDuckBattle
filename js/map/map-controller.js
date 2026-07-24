@@ -28,6 +28,10 @@ const expandedAreaIds = new Set();
 let selectedFieldId = null;
 let moveConfirmPlaceId = null;
 let editingRoomPlaceId = null;
+let activeRoomForm = null;
+let activeRoomFormKey = null;
+let roomFormInitialState = null;
+let roomFormDraftState = null;
 
 function getCurrentCharacter() {
   const account = getCurrentAccount();
@@ -430,9 +434,8 @@ function renderMoveConfirmModal() {
   confirmButton.textContent = "移動する";
 
   confirmButton.addEventListener("click", () => {
-    moveToPlace(place.placeId);
+    moveToPlaceWithConfirmation(place.placeId);
   });
-
   const cancelButton = document.createElement("button");
   cancelButton.type = "button";
   cancelButton.className = "button-box mapModalButton";
@@ -474,7 +477,7 @@ function renderMapFavoritesPanel() {
     defaultTab: "place",
     favoritePlaces: addUnreadCountsToPlaces(getFavoritePlaces(), { currentEno, viewerEno: currentEno }),
     favoriteCharacters: getFavoriteCharacters({ currentEno }),
-    onMoveToPlace: moveToPlace,
+    onMoveToPlace: moveToPlaceWithConfirmation,
     showCharacterMemo: true,
     enablePlaceReorder: true,
     onReorderFavoritePlaces: (placeIds) => {
@@ -494,6 +497,109 @@ function readRoomFormData(form) {
     actionIds: form.querySelector("[name=actionLookAround]")?.checked ? ["look-around"] : []
   };
 }
+
+function cloneRoomFormState(state) {
+  return {
+    name: state?.name ?? "",
+    shortDescription: state?.shortDescription ?? "",
+    longDescription: state?.longDescription ?? "",
+    accessType: state?.accessType ?? "public",
+    showParentMainAreaPreview:
+      Boolean(state?.showParentMainAreaPreview),
+    actionIds: Array.isArray(state?.actionIds)
+      ? [...state.actionIds]
+      : []
+  };
+}
+
+function createRoomFormKey(currentPlaceId, editingRoom) {
+  if (editingRoom?.placeId) {
+    return `edit:${editingRoom.placeId}`;
+  }
+
+  return `create:${currentPlaceId ?? "none"}`;
+}
+
+function initializeRoomFormTracking(formKey, initialState) {
+  /*
+   * 同じフォームの再描画なら、入力途中の内容を保持する。
+   */
+  if (activeRoomFormKey === formKey && roomFormDraftState) {
+    return;
+  }
+
+  activeRoomFormKey = formKey;
+  roomFormInitialState = cloneRoomFormState(initialState);
+  roomFormDraftState = cloneRoomFormState(initialState);
+}
+
+function registerActiveRoomForm(form) {
+  activeRoomForm = form;
+
+  const syncDraft = () => {
+    roomFormDraftState = cloneRoomFormState(
+      readRoomFormData(form)
+    );
+  };
+
+  form.addEventListener("input", syncDraft);
+  form.addEventListener("change", syncDraft);
+}
+
+function normalizeRoomFormState(state) {
+  const normalized = cloneRoomFormState(state);
+
+  normalized.actionIds.sort();
+
+  return normalized;
+}
+
+function hasUnsavedRoomChanges() {
+  if (!roomFormInitialState || !roomFormDraftState) {
+    return false;
+  }
+
+  return JSON.stringify(
+    normalizeRoomFormState(roomFormInitialState)
+  ) !== JSON.stringify(
+    normalizeRoomFormState(roomFormDraftState)
+  );
+}
+
+function confirmDiscardRoomChanges() {
+  if (!hasUnsavedRoomChanges()) {
+    return true;
+  }
+
+  return window.confirm(
+    "入力内容が保存されていません。\n変更を破棄してよろしいですか？"
+  );
+}
+
+function clearRoomFormTracking() {
+  activeRoomForm = null;
+  activeRoomFormKey = null;
+  roomFormInitialState = null;
+  roomFormDraftState = null;
+}
+
+function moveToPlaceWithConfirmation(placeId) {
+  if (!confirmDiscardRoomChanges()) {
+    return;
+  }
+
+  clearRoomFormTracking();
+  moveToPlace(placeId);
+}
+
+window.addEventListener("beforeunload", event => {
+  if (!hasUnsavedRoomChanges()) {
+    return;
+  }
+
+  event.preventDefault();
+  event.returnValue = "";
+});
 
 function renderRoomCreatorSection(currentPlaceId) {
   /*
@@ -591,26 +697,57 @@ function renderRoomCreatorSection(currentPlaceId) {
   const form = document.createElement("form");
   form.className = "mapRoomForm";
 
-  const roomName = editingRoom?.name ?? "";
-  const roomShortDescription =
-    editingRoom?.shortDescription ?? "";
-  const roomLongDescription =
-    editingRoom?.longDescription ?? "";
+  const initialFormState = {
+    name: editingRoom?.name ?? "",
+    shortDescription:
+      editingRoom?.shortDescription ?? "",
+    longDescription:
+      editingRoom?.longDescription ?? "",
 
-  const accessType =
-    editingRoom?.accessType === "invite" ||
-    editingRoom?.accessType === "private"
-      ? editingRoom.accessType
-      : "public";
+    accessType:
+      editingRoom?.accessType === "invite" ||
+      editingRoom?.accessType === "private"
+        ? editingRoom.accessType
+        : "public",
 
-  const showParentPreview = editingRoom
-    ? Boolean(editingRoom.showParentMainAreaPreview)
-    : true;
+    showParentMainAreaPreview: editingRoom
+      ? Boolean(editingRoom.showParentMainAreaPreview)
+      : true,
 
-  const hasLookAround = editingRoom
-    ? Array.isArray(editingRoom.actionIds) &&
+    actionIds:
+      editingRoom &&
+      Array.isArray(editingRoom.actionIds) &&
       editingRoom.actionIds.includes("look-around")
-    : true;
+        ? ["look-around"]
+        : editingRoom
+          ? []
+          : ["look-around"]
+  };
+
+  const formKey = createRoomFormKey(
+    currentPlaceId,
+    editingRoom
+  );
+
+  initializeRoomFormTracking(
+    formKey,
+    initialFormState
+  );
+
+  const formState = cloneRoomFormState(
+    roomFormDraftState
+  );
+
+  const roomName = formState.name;
+  const roomShortDescription =
+    formState.shortDescription;
+  const roomLongDescription =
+    formState.longDescription;
+  const accessType = formState.accessType;
+  const showParentPreview =
+    formState.showParentMainAreaPreview;
+  const hasLookAround =
+    formState.actionIds.includes("look-around");
 
   form.innerHTML = `
     <label class="mapRoomFormField">
@@ -623,6 +760,7 @@ function renderRoomCreatorSection(currentPlaceId) {
         required
       >
     </label>
+    
 
     <label class="mapRoomFormField">
       <span>簡易説明</span>
@@ -705,7 +843,9 @@ function renderRoomCreatorSection(currentPlaceId) {
       アクション「周囲を見る」を使えるようにする
     </label>
   `;
-
+  
+registerActiveRoomForm(form);
+  
   /*
    * 作成・保存ボタン。
    */
@@ -733,6 +873,11 @@ function renderRoomCreatorSection(currentPlaceId) {
     cancelButton.textContent = "編集をやめる";
 
     cancelButton.addEventListener("click", () => {
+      if (!confirmDiscardRoomChanges()) {
+        return;
+      }
+
+      clearRoomFormTracking();
       editingRoomPlaceId = null;
       renderMapTree();
     });
@@ -766,15 +911,25 @@ function renderRoomCreatorSection(currentPlaceId) {
       return;
     }
 
+    if (editingRoom) {
+      sessionStorage.setItem(
+        "chatToastMessage",
+        JSON.stringify({
+          message: result.message,
+          type: "success"
+        })
+      );
+
+      clearRoomFormTracking();
+      window.location.reload();
+      return;
+    }
+
+    clearRoomFormTracking();
+
     showToast(result.message, {
       type: "success"
     });
-
-    if (editingRoom) {
-      editingRoomPlaceId = null;
-      renderMapTree();
-      return;
-    }
 
     moveToPlace(result.room.placeId);
   });
@@ -854,6 +1009,18 @@ function renderOwnedRoomList(ownerEno) {
     editButton.textContent = "編集";
 
     editButton.addEventListener("click", () => {
+      /*
+       * 現在編集中のルームと同じなら何もしない。
+       */
+      if (editingRoomPlaceId === room.placeId) {
+        return;
+      }
+
+      if (!confirmDiscardRoomChanges()) {
+        return;
+      }
+
+      clearRoomFormTracking();
       editingRoomPlaceId = room.placeId;
       renderMapTree();
     });
