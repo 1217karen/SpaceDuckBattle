@@ -447,6 +447,24 @@
   align-items: center;
 }
 
+.mapRoomDeleteButton {
+  padding: 8px 14px;
+  border-color: var(--theme-border-strong);
+}
+
+.mapRoomDeleteButton:not(:disabled) {
+  color: #ffb8b8;
+}
+
+.mapRoomDeleteButton:not(:disabled):hover {
+  background: var(--theme-button-bg-hover);
+}
+
+.mapRoomDeleteButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* =======================================================
    作成済みルーム一覧
 ======================================================= */
