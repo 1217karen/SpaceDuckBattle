@@ -240,7 +240,7 @@ function createMoveButton(place) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "button-box mapMoveButton";
-  button.textContent = "移動";
+  button.textContent = "MOVE";
 
   button.addEventListener("click", () => {
     openMoveConfirm(place.placeId);
@@ -512,7 +512,7 @@ function renderRoomCreatorSection(currentPlaceId) {
   const canCreateRoom = isAreaPlace(currentPlace);
 
   section.appendChild(
-    createMapSectionHeading("作成")
+    createMapSectionHeading("ROOM")
   );
 
   const title = document.createElement("h2");
