@@ -5,6 +5,7 @@ import { places } from "../data/places-data.js";
 const ROOM_STORAGE_KEY = "userCreatedRooms";
 const ROOM_ID_PREFIX = "room_";
 const ROOM_ID_RANDOM_LENGTH = 16;
+const ROOM_NAME_MAX_LENGTH = 25;
 const ROOM_SHORT_DESCRIPTION_MAX_LENGTH = 40;
 const ROOM_LONG_DESCRIPTION_MAX_LENGTH = 800;
 const ROOM_ACCESS_LABELS = {
