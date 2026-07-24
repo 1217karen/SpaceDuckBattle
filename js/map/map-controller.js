@@ -562,7 +562,7 @@ function renderRoomCreatorSection(currentPlaceId) {
     const notice = document.createElement("p");
     notice.className = "mapRoomCreatorNotice";
     notice.textContent =
-      "現在地ではルームを作成できません。エリアに移動してください。";
+      "※現在地ではルームを作成できません。エリアに移動してください。";
 
     currentRow.appendChild(notice);
   }
