@@ -1,5 +1,6 @@
 //chat-header-view.js
 
+import { getRoomAccessLabel, isRoomPlace } from "../services/room-service.js";
 
 export function renderPlaceInfoSection(container, options = {}) {
   const {
@@ -31,6 +32,13 @@ export function renderPlaceInfoSection(container, options = {}) {
 
   titleGroup.appendChild(title);
   topRow.appendChild(titleGroup);
+
+  if (isRoomPlace(place) && place.accessType !== "public") {
+    const accessBadge = document.createElement("span");
+    accessBadge.className = "chatHeaderAccessBadge";
+    accessBadge.textContent = `[${getRoomAccessLabel(place.accessType)}]`;
+    titleGroup.appendChild(accessBadge);
+  }
 
   if (place && typeof onToggleFavorite === "function") {
     favoriteButton = document.createElement("button");
