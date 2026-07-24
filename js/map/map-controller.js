@@ -244,7 +244,7 @@ function createMoveButton(place) {
   const button = document.createElement("button");
   button.type = "button";
   button.className = "button-box mapMoveButton";
-  button.textContent = "MOVE";
+  button.textContent = "移動";
 
   button.addEventListener("click", () => {
     openMoveConfirm(place.placeId);
