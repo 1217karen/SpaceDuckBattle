@@ -11,12 +11,6 @@
   margin-bottom: 8px;
 }
 
-.mapCurrentInfo {
-  margin: 0 0 14px;
-  color: var(--theme-text-muted);
-  font-size: var(--font-size-small);
-}
-
 
 /* =======================================================
    マップ画像エリア
@@ -323,11 +317,16 @@
 }
 
 .mapRoomCreatorHelp,
+.mapRoomCurrentInfo,
 .mapRoomCreatorNotice {
   margin: 0 0 10px;
   color: var(--theme-text-muted);
   font-size: var(--font-size-small);
   line-height: 1.6;
+}
+
+.mapRoomCurrentInfo {
+  color: var(--theme-text-main);
 }
 
 .mapRoomForm {
