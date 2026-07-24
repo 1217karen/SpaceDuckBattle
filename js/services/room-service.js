@@ -1,8 +1,12 @@
+// room-service.js
+
 import { places } from "../data/places-data.js";
 
 const ROOM_STORAGE_KEY = "userCreatedRooms";
 const ROOM_ID_PREFIX = "room_";
 const ROOM_ID_RANDOM_LENGTH = 16;
+const ROOM_SHORT_DESCRIPTION_MAX_LENGTH = 40;
+const ROOM_LONG_DESCRIPTION_MAX_LENGTH = 800;
 const ROOM_ACCESS_LABELS = {
   public: "公開",
   invite: "招待制",
@@ -44,8 +48,8 @@ function normalizeRoom(room = {}) {
     name: typeof room.name === "string" && room.name.trim() !== ""
       ? room.name.trim()
       : "無名のルーム",
-    shortDescription: typeof room.shortDescription === "string" ? room.shortDescription.trim() : "",
-    longDescription: typeof room.longDescription === "string" ? room.longDescription.trim() : "",
+    shortDescription: normalizeRoomShortDescription(room.shortDescription),
+    longDescription: normalizeRoomLongDescription(room.longDescription),
     accessType: normalizeAccessType(room.accessType),
     ownerEno: Number.isInteger(Number(room.ownerEno)) && Number(room.ownerEno) > 0
       ? Number(room.ownerEno)
@@ -60,6 +64,18 @@ function normalizeRoom(room = {}) {
     createdAt: typeof room.createdAt === "string" && room.createdAt ? room.createdAt : now,
     updatedAt: typeof room.updatedAt === "string" && room.updatedAt ? room.updatedAt : now
   };
+}
+
+function normalizeRoomShortDescription(value) {
+  return typeof value === "string"
+    ? value.replace(/\s+/g, " ").trim().slice(0, ROOM_SHORT_DESCRIPTION_MAX_LENGTH)
+    : "";
+}
+
+function normalizeRoomLongDescription(value) {
+  return typeof value === "string"
+    ? value.trim().slice(0, ROOM_LONG_DESCRIPTION_MAX_LENGTH)
+    : "";
 }
 
 function loadStoredRooms() {
@@ -234,15 +250,16 @@ export function createRoom(input = {}) {
 
   const now = new Date().toISOString();
   const placeId = createRoomId();
-  const description = typeof input.description === "string" ? input.description.trim() : "";
+  const shortDescription = normalizeRoomShortDescription(input.shortDescription ?? input.description);
+  const longDescription = normalizeRoomLongDescription(input.longDescription ?? input.description);
   const room = normalizeRoom({
     placeId,
     groupId: placeId,
     zoneId: parentPlace.zoneId,
     parentId: parentPlace.placeId,
     name,
-    shortDescription: description,
-    longDescription: description,
+    shortDescription,
+    longDescription,
     accessType: input.accessType,
     ownerEno,
     showParentMainAreaPreview: Boolean(input.showParentMainAreaPreview),
@@ -276,12 +293,13 @@ export function updateRoom(roomPlaceId, input = {}) {
     return { ok: false, message: "ルーム名を入力してください", room };
   }
 
-  const description = typeof input.description === "string" ? input.description.trim() : "";
+  const shortDescription = normalizeRoomShortDescription(input.shortDescription ?? input.description);
+  const longDescription = normalizeRoomLongDescription(input.longDescription ?? input.description);
   const nextRoom = normalizeRoom({
     ...room,
     name,
-    shortDescription: description,
-    longDescription: description,
+    shortDescription,
+    longDescription,
     accessType: input.accessType,
     showParentMainAreaPreview: Boolean(input.showParentMainAreaPreview),
     actionIds: Array.isArray(input.actionIds) ? input.actionIds : room.actionIds,
