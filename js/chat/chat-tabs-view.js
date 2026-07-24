@@ -1,4 +1,5 @@
 //chat-tabs-view.js
+import { hasShopForPlace } from "../services/shop-service.js";
 
 export function renderPlaceTabsSection(container, options = {}) {
   const {
@@ -105,4 +106,207 @@ function createChatTabButton(tab = {}, buttonClassName = "") {
   }
 
   return button;
+}
+
+function getPlacesInSameGroup(place, places = []) {
+  if (!place?.groupId) return [];
+
+  return places.filter(item =>
+    item.groupId === place.groupId
+  );
+}
+
+function getLayerSortValue(layer) {
+  if (layer === "main") return 1;
+  if (layer === "side") return 2;
+  if (layer === "local") return 3;
+  return 999;
+}
+
+export function buildPlaceTabs(place, options = {}) {
+  const {
+    places = [],
+    isShopOpen = false,
+    isActionOpen = false,
+    onMoveToPlace = null,
+    onToggleShop = null,
+    onToggleAction = null,
+    onSelectCurrentPlace = null
+  } = options;
+
+  if (!place) {
+    return [];
+  }
+
+  const sameGroupPlaces =
+    place.kind === "room"
+      ? []
+      : getPlacesInSameGroup(place, places)
+          .slice()
+          .sort((a, b) =>
+            getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
+          );
+
+  const tabs = sameGroupPlaces.map(item => {
+    const isCurrentPlace = item.placeId === place.placeId;
+
+    return {
+      key: `layer-${item.layer}`,
+      label: String(item.layer ?? "").toUpperCase(),
+      isActive: isCurrentPlace,
+      isCurrent: isCurrentPlace,
+      isDisabled: false,
+      onClick: () => {
+        if (isCurrentPlace) {
+          if (typeof onSelectCurrentPlace === "function") {
+            onSelectCurrentPlace();
+          }
+          return;
+        }
+
+        if (typeof onMoveToPlace === "function") {
+          onMoveToPlace(item.placeId);
+        }
+      }
+    };
+  });
+
+  if (hasShopForPlace(place)) {
+    tabs.push({
+      key: "shop",
+      label: "SHOP",
+      isActive: isShopOpen,
+      isDisabled: typeof onToggleShop !== "function",
+      onClick: () => {
+        if (typeof onToggleShop === "function") {
+          onToggleShop();
+        }
+      }
+    });
+  }
+
+  tabs.push({
+    key: "action",
+    label: "ACTION",
+    isActive: isActionOpen,
+    isDisabled: typeof onToggleAction !== "function",
+    onClick: () => {
+      if (typeof onToggleAction === "function") {
+        onToggleAction();
+      }
+    }
+  });
+
+  return tabs;
+}
+
+export function buildViewTabs(options = {}) {
+  const {
+    currentMode = "chat",
+    authorEno = null,
+    onSelectMode = null
+  } = options;
+
+  const tabs = [
+    {
+      key: "chat",
+      label: "CHAT",
+      isActive: currentMode === "chat",
+      isCurrent: currentMode === "chat",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("chat");
+        }
+      }
+    },
+    {
+      key: "here",
+      label: "HERE",
+      isActive: currentMode === "here",
+      isCurrent: currentMode === "here",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("here");
+        }
+      }
+    },
+    {
+      key: "reply",
+      label: "REPLY",
+      isActive: currentMode === "reply",
+      isCurrent: currentMode === "reply",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("reply");
+        }
+      }
+    },
+    {
+      key: "message",
+      label: "MESSAGE",
+      isActive: currentMode === "message",
+      isCurrent: currentMode === "message",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("message");
+        }
+      }
+    },
+    {
+      key: "favorite",
+      label: "FAVORITE",
+      isActive: currentMode === "favorite",
+      isCurrent: currentMode === "favorite",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("favorite");
+        }
+      }
+    },
+    {
+      key: "self",
+      label: "SELF",
+      isActive: currentMode === "self",
+      isCurrent: currentMode === "self",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("self");
+        }
+      }
+    }
+  ];
+
+  const normalizedAuthorEno = Number(authorEno || 0);
+
+  if (Number.isInteger(normalizedAuthorEno) && normalizedAuthorEno > 0) {
+    tabs.push({
+      key: `eno-${normalizedAuthorEno}`,
+      label: `Eno.${normalizedAuthorEno}`,
+      isActive: currentMode === "eno",
+      isCurrent: currentMode === "eno",
+      isDisabled: typeof onSelectMode !== "function",
+      onClick: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("eno", {
+            eno: normalizedAuthorEno
+          });
+        }
+      },
+      onClose: () => {
+        if (typeof onSelectMode === "function") {
+          onSelectMode("chat", {
+            closeAuthorEno: true
+          });
+        }
+      }
+    });
+  }
+
+  return tabs;
 }
