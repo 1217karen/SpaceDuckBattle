@@ -1,6 +1,6 @@
 // map-room-section.js
 
-import { createRoom, getRoomAccessLabel, getRoomsByOwnerEno, isAreaPlace, updateRoom } from "../services/room-service.js";
+import { createRoom,deleteRoom,getRoomAccessLabel,getRoomsByOwnerEno,isAreaPlace,updateRoom } from "../services/room-service.js";
 
 export function createMapRoomSectionController(options = {}) {
   const {
@@ -21,11 +21,18 @@ export function createMapRoomSectionController(options = {}) {
   function readRoomFormData(form) {
     return {
       name: form.querySelector("[name=roomName]")?.value ?? "",
-      shortDescription: form.querySelector("[name=roomShortDescription]")?.value ?? "",
-      longDescription: form.querySelector("[name=roomLongDescription]")?.value ?? "",
-      accessType: form.querySelector("[name=roomAccessType]:checked")?.value ?? "public",
-      showParentMainAreaPreview: Boolean(form.querySelector("[name=showParentMainAreaPreview]")?.checked),
-      actionIds: form.querySelector("[name=actionLookAround]")?.checked ? ["look-around"] : []
+      shortDescription:
+        form.querySelector("[name=roomShortDescription]")?.value ?? "",
+      longDescription:
+        form.querySelector("[name=roomLongDescription]")?.value ?? "",
+      accessType:
+        form.querySelector("[name=roomAccessType]:checked")?.value ?? "public",
+      showParentMainAreaPreview: Boolean(
+        form.querySelector("[name=showParentMainAreaPreview]")?.checked
+      ),
+      actionIds: form.querySelector("[name=actionLookAround]")?.checked
+        ? ["look-around"]
+        : []
     };
   }
 
@@ -35,8 +42,9 @@ export function createMapRoomSectionController(options = {}) {
       shortDescription: state?.shortDescription ?? "",
       longDescription: state?.longDescription ?? "",
       accessType: state?.accessType ?? "public",
-      showParentMainAreaPreview:
-        Boolean(state?.showParentMainAreaPreview),
+      showParentMainAreaPreview: Boolean(
+        state?.showParentMainAreaPreview
+      ),
       actionIds: Array.isArray(state?.actionIds)
         ? [...state.actionIds]
         : []
@@ -55,7 +63,10 @@ export function createMapRoomSectionController(options = {}) {
     /*
      * 同じフォームの再描画なら、入力途中の内容を保持する。
      */
-    if (activeRoomFormKey === formKey && roomFormDraftState) {
+    if (
+      activeRoomFormKey === formKey &&
+      roomFormDraftState
+    ) {
       return;
     }
 
@@ -90,10 +101,13 @@ export function createMapRoomSectionController(options = {}) {
       return false;
     }
 
-    return JSON.stringify(
-      normalizeRoomFormState(roomFormInitialState)
-    ) !== JSON.stringify(
-      normalizeRoomFormState(roomFormDraftState)
+    return (
+      JSON.stringify(
+        normalizeRoomFormState(roomFormInitialState)
+      ) !==
+      JSON.stringify(
+        normalizeRoomFormState(roomFormDraftState)
+      )
     );
   }
 
@@ -273,7 +287,6 @@ export function createMapRoomSectionController(options = {}) {
           required
         >
       </label>
-      
 
       <label class="mapRoomFormField">
         <span>簡易説明</span>
@@ -356,9 +369,9 @@ export function createMapRoomSectionController(options = {}) {
         アクション「周囲を見る」を使えるようにする
       </label>
     `;
-    
-  registerActiveRoomForm(form);
-    
+
+    registerActiveRoomForm(form);
+
     /*
      * 作成・保存ボタン。
      */
@@ -379,7 +392,9 @@ export function createMapRoomSectionController(options = {}) {
      * 編集中だけキャンセルボタンを表示。
      */
     if (editingRoom) {
-      const cancelButton = document.createElement("button");
+      const cancelButton =
+        document.createElement("button");
+
       cancelButton.type = "button";
       cancelButton.className =
         "button-box mapRoomFormSecondaryButton";
@@ -399,6 +414,119 @@ export function createMapRoomSectionController(options = {}) {
     }
 
     form.appendChild(buttonRow);
+
+    if (editingRoom) {
+      const dangerSection =
+        document.createElement("div");
+
+      dangerSection.className =
+        "mapRoomDangerSection";
+
+      const dangerTitle =
+        document.createElement("h3");
+
+      dangerTitle.className =
+        "mapRoomDangerTitle";
+      dangerTitle.textContent =
+        "ルームの削除";
+
+      const confirmLabel =
+        document.createElement("label");
+
+      confirmLabel.className =
+        "mapRoomFormCheckbox";
+
+      const confirmCheckbox =
+        document.createElement("input");
+
+      confirmCheckbox.type = "checkbox";
+      confirmCheckbox.name =
+        "confirmRoomDelete";
+
+      const confirmText = document.createTextNode(
+        "削除すると元に戻せないことを確認しました"
+      );
+
+      confirmLabel.append(
+        confirmCheckbox,
+        confirmText
+      );
+
+      const deleteButton =
+        document.createElement("button");
+
+      deleteButton.type = "button";
+      deleteButton.className =
+        "button-danger mapRoomDeleteButton";
+      deleteButton.textContent =
+        "ルームを削除";
+      deleteButton.disabled = true;
+
+      confirmCheckbox.addEventListener(
+        "change",
+        () => {
+          deleteButton.disabled =
+            !confirmCheckbox.checked;
+        }
+      );
+
+      deleteButton.addEventListener("click", () => {
+        const confirmed = window.confirm(
+          `「${editingRoom.name}」を削除します。\nこの操作は取り消せません。\n本当に削除しますか？`
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        const result = deleteRoom(
+          editingRoom.placeId,
+          {
+            ownerEno: account.eno
+          }
+        );
+
+        if (!result.ok) {
+          showToast(result.message, {
+            type: "error"
+          });
+
+          return;
+        }
+
+        clearRoomFormTracking();
+        editingRoomPlaceId = null;
+
+        if (
+          currentPlaceId === editingRoom.placeId
+        ) {
+          sessionStorage.setItem(
+            "chatToastMessage",
+            JSON.stringify({
+              message: result.message,
+              type: "success"
+            })
+          );
+
+          moveToPlace(result.parentPlaceId);
+          return;
+        }
+
+        showToast(result.message, {
+          type: "success"
+        });
+
+        renderMapTree();
+      });
+
+      dangerSection.append(
+        dangerTitle,
+        confirmLabel,
+        deleteButton
+      );
+
+      form.appendChild(dangerSection);
+    }
 
     form.addEventListener("submit", event => {
       event.preventDefault();
@@ -453,7 +581,9 @@ export function createMapRoomSectionController(options = {}) {
      */
     if (!editingRoom && !canCreateRoom) {
       form
-        .querySelectorAll("input, textarea, button")
+        .querySelectorAll(
+          "input, textarea, button"
+        )
         .forEach(element => {
           element.disabled = true;
         });
@@ -487,8 +617,11 @@ export function createMapRoomSectionController(options = {}) {
     ].join(" ");
 
     const title = document.createElement("h2");
-    title.className = "mapRoomCreatorTitle mapOwnedRoomListTitle";
-    title.textContent = "作成済みルーム一覧";
+    title.className =
+      "mapRoomCreatorTitle mapOwnedRoomListTitle";
+    title.textContent =
+      "作成済みルーム一覧";
+
     wrapper.appendChild(title);
 
     const rooms = getRoomsByOwnerEno(ownerEno);
@@ -496,7 +629,9 @@ export function createMapRoomSectionController(options = {}) {
     if (rooms.length === 0) {
       const empty = document.createElement("p");
       empty.className = "mapNoRoomText";
-      empty.textContent = "作成済みルームはありません。";
+      empty.textContent =
+        "作成済みルームはありません。";
+
       wrapper.appendChild(empty);
 
       return wrapper;
@@ -516,16 +651,21 @@ export function createMapRoomSectionController(options = {}) {
 
       row.appendChild(name);
 
-      const editButton = document.createElement("button");
+      const editButton =
+        document.createElement("button");
+
       editButton.type = "button";
-      editButton.className = "button-box mapMoveButton";
+      editButton.className =
+        "button-box mapMoveButton";
       editButton.textContent = "編集";
 
       editButton.addEventListener("click", () => {
         /*
          * 現在編集中のルームと同じなら何もしない。
          */
-        if (editingRoomPlaceId === room.placeId) {
+        if (
+          editingRoomPlaceId === room.placeId
+        ) {
           return;
         }
 
