@@ -257,16 +257,31 @@ function createPlaceNameBlock(place, currentPlaceId) {
   const nameWrap = document.createElement("div");
   nameWrap.className = "mapListNameWrap";
 
+  const nameRow = document.createElement("div");
+  nameRow.className = "mapListNameRow";
+
   const name = document.createElement("span");
   name.className = "mapListName";
   name.textContent = place.name;
-  nameWrap.appendChild(name);
+
+  nameRow.appendChild(name);
 
   if (place.placeId === currentPlaceId) {
     const currentMark = document.createElement("span");
     currentMark.className = "mapCurrentMark";
     currentMark.textContent = "← 現在地";
-    nameWrap.appendChild(currentMark);
+    nameRow.appendChild(currentMark);
+  }
+
+  nameWrap.appendChild(nameRow);
+
+  if (place.shortDescription) {
+    const description = document.createElement("span");
+    description.className =
+      "text-muted mapListShortDescription";
+    description.textContent = place.shortDescription;
+
+    nameWrap.appendChild(description);
   }
 
   return nameWrap;
