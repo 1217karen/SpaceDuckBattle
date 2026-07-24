@@ -339,8 +339,8 @@
 
 .mapRoomCreatorHelp {
   margin: 0 0 10px;
-  color: var(--theme-text-muted);
-  font-size: var(--font-size-small);
+  color: var(--theme-text-main);
+  font-size: inherit;
   line-height: 1.6;
 }
 
