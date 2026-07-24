@@ -469,7 +469,8 @@ function renderMapFavoritesPanel() {
 function readRoomFormData(form) {
   return {
     name: form.querySelector("[name=roomName]")?.value ?? "",
-    description: form.querySelector("[name=roomDescription]")?.value ?? "",
+    shortDescription: form.querySelector("[name=roomShortDescription]")?.value ?? "",
+    longDescription: form.querySelector("[name=roomLongDescription]")?.value ?? "",
     accessType: form.querySelector("[name=roomAccessType]:checked")?.value ?? "public",
     showParentMainAreaPreview: Boolean(form.querySelector("[name=showParentMainAreaPreview]")?.checked),
     actionIds: form.querySelector("[name=actionLookAround]")?.checked ? ["look-around"] : []
@@ -508,7 +509,8 @@ function renderRoomCreatorSection(currentPlaceId) {
   form.className = "mapRoomForm";
 
   const roomName = editingRoom?.name ?? "";
-  const roomDescription = editingRoom?.longDescription ?? editingRoom?.shortDescription ?? "";
+  const roomShortDescription = editingRoom?.shortDescription ?? "";
+  const roomLongDescription = editingRoom?.longDescription ?? "";
   const accessType = editingRoom?.accessType === "invite" || editingRoom?.accessType === "private"
     ? editingRoom.accessType
     : "public";
@@ -525,8 +527,14 @@ function renderRoomCreatorSection(currentPlaceId) {
       <input type="text" name="roomName" value="${escapeHtml(roomName)}" maxlength="40" required>
     </label>
     <label class="mapRoomFormField">
-      <span>説明文</span>
-      <textarea name="roomDescription" maxlength="200" rows="3">${escapeHtml(roomDescription)}</textarea>
+      <span>簡易説明</span>
+      <input type="text" name="roomShortDescription" value="${escapeHtml(roomShortDescription)}" maxlength="40" placeholder="40文字以内の短い説明">
+      <small class="mapRoomFormHint">一覧やヘッダーに出る1行説明です。40文字まで入力できます。</small>
+    </label>
+    <label class="mapRoomFormField">
+      <span>詳細説明</span>
+      <textarea name="roomLongDescription" maxlength="800" rows="5" placeholder="改行を使って自由に説明できます">${escapeHtml(roomLongDescription)}</textarea>
+      <small class="mapRoomFormHint">ルーム詳細に出る説明です。改行を反映します。</small>
     </label>
     <fieldset class="mapRoomFormFieldset">
       <legend>公開範囲</legend>
