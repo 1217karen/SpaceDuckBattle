@@ -771,7 +771,7 @@ function renderRoomCreatorSection(currentPlaceId) {
         type="text"
         name="roomName"
         value="${escapeHtml(roomName)}"
-        maxlength="40"
+        maxlength="25"
         required
       >
     </label>
