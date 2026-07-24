@@ -819,14 +819,7 @@ function renderOwnedRoomList(ownerEno) {
   ].join(" ");
 
   const title = document.createElement("h3");
-
-  title.className = [
-    "common-gradientHeading",
-    "commonSectionHeading",
-    "commonSectionHeading-small",
-    "mapOwnedRoomListTitle"
-  ].join(" ");
-
+  title.className = "mapOwnedRoomListTitle";
   title.textContent = "作成済みルーム一覧";
   wrapper.appendChild(title);
 
