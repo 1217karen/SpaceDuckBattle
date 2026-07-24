@@ -494,7 +494,7 @@ function renderRoomCreatorSection(currentPlaceId) {
 
   const help = document.createElement("p");
   help.className = "mapRoomCreatorHelp";
-  help.textContent = "現在いるエリアにだけルームを作成できます。作成後は自動でそのルームへ移動します。";
+  help.textContent = "現在いるエリアにルームを作成します。作成後は自動でそのルームへ移動します。";
   section.appendChild(help);
 
   const currentInfo = document.createElement("p");
