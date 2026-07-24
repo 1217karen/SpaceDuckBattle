@@ -3,7 +3,7 @@
 import { places } from "../data/places-data.js";
 
 import { createPost,getReplySourcePostForDraft } from "../services/post-service.js";
-import { getChatPostsForViewMode, normalizeEno } from "../services/chat-post-query-service.js";
+import { getChatPostsForViewMode } from "../services/chat-post-query-service.js";
 import { getFavoriteCharacters, loadFavoriteCharacterEnos } from "../services/character-favorite-service.js";
 import { getCurrentAccount, loadCharacter } from "../services/storage-service.js";
 import { addUnreadCountsToPlaces, markPlaceReadAtLatestPost } from "../services/place-unread-service.js";
@@ -30,11 +30,12 @@ import { buildActionLogPostInput } from "./chat-action-post.js";
 
 import { renderPlaceInfoSection } from "./chat-header-view.js";
 import { renderChatComposerSection } from "./chat-composer-view.js";
-import { renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.js";
+import { buildPlaceTabs,buildViewTabs,renderPlaceTabsSection,renderViewTabsSection } from "./chat-tabs-view.js";
 import { renderPostListSection,renderPostListContent } from "./chat-post-view.js";
-import { loadChatPageSize,saveChatPageSize } from "./chat-pagination-state.js";
+import { getPagedPosts,getPaginationState,loadChatPageSize,saveChatPageSize } from "./chat-pagination-state.js";
 import { renderChatPaginationSection } from "./chat-pagination-view.js";
 import { renderChatActionSection } from "./chat-action-view.js";
+import { renderMessageFilterSection } from "./chat-message-filter-view.js";
 
 import { hasShopForPlace } from "../services/shop-service.js";
 import { canAccessRoom, isInviteRoom, isInviteRoomPost, isInviteRoomReplyBlocked } from "../services/room-service.js";
@@ -59,21 +60,6 @@ let isActionOpen = false;
 let selectedActionId = "";
 let selectedLogId = "";
 let pendingShopPurchaseItems = [];
-
-function getPlacesInSameGroup(place) {
-  if (!place?.groupId) return [];
-
-  return places.filter(item =>
-    item.groupId === place.groupId
-  );
-}
-
-function getLayerSortValue(layer) {
-  if (layer === "main") return 1;
-  if (layer === "side") return 2;
-  if (layer === "local") return 3;
-  return 999;
-}
 
 function openShopPurchaseConfirm(purchaseItems) {
   pendingShopPurchaseItems = purchaseItems;
@@ -145,26 +131,6 @@ function replaceChatUrl({ placeId, view = currentViewMode, page = 1, eno = opene
 }
 
 
-function getPaginationState(posts = [], requestedPage = 1, pageSize = 30) {
-  const totalItems = posts.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const currentPage = Math.min(Math.max(1, requestedPage), totalPages);
-  const startIndex = (currentPage - 1) * pageSize;
-
-  return {
-    currentPage,
-    pageSize,
-    totalItems,
-    totalPages,
-    startIndex,
-    endIndex: startIndex + pageSize
-  };
-}
-
-function getPagedPosts(posts = [], pagination = {}) {
-  return posts.slice(pagination.startIndex, pagination.endIndex);
-}
-
 let activeChatTimelineContext = null;
 
 function saveActiveComposerDraft() {
@@ -226,60 +192,6 @@ function renderActiveChatViewTabs() {
       onSelectMode: selectChatViewMode
     })
   });
-}
-
-function renderMessageFilterSection(container, options = {}) {
-  const {
-    filterEno = null,
-    onApplyFilter = null
-  } = options;
-
-  if (!container) {
-    return;
-  }
-
-  const form = document.createElement("form");
-  form.className = "chatMessageFilterForm";
-
-  const label = document.createElement("label");
-  label.className = "chatMessageFilterLabel";
-  label.textContent = "送受信Eno:";
-
-  const input = document.createElement("input");
-  input.type = "number";
-  input.min = "1";
-  input.step = "1";
-  input.className = "chatMessageFilterInput";
-  input.value = filterEno ? String(filterEno) : "";
-  input.placeholder = "Eno";
-
-  const button = document.createElement("button");
-  button.type = "submit";
-  button.className = "button-box chatMessageFilterButton";
-  button.textContent = "絞り込み";
-
-  form.appendChild(label);
-  form.appendChild(input);
-  form.appendChild(button);
-
-  if (filterEno) {
-    const status = document.createElement("span");
-    status.className = "chatMessageFilterStatus";
-    status.textContent = `Eno.${filterEno} とのメッセージを表示中`;
-    form.appendChild(status);
-  }
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const nextFilterEno = normalizeEno(input.value);
-
-    if (typeof onApplyFilter === "function") {
-      onApplyFilter(nextFilterEno || null);
-    }
-  });
-
-  container.appendChild(form);
 }
 
 function renderActiveChatTimeline() {
@@ -399,189 +311,6 @@ function getAroundBasePlace(place) {
   ) || place;
 }
 
-function buildPlaceTabs(place, options = {}) {
-  const {
-    isShopOpen = false,
-    isActionOpen = false,
-    onToggleShop = null,
-    onToggleAction = null,
-    onSelectCurrentPlace = null
-  } = options;
-
-  if (!place) {
-    return [];
-  }
-
-  const sameGroupPlaces =
-    place.kind === "room"
-      ? []
-      : getPlacesInSameGroup(place)
-          .slice()
-          .sort((a, b) =>
-            getLayerSortValue(a.layer) - getLayerSortValue(b.layer)
-          );
-
-  const tabs = sameGroupPlaces.map(item => {
-    const isCurrentPlace = item.placeId === place.placeId;
-
-    return {
-      key: `layer-${item.layer}`,
-      label: String(item.layer ?? "").toUpperCase(),
-      isActive: isCurrentPlace,
-      isCurrent: isCurrentPlace,
-      isDisabled: false,
-      onClick: () => {
-        if (isCurrentPlace) {
-          if (typeof onSelectCurrentPlace === "function") {
-            onSelectCurrentPlace();
-          }
-          return;
-        }
-
-        moveToPlace(item.placeId);
-      }
-    };
-  });
-
-if (hasShopForPlace(place)) {
-  tabs.push({
-    key: "shop",
-    label: "SHOP",
-    isActive: isShopOpen,
-    isDisabled: typeof onToggleShop !== "function",
-    onClick: () => {
-      if (typeof onToggleShop === "function") {
-        onToggleShop();
-      }
-    }
-  });
-}
-
-  tabs.push({
-    key: "action",
-    label: "ACTION",
-    isActive: isActionOpen,
-    isDisabled: typeof onToggleAction !== "function",
-    onClick: () => {
-      if (typeof onToggleAction === "function") {
-        onToggleAction();
-      }
-    }
-  });
-
-  return tabs;
-}
-
-function buildViewTabs(options = {}) {
-  const {
-    currentMode = "chat",
-    authorEno = null,
-    onSelectMode = null
-  } = options;
-
-  const tabs = [
-    {
-      key: "chat",
-      label: "CHAT",
-      isActive: currentMode === "chat",
-      isCurrent: currentMode === "chat",
-      isDisabled: typeof onSelectMode !== "function",
-      onClick: () => {
-        if (typeof onSelectMode === "function") {
-          onSelectMode("chat");
-        }
-      }
-    },
-    {
-      key: "here",
-      label: "HERE",
-      isActive: currentMode === "here",
-      isCurrent: currentMode === "here",
-      isDisabled: typeof onSelectMode !== "function",
-      onClick: () => {
-        if (typeof onSelectMode === "function") {
-          onSelectMode("here");
-        }
-      }
-    },
-    {
-      key: "reply",
-      label: "REPLY",
-      isActive: currentMode === "reply",
-      isCurrent: currentMode === "reply",
-      isDisabled: typeof onSelectMode !== "function",
-      onClick: () => {
-        if (typeof onSelectMode === "function") {
-          onSelectMode("reply");
-        }
-      }
-    },
-    {
-      key: "message",
-      label: "MESSAGE",
-      isActive: currentMode === "message",
-      isCurrent: currentMode === "message",
-      isDisabled: typeof onSelectMode !== "function",
-      onClick: () => {
-        if (typeof onSelectMode === "function") {
-          onSelectMode("message");
-        }
-      }
-    },
-    {
-      key: "favorite",
-      label: "FAVORITE",
-      isActive: currentMode === "favorite",
-      isCurrent: currentMode === "favorite",
-      isDisabled: typeof onSelectMode !== "function",
-      onClick: () => {
-        if (typeof onSelectMode === "function") {
-          onSelectMode("favorite");
-        }
-      }
-    },
-    {
-      key: "self",
-      label: "SELF",
-      isActive: currentMode === "self",
-      isCurrent: currentMode === "self",
-      isDisabled: typeof onSelectMode !== "function",
-      onClick: () => {
-        if (typeof onSelectMode === "function") {
-          onSelectMode("self");
-        }
-      }
-    }
-  ];
-
-  const normalizedAuthorEno = Number(authorEno || 0);
-
-  if (Number.isInteger(normalizedAuthorEno) && normalizedAuthorEno > 0) {
-    tabs.push({
-      key: `eno-${normalizedAuthorEno}`,
-      label: `Eno.${normalizedAuthorEno}`,
-      isActive: currentMode === "eno",
-      isCurrent: currentMode === "eno",
-      isDisabled: typeof onSelectMode !== "function",
-      onClick: () => {
-        if (typeof onSelectMode === "function") {
-          onSelectMode("eno", {
-            eno: normalizedAuthorEno
-          });
-        }
-      },
-      onClose: () => {
-        if (typeof onSelectMode === "function") {
-          onSelectMode("chat", {
-            closeAuthorEno: true
-          });
-        }
-      }
-    });
-  }
-
-  return tabs;
-}
 function setupDraftPreview({
   postListRefs,
   place,
@@ -897,7 +626,9 @@ const replySourcePost = getReplySourcePostForDraft(composerDraft);
 const fixedReplyTargetName = getFixedReplyTargetName(replySourcePost);
 
 const placeTabs = buildPlaceTabs(place, {
+  places,
   isShopOpen,
+  onMoveToPlace: moveToPlace,
   isActionOpen,
   onToggleShop: () => {
     isShopOpen = !isShopOpen;
