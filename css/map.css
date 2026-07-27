@@ -395,6 +395,14 @@
   gap: 10px;
 }
 
+.mapRoomRichTextToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 6px;
+  min-height: 22px;
+}
+
 .mapRoomFormButtonRow {
   display: flex;
   flex-wrap: wrap;
