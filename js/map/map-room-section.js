@@ -1,6 +1,11 @@
 // map-room-section.js
 
 import { createRoom,deleteRoom,getRoomAccessLabel,getRoomsByOwnerEno,isAreaPlace,updateRoom } from "../services/room-service.js";
+import { bindRichTextToolbar } from "../common/rich-text-toolbar.js";
+
+import {
+  createRichTextToolbarButtons
+} from "../common/rich-text-toolbar-ui.js";
 
 export function createMapRoomSectionController(options = {}) {
   const {
@@ -302,18 +307,28 @@ export function createMapRoomSectionController(options = {}) {
         </small>
       </label>
 
-      <label class="mapRoomFormField">
-        <span>詳細説明</span>
+      <div class="mapRoomFormField">
+        <label for="roomLongDescription">
+          詳細説明
+        </label>
+
         <textarea
+          id="roomLongDescription"
           name="roomLongDescription"
           maxlength="800"
           rows="5"
           placeholder="最大800文字"
         >${escapeHtml(roomLongDescription)}</textarea>
+
+        <div
+          class="mapRoomRichTextToolbar"
+          data-room-rich-text-toolbar
+        ></div>
+
         <small class="text-muted mapRoomFormHint">
           ルーム詳細に出る説明です。文字装飾が使用可能です。
         </small>
-      </label>
+      </div>
 
       <fieldset class="common-card-subtle mapRoomFormFieldset">
         <legend class="text-muted">
@@ -370,6 +385,28 @@ export function createMapRoomSectionController(options = {}) {
       </label>
     `;
 
+    const longDescriptionInput = form.querySelector(
+      "[name=roomLongDescription]"
+    );
+
+    const longDescriptionToolbar = form.querySelector(
+      "[data-room-rich-text-toolbar]"
+    );
+
+    if (
+      longDescriptionInput &&
+      longDescriptionToolbar
+    ) {
+      longDescriptionToolbar.appendChild(
+        createRichTextToolbarButtons()
+      );
+
+      bindRichTextToolbar(
+        longDescriptionToolbar,
+        longDescriptionInput
+      );
+    }
+    
     registerActiveRoomForm(form);
 
     /*
