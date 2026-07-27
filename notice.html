@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お知らせ</title>
+
+<link rel="stylesheet" href="./css/layout.css">
+<link rel="stylesheet" href="./css/common.css">
+<link rel="stylesheet" href="./css/common-theme.css">
+<link rel="stylesheet" href="./css/notice.css">
+</head>
+
+<body>
+<div class="layout">
+  <aside class="left-panel">
+    <div id="commonMenu"></div>
+  </aside>
+
+  <main class="center-panel noticePage">
+    <div
+      class="center-topbar"
+      data-notice="お知らせエリア"
+      data-right-label="NOTICE LIST ＞"
+    ></div>
+
+    <h1 class="pageTitle">NOTICE</h1>
+    <p class="noticeLead text-muted">運営からのお知らせを掲載しています。</p>
+    <div id="noticeList" class="noticeList"></div>
+  </main>
+
+  <aside class="right-panel">
+    <section class="noticeIndexPanel">
+      <div class="common-gradientHeading commonSectionHeading commonSectionHeading-large">
+        NOTICE LIST
+      </div>
+      <p class="noticeIndexLead text-muted">タイトルを選ぶと記事へ移動します。</p>
+      <nav id="noticeIndex" class="noticeIndex" aria-label="お知らせ一覧"></nav>
+    </section>
+  </aside>
+</div>
+
+<script type="module" src="./js/common/include-menu.js"></script>
+<script type="module" src="./js/notice/notice-controller.js"></script>
+<script type="module">
+  import { initCenterTopbar } from "./js/common/center-topbar.js";
+  import { initLayoutPanelToggles } from "./js/common/layout.js";
+  import { requireLogin } from "./js/services/storage-service.js";
+
+  requireLogin();
+  initCenterTopbar();
+  initLayoutPanelToggles();
+</script>
+</body>
+</html>
