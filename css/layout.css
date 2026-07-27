@@ -82,6 +82,21 @@ html, body{
   text-overflow:ellipsis;
 }
 
+.center-topbar-notice-link{
+  display:block;
+  width:100%;
+  min-width:0;
+  color:inherit;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-decoration:none;
+}
+
+.center-topbar-notice-link:hover{
+  color:var(--theme-text-accent);
+  text-decoration:underline;
+}
+
 .center-topbar-right{
   display:flex;
   align-items:center;
