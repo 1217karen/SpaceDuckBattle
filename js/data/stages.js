@@ -26,7 +26,7 @@ export const STAGES = {
     chapter: 0,
     step: 0,
     order: 10,
-    name: "チュートリアル",
+    name: "チュートリアル（１人固定）",
     description: "自動戦闘の基本的な流れを確認するチュートリアルです。",
     partyMode: "solo",
     unlockCondition: {
