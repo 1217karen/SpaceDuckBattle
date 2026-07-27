@@ -19,6 +19,8 @@ export const shops = [
       "food-pack-sandwich",
       "food-duck-bun",
       "goods-logo-towel",
+      "goods-dice",
+      "goods-handheld-firework",
       "drink-duck-soda"
     ]
   },
