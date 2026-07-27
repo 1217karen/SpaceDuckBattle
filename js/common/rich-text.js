@@ -37,6 +37,11 @@ export const RICH_TEXT_TAGS = {
 export const RICH_TEXT_PRESETS = {
   plain: new Set(),
   name: new Set(),
+  notice: new Set([
+    "b",
+    "br",
+    "f3"
+  ]),
   message: new Set([
     "b",
     "i",
