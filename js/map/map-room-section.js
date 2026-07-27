@@ -184,7 +184,7 @@ export function createMapRoomSectionController(options = {}) {
     creatorCard.appendChild(help);
 
     /*
-     * 現在地と、作成できない場合の注意文。
+     * 現在地
      */
     const currentRow = document.createElement("div");
     currentRow.className = "mapRoomCurrentRow";
@@ -195,15 +195,6 @@ export function createMapRoomSectionController(options = {}) {
       `現在地：${currentPlace?.name ?? "なし"}`;
 
     currentRow.appendChild(currentInfo);
-
-    if (!editingRoom && !canCreateRoom) {
-      const notice = document.createElement("p");
-      notice.className = "mapRoomCreatorNotice";
-      notice.textContent =
-        "※現在地ではルームを作成できません。エリアに移動してください。";
-
-      currentRow.appendChild(notice);
-    }
 
     creatorCard.appendChild(currentRow);
 
@@ -223,6 +214,28 @@ export function createMapRoomSectionController(options = {}) {
       return section;
     }
 
+/*
+ * 新規作成時に現在地がエリアでなければ、
+ * 作成フォームを表示せず注意文だけ表示する。
+ *
+ * 編集中は現在地に関係なくフォームを表示する。
+ */
+if (!editingRoom && !canCreateRoom) {
+  const notice = document.createElement("p");
+  notice.className = "mapRoomCreatorNotice";
+  notice.textContent =
+    "※現在地ではルームを作成できません。フィールド・ルームではなくエリアに移動してください。";
+
+  creatorCard.appendChild(notice);
+
+  section.appendChild(creatorCard);
+  section.appendChild(
+    renderOwnedRoomList(account.eno)
+  );
+
+  return section;
+}
+    
     /*
      * 入力フォーム。
      */
@@ -603,20 +616,6 @@ if (editingRoom) {
 
       moveToPlace(result.room.placeId);
     });
-
-    /*
-     * 新規作成時、現在地がエリアでなければフォームを無効化。
-     * 編集中は現在地に関係なく編集可能。
-     */
-    if (!editingRoom && !canCreateRoom) {
-      form
-        .querySelectorAll(
-          "input, textarea, button"
-        )
-        .forEach(element => {
-          element.disabled = true;
-        });
-    }
 
     /*
      * フォームは作成カード内に入れる。
