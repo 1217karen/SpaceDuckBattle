@@ -294,7 +294,16 @@ export function createMapRoomSectionController(options = {}) {
       </label>
 
       <label class="mapRoomFormField">
-        <span>簡易説明</span>
+        <span class="mapRoomFormLabelRow">
+          <span class="mapRoomFormLabel">
+            簡易説明
+          </span>
+
+          <small class="text-muted mapRoomFormHint">
+            一覧やヘッダーに出る1行説明です。
+          </small>
+        </span>
+
         <input
           type="text"
           name="roomShortDescription"
@@ -302,15 +311,21 @@ export function createMapRoomSectionController(options = {}) {
           maxlength="40"
           placeholder="最大40文字"
         >
-        <small class="text-muted mapRoomFormHint">
-          一覧やヘッダーに出る1行説明です。
-        </small>
       </label>
 
       <div class="mapRoomFormField">
-        <label for="roomLongDescription">
-          詳細説明
-        </label>
+        <div class="mapRoomFormLabelRow">
+          <label
+            class="mapRoomFormLabel"
+            for="roomLongDescription"
+          >
+            詳細説明
+          </label>
+
+          <small class="text-muted mapRoomFormHint">
+            ルーム詳細に出る説明です。文字装飾が使用可能です。
+          </small>
+        </div>
 
         <textarea
           id="roomLongDescription"
@@ -324,12 +339,7 @@ export function createMapRoomSectionController(options = {}) {
           class="mapRoomRichTextToolbar"
           data-room-rich-text-toolbar
         ></div>
-
-        <small class="text-muted mapRoomFormHint">
-          ルーム詳細に出る説明です。文字装飾が使用可能です。
-        </small>
       </div>
-
       <fieldset class="common-card-subtle mapRoomFormFieldset">
         <legend class="text-muted">
           公開範囲
