@@ -6,14 +6,36 @@ export const items = [
     name: "飲料水",
     description: "環境制御区で管理された、くせのない飲料水。",
     price: 100,
-    category: "drink"
+    category: "drink",
+    actions: [
+      {
+        actionId: "drink",
+        label: "飲む",
+        contexts: ["inventory", "chat"],
+        consumeQuantity: 1,
+        staminaRecovery: 10,
+        message: "{name}は飲料水を飲んだ。",
+        pluralMessage: "{name}は飲料水を{quantity}本飲んだ。"
+      }
+    ]
   },
   {
     itemId: "drink-duck-soda",
     name: "ダックソーダ",
     description: "中層でよく見かける、軽い炭酸飲料。",
     price: 160,
-    category: "drink"
+    category: "drink",
+    actions: [
+      {
+        actionId: "drink",
+        label: "飲む",
+        contexts: ["inventory", "chat"],
+        consumeQuantity: 1,
+        staminaRecovery: 20,
+        message: "{name}はダックソーダの栓を開け、一気に飲んだ。",
+        pluralMessage: "{name}はダックソーダを{quantity}本飲んだ。"
+      }
+    ]
   },
   {
     itemId: "snack-energy-bar",
@@ -27,7 +49,18 @@ export const items = [
     name: "パックサンド",
     description: "商店街で売られている手軽な軽食。",
     price: 280,
-    category: "food"
+    category: "food",
+    actions: [
+      {
+        actionId: "eat",
+        label: "食べる",
+        contexts: ["inventory", "chat"],
+        consumeQuantity: 1,
+        staminaRecovery: 20,
+        message: "{name}はパックサンドを食べた。",
+        pluralMessage: "{name}はパックサンドを{quantity}個食べた。"
+      }
+    ]
   },
   {
     itemId: "food-duck-bun",
@@ -84,5 +117,39 @@ export const items = [
     description: "その日に余った規格外品をまとめた野菜パック。",
     price: 150,
     category: "food"
+  },
+  {
+    itemId: "goods-dice",
+    name: "サイコロ",
+    description: "手のひらに収まる、ごく普通の六面サイコロ。",
+    price: 120,
+    category: "goods",
+    actions: [
+      {
+        actionId: "roll",
+        label: "振る",
+        contexts: ["chat"],
+        consumeQuantity: 0,
+        resultValues: ["1", "2", "3", "4", "5", "6"],
+        message: "{name}はサイコロを振った。{result}が出た。"
+      }
+    ]
+  },
+  {
+    itemId: "goods-handheld-firework",
+    name: "手持ち花火",
+    description: "海辺で静かに楽しめる、小さな手持ち花火。",
+    price: 180,
+    category: "goods",
+    actions: [
+      {
+        actionId: "light",
+        label: "火をつける",
+        contexts: ["chat"],
+        placeGroupIds: ["E8"],
+        consumeQuantity: 1,
+        message: "{name}は海辺で手持ち花火に火をつけた。"
+      }
+    ]
   }
 ];
