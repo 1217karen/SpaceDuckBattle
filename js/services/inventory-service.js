@@ -1,6 +1,14 @@
 // inventory-service.js
 
 import { getItemById } from "./shop-service.js";
+import {
+  applyStaminaRecovery,
+  previewStaminaRecovery
+} from "./player-resource-service.js";
+import {
+  buildItemActionMessage,
+  getItemActionById
+} from "./item-action-service.js";
 
 const DEFAULT_MONEY = 1000;
 const INVENTORY_KEY_PREFIX = "inventory:";
@@ -119,6 +127,49 @@ function createPurchaseLog({ character, item, quantity, totalPrice }) {
   };
 }
 
+function createUseLog({
+  character,
+  item,
+  action,
+  quantity,
+  recovery,
+  isPosted,
+  postedPlaceId
+}) {
+  return {
+    logId: createLogId("use"),
+    logType: "use",
+    createdAt: new Date().toISOString(),
+    itemId: item.itemId,
+    itemName: item.name,
+    actionId: action.actionId,
+    actionLabel: action.label,
+    quantity,
+    staminaBefore: recovery?.staminaBefore ?? null,
+    staminaAfter: recovery?.staminaAfter ?? null,
+    recoveryPerItem: recovery?.recoveryPerItem ?? 0,
+    requestedRecovery: recovery?.requestedRecovery ?? 0,
+    appliedRecovery: recovery?.appliedRecovery ?? 0,
+    effectiveQuantity: recovery?.effectiveQuantity ?? quantity,
+    ineffectiveQuantity: recovery?.ineffectiveQuantity ?? 0,
+    message: buildItemActionMessage({ item, action, character, quantity }),
+    isPosted: Boolean(isPosted),
+    postedAt: isPosted ? new Date().toISOString() : null,
+    postedPlaceId: isPosted ? postedPlaceId || null : null
+  };
+}
+
+function removeUsedItemQuantity(items, itemId, quantity) {
+  return items.map(item =>
+    item.itemId === itemId
+      ? {
+          ...item,
+          quantity: Math.max(0, Number(item.quantity || 0) - quantity)
+        }
+      : item
+  );
+}
+
 function mergePurchasedItem(items, itemId, quantity) {
   const existingItem = items.find(item => item.itemId === itemId);
 
@@ -205,6 +256,104 @@ export function getInventoryLogs(eno) {
   return inventory.logs.slice().sort((a, b) =>
     String(b.createdAt ?? "").localeCompare(String(a.createdAt ?? ""))
   );
+}
+
+export function previewItemUse({ eno, itemId, actionId, quantity = 1 } = {}) {
+  const inventory = loadInventory(eno);
+  const item = getItemById(itemId);
+  const action = getItemActionById(item, actionId);
+  const normalizedQuantity = Number(quantity);
+
+  if (!inventory || !item || !action) {
+    return { ok: false, message: "使用するアイテムを確認できません" };
+  }
+
+  if (!Number.isInteger(normalizedQuantity) || normalizedQuantity < 1) {
+    return { ok: false, message: "使用個数には1以上の整数を入力してください" };
+  }
+
+  const ownedQuantity = Number(
+    inventory.items.find(ownedItem => ownedItem.itemId === itemId)?.quantity || 0
+  );
+
+  if (ownedQuantity < normalizedQuantity) {
+    return { ok: false, message: "アイテムの所持数が足りません" };
+  }
+
+  const recovery = Number(action.staminaRecovery) > 0
+    ? previewStaminaRecovery(eno, action.staminaRecovery, normalizedQuantity)
+    : null;
+
+  return {
+    ok: true,
+    item,
+    action,
+    quantity: normalizedQuantity,
+    ownedQuantity,
+    recovery
+  };
+}
+
+export function useInventoryItem({
+  eno,
+  character,
+  itemId,
+  actionId,
+  quantity = 1,
+  isPosted = false,
+  postedPlaceId = null
+} = {}) {
+  const preview = previewItemUse({ eno, itemId, actionId, quantity });
+
+  if (!preview.ok) return preview;
+
+  const consumePerUse = Math.max(
+    0,
+    Math.floor(Number(preview.action.consumeQuantity) || 0)
+  );
+  const totalConsumeQuantity = consumePerUse * preview.quantity;
+
+  if (totalConsumeQuantity < 1) {
+    return { ok: false, message: "このアクションではアイテムを消費しません" };
+  }
+
+  if (preview.ownedQuantity < totalConsumeQuantity) {
+    return { ok: false, message: "アイテムの所持数が足りません" };
+  }
+
+  const inventory = loadInventory(eno);
+  const recovery = preview.recovery
+    ? applyStaminaRecovery(eno, preview.action.staminaRecovery, preview.quantity)
+    : null;
+  const log = createUseLog({
+    character,
+    item: preview.item,
+    action: preview.action,
+    quantity: preview.quantity,
+    recovery,
+    isPosted,
+    postedPlaceId
+  });
+
+  saveInventory(eno, {
+    ...inventory,
+    items: removeUsedItemQuantity(
+      inventory.items,
+      itemId,
+      totalConsumeQuantity
+    ),
+    logs: [...inventory.logs, log]
+  });
+
+  return {
+    ok: true,
+    item: preview.item,
+    action: preview.action,
+    quantity: preview.quantity,
+    consumedQuantity: totalConsumeQuantity,
+    recovery,
+    log
+  };
 }
 
 export function purchaseItems({ eno, character, purchaseItems } = {}) {
