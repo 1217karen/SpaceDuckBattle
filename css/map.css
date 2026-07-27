@@ -395,6 +395,18 @@
   gap: 10px;
 }
 
+.mapRoomFormLabelRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.mapRoomFormLabel {
+  flex-shrink: 0;
+  color: var(--theme-text-main);
+}
+
 .mapRoomRichTextToolbar {
   display: flex;
   flex-wrap: wrap;
