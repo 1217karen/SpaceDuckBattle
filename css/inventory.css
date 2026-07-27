@@ -23,6 +23,20 @@
   color: var(--theme-text-strong);
 }
 
+.inventoryStaminaText {
+  margin-bottom: 6px;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: var(--theme-text-strong);
+}
+
+.inventoryResourceHelp {
+  margin: 0 0 12px;
+  color: var(--theme-text-subtle);
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+}
+
 .inventoryDebugMoneyBox {
   display: flex;
   flex-wrap: wrap;
@@ -87,6 +101,44 @@
   color: var(--theme-text-strong);
 }
 
+.inventoryItemSide {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.inventoryItemActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.inventoryUseQuantity {
+  width: 64px;
+  box-sizing: border-box;
+}
+
+.inventoryUseButton {
+  padding: 5px 10px;
+}
+
 .inventoryLogRow.is-posted {
   opacity: 0.65;
+}
+
+@media (max-width: 600px) {
+  .inventoryItemRow {
+    flex-direction: column;
+  }
+
+  .inventoryItemSide {
+    align-items: stretch;
+  }
+
+  .inventoryItemActions {
+    justify-content: flex-start;
+  }
 }
