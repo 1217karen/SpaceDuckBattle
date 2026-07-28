@@ -234,9 +234,15 @@
 
 .chatActionButtonList {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
   margin-bottom: 10px;
+}
+
+.chatActionButtonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .chatActionButton {
