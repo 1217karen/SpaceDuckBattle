@@ -60,6 +60,7 @@ let isShopOpen = false;
 let isActionOpen = false;
 let selectedActionId = "";
 let selectedLogId = "";
+let selectedItemActionId = "";
 let pendingShopPurchaseItems = [];
 
 function openShopPurchaseConfirm(purchaseItems) {
@@ -77,6 +78,7 @@ function resetUtilityStateBeforeMove() {
   isActionOpen = false;
   selectedActionId = "";
   selectedLogId = "";
+  selectedItemActionId = "";
 }
 
 function moveToPlace(placeId) {
@@ -636,6 +638,7 @@ const placeTabs = buildPlaceTabs(place, {
     isActionOpen = false;
     selectedActionId = "";
     selectedLogId = "";
+    selectedItemActionId = "";
     renderChatPlaceInfo();
   },
   onToggleAction: () => {
@@ -645,6 +648,7 @@ const placeTabs = buildPlaceTabs(place, {
     if (!isActionOpen) {
       selectedActionId = "";
       selectedLogId = "";
+      selectedItemActionId = "";
     }
 
     renderChatPlaceInfo();
@@ -704,27 +708,51 @@ if (isShopOpen) {
     character
   });
 
-  const itemActions = getOwnedItems(eno).flatMap(({ item, itemId }) =>
-    getItemActionsForContext(item, "chat", place).map(itemAction => ({
-      actionId: `item-${itemId}-${itemAction.actionId}`,
-      label: `${item.name}：${itemAction.label}`,
-      type: "item",
-      description: Number(itemAction.consumeQuantity) > 0
-        ? "アイテムを1個消費し、結果を現在地に投稿します。"
-        : "アイテムを使用し、結果を現在地に投稿します。",
-      item,
-      itemAction
-    }))
+
+  const ownedItems = getOwnedItems(eno);
+  const holdItemOptions = ownedItems.flatMap(({ item, itemId }) => {
+    const holdAction = getItemActionsForContext(item, "chat")
+      .find(itemAction => itemAction.actionId === "hold");
+
+    return holdAction
+      ? [{
+          choiceId: `hold-${itemId}`,
+          label: item.name,
+          item,
+          itemAction: holdAction
+        }]
+      : [];
+  });
+  const useItemOptions = ownedItems.flatMap(({ item, itemId }) =>
+    getItemActionsForContext(item, "chat")
+      .filter(itemAction => itemAction.actionId !== "hold")
+      .map(itemAction => ({
+        choiceId: `use-${itemId}-${itemAction.actionId}`,
+        label: `${item.name}（${itemAction.label}）`,
+        item,
+        itemAction
+      }))
   );
 
   const actionChoices = [
     ...availableActions,
-    ...itemActions,
+    {
+      actionId: "hold-item",
+      label: "アイテムを手に持つ",
+      type: "item-selector",
+      description: "所持アイテムを手に持ちます。"
+    },
+    {
+      actionId: "use-item",
+      label: "アイテムを使用する",
+      type: "item-selector",
+      description: "所持アイテムを使用し、現在地に使用ログを投稿します。"
+    },
     {
       actionId: "post-log",
       label: "ログを投稿する",
       type: "log",
-      description: "保存済みの購入ログなどを選んで、現在地へ投稿します。"
+      description: "保存済みのログを選び、現在地へ投稿します。"
     }
   ];
 
@@ -734,6 +762,7 @@ if (
 ) {
   selectedActionId = "";
   selectedLogId = "";
+  selectedItemActionId = "";
 }
 
 const logOptions = getInventoryLogs(eno).map(log => ({
@@ -745,7 +774,10 @@ renderChatActionSection(interactionPanel, {
   actions: actionChoices,
   selectedActionId,
   selectedLogId,
+  selectedItemActionId,
   logOptions,
+  holdItemOptions,
+  useItemOptions,
   onSelectAction: (action) => {
     const actionId = action.actionId ?? "";
 
@@ -755,10 +787,15 @@ renderChatActionSection(interactionPanel, {
         : actionId;
 
     selectedLogId = "";
+    selectedItemActionId = "";
     renderChatPlaceInfo();
   },
   onSelectLog: (logId) => {
     selectedLogId = logId;
+    renderChatPlaceInfo();
+  },
+  onSelectItemAction: (choiceId) => {
+    selectedItemActionId = choiceId;
     renderChatPlaceInfo();
   },
   onExecuteAction: (action) => {
@@ -788,6 +825,7 @@ renderChatActionSection(interactionPanel, {
       isActionOpen = false;
       selectedActionId = "";
       selectedLogId = "";
+      selectedItemActionId = "";
 
       navigateChatPageWithToast({
         placeId: place.placeId,
@@ -799,18 +837,34 @@ renderChatActionSection(interactionPanel, {
       return;
     }
 
-    if (action.type === "item") {
+    if (action.actionId === "hold-item" || action.actionId === "use-item") {
+      const itemOptions = action.actionId === "hold-item"
+        ? holdItemOptions
+        : useItemOptions;
+      const selectedItemAction = itemOptions.find(
+        option => option.choiceId === selectedItemActionId
+      );
+
+      if (!selectedItemAction) {
+        alert(
+          action.actionId === "hold-item"
+            ? "手に持つアイテムを選択してください"
+            : "使用するアイテムを選択してください"
+        );
+        return;
+      }
+
       const consumeQuantity = Math.max(
         0,
-        Math.floor(Number(action.itemAction?.consumeQuantity) || 0)
+        Math.floor(Number(selectedItemAction.itemAction?.consumeQuantity) || 0)
       );
       let body = "";
 
       if (consumeQuantity > 0) {
         const preview = previewItemUse({
           eno,
-          itemId: action.item.itemId,
-          actionId: action.itemAction.actionId,
+          itemId: selectedItemAction.item.itemId,
+          actionId: selectedItemAction.itemAction.actionId,
           quantity: 1
         });
 
@@ -820,8 +874,8 @@ renderChatActionSection(interactionPanel, {
         }
 
         const confirmLines = [
-          `${action.item.name}を1個「${action.itemAction.label}」で使用しますか？`,
-          "使用結果は現在地に投稿されます。"
+          `${selectedItemAction.item.name}を1個「${selectedItemAction.itemAction.label}」で使用しますか？`,
+          "使用結果は現在地のログへ投稿されます。"
         ];
 
         if (preview.recovery) {
@@ -833,7 +887,7 @@ renderChatActionSection(interactionPanel, {
           if (preview.recovery.ineffectiveQuantity > 0) {
             confirmLines.push(
               "",
-              "注意：現在スタミナが上限を超えているため回復しません。",
+              "注意：現在のスタミナは通常上限を超えているため回復しません。",
               "回復しなくてもアイテムは消費されます。"
             );
           }
@@ -844,8 +898,8 @@ renderChatActionSection(interactionPanel, {
         const result = useInventoryItem({
           eno,
           character,
-          itemId: action.item.itemId,
-          actionId: action.itemAction.actionId,
+          itemId: selectedItemAction.item.itemId,
+          actionId: selectedItemAction.itemAction.actionId,
           quantity: 1,
           isPosted: true,
           postedPlaceId: place.placeId
@@ -859,8 +913,8 @@ renderChatActionSection(interactionPanel, {
         body = result.log.message;
       } else {
         body = buildItemActionMessage({
-          item: action.item,
-          action: action.itemAction,
+          item: selectedItemAction.item,
+          action: selectedItemAction.itemAction,
           character,
           quantity: 1
         });
@@ -883,6 +937,7 @@ renderChatActionSection(interactionPanel, {
       isActionOpen = false;
       selectedActionId = "";
       selectedLogId = "";
+      selectedItemActionId = "";
 
       navigateChatPageWithToast({
         placeId: place.placeId,
