@@ -5,9 +5,13 @@ export function renderChatActionSection(container, options = {}) {
     actions = [],
     selectedActionId = "",
     selectedLogId = "",
+    selectedItemActionId = "",
     logOptions = [],
+    holdItemOptions = [],
+    useItemOptions = [],
     onSelectAction = null,
     onSelectLog = null,
+    onSelectItemAction = null,
     onExecuteAction = null
   } = options;
 
@@ -34,26 +38,39 @@ export function renderChatActionSection(container, options = {}) {
     const buttonList = document.createElement("div");
     buttonList.className = "chatActionButtonList";
 
-    actions.forEach(action => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "chatActionButton button-box";
+    const actionGroups = [
+      actions.filter(action => !["item-selector", "log"].includes(action.type)),
+      actions.filter(action => action.type === "item-selector"),
+      actions.filter(action => action.type === "log")
+    ].filter(group => group.length > 0);
 
-      if (selectedAction?.actionId === action.actionId) {
-        button.classList.add("is-active");
-      }
+    actionGroups.forEach(group => {
+      const groupElement = document.createElement("div");
+      groupElement.className = "chatActionButtonGroup";
 
-      button.textContent = action.label ?? "アクション";
+      group.forEach(action => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "chatActionButton button-box";
 
-      if (typeof onSelectAction === "function") {
-        button.addEventListener("click", () => {
-          onSelectAction(action);
-        });
-      } else {
-        button.disabled = true;
-      }
+        if (selectedAction?.actionId === action.actionId) {
+          button.classList.add("is-active");
+        }
 
-      buttonList.appendChild(button);
+        button.textContent = action.label ?? "アクション";
+
+        if (typeof onSelectAction === "function") {
+          button.addEventListener("click", () => {
+            onSelectAction(action);
+          });
+        } else {
+          button.disabled = true;
+        }
+
+        groupElement.appendChild(button);
+      });
+
+      buttonList.appendChild(groupElement);
     });
 
     inner.appendChild(buttonList);
@@ -82,7 +99,7 @@ export function renderChatActionSection(container, options = {}) {
     if (selectedAction?.actionId === "post-log") {
       const logField = document.createElement("label");
       logField.className = "chatActionLogField";
-      logField.textContent = "流すログ";
+      logField.textContent = "投稿するログ";
 
       const logSelect = document.createElement("select");
       logSelect.className = "chatActionLogSelect";
@@ -115,6 +132,54 @@ export function renderChatActionSection(container, options = {}) {
 
       logField.appendChild(logSelect);
       detail.appendChild(logField);
+    }
+
+    if (
+      selectedAction?.actionId === "hold-item" ||
+      selectedAction?.actionId === "use-item"
+    ) {
+      const isHoldAction = selectedAction.actionId === "hold-item";
+      const itemOptions = isHoldAction ? holdItemOptions : useItemOptions;
+      const itemField = document.createElement("label");
+      itemField.className = "chatActionLogField";
+      itemField.textContent = isHoldAction
+        ? "手に持つアイテム"
+        : "使用するアイテム";
+
+      const itemSelect = document.createElement("select");
+      itemSelect.className = "chatActionLogSelect";
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = itemOptions.length > 0
+        ? "アイテムを選択してください"
+        : isHoldAction
+          ? "手に持てるアイテムがありません"
+          : "使用できるアイテムがありません";
+      itemSelect.appendChild(placeholder);
+
+      itemOptions.forEach(optionData => {
+        const option = document.createElement("option");
+        option.value = optionData.choiceId;
+        option.textContent = optionData.label;
+
+        if (optionData.choiceId === selectedItemActionId) {
+          option.selected = true;
+        }
+
+        itemSelect.appendChild(option);
+      });
+
+      itemSelect.disabled = itemOptions.length === 0;
+
+      if (typeof onSelectItemAction === "function") {
+        itemSelect.addEventListener("change", () => {
+          onSelectItemAction(itemSelect.value);
+        });
+      }
+
+      itemField.appendChild(itemSelect);
+      detail.appendChild(itemField);
     }
 
     inner.appendChild(detail);
