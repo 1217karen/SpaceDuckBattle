@@ -740,13 +740,13 @@ if (isShopOpen) {
       actionId: "hold-item",
       label: "アイテムを手に持つ",
       type: "item-selector",
-      description: "所持アイテムを手に持ちます。"
+      description: "所持アイテムから１つ選んで手に持ちます。"
     },
     {
       actionId: "use-item",
       label: "アイテムを使用する",
       type: "item-selector",
-      description: "所持アイテムを使用し、現在地に使用ログを投稿します。"
+      description: "所持アイテムから１つ選んで使用し、現在地に使用ログを投稿します。"
     },
     {
       actionId: "post-log",
