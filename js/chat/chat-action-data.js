@@ -11,7 +11,23 @@ export const chatActionDefinitions = [
       "ここは{placeName}だ。"
     ]
   },
-
+    {
+    actionId: "swim",
+    label: "泳ぐ",
+    type: "environment",
+    description: "水辺で泳ぎます。",
+    requiredEnvironmentTags: ["waterside"],
+    resultBaseText: "{name}は水辺で泳いだ。"
+  },
+  {
+    actionId: "wash",
+    label: "洗う",
+    type: "environment",
+    description: "水辺で身の回りのものを洗います。",
+    requiredEnvironmentTags: ["waterside"],
+    resultBaseText: "{name}は水辺で洗い物をした。"
+  },
+  
   {
     actionId: "park-walk",
     label: "ウォーキングをする",
