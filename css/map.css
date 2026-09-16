@@ -462,6 +462,28 @@
   font-size: var(--font-size-small);
 }
 
+.mapRoomFormEnvironmentTags {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 10px;
+  border: 1px solid var(--theme-border-main);
+  border-radius: var(--theme-radius-sm);
+}
+
+.mapRoomFormEnvironmentTags legend {
+  padding: 0 4px;
+  color: var(--theme-text-strong);
+  font-size: var(--font-size-small);
+  font-weight: bold;
+}
+
+.mapRoomFormEnvironmentTags p {
+  margin: 0 0 2px;
+  font-size: var(--font-size-small);
+}
+
 .mapRoomFormCheckbox {
   flex-direction: row;
   align-items: center;
