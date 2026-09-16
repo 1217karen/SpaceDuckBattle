@@ -1,6 +1,7 @@
 // room-service.js
 
 import { places } from "../data/places-data.js";
+import { normalizeEnvironmentTags } from "../data/environment-tags-data.js";
 
 const ROOM_STORAGE_KEY = "userCreatedRooms";
 const ROOM_ID_PREFIX = "room_";
@@ -57,6 +58,9 @@ function normalizeRoom(room = {}) {
     actionIds: Array.isArray(room.actionIds)
       ? room.actionIds.filter(actionId => typeof actionId === "string" && actionId.trim() !== "")
       : [],
+    environmentTags: normalizeEnvironmentTags(room.environmentTags, {
+      roomSelectableOnly: true
+    }),
     creationRequirements: Array.isArray(room.creationRequirements)
       ? room.creationRequirements
       : [],
@@ -272,6 +276,9 @@ export function createRoom(input = {}) {
     ownerEno,
     showParentMainAreaPreview: Boolean(input.showParentMainAreaPreview),
     actionIds: Array.isArray(input.actionIds) ? input.actionIds : [],
+    environmentTags: normalizeEnvironmentTags(input.environmentTags, {
+      roomSelectableOnly: true
+    }),
     creationRequirements: [],
     createdAt: now,
     updatedAt: now
@@ -311,6 +318,12 @@ export function updateRoom(roomPlaceId, input = {}) {
     accessType: input.accessType,
     showParentMainAreaPreview: Boolean(input.showParentMainAreaPreview),
     actionIds: Array.isArray(input.actionIds) ? input.actionIds : room.actionIds,
+    environmentTags: normalizeEnvironmentTags(
+      Array.isArray(input.environmentTags)
+        ? input.environmentTags
+        : room.environmentTags,
+      { roomSelectableOnly: true }
+    ),
     updatedAt: new Date().toISOString()
   });
 
