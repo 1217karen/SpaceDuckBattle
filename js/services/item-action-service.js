@@ -16,12 +16,25 @@ function applyTemplate(template, values) {
   );
 }
 
-function isActionAvailableAtPlace(action, place) {
-  const groupIds = Array.isArray(action?.placeGroupIds)
-    ? action.placeGroupIds
+export function hasRequiredEnvironmentTags(action, place) {
+  const requiredTags = Array.isArray(action?.requiredEnvironmentTags)
+    ? action.requiredEnvironmentTags
     : [];
+  const environmentTags = new Set(
+    Array.isArray(place?.environmentTags) ? place.environmentTags : []
+  );
 
-  return groupIds.length === 0 || groupIds.includes(place?.groupId);
+  return requiredTags.every(tagId => environmentTags.has(tagId));
+}
+
+function createHoldAction() {
+  return {
+    actionId: "hold",
+    label: "手に持つ",
+    actionKind: "hold",
+    consumptionPolicy: "preserve",
+    message: "{name}は{itemName}を手に持った。"
+  };
 }
 
 export function getItemActionsForContext(item, context, place = null) {
@@ -30,22 +43,17 @@ export function getItemActionsForContext(item, context, place = null) {
   const actions = [];
 
   if (context === "chat" && item.holdable !== false) {
-    actions.push({
-      actionId: "hold",
-      label: "手に持つ",
-      contexts: ["chat"],
-      consumeQuantity: 0,
-      message: "{name}は{itemName}を手に持った。"
-    });
+    actions.push(createHoldAction());
   }
 
   const itemActions = Array.isArray(item.actions) ? item.actions : [];
   itemActions.forEach(action => {
-    if (!Array.isArray(action.contexts) || !action.contexts.includes(context)) {
-      return;
-    }
+    const actionKind = action.actionKind === "special" ? "special" : "normal";
 
-    if (!isActionAvailableAtPlace(action, place)) return;
+    if (context === "inventory" && actionKind !== "normal") return;
+    if (context === "chat" && !["normal", "special"].includes(actionKind)) return;
+
+    if (actionKind === "special" && !hasRequiredEnvironmentTags(action, place)) return;
     actions.push(action);
   });
 
@@ -54,6 +62,7 @@ export function getItemActionsForContext(item, context, place = null) {
 
 export function getItemActionById(item, actionId) {
   if (!item || !actionId) return null;
+  if (actionId === "hold" && item.holdable !== false) return createHoldAction();
   return (Array.isArray(item.actions) ? item.actions : [])
     .find(action => action.actionId === actionId) || null;
 }
