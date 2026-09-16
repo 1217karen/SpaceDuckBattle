@@ -2,6 +2,7 @@
 
 import { createRoom,deleteRoom,getRoomAccessLabel,getRoomsByOwnerEno,isAreaPlace,updateRoom } from "../services/room-service.js";
 import { bindRichTextToolbar } from "../common/rich-text-toolbar.js";
+import { getRoomSelectableEnvironmentTags } from "../data/environment-tags-data.js";
 
 import {
   createRichTextToolbarButtons
@@ -37,7 +38,9 @@ export function createMapRoomSectionController(options = {}) {
       ),
       actionIds: form.querySelector("[name=actionLookAround]")?.checked
         ? ["look-around"]
-        : []
+        : [],
+      environmentTags: [...form.querySelectorAll("[name=environmentTag]:checked")]
+        .map(input => input.value)
     };
   }
 
@@ -52,6 +55,9 @@ export function createMapRoomSectionController(options = {}) {
       ),
       actionIds: Array.isArray(state?.actionIds)
         ? [...state.actionIds]
+        : [],
+      environmentTags: [...form.querySelectorAll("[name=environmentTag]:checked")]
+        .map(input => input.value)
         : []
     };
   }
@@ -97,6 +103,7 @@ export function createMapRoomSectionController(options = {}) {
     const normalized = cloneRoomFormState(state);
 
     normalized.actionIds.sort();
+    normalized.environmentTags.sort();
 
     return normalized;
   }
@@ -266,7 +273,10 @@ if (!editingRoom && !canCreateRoom) {
           ? ["look-around"]
           : editingRoom
             ? []
-            : ["look-around"]
+            : ["look-around"],
+      environmentTags: editingRoom && Array.isArray(editingRoom.environmentTags)
+        ? [...editingRoom.environmentTags]
+        : []
     };
 
     const formKey = createRoomFormKey(
@@ -293,6 +303,19 @@ if (!editingRoom && !canCreateRoom) {
       formState.showParentMainAreaPreview;
     const hasLookAround =
       formState.actionIds.includes("look-around");
+    const environmentTagFields = getRoomSelectableEnvironmentTags()
+      .map(tag => `
+        <label class="mapRoomFormCheckbox">
+          <input
+            type="checkbox"
+            name="environmentTag"
+            value="${tag.tagId}"
+            ${formState.environmentTags.includes(tag.tagId) ? "checked" : ""}
+          >
+          <span>${tag.label}<small class="text-muted"> — ${tag.description}</small></span>
+        </label>
+      `)
+      .join("");
 
     form.innerHTML = `
       <label class="mapRoomFormField">
@@ -406,6 +429,12 @@ if (!editingRoom && !canCreateRoom) {
         >
         アクション「周囲を見る」を使えるようにする
       </label>
+
+      <fieldset class="mapRoomFormEnvironmentTags">
+        <legend>ルーム環境</legend>
+        <p class="text-muted">設定した環境により、一部のアイテムやアクションが使用できるようになります。</p>
+        ${environmentTagFields}
+      </fieldset>
     `;
 
     const longDescriptionInput = form.querySelector(
