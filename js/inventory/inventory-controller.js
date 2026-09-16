@@ -139,11 +139,16 @@ function renderStaminaSection(container, { eno, resources }) {
 }
 
 function buildItemUseConfirmMessage(preview) {
+  const willConsume =
+    preview.item.usageType === "consumable" &&
+    preview.action.consumptionPolicy !== "preserve";
   const lines = [
     `${preview.item.name}を${preview.quantity}個「${preview.action.label}」で使用しますか？`,
     "",
-    `所持数：${preview.ownedQuantity} → ${preview.ownedQuantity - preview.quantity}`
+    `所持数：${preview.ownedQuantity} → ${preview.ownedQuantity - (willConsume ? preview.quantity : 0)}`
   ];
+
+  if (!willConsume) lines.push("このアクションではアイテムを消費しません。");
 
   if (preview.recovery) {
     lines.push(
@@ -204,7 +209,9 @@ function renderOwnedItemsSection(container, ownedItems, { eno, character }) {
 
     const meta = document.createElement("div");
     meta.className = "inventoryItemMeta";
-    meta.textContent = item?.category ? `カテゴリ: ${item.category}` : "カテゴリ: -";
+    const categoryLabel = item?.category || "-";
+    const usageLabel = item?.usageType === "consumable" ? "消費" : "非消費";
+    meta.textContent = `カテゴリ: ${categoryLabel} / 使用区分: ${usageLabel}`;
     main.appendChild(meta);
 
     const count = document.createElement("div");
@@ -216,16 +223,23 @@ function renderOwnedItemsSection(container, ownedItems, { eno, character }) {
     const inventoryActions = getItemActionsForContext(item, "inventory");
 
     inventoryActions.forEach(action => {
-      if (Number(action.consumeQuantity) < 1) return;
+      const canUseMultiple =
+        item.usageType === "consumable" &&
+        action.consumptionPolicy !== "preserve" &&
+        Boolean(action.pluralMessage);
+      const quantityInput = canUseMultiple
+        ? document.createElement("input")
+        : null;
 
-      const quantityInput = document.createElement("input");
-      quantityInput.type = "number";
-      quantityInput.min = "1";
-      quantityInput.max = String(quantity);
-      quantityInput.step = "1";
-      quantityInput.value = "1";
-      quantityInput.className = "inventoryUseQuantity";
-      quantityInput.setAttribute("aria-label", `${item.name}の使用個数`);
+      if (quantityInput) {
+        quantityInput.type = "number";
+        quantityInput.min = "1";
+        quantityInput.max = String(quantity);
+        quantityInput.step = "1";
+        quantityInput.value = "1";
+        quantityInput.className = "inventoryUseQuantity";
+        quantityInput.setAttribute("aria-label", `${item.name}の使用個数`);
+      }
 
       const button = document.createElement("button");
       button.type = "button";
@@ -236,7 +250,7 @@ function renderOwnedItemsSection(container, ownedItems, { eno, character }) {
           eno,
           itemId,
           actionId: action.actionId,
-          quantity: Number(quantityInput.value)
+          quantity: quantityInput ? Number(quantityInput.value) : 1
         });
 
         if (!preview.ok) {
@@ -263,7 +277,7 @@ function renderOwnedItemsSection(container, ownedItems, { eno, character }) {
         renderInventoryPage();
       });
 
-      actionArea.appendChild(quantityInput);
+      if (quantityInput) actionArea.appendChild(quantityInput);
       actionArea.appendChild(button);
     });
 
