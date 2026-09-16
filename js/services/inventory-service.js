@@ -1,14 +1,9 @@
 // inventory-service.js
 
 import { getItemById } from "./shop-service.js";
-import {
-  applyStaminaRecovery,
-  previewStaminaRecovery
-} from "./player-resource-service.js";
-import {
-  buildItemActionMessage,
-  getItemActionById
-} from "./item-action-service.js";
+import { applyStaminaRecovery,previewStaminaRecovery } from "./player-resource-service.js";
+import { buildItemActionMessage,getItemActionById } from "./item-action-service.js";
+import { createActionLog,getActionLogs,markActionLogPosted } from "./action-log-service.js";
 
 const DEFAULT_MONEY = 1000;
 const INVENTORY_KEY_PREFIX = "inventory:";
@@ -134,7 +129,8 @@ function createUseLog({
   quantity,
   recovery,
   isPosted,
-  postedPlaceId
+  postedPlaceId,
+  consumedQuantity
 }) {
   return {
     logId: createLogId("use"),
@@ -144,7 +140,10 @@ function createUseLog({
     itemName: item.name,
     actionId: action.actionId,
     actionLabel: action.label,
+    actionKind: action.actionKind || "normal",
+    consumptionPolicy: action.consumptionPolicy || "item-default",
     quantity,
+    consumedQuantity,
     staminaBefore: recovery?.staminaBefore ?? null,
     staminaAfter: recovery?.staminaAfter ?? null,
     recoveryPerItem: recovery?.recoveryPerItem ?? 0,
@@ -247,15 +246,7 @@ export function getOwnedItems(eno) {
 }
 
 export function getInventoryLogs(eno) {
-  const inventory = loadInventory(eno);
-
-  if (!inventory) {
-    return [];
-  }
-
-  return inventory.logs.slice().sort((a, b) =>
-    String(b.createdAt ?? "").localeCompare(String(a.createdAt ?? ""))
-  );
+  return getActionLogs(eno);
 }
 
 export function previewItemUse({ eno, itemId, actionId, quantity = 1 } = {}) {
@@ -307,15 +298,11 @@ export function useInventoryItem({
 
   if (!preview.ok) return preview;
 
-  const consumePerUse = Math.max(
-    0,
-    Math.floor(Number(preview.action.consumeQuantity) || 0)
-  );
-  const totalConsumeQuantity = consumePerUse * preview.quantity;
-
-  if (totalConsumeQuantity < 1) {
-    return { ok: false, message: "このアクションではアイテムを消費しません" };
-  }
+  const shouldConsume =
+    preview.item.usageType === "consumable" &&
+    preview.action.consumptionPolicy !== "preserve" &&
+    preview.action.actionKind !== "hold";
+  const totalConsumeQuantity = shouldConsume ? preview.quantity : 0;
 
   if (preview.ownedQuantity < totalConsumeQuantity) {
     return { ok: false, message: "アイテムの所持数が足りません" };
@@ -332,18 +319,18 @@ export function useInventoryItem({
     quantity: preview.quantity,
     recovery,
     isPosted,
-    postedPlaceId
+    postedPlaceId,
+    consumedQuantity: totalConsumeQuantity
   });
 
   saveInventory(eno, {
     ...inventory,
-    items: removeUsedItemQuantity(
-      inventory.items,
-      itemId,
-      totalConsumeQuantity
-    ),
-    logs: [...inventory.logs, log]
+    items: totalConsumeQuantity > 0
+      ? removeUsedItemQuantity(inventory.items, itemId, totalConsumeQuantity)
+      : inventory.items
   });
+
+  const savedLog = createActionLog(eno, log);
 
   return {
     ok: true,
@@ -352,7 +339,7 @@ export function useInventoryItem({
     quantity: preview.quantity,
     consumedQuantity: totalConsumeQuantity,
     recovery,
-    log
+    log: savedLog
   };
 }
 
@@ -403,9 +390,7 @@ export function purchaseItems({ eno, character, purchaseItems } = {}) {
     inventory.items
   );
 
-  const nextLogs = [
-    ...inventory.logs,
-    ...normalizedItems.map(target => {
+  const purchaseLogs = normalizedItems.map(target => {
       const price = typeof target.item.price === "number" ? target.item.price : 0;
       return createPurchaseLog({
         character,
@@ -413,45 +398,24 @@ export function purchaseItems({ eno, character, purchaseItems } = {}) {
         quantity: target.quantity,
         totalPrice: price * target.quantity
       });
-    })
-  ];
+    });
 
   const nextInventory = saveInventory(eno, {
     ...inventory,
     money: inventory.money - totalPrice,
-    items: nextItems,
-    logs: nextLogs
+    items: nextItems
   });
+
+  const savedLogs = purchaseLogs.map(log => createActionLog(eno, log));
 
   return {
     ok: true,
     money: nextInventory.money,
     totalPrice,
-    logs: nextLogs.slice(inventory.logs.length)
+    logs: savedLogs
   };
 }
 
 export function markInventoryLogPosted(eno, logId) {
-  const inventory = loadInventory(eno);
-
-  if (!inventory || !logId) {
-    return false;
-  }
-
-  const nextLogs = inventory.logs.map(log =>
-    log.logId === logId
-      ? {
-          ...log,
-          isPosted: true,
-          postedAt: new Date().toISOString()
-        }
-      : log
-  );
-
-  saveInventory(eno, {
-    ...inventory,
-    logs: nextLogs
-  });
-
-  return true;
+  return markActionLogPosted(eno, logId);
 }
