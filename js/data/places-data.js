@@ -29,7 +29,8 @@ function createLinkedLayerPlace(mainPlace, layer) {
     layer,
     name: `${mainPlace.name} ${LAYER_SUFFIXES[layer]}`,
     actionIds: copyStringArray(mainPlace.actionIds),
-    shopIds: copyStringArray(mainPlace.shopIds)
+    shopIds: copyStringArray(mainPlace.shopIds),
+    environmentTags: copyStringArray(mainPlace.environmentTags)
   };
 }
 
@@ -150,6 +151,7 @@ const mainPlaces = [
     longDescription: "環境制御によって再現された人工海のあるエリア。\n砂浜や桟橋が整備され、散歩や休憩、住民同士の気軽な交流に使われている。",
     lookAroundText: "{name}は周囲を見渡した。人工海の水面が光を返し、遠くには桟橋と白い波が見える。",
     actionIds: [],
+    environmentTags: ["fire_allowed", "waterside"],
     shopIds: ["vending-machine"],
     accessType: null
   },
@@ -210,6 +212,7 @@ const mainPlaces = [
     lookAroundText: "{name}は周囲を見渡した。工具やパーツが並び、整備台の上で機械の光が瞬いている。",
     actionIds: [],
     shopIds: ["equipment-shop"],
+    environmentTags: ["maintenance_facility"],
     accessType: null
   },
   {
