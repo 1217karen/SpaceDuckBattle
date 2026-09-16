@@ -39,8 +39,9 @@ import { renderMessageFilterSection } from "./chat-message-filter-view.js";
 
 import { hasShopForPlace } from "../services/shop-service.js";
 import { canAccessRoom, isInviteRoom, isInviteRoomPost, isInviteRoomReplyBlocked } from "../services/room-service.js";
-import { purchaseItems as purchaseInventoryItems,getInventoryLogs,getOwnedItems,markInventoryLogPosted,previewItemUse,useInventoryItem } from "../services/inventory-service.js";
-import { buildItemActionMessage,getItemActionsForContext } from "../services/item-action-service.js";
+import { purchaseItems as purchaseInventoryItems,getInventoryLogs,getOwnedItems,previewItemUse,useInventoryItem } from "../services/inventory-service.js";
+import { getItemActionsForContext,hasRequiredEnvironmentTags } from "../services/item-action-service.js";
+import { createActionLog,markActionLogPosted } from "../services/action-log-service.js";
 import { renderShopSection,renderShopPurchaseConfirmModalIfNeeded } from "./chat-shop-view.js";
 
 const centerPanel = document.querySelector(".center-panel");
@@ -711,7 +712,7 @@ if (isShopOpen) {
 
   const ownedItems = getOwnedItems(eno);
   const holdItemOptions = ownedItems.flatMap(({ item, itemId }) => {
-    const holdAction = getItemActionsForContext(item, "chat")
+    const holdAction = getItemActionsForContext(item, "chat", place)
       .find(itemAction => itemAction.actionId === "hold");
 
     return holdAction
@@ -724,7 +725,7 @@ if (isShopOpen) {
       : [];
   });
   const useItemOptions = ownedItems.flatMap(({ item, itemId }) =>
-    getItemActionsForContext(item, "chat")
+    getItemActionsForContext(item, "chat", place)
       .filter(itemAction => itemAction.actionId !== "hold")
       .map(itemAction => ({
         choiceId: `use-${itemId}-${itemAction.actionId}`,
@@ -812,7 +813,7 @@ renderChatActionSection(interactionPanel, {
         return;
       }
 
-      createPost({
+      const post = createPost({
         type: "actionLog",
         placeId: place.placeId,
         authorEno: character.eno,
@@ -820,7 +821,10 @@ renderChatActionSection(interactionPanel, {
         body: selectedLog.message
       });
 
-      markInventoryLogPosted(eno, selectedLog.logId);
+      markActionLogPosted(eno, selectedLog.logId, {
+        postedPlaceId: place.placeId,
+        postId: post.postId
+      });
       isShopOpen = false;
       isActionOpen = false;
       selectedActionId = "";
@@ -854,83 +858,78 @@ renderChatActionSection(interactionPanel, {
         return;
       }
 
-      const consumeQuantity = Math.max(
-        0,
-        Math.floor(Number(selectedItemAction.itemAction?.consumeQuantity) || 0)
-      );
-      let body = "";
-
-      if (consumeQuantity > 0) {
-        const preview = previewItemUse({
-          eno,
-          itemId: selectedItemAction.item.itemId,
-          actionId: selectedItemAction.itemAction.actionId,
-          quantity: 1
-        });
-
-        if (!preview.ok) {
-          alert(preview.message);
-          return;
-        }
-
-        const confirmLines = [
-          `${selectedItemAction.item.name}を1個「${selectedItemAction.itemAction.label}」で使用しますか？`,
-          "使用結果は現在地のログへ投稿されます。"
-        ];
-
-        if (preview.recovery) {
-          confirmLines.push(
-            "",
-            `スタミナ：${preview.recovery.staminaBefore} → ${preview.recovery.staminaAfter}`
-          );
-
-          if (preview.recovery.ineffectiveQuantity > 0) {
-            confirmLines.push(
-              "",
-              "注意：現在のスタミナは通常上限を超えているため回復しません。",
-              "回復しなくてもアイテムは消費されます。"
-            );
-          }
-        }
-
-        if (!window.confirm(confirmLines.join("\n"))) return;
-
-        const result = useInventoryItem({
-          eno,
-          character,
-          itemId: selectedItemAction.item.itemId,
-          actionId: selectedItemAction.itemAction.actionId,
-          quantity: 1,
-          isPosted: true,
-          postedPlaceId: place.placeId
-        });
-
-        if (!result.ok) {
-          alert(result.message);
-          return;
-        }
-
-        body = result.log.message;
-      } else {
-        body = buildItemActionMessage({
-          item: selectedItemAction.item,
-          action: selectedItemAction.itemAction,
-          character,
-          quantity: 1
-        });
+      if (
+        selectedItemAction.itemAction.actionKind === "special" &&
+        !hasRequiredEnvironmentTags(selectedItemAction.itemAction, place)
+      ) {
+        alert("現在地ではこの特殊使用を実行できません");
+        renderChatPlaceInfo();
+        return;
       }
+
+      const preview = previewItemUse({
+        eno,
+        itemId: selectedItemAction.item.itemId,
+        actionId: selectedItemAction.itemAction.actionId,
+        quantity: 1
+      });
+
+      if (!preview.ok) {
+        alert(preview.message);
+        return;
+      }
+
+      const willConsume =
+        preview.item.usageType === "consumable" &&
+        preview.action.consumptionPolicy !== "preserve" &&
+        preview.action.actionKind !== "hold";
+      const confirmLines = [
+        `${selectedItemAction.item.name}を「${selectedItemAction.itemAction.label}」で実行しますか？`,
+        "使用結果は保存され、現在地へ投稿されます。",
+        willConsume ? "アイテムを1個消費します。" : "アイテムは消費しません。"
+      ];
+
+      if (preview.recovery) {
+        confirmLines.push(
+          "",
+          `スタミナ：${preview.recovery.staminaBefore} → ${preview.recovery.staminaAfter}`
+        );
+      }
+
+      if (!window.confirm(confirmLines.join("\n"))) return;
+
+      const result = useInventoryItem({
+        eno,
+        character,
+        itemId: selectedItemAction.item.itemId,
+        actionId: selectedItemAction.itemAction.actionId,
+        quantity: 1,
+        isPosted: true,
+        postedPlaceId: place.placeId
+      });
+
+      if (!result.ok) {
+        alert(result.message);
+        return;
+      }
+
+      const body = result.log?.message ?? "";
 
       if (!body) {
         alert("アクションのログを作成できません");
         return;
       }
 
-      createPost({
+      const post = createPost({
         type: "actionLog",
         placeId: place.placeId,
         authorEno: character.eno,
         speakerName: character.fullName || character.defaultName || "誰か",
         body
+      });
+      markActionLogPosted(eno, result.log.logId, {
+        postedPlaceId: place.placeId,
+        postId: post.postId
       });
 
       isShopOpen = false;
@@ -960,7 +959,17 @@ renderChatActionSection(interactionPanel, {
       return;
     }
 
-    createPost(actionPostInput);
+    const post = createPost(actionPostInput);
+    createActionLog(eno, {
+      logType: "action",
+      actionId: action.actionId,
+      actionLabel: action.label,
+      actionKind: "chat",
+      message: actionPostInput.body,
+      isPosted: true,
+      postedPlaceId: place.placeId,
+      postId: post.postId
+    });
     isShopOpen = false;
     isActionOpen = false;
     selectedActionId = "";
