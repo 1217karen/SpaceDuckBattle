@@ -24,6 +24,17 @@ function getMainPlaceInSameGroup(place) {
   ) || null;
 }
 
+function hasRequiredEnvironmentTags(action, place) {
+  const requiredTags = Array.isArray(action?.requiredEnvironmentTags)
+    ? action.requiredEnvironmentTags
+    : [];
+  const environmentTags = new Set(
+    Array.isArray(place?.environmentTags) ? place.environmentTags : []
+  );
+
+  return requiredTags.every(tagId => environmentTags.has(tagId));
+}
+
 export function getAvailableChatActions({
   place,
   character
@@ -42,6 +53,10 @@ export function getAvailableChatActions({
   return chatActionDefinitions.filter(action => {
     if (action.type === "common") {
       return true;
+    }
+
+    if (action.type === "environment") {
+      return hasRequiredEnvironmentTags(action, place);
     }
 
     return actionIdSet.has(action.actionId);
