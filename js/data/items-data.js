@@ -97,7 +97,6 @@ export const items = [
       message: "{name}はロゴ入りタオルを使用した。"
     }]
   },
-  },
   {
     itemId: "gear-training-gloves",
     name: "訓練用グローブ",
