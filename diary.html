@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>日記</title>
+
+  <link rel="stylesheet" href="./css/layout.css">
+  <link rel="stylesheet" href="./css/common.css">
+  <link rel="stylesheet" href="./css/common-theme.css">
+  <link rel="stylesheet" href="./css/common-richtext-toolbar.css">
+  <link rel="stylesheet" href="./css/diary.css">
+  <link rel="stylesheet" href="./css/favorites-panel.css">
+</head>
+
+<body>
+<div class="layout">
+  <aside class="left-panel">
+    <div id="commonMenu"></div>
+  </aside>
+
+  <main class="center-panel">
+    <div
+      class="center-topbar"
+      data-notice="お知らせエリア"
+      data-right-label="FAV ＞"
+    ></div>
+
+    <h1 class="pageTitle">DIARY</h1>
+
+    <div class="section-divider"></div>
+    <h2 class="common-gradientHeading commonSectionHeading commonSectionHeading-large diarySectionHeading">NEXT DIARY</h2>
+
+    <section class="diaryEditor" aria-labelledby="diaryDraftLabel">
+      <p class="diaryHelpText">
+        次回更新時に公開される日記です。更新までは何度でも編集できます。
+      </p>
+
+      <label id="diaryDraftLabel" class="diaryFormLabel" for="diaryDraftBody">日記本文</label>
+      <textarea id="diaryDraftBody" class="diaryTextarea" rows="14"></textarea>
+      <div id="diaryDraftToolbar" class="diaryRichTextToolbar"></div>
+
+      <div class="diarySaveRow">
+        <button type="button" id="saveDiaryDraft" class="button-primaryNew">下書きを保存</button>
+        <span id="diarySaveStatus" class="diarySaveStatus text-muted" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+    <h2 class="common-gradientHeading commonSectionHeading commonSectionHeading-large diarySectionHeading">FAVORITE DIARIES</h2>
+
+    <section class="diaryFavoriteSection" aria-label="お気に入りキャラクターの日記">
+      <p class="diaryFavoritePlaceholder text-muted">
+        お気に入りキャラクターの公開日記は、ここに表示される予定です。
+      </p>
+    </section>
+  </main>
+
+  <aside class="right-panel"></aside>
+</div>
+
+<script type="module" src="./js/diary/diary-controller.js"></script>
+<script type="module" src="./js/common/include-menu.js"></script>
+<script type="module">
+  import { initCenterTopbar } from "./js/common/center-topbar.js";
+  import { initLayoutPanelToggles } from "./js/common/layout.js";
+
+  initCenterTopbar();
+  initLayoutPanelToggles();
+</script>
+</body>
+</html>
