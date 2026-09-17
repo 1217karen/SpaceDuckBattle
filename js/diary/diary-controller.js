@@ -7,6 +7,7 @@ import { loadDiaryDraft, saveDiaryDraft } from "../services/diary-service.js";
 
 requireLogin();
 
+const titleInput = document.getElementById("diaryDraftTitle");
 const bodyInput = document.getElementById("diaryDraftBody");
 const toolbar = document.getElementById("diaryDraftToolbar");
 const saveButton = document.getElementById("saveDiaryDraft");
@@ -51,6 +52,11 @@ function loadDraftIntoForm() {
   if (!eno) return;
 
   const draft = loadDiaryDraft(eno);
+
+  if (titleInput) {
+    titleInput.value = draft?.title ?? "";
+  }
+
   bodyInput.value = draft?.body ?? "";
 
   if (draft?.updatedAt) {
@@ -68,7 +74,12 @@ function saveDraftFromForm() {
     return;
   }
 
-  const draft = saveDiaryDraft(eno, bodyInput.value);
+  const draft = saveDiaryDraft(
+    eno,
+    titleInput?.value ?? "",
+    bodyInput.value
+  );
+
   const savedAt = formatSavedAt(draft.updatedAt);
   setSaveStatus(savedAt ? `保存しました：${savedAt}` : "保存しました");
 }
