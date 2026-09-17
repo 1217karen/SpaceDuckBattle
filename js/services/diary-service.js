@@ -30,13 +30,14 @@ export function loadDiaryDraft(eno) {
 
   return {
     eno: normalizedEno,
+    title: typeof stored.title === "string" ? stored.title : "",
     body: typeof stored.body === "string" ? stored.body : "",
     status: "draft",
     updatedAt: typeof stored.updatedAt === "string" ? stored.updatedAt : ""
   };
 }
 
-export function saveDiaryDraft(eno, body) {
+export function saveDiaryDraft(eno, title, body) {
   const normalizedEno = normalizeAccountEno(eno);
   if (!normalizedEno) {
     throw new Error("日記下書きの保存には eno が必要です");
@@ -49,6 +50,7 @@ export function saveDiaryDraft(eno, body) {
 
   const draft = {
     eno: normalizedEno,
+    title: typeof title === "string" ? title.slice(0, 40) : "",
     body: typeof body === "string" ? body : "",
     status: "draft",
     updatedAt: new Date().toISOString()
