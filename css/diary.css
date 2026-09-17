@@ -1,0 +1,62 @@
+/* =======================================================
+   日記ページ
+======================================================= */
+
+.diarySectionHeading {
+  margin: 0 0 12px;
+}
+
+.diaryEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 720px;
+}
+
+.diaryHelpText {
+  margin: 0 0 4px;
+  color: var(--theme-text-subtle);
+}
+
+.diaryFormLabel {
+  margin-top: 4px;
+  font-weight: bold;
+}
+
+.diaryTextarea {
+  width: min(100%, 720px);
+  min-height: 320px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.diaryRichTextToolbar {
+  width: min(100%, 720px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 6px;
+}
+
+.diarySaveRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+#saveDiaryDraft {
+  padding: 6px 14px;
+}
+
+.diarySaveStatus {
+  min-height: 1.4em;
+}
+
+.diaryFavoriteSection {
+  max-width: 720px;
+}
+
+.diaryFavoritePlaceholder {
+  margin: 0;
+}
