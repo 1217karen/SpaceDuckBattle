@@ -23,6 +23,11 @@
   font-weight: bold;
 }
 
+.diaryTitleInput {
+  width: min(100%, 480px);
+  box-sizing: border-box;
+}
+
 .diaryTextarea {
   width: min(100%, 720px);
   min-height: 320px;
