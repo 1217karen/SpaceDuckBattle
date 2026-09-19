@@ -46,6 +46,9 @@
 
       <div class="diarySaveRow">
         <button type="button" id="saveDiaryDraft" class="button-primaryNew">下書きを保存</button>
+        <button type="button" id="publishDiaryDraft" class="button-box diaryDebugPublishButton">
+          DEBUG: 第1回として公開
+        </button>
         <span id="diarySaveStatus" class="diarySaveStatus text-muted" aria-live="polite"></span>
       </div>
     </section>
@@ -54,9 +57,12 @@
     <h2 class="common-gradientHeading commonSectionHeading commonSectionHeading-large diarySectionHeading">FAVORITE DIARIES</h2>
 
     <section class="diaryFavoriteSection" aria-label="お気に入りキャラクターの日記">
-      <p class="diaryFavoritePlaceholder text-muted">
-        お気に入りキャラクターの公開日記は、ここに表示される予定です。
-      </p>
+      <div class="diaryUpdateControls">
+        <label class="diaryUpdateLabel" for="diaryUpdateSelect">更新回</label>
+        <select id="diaryUpdateSelect" class="diaryUpdateSelect"></select>
+      </div>
+
+      <div id="diaryFavoriteList" class="diaryFavoriteList"></div>
     </section>
   </main>
 
