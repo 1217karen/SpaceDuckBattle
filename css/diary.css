@@ -50,7 +50,8 @@
   margin-top: 6px;
 }
 
-#saveDiaryDraft {
+#saveDiaryDraft,
+.diaryDebugPublishButton {
   padding: 6px 14px;
 }
 
@@ -60,6 +61,63 @@
 
 .diaryFavoriteSection {
   max-width: 720px;
+}
+
+.diaryUpdateControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.diaryUpdateLabel {
+  font-weight: bold;
+}
+
+.diaryUpdateSelect {
+  min-width: 110px;
+  box-sizing: border-box;
+}
+
+.diaryFavoriteList {
+  display: flex;
+  flex-direction: column;
+}
+
+.diaryPublishedEntry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 0 12px;
+  border-bottom: 1px dotted var(--theme-border-main);
+}
+
+.diaryPublishedEntry:first-child {
+  padding-top: 0;
+}
+
+.diaryPublishedEntry:last-child {
+  border-bottom: none;
+}
+
+.diaryPublishedAuthor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--theme-text-main);
+}
+
+.diaryPublishedEno {
+  color: var(--theme-text-subtle);
+}
+
+.diaryPublishedName {
+  font-weight: bold;
+}
+
+.diaryPublishedTitle {
+  width: fit-content;
+  text-align: left;
 }
 
 .diaryFavoritePlaceholder {
